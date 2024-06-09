@@ -34,20 +34,45 @@ export const RoleSchema = z.object({
     })
 })
 
+export const ProductSchema = z.object({
+    productID: z.string().min(1, { message: "Product ID is required." }),
+    productName: z.string().min(1, { message: "Product Name is required." }),
+    Code: z.string().min(1, { message: "Code is required." }),
+    productPrice: z.string(),
+    isGroup: z.string(),
+    size: z.string().min(1, { message: "Size is required." }),
+    description: z.string().min(1, { message: "Description is required." }),
+    createdBy: z.string().min(1, { message: "Created By is required." })
+})
+
 
 export const UsersSchema = z.object({
     firstName: z.string().min(1,{ message: "First name is required." }),
     lastName: z.string().min(1,{ message: "Last name is required." }),
-    dob: z.string(),
-    gender:z.string(),
+    dob: z.string().refine((dob) => {
+        const dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
+        return dobPattern.test(dob);
+    }, { message: "Date of birth must be in the format dd/MM/yyyy" }),
+
+    gender: z.string().refine((gender) => {
+        return gender === 'Male' || gender === 'Female';
+    }, { message: "Gender must be either 'Male' or 'Female'" }),
     address: z.string().min(1,{ message: "Address is required." }),
-    phone: z.string().min(1,{ message: "Phone number is required." }),
-    password: z.string().min(1,{ message: "Password is required." }),
-    role: z.string().min(1,{ message: "Role is required." }),
-    // isActive: z.string().optional(),
+    phone: z.string().refine((phone) => {
+        const phonePattern = /^\d{10}$/;
+        return phonePattern.test(phone);
+    }, { message: "Phone number must be exactly 10 digits" }),
+    password: z.string().refine((password) => {
+        return /[A-Z]/.test(password);
+    }, { message: "Password must contain at least one uppercase letter" }).refine((password) => {
+        return /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    }, { message: "Password must contain at least one special character" }),
+    roleId: z.number().min(1,{ message: "roleId is required." }),
+    isActive: z.boolean(),
     facility: z.string().min(1,{ message: "Facility is required." }),
-    
-    pin: z.string().min(12).max(12, {
-        message: "Your one-time password must be 12 characters.",
-    }),
+    id: z.string().refine((id) => {
+        const idPattern = /^\d{12}$/;
+        return idPattern.test(id);
+    }, { message: "Id must be exactly 12 digits" }),
+    salaryByDay: z.number(),
 })

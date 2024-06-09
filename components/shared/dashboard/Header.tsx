@@ -17,8 +17,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useAuth } from "@/hooks/useAuth";
 
 export default function Header() {
+    const user = useAuth();
+    
     return (
         <div className=" bg-slate-100 h-12 flex items-center justify-between p-8 border-b border-slate-300 shadow-md">
             <div className="flex items-center">
@@ -55,7 +58,7 @@ export default function Header() {
                     <DropdownMenu>
                         <DropdownMenuTrigger >
                             <div className="flex items-center space-x-1">
-                                <span>cuong</span>
+                                <span>{user?.user?.firstName} {user?.user?.lastName}</span>
                                 <ChevronDown className="mr-2 h-3 w-3 shrink-0 opacity-50" />
                             </div>
                         </DropdownMenuTrigger>
