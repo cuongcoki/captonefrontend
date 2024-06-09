@@ -5,7 +5,7 @@ import { DataTable } from "./DataTable"
 import { useEffect, useState } from "react";
 
 // async function getData(): Promise<Employee[]> {
-  
+
 //   return [
 //     {
 //       id: "EMP001",
@@ -26,28 +26,32 @@ import { useEffect, useState } from "react";
 //   ]
 // }
 
-export default  function RenderTableUsers() {
+export default function RenderTableUsers() {
   const [loading, setLoading] = useState<boolean>(false);
   const [value, setValue] = useState('');
   const [roleId, setRoleId] = useState<number>(1);
   const [isActive, setIsActive] = useState<any>(true);
-  const [data,setData] = useState<any>([]);
-  
+  const [data, setData] = useState<any>([]);
+
+
+
   useEffect(() => {
+    const fetchData = () => {
+      userApi.allUsers(roleId, value, isActive)
+        .then(res => {
+          setData(res.data.data.data);
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+        })
+        .finally(() => {
+          setLoading(false);
+        })
+    }
+
     fetchData()
-  }, [])
-  const fetchData =() =>{
-    userApi.allUsers(roleId,value,isActive)
-            .then(res => {
-              setData(res.data.data.data);
-            })
-            .catch(error =>{
-              console.error('Error fetching user data:', error);
-            })
-            .finally(() => {
-              setLoading(false);
-          })
-  }
+  }, [roleId,value,isActive])
+
 
   return (
     <div className="px-3">

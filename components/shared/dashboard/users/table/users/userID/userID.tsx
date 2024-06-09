@@ -39,40 +39,42 @@ export default function UserIDPage() {
         roleId: 0,
         salaryByDay: 0,
     });
+
+
     useEffect(() => {
+
+        const fetchData = () => {
+            setLoading(true);
+            userApi.allUsers(roleId, value, isActive)
+                .then(res => {
+                    setData(res.data.data.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        }
+
+        const fetchDataUserId = () => {
+            setLoading(true);
+            userApi.getUserId(params.id)
+                .then(res => {
+                    setUserId(res.data.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                })
+                .finally(() => {
+                    setLoading(false);
+                })
+        }
+
         fetchData()
         fetchDataUserId()
 
-    }, [])
-    const fetchData = () => {
-        setLoading(true);
-        userApi.allUsers(roleId, value, isActive)
-            .then(res => {
-                setData(res.data.data.data);
-            })
-            .catch(error => {
-                console.error('Error fetching user data:', error);
-            })
-            .finally(() => {
-                setLoading(false);
-            })
-    }
-
-
-    const fetchDataUserId = () => {
-        setLoading(true);
-        userApi.getUserId(params.id)
-            .then(res => {
-                setUserId(res.data.data);
-            })
-            .catch(error => {
-                console.error('Error fetching user data:', error);
-            })
-            .finally(() => {
-                setLoading(false);
-            })
-    }
-
+    }, [roleId,value,isActive,params.id])
 
     return (
         <div className="py-2 h-full">
@@ -102,7 +104,7 @@ export default function UserIDPage() {
                             <div className="flex flex-col p-3 ">
                                 {
                                     data.map((dataId: any, index: any) => (
-                                        <Link href={`/dashboard/user/users/${dataId.id}`}>
+                                        <Link href={`/dashboard/user/users/${dataId.id}`} key={index}>
                                             <div key={index} className='my-3 flex flex-col justify-between '>
                                                 <span className={cn('btn', { 'font-medium text-xl text-primary-backgroudPrimary mb-5': dataId.id === params.id })}>CMND/CCCD : {dataId.id}</span>
                                                 <Separator className={cn('h-[2px]', { 'm bg-primary-backgroudPrimary mb-5': dataId.id === params.id })} />
