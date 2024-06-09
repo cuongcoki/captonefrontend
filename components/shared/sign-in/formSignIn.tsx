@@ -17,6 +17,7 @@ import { SignInSchema } from "@/schema";
 import { useAuth } from "@/hooks/useAuth";
 import { authApi } from "@/apis/auth.api";
 import { useRouter } from 'next/navigation'
+import toast, { Toaster } from 'react-hot-toast';
 export default function FormSignIn() {
     const auth = useAuth();
     const [loading, setLoading] = useState(false);
@@ -32,7 +33,7 @@ export default function FormSignIn() {
             password: "",
         },
     });
-
+    
     const onSubmit = (data: z.infer<typeof SignInSchema>) => {
         const { id, password } = data;
         setLoading(true);
@@ -43,7 +44,8 @@ export default function FormSignIn() {
                     const { user, accessToken, refreshToken } = data.data;
                     auth.login(user, rememberMe, accessToken, refreshToken);
                     console.log(data)
-                    router.push('/dashboard')
+                    toast.success(data.message)
+                    router.push('/dashboard/home')
                 } else {
                     if (data?.message?.includes('id is incorrect')) {
                         form.setError('id', {
@@ -57,12 +59,14 @@ export default function FormSignIn() {
                         });
                     } else {
                         // Handle other errors
+
                     }
                 }
             })
             .catch(err => {
                 // Handle catch error
-                console.error(err);
+                console.error(err.response.data.message);
+                toast.error(err.response.data.message);
             })
             .finally(() => {
                 setLoading(false);
@@ -73,6 +77,7 @@ export default function FormSignIn() {
 
     return (
         <Form {...form}>
+            <Toaster />
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="max-w-md w-full flex flex-col gap-4"
@@ -117,6 +122,7 @@ export default function FormSignIn() {
                     disabled={loading}
                 >
                     {loading ? "Loading..." : "ĐĂNG NHẬP"}
+
                 </Button>
             </form>
         </Form>

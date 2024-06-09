@@ -2,8 +2,8 @@
 
 // ** React Imports
 import { createContext, useEffect, useState, ReactNode } from 'react'
-
-// ** Next Import
+import { useRouter } from 'next/navigation'
+import { jwtDecode } from 'jwt-decode'
 
 // ** Config
 import authConfig from '@/configs/auth'
@@ -11,7 +11,6 @@ import authConfig from '@/configs/auth'
 // ** Types
 import { AuthValuesType } from './types'
 import { UsersType } from '@/types/userTypes'
-import { useRouter } from 'next/navigation'
 import { authService } from '@/auth/authService'
 
 // ** Defaults
@@ -37,32 +36,85 @@ const AuthProvider = ({ children }: Props) => {
 
   // ** Hooks
   const router = useRouter()
-  
+
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)
-      
-      if (!storedToken) {
+      const storedRefreshToken = window.localStorage.getItem(authConfig.onTokenExpiration)
+
+      if (!storedToken || !storedRefreshToken) {
         router.push('/sign-in')
+        setLoading(false)
+        return
+      }
+
+      const decodedToken: any = jwtDecode(storedToken)
+      const currentTime = Date.now() / 1000
+      console.log('decodedToken',decodedToken)
+      if (decodedToken.exp < currentTime) {
+        try {
+          const response = await authService.refreshToken()
+          const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data.data
+
+          authService.setLocalStorageWhenLogin({
+            user: JSON.parse(window.localStorage.getItem(authConfig.userData) || '{}'),
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken
+          })
+          setUser(JSON.parse(window.localStorage.getItem(authConfig.userData) || '{}'))
+        } catch (error) {
+          console.error('Failed to refresh token', error)
+          handleLogout()
+        }
       } else {
         setUser(JSON.parse(window.localStorage.getItem(authConfig.userData) || '{}'))
       }
+
       setLoading(false)
     }
 
     initAuth()
-   
+
+    const interval = setInterval(() => {
+      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)
+      if (storedToken) {
+        const decodedToken: any = jwtDecode(storedToken)
+        const currentTime = Date.now() / 1000
+
+        if (decodedToken.exp < currentTime + 60) { // Refresh token 1 minute before it expires
+          authService.refreshToken().then(response => {
+            const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data.data
+
+            authService.setLocalStorageWhenLogin({
+              user: JSON.parse(window.localStorage.getItem(authConfig.userData) || '{}'),
+              accessToken: newAccessToken,
+              refreshToken: newRefreshToken
+            })
+            setUser(JSON.parse(window.localStorage.getItem(authConfig.userData) || '{}'))
+          }).catch(error => {
+            console.error('Failed to refresh token', error)
+            handleLogout()
+          })
+        }
+      }
+    }, 4 * 60 * 1000) // Check every 4 minutes
+
+    return () => clearInterval(interval)
   }, [])
 
   const handleLogin = (data: UsersType, rememberMe: boolean, accessToken: string, refreshToken: string) => {
     setUser({ ...data, accessToken })
     setLoading(false)
     authService.setLocalStorageWhenLogin({ accessToken, refreshToken, user: { ...data, accessToken } })
-    setLoading(false);
+    setLoading(false)
   }
 
   const handleLogout = () => {
-
+    setUser(null)
+    window.localStorage.removeItem('userData')
+    window.localStorage.removeItem(authConfig.storageTokenKeyName)
+    window.localStorage.removeItem(authConfig.onTokenExpiration)
+    router.push('/login')
   }
 
   const values = {

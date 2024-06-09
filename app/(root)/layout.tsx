@@ -3,7 +3,7 @@
 import Header from "@/components/shared/dashboard/Header";
 import SideNavbar from "@/components/shared/dashboard/sidebar/SideNavbar";
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useWindowWidth } from '@react-hook/window-size'
 export default function Layout({ children }: { children: React.ReactNode }) {
 
@@ -15,8 +15,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     function toggleSidebar() {
         setIsCollapsed(!isCollapsed);
     }
+    useEffect(() => {
+        document.body.style.overflow = "hidden";
+        return () => {
+            document.body.style.overflow = "scroll"
+        };
+    }, []);
     return (
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between ">
             <div className="sticky  hidden lg:flex  min-h-screen  top-0">
                 <SideNavbar />
             </div>
@@ -24,7 +30,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <div className="sticky top-0 z-10">
                     <Header />
                 </div>
-                <div className="p-2">
+                <div className="p-2 overflow-auto">
                     {children}
                 </div>
             </main>

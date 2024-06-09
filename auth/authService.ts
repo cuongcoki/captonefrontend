@@ -1,5 +1,3 @@
-
-
 // ** Auth config import
 import jwtConfig from '@/configs/auth'
 
@@ -29,19 +27,23 @@ export const authService = {
         Authorization: `Bearer ${localStorage.getItem(jwtConfig.onTokenExpiration)}`
       }
     })
-
     const data = {
-      token: payload?.email,
+      token: payload?.UserID,
       refreshToken: localStorage.getItem(jwtConfig.onTokenExpiration)
     }
 
-    return refreshTokenApi.post(apiUrl, data)
+    try {
+      const response = await refreshTokenApi.post(apiUrl, data)
+      return response
+    } catch (err: any) {
+      console.error('Error refreshing token:', err.response ? err.response.data : err)
+      throw err
+    }
   },
   setLocalStorageWhenLogin: (payload: LoginPayload) => {
     localStorage.setItem(jwtConfig.userData, JSON.stringify(payload.user))
     localStorage.setItem(jwtConfig.storageTokenKeyName, payload.accessToken)
     localStorage.setItem(jwtConfig.onTokenExpiration, payload.refreshToken)
-
   },
   removeLocalStorageWhenLogout: () => {
     localStorage.removeItem(jwtConfig.userData)
@@ -54,5 +56,6 @@ export const authService = {
   },
   updateStorageWhenRefreshToken: (payload: LoginPayload) => {
     localStorage.setItem(jwtConfig.storageTokenKeyName, payload.accessToken)
+    localStorage.setItem(jwtConfig.onTokenExpiration, payload.refreshToken)
   }
 }

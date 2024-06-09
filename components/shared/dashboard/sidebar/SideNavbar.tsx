@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import { Nav } from './nav'
-import { ShoppingCart, LayoutDashboard, UserRound, Settings, ChevronRight, ChevronLeft } from 'lucide-react'
+import { ShoppingCart, LayoutDashboard, UserRound, Settings, ChevronRight, ChevronLeft, PackageSearch } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useWindowWidth } from '@react-hook/window-size'
 
@@ -48,13 +48,19 @@ export default function SideNavbar
         }, 
         {
           title: "Đơn đặt hàng",
-          href: "/dashbroad/orders",
+          href: "/dashboard/orders",
           icon: ShoppingCart,
           variant: "ghost",
         }, 
         {
+          title: "Sản phẩm",
+          href: "/dashboard/product",
+          icon: PackageSearch ,
+          variant: "ghost",
+        },
+        {
           title: "Cài đặt",
-          href: "/dashbroad/settings",
+          href: "/dashboard/settings",
           icon: Settings,
           variant: "ghost",
         },

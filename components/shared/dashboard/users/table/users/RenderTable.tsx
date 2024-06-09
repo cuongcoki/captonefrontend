@@ -1,92 +1,53 @@
+'use client'
+import { userApi } from "@/apis/user.api"
 import { Employee, columns } from "./Column"
 import { DataTable } from "./DataTable"
+import { useEffect, useState } from "react";
 
-async function getData(): Promise<Employee[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      EmployeeID: "EMP001",
-      FirstName: "John",
-      LastName: "Doe",
-      Gender: "Male",
-      Address: "123 Main Street, ",
-      SalaryByDay: 100,
-      Phone: "555-1234",
-      Password: "password123",
-      Role: 1,
-      CreatedBy: "Admin",
-      SalaryOT: 150,
-      FacilityID: 1,
-      IsActive: true,
-    },
+// async function getData(): Promise<Employee[]> {
+  
+//   return [
+//     {
+//       id: "EMP001",
+//       firstName: "John",
+//       lastName: "Doe",
+//       dob: "19/11/2002",
+//       gender: "Male",
+//       address: "123 Main Street, ",
+//       salaryByDay: 100,
+//       phone: "555-1234",
+//       roleId: 1,
+//       facilityID: 1,
+//       isActive: true,
+//     },
 
-    {
-      EmployeeID: "EMP001",
-      FirstName: "nnnnn",
-      LastName: "Doe",
-      Gender: "Female",
-      Address: "123 Main Street, ",
-      SalaryByDay: 100,
-      Phone: "555-1234",
-      Password: "password123",
-      Role: 1,
-      CreatedBy: "Admin",
-      SalaryOT: 150,
-      FacilityID: 1,
-      IsActive: true,
-    },
-    {
-      EmployeeID: "EMP001",
-      FirstName: "jjjjjj",
-      LastName: "Doe",
-      Gender: "Female",
-      Address: "123 Main Street, ",
-      SalaryByDay: 100,
-      Phone: "555-1234",
-      Password: "password123",
-      Role: 1,
-      CreatedBy: "Admin",
-      SalaryOT: 150,
-      FacilityID: 1,
-      IsActive: true,
-    },
-    {
-      EmployeeID: "EMP001",
-      FirstName: "John",
-      LastName: "Doe",
-      Gender: "Male",
-      Address: "123 Main Street, ",
-      SalaryByDay: 100,
-      Phone: "555-1234",
-      Password: "password123",
-      Role: 1,
-      CreatedBy: "Admin",
-      SalaryOT: 150,
-      FacilityID: 1,
-      IsActive: true,
-    },
-    {
-      EmployeeID: "EMP001",
-      FirstName: "John",
-      LastName: "Doe",
-      Gender: "Female",
-      Address: "123 Main Street, ",
-      SalaryByDay: 100,
-      Phone: "555-1234",
-      Password: "password123",
-      Role: 1,
-      CreatedBy: "Admin",
-      SalaryOT: 150,
-      FacilityID: 1,
-      IsActive: true,
-    }
 
-    // ...
-  ]
-}
+//     // ...
+//   ]
+// }
 
-export default async function RenderTableUsers() {
-  const data = await getData()
+export default  function RenderTableUsers() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [value, setValue] = useState('');
+  const [roleId, setRoleId] = useState<number>(1);
+  const [isActive, setIsActive] = useState<any>(true);
+  const [data,setData] = useState<any>([]);
+  
+  useEffect(() => {
+    fetchData()
+  }, [])
+  const fetchData =() =>{
+    userApi.allUsers(roleId,value,isActive)
+            .then(res => {
+              setData(res.data.data.data);
+            })
+            .catch(error =>{
+              console.error('Error fetching user data:', error);
+            })
+            .finally(() => {
+              setLoading(false);
+          })
+  }
 
   return (
     <div className="px-3">

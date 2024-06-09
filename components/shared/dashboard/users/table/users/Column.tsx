@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { DataTableColumnHeader } from "./data-table-column-header"
-import { Gender } from "./data/data"
+import { Gender , Role } from "./data/data"
 import { DataTableRowActions } from "./data-table-row-actions"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -24,23 +24,17 @@ export type Roles = {
 }
 
 export type Employee = {
-  EmployeeID: string;
-  FirstName: string;
-  LastName: string;
-  // DOB: Date;
-  Gender: string;
-  Address: string;
-  SalaryByDay: number;
-  Phone: string;
-  Password: string;
-  Role: number;
-  CreatedBy: string;
-  // CreatedAt: Date;
-  // UpdatedBy: string;
-  // UpdatedAt: Date;
-  IsActive: boolean;
-  FacilityID: number;
-  SalaryOT: number;
+  id: string;
+  firstName: string;
+  lastName: string;
+  dob:string
+  gender: string;
+  address: string;
+  phone: string;
+  roleId: number;
+  isActive: boolean;
+  facilityID: number;
+  salaryByDay: number;
 }
 
 export const columns: ColumnDef<Employee>[] = [
@@ -66,9 +60,17 @@ export const columns: ColumnDef<Employee>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-
   {
-    accessorKey: "FirstName",
+    accessorKey: "id",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="CMND/CCCD" />
+    ),
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "firstName",
     header: ({ column }) => {
       return (
         <Button
@@ -83,7 +85,7 @@ export const columns: ColumnDef<Employee>[] = [
   },
 
   {
-    accessorKey: "LastName",
+    accessorKey: "lastName",
     header: ({ column }) => {
       return (
         <Button
@@ -97,29 +99,28 @@ export const columns: ColumnDef<Employee>[] = [
     },
   },
 
-  // {
-  //   accessorKey: "DOB",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         Ngày/tháng/năm sinh
-  //         <ArrowUpDown className="ml-2 h-4 w-4" />
-  //       </Button>
-  //     )
-  //   },
-  // },
+  {
+    accessorKey: "dob",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Ngày/tháng/năm sinh
+        </Button>
+      )
+    },
+  },
 
   {
-    accessorKey: "Gender",
+    accessorKey: "gender",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Gender" />
+      <DataTableColumnHeader column={column} title="Giới tính" />
     ),
     cell: ({ row }) => {
       const gender = Gender.find(
-        (gender) => gender.value === row.getValue("Gender")
+        (gender) => gender.value === row.getValue("gender")
       )
 
       if (!gender) {
@@ -139,7 +140,7 @@ export const columns: ColumnDef<Employee>[] = [
   },
 
   {
-    accessorKey: "Address",
+    accessorKey: "address",
     header: ({ column }) => {
       return (
         <Button
@@ -152,39 +153,8 @@ export const columns: ColumnDef<Employee>[] = [
     },
   },
 
-  // {
-  //   accessorKey: "SalaryByDay",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         Lương ngày
-  //         <ArrowUpDown className="ml-2 h-4 w-4" />
-  //       </Button>
-  //     )
-  //   },
-  // },
-
-  
-  // {
-  //   accessorKey: "SalaryOT",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         Lương cố định
-  //         <ArrowUpDown className="ml-2 h-4 w-4" />
-  //       </Button>
-  //     )
-  //   },
-  // },
-
   {
-    accessorKey: "Phone",
+    accessorKey: "phone",
     header: ({ column }) => {
       return (
         <Button
@@ -198,81 +168,49 @@ export const columns: ColumnDef<Employee>[] = [
   },
 
   {
-    accessorKey: "Password",
+    accessorKey: "roleId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Vai trò" />
+    ),
+    cell: ({ row }) => {
+      const role = Role.find(
+        (role) => role.value === row.getValue("roleId")
+      )
+
+      if (!role) {
+        return null
+      }
+
+      return (
+        <div className="flex w-[100px] items-center">
+        
+          <span>{role.label}</span>
+        </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+  },
+
+
+
+  {
+    accessorKey: "salaryByDay",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Mật khẩu 
+          Lường ngày
         </Button>
       )
     },
   },
 
   {
-    accessorKey: "Role",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Vai trò
-        </Button>
-      )
-    },
-  },
-
-  // {
-  //   accessorKey: "CreatedBy",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         Tạo bởi ai
-  //         <ArrowUpDown className="ml-2 h-4 w-4" />
-  //       </Button>
-  //     )
-  //   },
-  // },
-
-  // {
-  //   accessorKey: "CreatedAt",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //       >
-  //         Tạo bởi ai
-  //         <ArrowUpDown className="ml-2 h-4 w-4" />
-  //       </Button>
-  //     )
-  //   },
-  // },
-  
-
-
-  {
-    accessorKey: "FacilityID",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Cơ sở
-        </Button>
-      )
-    },
-  },
-
-  {
-    accessorKey: "IsActive",
+    accessorKey: "isActive",
     header: ({ column }) => {
       return (
         <Button
@@ -284,39 +222,6 @@ export const columns: ColumnDef<Employee>[] = [
       )
     },
   },
-
-  
-
- 
- 
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => {
-  //     const payment = row.original
-
-  //     return (
-  //       <DropdownMenu>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button variant="ghost" className="h-8 w-8 p-0">
-  //             <span className="sr-only">Open menu</span>
-  //             <MoreHorizontal className="h-4 w-4" />
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end">
-  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  //           <DropdownMenuItem
-  //             onClick={() => navigator.clipboard.writeText(payment.EmployeeID)}
-  //           >
-  //             CMND/CCCD
-  //           </DropdownMenuItem>
-  //           <DropdownMenuSeparator />
-  //           <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
-  //           <DropdownMenuItem>Xóa</DropdownMenuItem>
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     )
-  //   },
-  // },
 
   {
     id: "actions",

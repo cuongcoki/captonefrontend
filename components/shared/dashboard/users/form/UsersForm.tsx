@@ -29,14 +29,24 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import toast, { Toaster } from 'react-hot-toast';
 
 import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { UsersSchema } from "@/schema";
+import { userApi } from "@/apis/user.api";
+import { useRouter } from "next/navigation";
 
+interface UsersFormProps {
+    setOpen: (open: boolean) => void;
+  }
 
-export default function UsersForm() {
+export  const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
     const [loading, setLoading] = useState(false);
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+    // ** Hooks
+    const router = useRouter()
     const form = useForm({
         resolver: zodResolver(UsersSchema),
         defaultValues: {
@@ -47,21 +57,42 @@ export default function UsersForm() {
             address: "",
             phone: "",
             password: "",
-            role: "",
-            // isActive: "",
+            roleId: 1,
+            isActive: true,
             facility: "",
-            pin: "",
+            id: "",
+            salaryByDay: 0,
         },
     });
 
     const onSubmit = (data: z.infer<typeof UsersSchema>) => {
+        const { firstName, lastName, dob, gender, address, phone, password, roleId, isActive, facility, id, salaryByDay } = data
         setLoading(true);
-        console.log(data);
+
+        userApi.createUser({ firstName, lastName, dob, gender, address, phone, password, roleId, isActive, facility, id, salaryByDay })
+            .then(({ data }) => {
+                if (data.isSuccess) {
+                    toast.success(data.message);
+                    setOpen(false);
+                    console.log(data)
+                } 
+            })
+            .catch(err => {
+                console.log(err.response);
+                toast.error(err.response.data.message);
+                
+            })
+            .finally(() => {
+                setLoading(false);
+                console.log(data);
+            });
+     
     };
 
     const { pending } = useFormStatus();
     return (
         <Form {...form}>
+            <Toaster />
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="w-full flex flex-col gap-4"
@@ -156,13 +187,13 @@ export default function UsersForm() {
                                                     >
                                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                                             <FormControl>
-                                                                <RadioGroupItem value="1" />
+                                                                <RadioGroupItem value="Male" />
                                                             </FormControl>
                                                             <FormLabel className="font-normal">Nam</FormLabel>
                                                         </FormItem>
                                                         <FormItem className="flex items-center space-x-3 space-y-0">
                                                             <FormControl>
-                                                                <RadioGroupItem value="2" />
+                                                                <RadioGroupItem value="Female" />
                                                             </FormControl>
                                                             <FormLabel className="font-normal">Nữ</FormLabel>
                                                         </FormItem>
@@ -248,25 +279,25 @@ export default function UsersForm() {
                             />
 
                             {/* role */}
-                            <FormField
+                            {/* <FormField
                                 control={form.control}
-                                name="role"
+                                name="roleId"
                                 render={({ field }) => {
                                     return (
                                         <FormItem>
                                             <div className="flex items-center justify-between">
                                                 <FormLabel className="flex items-center text-primary-backgroudPrimary">Vai trò *</FormLabel>
                                                 <div className="w-[70%]">
-                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                    <Select onValueChange={field.onChange} >
                                                         <FormControl>
                                                             <SelectTrigger>
                                                                 <SelectValue placeholder="Select a verified email to display" />
                                                             </SelectTrigger>
                                                         </FormControl>
                                                         <SelectContent>
-                                                            <SelectItem value="m@example.com">m@example.com</SelectItem>
-                                                            <SelectItem value="m@google.com">m@google.com</SelectItem>
-                                                            <SelectItem value="m@support.com">m@support.com</SelectItem>
+                                                            <SelectItem value="1">admin</SelectItem>
+                                                            <SelectItem value="2">staff</SelectItem>
+                                                            <SelectItem value="3">countproduct</SelectItem>
                                                         </SelectContent>
                                                     </Select>
                                                     <FormMessage />
@@ -275,7 +306,7 @@ export default function UsersForm() {
                                         </FormItem>
                                     );
                                 }}
-                            />
+                            /> */}
 
                             {/* facility */}
                             <FormField
@@ -304,7 +335,7 @@ export default function UsersForm() {
                             {/* pin */}
                             <FormField
                                 control={form.control}
-                                name="pin"
+                                name="id"
                                 render={({ field }) => (
                                     <FormItem>
                                         <div className="flex items-center justify-between">
@@ -335,6 +366,7 @@ export default function UsersForm() {
                 <FormLabel className="flex items-center "></FormLabel>
                 <Button type="submit" className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90" disabled={pending}>
                     {loading ? "Loading..." : "GỬI"}
+
                 </Button>
             </form>
         </Form>
