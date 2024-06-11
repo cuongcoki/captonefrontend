@@ -38,10 +38,6 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
         form.setValue(name, format(date, "dd/MM/yyyy"));
     }, [date, name, form]);
 
-    if (name) {
-      console.log("FROM COMBOBOX: date =", form?.getValues(name));
-    }
-    console.log("FROM COMBOBOX: state =", date);
     return (
       <Popover>
         <PopoverTrigger asChild>
