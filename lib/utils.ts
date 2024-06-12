@@ -10,6 +10,9 @@ export function cn(...inputs: ClassValue[]) {
 export const CheckPermissionEnter = (dataPer: any) => {
   if (typeof storage !== 'undefined' && typeof window !== 'undefined') {
     const user = storage.getProfile();
+    if(user === null){{
+      window.location.href = '/sign-in';
+    }}
     if (user.roleId === dataPer) {
       console.log('User has permission to enter.');
     } else {

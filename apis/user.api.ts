@@ -21,8 +21,8 @@ type userType = {
   }
 
 export const userApi = {
-    allUsers: (RoleId: number, searchTerm?: string, IsActive?: any) =>
-        axiosClient.get(`${endPointConstant.BASE_URL}/users?RoleId=${RoleId}&searchTerm=${searchTerm}&IsActive=${IsActive}`),
+    allUsers: (RoleId: number, searchTerm?: string, IsActive?: any, PageIndex?:any ,PageSize?:any) =>
+        axiosClient.get(`${endPointConstant.BASE_URL}/users?RoleId=${RoleId}&searchTerm=${searchTerm}&IsActive=${IsActive}&PageIndex=${PageIndex}&PageSize=${PageSize}`),
 
     getUserId: (id: string) => 
         axiosClient.get(`${endPointConstant.BASE_URL}/users/${id}`),

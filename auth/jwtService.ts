@@ -4,14 +4,17 @@ import axios from "axios"
 // ** Config import
 import jwtConfig from "@/configs/auth"
 import { authService } from "./authService"
-
-const axiosClient = axios.create({
+import { setupCache } from 'axios-cache-interceptor';
+const axiosInstance  = axios.create({
   headers: {
     "Content-Type": "application/json"
   },
   responseType: "json"
 })
-
+const cache = setupCache(axiosInstance, {
+  ttl: 15 * 60 * 1000 // Thời gian bộ nhớ đệm (15 phút)
+});
+const axiosClient = cache;
 axiosClient.interceptors.request.use(
   async config => {
     const jwtToken = localStorage.getItem(jwtConfig.storageTokenKeyName)

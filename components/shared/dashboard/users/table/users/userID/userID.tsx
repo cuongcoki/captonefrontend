@@ -9,6 +9,8 @@ import { userApi } from "@/apis/user.api";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { DataTablePagination } from "../data-table-pagination";
 interface User {
     firstName: string;
     id: string;
@@ -28,6 +30,12 @@ export default function UserIDPage() {
     const [roleId, setRoleId] = useState<number>(1);
     const [isActive, setIsActive] = useState<any>(true);
     const [data, setData] = useState<any>([]);
+
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [pageSize, setPageSize] = useState<number>(10);
+    const [open, setOpen] = useState<boolean>(false);
     const [userId, setUserId] = useState<User>({
         id: "",
         firstName: "",
@@ -43,19 +51,22 @@ export default function UserIDPage() {
 
     useEffect(() => {
 
-        const fetchData = () => {
+        const fetchData = async () => {
             setLoading(true);
-            userApi.allUsers(roleId, value, isActive)
-                .then(res => {
-                    setData(res.data.data.data);
-                })
-                .catch(error => {
-                    console.error('Error fetching user data:', error);
-                })
-                .finally(() => {
-                    setLoading(false);
-                })
-        }
+            try {
+                const res = await userApi.allUsers(roleId, searchTerm, isActive, currentPage, pageSize);
+                setData(res.data.data.data);
+                setCurrentPage(res.data.data.currentPage);
+                setTotalPages(res.data.data.totalPages);
+                console.log('Response:', res);
+            } catch (error) {
+                // console.error('Error fetching user data:', error?.response);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
 
         const fetchDataUserId = () => {
             setLoading(true);
@@ -74,12 +85,12 @@ export default function UserIDPage() {
         fetchData()
         fetchDataUserId()
 
-    }, [roleId,value,isActive,params.id])
-
+    }, [roleId, value, isActive, currentPage, pageSize, params.id])
+    console.log('datadata', data)
     return (
-        <div className="py-2 h-full">
-            <div className="bg-white flex justify-between w-full h-full ">
-                <div className="w-[10%]">
+        <Card className="" >
+            <div className="bg-white flex justify-between h-[825px] w-full overflow-auto">
+                <div className="w-[20%]">
                     {
                         loading ? (
                             <div className="flex flex-col p-3 ">
@@ -101,17 +112,24 @@ export default function UserIDPage() {
                                 </div>
                             </div>
                         ) : (
-                            <div className="flex flex-col p-3 ">
+                            <div className="flex flex-col p-3  overflow-auto h-[825px]">
+                                <DataTablePagination
+                                    currentPage={currentPage}
+                                    totalPages={totalPages}
+                                    setCurrentPage={setCurrentPage}
+                                />
                                 {
                                     data.map((dataId: any, index: any) => (
-                                        <Link href={`/dashboard/user/users/${dataId.id}`} key={index}>
-                                            <div key={index} className='my-3 flex flex-col justify-between '>
-                                                <span className={cn('btn', { 'font-medium text-xl text-primary-backgroudPrimary mb-5': dataId.id === params.id })}>CMND/CCCD : {dataId.id}</span>
-                                                <Separator className={cn('h-[2px]', { 'm bg-primary-backgroudPrimary mb-5': dataId.id === params.id })} />
-                                            </div>
+                                        <Link href={`/dashboard/user/${dataId.id}`} key={index}>
+                                            <Card key={index} className={cn('my-3 p-2 flex flex-col items-start ', { 'font-medium text-l border-primary-backgroudPrimary ': dataId.id === params.id })}>
+                                                <span className={cn('btn', { 'font-medium text-l text-primary-backgroudPrimary ': dataId.id === params.id })}>CMND/CCCD : {dataId.id}</span>
+                                                <span className={cn('btn', { 'font-medium text-l text-primary-backgroudPrimary mb-5': dataId.id === params.id })}>NGƯỜI DÙNG : {dataId.firstName} {dataId.lastName}</span>
+                                                <Separator className={cn('h-[2px]', { 'm bg-primary-backgroudPrimary ': dataId.id === params.id })} />
+                                            </Card>
                                         </Link>
                                     ))
                                 }
+
                             </div>
                         )
                     }
@@ -194,34 +212,13 @@ export default function UserIDPage() {
                                                 {userId?.id}
                                             </span>
                                         </div>
-
                                     </div>
                                 </div>
-
-
-                                <div className="space-y-2">
-                                    <h2 className="text-lg font-semibold">Thay đổi mật khẩu</h2>
-                                    <div className="grid grid-cols-1  gap-6">
-                                        <div>
-                                            <Label htmlFor="current-password">Mật khẩu hiện tại</Label>
-                                            <Input disabled id="current-password" placeholder="Enter your current password" type="password" />
-                                        </div>
-                                        <div>
-                                            <Label htmlFor="new-password">Mật khẩu mới</Label>
-                                            <Input disabled id="new-password" placeholder="Enter your new password" type="password" />
-                                        </div>
-                                        <div>
-                                            <Label htmlFor="confirm-password">Xác nhận mật khẩu</Label>
-                                            <Input disabled id="confirm-password" placeholder="Confirm your new password" type="password" />
-                                        </div>
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Card>
     );
 }

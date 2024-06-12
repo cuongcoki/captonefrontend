@@ -1,28 +1,16 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal ,ArrowUpDown} from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { DataTableColumnHeader } from "./data-table-column-header"
-import { Gender , Role } from "./data/data"
+
 import { DataTableRowActions } from "./data-table-row-actions"
-
-
 
 export type Product = {
   productID: string;
   productName: string;
   Code: string;
-  productPrice:number
+  productPrice: number
   isGroup: string;
   size: string;
   description: string;
@@ -55,7 +43,11 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "productID",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Mã sản phẩm" />
+      <Button
+        variant="ghost"
+      >
+        Mã sản phẩm
+      </Button>
     ),
     cell: ({ row }) => <div className="w-[80px]">{row.getValue("productID")}</div>,
     enableSorting: false,
@@ -67,10 +59,8 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Tên sản phẩm
-          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
@@ -82,10 +72,8 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Mã CODE
-          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
@@ -97,7 +85,6 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Giá tiền sản phẩm
         </Button>
@@ -111,7 +98,6 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Mô tả sản phẩm
         </Button>
@@ -126,7 +112,6 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Người tạo đơn
         </Button>
