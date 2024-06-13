@@ -41,33 +41,6 @@ export const attendanceProductSchema = z.object({
 
 export type attendanceProductType = z.infer<typeof attendanceProductSchema>;
 
-export const attendanceDetailProductSchema = z.object({
-  productID: z.string(),
-  productName: z.string(),
-  phaseName: z.string(),
-  quantity: z.string(),
-});
-
-export const attendanceDetailSchema = z.object({
-  employeeName: z.string(),
-  employeeID: z.string(),
-  products: z.array(attendanceDetailProductSchema),
-  isAttendance: z.string(),
-  hourOverTime: z.string().refine(
-    (value) => {
-      const parsedValue = parseFloat(value);
-      return !isNaN(parsedValue) && parsedValue > 0;
-    },
-    {
-      message: "HourOverTime must be a number greater than 0",
-    }
-  ),
-  isSalaryByProduct: z.string(),
-  isManufacture: z.string(),
-});
-
-export type attendanceDetailType = z.infer<typeof attendanceDetailSchema>;
-
 // export const attendanceHomeSchema = z.object({
 //   date: z.string(),
 //   morning: z.array(attendanceDetailSchema),
@@ -115,3 +88,32 @@ export const AddNewAttendanceSlotSchema = z.object({
 export type AddNewAttendanceSlotType = z.infer<
   typeof AddNewAttendanceSlotSchema
 >;
+//------------------------------- FOR UPDATE ATTENDANCE --------------------------------------------
+
+export const AttendanceDetailProductSchema = z.object({
+  productID: z.string(),
+  productName: z.string(),
+  phaseName: z.string(),
+  quantity: z.string(),
+});
+
+export const AttendanceDetailSchema = z.object({
+  image: z.string(),
+  userName: z.string(),
+  userID: z.string(),
+  products: z.array(AttendanceDetailProductSchema),
+  isAttendance: z.string(),
+  hourOverTime: z.string().refine(
+    (value) => {
+      const parsedValue = parseFloat(value);
+      return !isNaN(parsedValue) && parsedValue > 0;
+    },
+    {
+      message: "HourOverTime must be a number greater than 0",
+    }
+  ),
+  isSalaryByProduct: z.string(),
+  isManufacture: z.string(),
+});
+
+export type AttendanceDetailType = z.infer<typeof AttendanceDetailSchema>;

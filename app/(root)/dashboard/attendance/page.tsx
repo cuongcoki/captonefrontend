@@ -2,7 +2,6 @@ import { columnsForAttendance } from "@/components/shared/dashboard/attendance/t
 import { DataTableForAttendance } from "@/components/shared/dashboard/attendance/table/data-table";
 import { Card } from "@/components/ui/card";
 import {
-  attendanceDetailType,
   attendanceHomeType,
   attendanceProductType,
   attendanceType,
