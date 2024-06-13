@@ -23,12 +23,13 @@ import { DialogFooter } from "@/components/ui/dialog";
 import InputAnimation from "@/components/shared/common/input/input";
 import DragAndDropFile from "@/components/shared/common/input/drag&drop-file/drag&drop-file";
 import { number } from "zod";
-import {
-  Combobox,
-  ComboboxDataType,
-} from "@/components/shared/common/combobox/combobox";
+
 import { get } from "http";
 import DatePicker from "@/components/shared/common/datapicker/date-picker";
+import {
+  ComboboxDataType,
+  ComboboxForForm,
+} from "@/components/shared/common/combobox/combobox-for-form";
 
 const FakeDataCombobox: ComboboxDataType[] = [
   {
@@ -91,7 +92,7 @@ export default function AddNewMeterialHistoryForm() {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Combobox
+                <ComboboxForForm
                   title="Vui lòng chọn nguyên liệu"
                   data={comboboxData}
                   name="materialID"

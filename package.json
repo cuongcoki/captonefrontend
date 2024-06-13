@@ -32,6 +32,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "input-otp": "^1.2.4",
+    "js-cookie": "^3.0.5",
     "jsonwebtoken": "8.5.1",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.379.0",
@@ -44,9 +45,11 @@
     "recharts": "^2.12.7",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
     "@types/react": "^18",

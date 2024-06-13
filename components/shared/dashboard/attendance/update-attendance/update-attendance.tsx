@@ -1,27 +1,107 @@
 "use client";
 import React, { use, useEffect, useState } from "react";
-import { AttendanceDetailType } from "@/schema/attendance";
+import {
+  AttendanceDetailProductType,
+  AttendanceDetailType,
+} from "@/schema/attendance";
 import Image from "next/image";
 import "./style-update-attendance.css";
 import { Card } from "@/components/ui/card";
 import { ContextMenuForAttendance } from "@/components/shared/dashboard/attendance/update-attendance/context-menu";
+import { create } from "zustand";
+import { Button } from "@/components/ui/button";
+import Cookies from "js-cookie";
+
+interface UpdateAttendanceStore {
+  tableData: AttendanceDetailType[];
+  setTableData: (data: AttendanceDetailType[]) => void;
+  handleAttendanceChange: (index: number, checked: boolean) => void;
+  updateManufacture: (index: number, value: boolean) => void;
+  updateSalaryByProduct: (index: number, value: boolean) => void;
+  updateQuantityOfProduct: (
+    index: number,
+    productIndex: number,
+    value: string
+  ) => void;
+  addNewProduct: (index: number, product: AttendanceDetailProductType) => void;
+  removeProduct: (index: number, productIndex: number) => void;
+}
+
+export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
+  (set) => ({
+    tableData: [],
+    setTableData: (data) => {
+      set({ tableData: data });
+    },
+    handleAttendanceChange: (index, checked) => {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData[index].isAttendance = checked ? "true" : "false";
+        return { tableData: newData };
+      });
+    },
+    updateManufacture: (index, value) => {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData[index].isManufacture = value ? "true" : "false";
+        if (!value) {
+          newData[index].isSalaryByProduct = "false";
+        }
+        return { tableData: newData };
+      });
+    },
+    updateSalaryByProduct(index, value) {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData[index].isSalaryByProduct = value ? "true" : "false";
+        return { tableData: newData };
+      });
+    },
+    updateQuantityOfProduct(index, productIndex, value) {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData[index].products[productIndex].quantity = value;
+        return { tableData: newData };
+      });
+    },
+    addNewProduct(index, product) {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData[index].products.push(product);
+        return { tableData: newData };
+      });
+    },
+    removeProduct(index, productIndex) {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData[index].products.splice(productIndex, 1);
+        return { tableData: newData };
+      });
+    },
+  })
+);
 
 export default function UpdateAttendance({
   data,
 }: {
   data: AttendanceDetailType[];
 }): JSX.Element {
-  const [tableData, setTableData] = useState<AttendanceDetailType[]>(data);
+  const { tableData, setTableData, handleAttendanceChange } =
+    useUpdateAttendanceStore();
 
   const colorSlaryByProduct = "bg-[#f1eeee]";
 
-  const handleAttendanceChange = (index: number, checked: boolean) => {
-    setTableData((prev) => {
-      const newData = [...prev];
-      newData[index].isAttendance = checked ? "true" : "false";
-      return newData;
-    });
+  const saveDraft = () => {
+    console.log("Save draft");
+    if (typeof window !== "undefined") {
+      localStorage.setItem("DataAttendanceDetail", JSON.stringify(tableData));
+    }
   };
+
+  useEffect(() => {
+    setTableData(data);
+  }, [data, setTableData]);
+
   useEffect(() => {
     console.log("tableData", tableData);
   }, [tableData]);
@@ -87,10 +167,7 @@ export default function UpdateAttendance({
                         <td rowSpan={item.products.length}>{item.userID}</td>
                       </>
                     )}
-                    <ContextMenuForAttendance
-                      setTableData={setTableData}
-                      index={index}
-                    >
+                    <ContextMenuForAttendance index={index}>
                       <td
                         className={
                           item.isSalaryByProduct === "true"
@@ -104,10 +181,7 @@ export default function UpdateAttendance({
                         {product.productName}
                       </td>
                     </ContextMenuForAttendance>
-                    <ContextMenuForAttendance
-                      setTableData={setTableData}
-                      index={index}
-                    >
+                    <ContextMenuForAttendance index={index}>
                       <td
                         className={
                           item.isSalaryByProduct === "true"
@@ -121,10 +195,7 @@ export default function UpdateAttendance({
                         {product.phaseName}
                       </td>
                     </ContextMenuForAttendance>
-                    <ContextMenuForAttendance
-                      setTableData={setTableData}
-                      index={index}
-                    >
+                    <ContextMenuForAttendance index={index}>
                       <td
                         className={
                           item.isSalaryByProduct === "true"
@@ -156,16 +227,21 @@ export default function UpdateAttendance({
                 // Hiển thị hàng trống nếu không có sản phẩm
                 <tr>
                   <td>
-                    <div className="w-[90px] h-[120px] bg-gray-400 mx-auto"></div>
+                    <div className="w-[90px] h-[120px] bg-gray-400 mx-auto">
+                      <Image
+                        width={90}
+                        height={120}
+                        src={item.image}
+                        alt={item.userName}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
                   </td>
                   <td>{item.userName}</td>
                   <td>{item.userID}</td>
                   {item.isManufacture === "true" ? (
                     <>
-                      <ContextMenuForAttendance
-                        setTableData={setTableData}
-                        index={index}
-                      >
+                      <ContextMenuForAttendance index={index}>
                         <td
                           className={
                             item.isSalaryByProduct === "true"
@@ -179,10 +255,7 @@ export default function UpdateAttendance({
                           Click chuột phải
                         </td>
                       </ContextMenuForAttendance>
-                      <ContextMenuForAttendance
-                        setTableData={setTableData}
-                        index={index}
-                      >
+                      <ContextMenuForAttendance index={index}>
                         <td
                           className={
                             item.isSalaryByProduct === "true"
@@ -196,10 +269,7 @@ export default function UpdateAttendance({
                           Để tạo
                         </td>
                       </ContextMenuForAttendance>
-                      <ContextMenuForAttendance
-                        setTableData={setTableData}
-                        index={index}
-                      >
+                      <ContextMenuForAttendance index={index}>
                         <td
                           className={
                             item.isSalaryByProduct === "true"
@@ -215,10 +285,7 @@ export default function UpdateAttendance({
                       </ContextMenuForAttendance>
                     </>
                   ) : (
-                    <ContextMenuForAttendance
-                      setTableData={setTableData}
-                      index={index}
-                    >
+                    <ContextMenuForAttendance index={index}>
                       <td
                         className="bg-[#b1aeae]"
                         colSpan={3}
@@ -245,6 +312,14 @@ export default function UpdateAttendance({
           ))}
         </tbody>
       </table>
+      <div className="flex justify-end items-center gap-5 m-5 mt-10">
+        <Button className="bg-[#00a9ff] hover:bg-[#0087cc]" onClick={saveDraft}>
+          Lưu bản nháp
+        </Button>
+        <Button className="bg-[#00dd00] hover:bg-[#00aa00]">
+          Lưu thay đổi
+        </Button>
+      </div>
     </Card>
   );
 }

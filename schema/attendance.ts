@@ -93,9 +93,15 @@ export type AddNewAttendanceSlotType = z.infer<
 export const AttendanceDetailProductSchema = z.object({
   productID: z.string(),
   productName: z.string(),
+  image: z.string(),
+  phaseID: z.string(),
   phaseName: z.string(),
   quantity: z.string(),
 });
+
+export type AttendanceDetailProductType = z.infer<
+  typeof AttendanceDetailProductSchema
+>;
 
 export const AttendanceDetailSchema = z.object({
   image: z.string(),

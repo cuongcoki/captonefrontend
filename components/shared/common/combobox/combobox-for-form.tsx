@@ -18,20 +18,32 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
+import { UseFormReturn } from "react-hook-form";
+import { set } from "date-fns";
 
-export function Combobox({
+export type ComboboxDataType = {
+  value: string;
+  label: string;
+};
+
+export function ComboboxForForm({
   title,
   data,
-  value,
-  setValue,
+  name,
+  form,
 }: {
   title: string;
   data: ComboboxDataType[];
-  value: string;
-  setValue: (value: string) => void;
+  name: string;
+  form: UseFormReturn<any>;
 }) {
+  const materialID = form.getValues(name);
   const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState(materialID);
+
+  React.useEffect(() => {
+    setValue(materialID);
+  }, [materialID]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -40,32 +52,35 @@ export function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className="w-full justify-between"
         >
-          {value ? data.find((option) => option.value === value)?.label : title}
+          {value
+            ? data.find((component) => component.value === value)?.label
+            : title}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search option..." className="h-9" />
+          <CommandInput placeholder="Search component..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No option found.</CommandEmpty>
+            <CommandEmpty>No component found.</CommandEmpty>
             <CommandGroup>
-              {data.map((option) => (
+              {data.map((component) => (
                 <CommandItem
-                  key={option.value}
-                  value={option.value}
+                  key={component.value}
+                  value={component.value}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
+                    form.setValue(name, currentValue);
                     setOpen(false);
                   }}
                 >
-                  {option.label}
+                  {component.label}
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      value === option.value ? "opacity-100" : "opacity-0"
+                      value === component.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
