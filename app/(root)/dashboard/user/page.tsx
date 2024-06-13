@@ -1,9 +1,14 @@
 import UsersPage from "@/components/shared/dashboard/users/Users";
+import { UserSearchParams } from "@/types/userTypes";
 
-export default function Page() {
+type Props = {
+  searchParams: UserSearchParams;
+};
+
+export default function Page({ searchParams }: Props) {
   return (
     <div className="h-screen">
-        <UsersPage />
+      <UsersPage searchParams={searchParams} />
     </div>
   );
 }
