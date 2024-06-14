@@ -23,3 +23,9 @@ export type UserSearchParams = {
   pageIndex: number;
   pageSize: number;
 };
+
+export type ConfirmChangePassword = {
+  userId: string;
+  verifyCode: string;
+  password: string;
+};

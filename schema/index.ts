@@ -104,3 +104,48 @@ export const UserUpdateSchema = UsersSchema.omit({
 });
 
 export type UserUpdateFormType = z.infer<typeof UserUpdateSchema>;
+
+export const ForgetPasswordSchema = z.object({
+  id: z.string().refine(
+    (id) => {
+      const idPattern = /^\d{12}$/;
+      return idPattern.test(id);
+    },
+    { message: "Id must be exactly 12 digits" }
+  ),
+});
+
+export type ForgetPasswordFormType = z.infer<typeof ForgetPasswordSchema>;
+
+export const ChangePasswordSchema = z
+  .object({
+    id: z.string().refine(
+      (id) => {
+        const idPattern = /^\d{12}$/;
+        return idPattern.test(id);
+      },
+      { message: "Id must be exactly 12 digits" }
+    ),
+    verifyCode: z.string(),
+    password: z
+      .string()
+      .refine(
+        (password) => {
+          return /[A-Z]/.test(password);
+        },
+        { message: "Password must contain at least one uppercase letter" }
+      )
+      .refine(
+        (password) => {
+          return /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        },
+        { message: "Password must contain at least one special character" }
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"],
+  });
+
+export type ChangePasswordFormType = z.infer<typeof ChangePasswordSchema>;
