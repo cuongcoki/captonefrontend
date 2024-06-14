@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
-import { Row } from "@tanstack/react-table"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { Row } from "@tanstack/react-table";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,19 +11,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
-
-import { userskSchema } from "./data/schema"
+import { userskSchema } from "./data/schema";
+import UserBanButton from "@/components/shared/dashboard/users/table/users/user-ban-button";
+import { Employee } from "@/components/shared/dashboard/users/table/users/Column";
+import UserEditButton from "@/components/shared/dashboard/users/table/users/edit-button";
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<TData>
+  row: Row<TData>;
 }
 
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,20 +37,15 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <UserEditButton user={row._valuesCache as Employee} />
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
-        <DropdownMenuItem
-              onClick={() => console.log(row._valuesCache)}
-            >
-              CMND/CCCD
-            </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+        <DropdownMenuItem onClick={() => console.log(row._valuesCache)}>
+          CMND/CCCD
         </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <UserBanButton user={row._valuesCache as Employee} />
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

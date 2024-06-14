@@ -18,13 +18,6 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { UserSearchParams } from "@/types/userTypes";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import TableUserFeature from "@/components/shared/dashboard/users/table/users/user-table-feature";
 
 type Props = {

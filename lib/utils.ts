@@ -26,3 +26,15 @@ export const CheckPermissionEnter = (dataPer: any) => {
     );
   }
 };
+
+export function formatDate(inputDate: string): string {
+  const parts = inputDate.split("-");
+
+  if (parts.length !== 3) {
+    throw new Error("Invalid date format. Expected YYYY-MM-DD.");
+  }
+
+  const [year, month, day] = parts;
+
+  return `${day}/${month}/${year}`;
+}
