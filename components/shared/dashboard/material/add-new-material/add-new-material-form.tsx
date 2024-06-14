@@ -28,7 +28,7 @@ export default function AddNewMeterialForm() {
   const form = useForm<materialType>({
     resolver: zodResolver(materialSchema),
     defaultValues: {
-      materialID: "",
+      id: "",
       name: "",
       unit: "",
       image: "",

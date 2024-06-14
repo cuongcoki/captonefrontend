@@ -41,7 +41,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
   const form = useForm<materialType>({
     resolver: zodResolver(materialSchema),
     defaultValues: {
-      materialID: "",
+      id: "",
       name: "",
       unit: "",
       image: "",
@@ -53,7 +53,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
   useEffect(() => {
     const getMaterialData = () => {
       return Promise.resolve({
-        materialID: id,
+        id: id,
         name: "Vật liệu 1",
         unit: "Cái",
         image: linkImage,
