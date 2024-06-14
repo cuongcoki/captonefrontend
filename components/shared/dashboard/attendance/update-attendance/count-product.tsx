@@ -12,11 +12,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance";
 import Image from "next/image";
 import { Combobox } from "@/components/shared/common/combobox/combobox";
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import { X } from "lucide-react";
+import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
 export default function CountProduct({ index }: { index: number }) {
   const { tableData, updateQuantityOfProduct, addNewProduct, removeProduct } =
     useUpdateAttendanceStore();

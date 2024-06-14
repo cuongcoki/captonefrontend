@@ -885,6 +885,8 @@ import React from "react";
 const fakeAttendanceHomeData = [
   {
     date: "10/06/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",
@@ -911,6 +913,8 @@ const fakeAttendanceHomeData = [
   },
   {
     date: "09/06/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",
@@ -937,6 +941,8 @@ const fakeAttendanceHomeData = [
   },
   {
     date: "08/06/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",
@@ -963,6 +969,8 @@ const fakeAttendanceHomeData = [
   },
   {
     date: "07/06/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",
@@ -989,6 +997,8 @@ const fakeAttendanceHomeData = [
   },
   {
     date: "06/06/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",
@@ -1015,6 +1025,8 @@ const fakeAttendanceHomeData = [
   },
   {
     date: "05/06/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",
@@ -1041,6 +1053,8 @@ const fakeAttendanceHomeData = [
   },
   {
     date: "04/06/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",
@@ -1067,6 +1081,8 @@ const fakeAttendanceHomeData = [
   },
   {
     date: "03/06/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",
@@ -1093,6 +1109,8 @@ const fakeAttendanceHomeData = [
   },
   {
     date: "02/06/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",
@@ -1119,6 +1137,8 @@ const fakeAttendanceHomeData = [
   },
   {
     date: "01/06/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",
@@ -1145,6 +1165,8 @@ const fakeAttendanceHomeData = [
   },
   {
     date: "31/05/2024",
+    wareHouse: "Warehouse A",
+    wareHouseId: "WH001",
     slots: [
       {
         slotID: "1",

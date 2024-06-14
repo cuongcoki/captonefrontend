@@ -1,5 +1,6 @@
 import UpdateAttendance from "@/components/shared/dashboard/attendance/update-attendance/update-attendance";
 import { AttendanceDetailType } from "@/schema/attendance";
+import { GetServerSideProps } from "next";
 import React from "react";
 
 const fakeDate: AttendanceDetailType[] = [
@@ -105,11 +106,19 @@ const getDate = async (): Promise<AttendanceDetailType[]> => {
   return fakeDate;
 };
 
-export default async function page() {
-  const data = await getDate();
+export default async function page({
+  params,
+}: {
+  params: { warehouse: string; date: string; slot: string };
+}) {
   return (
     <>
-      <UpdateAttendance data={data} />
+      <UpdateAttendance
+        data={fakeDate}
+        date={params.date}
+        slot={params.slot}
+        warehouseID={params.warehouse}
+      />
     </>
   );
 }

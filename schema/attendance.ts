@@ -58,6 +58,8 @@ export const slotDetailSchema = z.object({
 
 export const attendanceHomeSchema = z.object({
   date: z.string(),
+  wareHouse: z.string(),
+  wareHouseId: z.string(),
   slots: z.array(slotDetailSchema),
 });
 

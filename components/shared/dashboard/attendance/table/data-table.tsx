@@ -87,11 +87,12 @@ export function DataTableForAttendance<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                  className="hover:bg-white"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell className="hover:bg-gray-100 " key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

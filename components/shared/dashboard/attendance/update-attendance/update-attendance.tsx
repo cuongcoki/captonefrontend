@@ -1,90 +1,23 @@
 "use client";
 import React, { use, useEffect, useState } from "react";
-import {
-  AttendanceDetailProductType,
-  AttendanceDetailType,
-} from "@/schema/attendance";
+import { AttendanceDetailType } from "@/schema/attendance";
 import Image from "next/image";
 import "./style-update-attendance.css";
 import { Card } from "@/components/ui/card";
 import { ContextMenuForAttendance } from "@/components/shared/dashboard/attendance/update-attendance/context-menu";
-import { create } from "zustand";
 import { Button } from "@/components/ui/button";
-import Cookies from "js-cookie";
-
-interface UpdateAttendanceStore {
-  tableData: AttendanceDetailType[];
-  setTableData: (data: AttendanceDetailType[]) => void;
-  handleAttendanceChange: (index: number, checked: boolean) => void;
-  updateManufacture: (index: number, value: boolean) => void;
-  updateSalaryByProduct: (index: number, value: boolean) => void;
-  updateQuantityOfProduct: (
-    index: number,
-    productIndex: number,
-    value: string
-  ) => void;
-  addNewProduct: (index: number, product: AttendanceDetailProductType) => void;
-  removeProduct: (index: number, productIndex: number) => void;
-}
-
-export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
-  (set) => ({
-    tableData: [],
-    setTableData: (data) => {
-      set({ tableData: data });
-    },
-    handleAttendanceChange: (index, checked) => {
-      set((state) => {
-        const newData = [...state.tableData];
-        newData[index].isAttendance = checked ? "true" : "false";
-        return { tableData: newData };
-      });
-    },
-    updateManufacture: (index, value) => {
-      set((state) => {
-        const newData = [...state.tableData];
-        newData[index].isManufacture = value ? "true" : "false";
-        if (!value) {
-          newData[index].isSalaryByProduct = "false";
-        }
-        return { tableData: newData };
-      });
-    },
-    updateSalaryByProduct(index, value) {
-      set((state) => {
-        const newData = [...state.tableData];
-        newData[index].isSalaryByProduct = value ? "true" : "false";
-        return { tableData: newData };
-      });
-    },
-    updateQuantityOfProduct(index, productIndex, value) {
-      set((state) => {
-        const newData = [...state.tableData];
-        newData[index].products[productIndex].quantity = value;
-        return { tableData: newData };
-      });
-    },
-    addNewProduct(index, product) {
-      set((state) => {
-        const newData = [...state.tableData];
-        newData[index].products.push(product);
-        return { tableData: newData };
-      });
-    },
-    removeProduct(index, productIndex) {
-      set((state) => {
-        const newData = [...state.tableData];
-        newData[index].products.splice(productIndex, 1);
-        return { tableData: newData };
-      });
-    },
-  })
-);
+import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
 
 export default function UpdateAttendance({
+  warehouseID,
   data,
+  date,
+  slot,
 }: {
+  warehouseID: string;
   data: AttendanceDetailType[];
+  date: string;
+  slot: string;
 }): JSX.Element {
   const { tableData, setTableData, handleAttendanceChange } =
     useUpdateAttendanceStore();
@@ -99,6 +32,13 @@ export default function UpdateAttendance({
   };
 
   useEffect(() => {
+    // const getData = () => {
+    //   const data: AttendanceDetailType[] = [];
+
+    //   const getData = () => {
+    //     const data = localStorage.getItem("DataAttendanceDetail");
+    //   };
+    // };
     setTableData(data);
   }, [data, setTableData]);
 
@@ -110,9 +50,9 @@ export default function UpdateAttendance({
       <div className="flex justify-center text-[2rem]">FORM ĐIỂM DANH</div>
       <div className="flex items-center m-5">
         <div className="">
-          <div>Ngày: 2/3/2024</div>
-          <div>Cơ sở: 1</div>
-          <div>Slot: Chiều</div>
+          <div>Cơ sở: {warehouseID}</div>
+          <div>Ngày: {date}</div>
+          <div>Slot: {slot}</div>
         </div>
         <div className="space-y-2 ml-auto">
           <div className="flex items-center">
