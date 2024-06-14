@@ -30,7 +30,7 @@ const ImageDisplayID: React.FC<ImageDisplayProps> = ({
                 <CarouselContent className="w-full h-full">
 
                     {images.map((image, index) => (
-                        <CarouselItem className="w-full h-full flex items-center justify-center">
+                        <CarouselItem className="w-full h-full flex items-center justify-center" key={index}>
                             <CardContent className="relative flex aspect-square items-center justify-center p-6 bg-black">
                                 
                                 <Image src={image.imageUrl} alt={`image-${index}`} width={500} height={500} className="h-full w-full object-contain bg-cover bg-center  bg-no-repeat  pointer-events-none" />
