@@ -5,7 +5,7 @@ import { describe } from "node:test";
 import { z } from "zod";
 
 export const materialSchema = z.object({
-  materialID: z.string(),
+  id: z.string(),
   name: z.string().min(1).max(255),
   unit: z.string(),
   image: z.string(),
@@ -77,3 +77,5 @@ export const materialHistoryFilterSchema = z.object({
 export type materialHistoryFilterType = z.infer<
   typeof materialHistoryFilterSchema
 >;
+
+//---------------------------------------------- Material API ----------------------------------------------

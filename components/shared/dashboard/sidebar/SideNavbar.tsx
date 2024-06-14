@@ -30,9 +30,9 @@ export default function SideNavbar({}: Props) {
     setIsClient(true);
   }, []);
   return (
-    <>
+    <div className="relative min-w-[80px] border-r  px-3 ">
       {isClient ? (
-        <div className="relative min-w-[80px] border-r px-3 pb-`0 ">
+        <div>
           {!mobileWidth && (
             <Button
               onClick={toggleSidebar}
@@ -92,6 +92,6 @@ export default function SideNavbar({}: Props) {
           />
         </div>
       ) : null}
-    </>
+    </div>
   );
 }

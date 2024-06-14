@@ -1,22 +1,13 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { MoreHorizontal ,ArrowUpDown} from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { DataTableColumnHeader } from "./data-table-column-header"
-import { Gender , Role } from "./data/data"
+
+import { Gender, Role } from "./data/data"
 import { DataTableRowActions } from "./data-table-row-actions"
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+import Link from "next/link"
+
 export type Roles = {
   id: string
   title: string
@@ -27,7 +18,7 @@ export type Employee = {
   id: string;
   firstName: string;
   lastName: string;
-  dob:string
+  dob: string
   gender: string;
   address: string;
   phone: string;
@@ -63,9 +54,13 @@ export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="CMND/CCCD" />
+      <Button
+        variant="ghost"
+      >
+        CMND/CCCD
+      </Button>
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => <Link href={`/dashboard/user/${row.getValue("id")}`}><div className="w-[80px]">{row.getValue("id")}</div></Link>,
     enableSorting: false,
     enableHiding: false,
   },
@@ -75,10 +70,8 @@ export const columns: ColumnDef<Employee>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Tên nhân viên
-          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
@@ -90,10 +83,8 @@ export const columns: ColumnDef<Employee>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Họ nhân viên
-          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
@@ -105,7 +96,6 @@ export const columns: ColumnDef<Employee>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Ngày/tháng/năm sinh
         </Button>
@@ -116,7 +106,11 @@ export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "gender",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Giới tính" />
+      <Button
+        variant="ghost"
+      >
+        Giới tính
+      </Button>
     ),
     cell: ({ row }) => {
       const gender = Gender.find(
@@ -129,14 +123,12 @@ export const columns: ColumnDef<Employee>[] = [
 
       return (
         <div className="flex w-[100px] items-center">
-        
+
           <span>{gender.label}</span>
         </div>
       )
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
+
   },
 
   {
@@ -145,7 +137,6 @@ export const columns: ColumnDef<Employee>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Địa chỉ, nơi chốn
         </Button>
@@ -159,7 +150,6 @@ export const columns: ColumnDef<Employee>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Số điện thoại
         </Button>
@@ -170,7 +160,11 @@ export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "roleId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Vai trò" />
+      <Button
+        variant="ghost"
+      >
+        Vai trò
+      </Button>
     ),
     cell: ({ row }) => {
       const role = Role.find(
@@ -183,7 +177,7 @@ export const columns: ColumnDef<Employee>[] = [
 
       return (
         <div className="flex w-[100px] items-center">
-        
+
           <span>{role.label}</span>
         </div>
       )
@@ -201,7 +195,6 @@ export const columns: ColumnDef<Employee>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Lường ngày
         </Button>
@@ -215,7 +208,6 @@ export const columns: ColumnDef<Employee>[] = [
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Hoạt động
         </Button>
