@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
 import Header from "@/components/shared/dashboard/Header";
 import SideNavbar from "@/components/shared/dashboard/sidebar/SideNavbar";
 
-import React, { Suspense, useEffect } from 'react'
-import Loading from "./loading";
+import React from 'react'
+
 export default function Layout({ children }: { children: React.ReactNode }) {
 
     return (
@@ -23,5 +23,3 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
     );
 }
-
-
