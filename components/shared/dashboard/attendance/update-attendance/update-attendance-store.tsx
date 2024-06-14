@@ -10,6 +10,7 @@ interface UpdateAttendanceStore {
   handleAttendanceChange: (index: number, checked: boolean) => void;
   updateManufacture: (index: number, value: boolean) => void;
   updateSalaryByProduct: (index: number, value: boolean) => void;
+  updateOverTime: (index: number, value: string) => void;
   updateQuantityOfProduct: (
     index: number,
     productIndex: number,
@@ -67,6 +68,13 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
       set((state) => {
         const newData = [...state.tableData];
         newData[index].products.splice(productIndex, 1);
+        return { tableData: newData };
+      });
+    },
+    updateOverTime(index, value) {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData[index].hourOverTime = value;
         return { tableData: newData };
       });
     },

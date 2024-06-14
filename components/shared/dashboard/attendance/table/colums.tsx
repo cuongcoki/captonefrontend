@@ -43,7 +43,7 @@ export const columnsForAttendance: ColumnDef<attendanceHomeType>[] = [
   },
   {
     id: "overtime",
-    header: "Tăng ca",
+    header: "Tối",
     cell: ({ row }) => {
       const data = row.original.slots.find((p) => p.slotID === "3");
       return (
@@ -94,16 +94,11 @@ const RedirectCell = ({
           <div>
             Sĩ số: {data.present}/{data.totalUser}
           </div>
-          {Number.parseInt(data.overTime) === 0 && (
-            <div>
-              Vắng: {parseInt(data.totalUser, 10) - parseInt(data.present, 10)}
-            </div>
-          )}
-
+          <div>
+            Vắng: {parseInt(data.totalUser, 10) - parseInt(data.present, 10)}
+          </div>
           <div>Tổng sản phẩm: {data.totalProduct}</div>
-          {Number.parseInt(data.overTime) > 0 && (
-            <div>Tổng thời gian: {data.overTime}</div>
-          )}
+          <div>Tổng thời gian: {data.overTime}</div>
         </div>
       ) : (
         <div>Không có dữ liệu</div>

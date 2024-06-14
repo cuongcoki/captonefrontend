@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { ContextMenuForAttendance } from "@/components/shared/dashboard/attendance/update-attendance/context-menu";
 import { Button } from "@/components/ui/button";
 import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
+import { Input } from "@/components/ui/input";
 
 export default function UpdateAttendance({
   warehouseID,
@@ -19,7 +20,7 @@ export default function UpdateAttendance({
   date: string;
   slot: string;
 }): JSX.Element {
-  const { tableData, setTableData, handleAttendanceChange } =
+  const { tableData, setTableData, handleAttendanceChange, updateOverTime } =
     useUpdateAttendanceStore();
 
   const colorSlaryByProduct = "bg-[#f1eeee]";
@@ -32,13 +33,6 @@ export default function UpdateAttendance({
   };
 
   useEffect(() => {
-    // const getData = () => {
-    //   const data: AttendanceDetailType[] = [];
-
-    //   const getData = () => {
-    //     const data = localStorage.getItem("DataAttendanceDetail");
-    //   };
-    // };
     setTableData(data);
   }, [data, setTableData]);
 
@@ -76,6 +70,7 @@ export default function UpdateAttendance({
             <th rowSpan={2}>Tên</th>
             <th rowSpan={2}>CCCD</th>
             <th colSpan={3}>Sản phẩm</th>
+            <th rowSpan={2}>Tăng ca</th>
             <th rowSpan={2}>Điểm danh</th>
           </tr>
           <tr>
@@ -150,16 +145,34 @@ export default function UpdateAttendance({
                       </td>
                     </ContextMenuForAttendance>
                     {productIndex === 0 && (
-                      <td rowSpan={item.products.length}>
-                        <input
-                          className="size-[30px]"
-                          type="checkbox"
-                          checked={item.isAttendance === "true"}
-                          onChange={(event) =>
-                            handleAttendanceChange(index, event.target.checked)
-                          }
-                        />
-                      </td>
+                      <>
+                        <td rowSpan={item.products.length}>
+                          <div className="flex items-center">
+                            <Input
+                              className="w-[70px] mx-auto"
+                              type="number"
+                              value={item.hourOverTime}
+                              onChange={(event) => {
+                                updateOverTime(index, event.target.value);
+                              }}
+                            />
+                            <div>giờ</div>
+                          </div>
+                        </td>
+                        <td rowSpan={item.products.length}>
+                          <input
+                            className="size-[30px]"
+                            type="checkbox"
+                            checked={item.isAttendance === "true"}
+                            onChange={(event) =>
+                              handleAttendanceChange(
+                                index,
+                                event.target.checked
+                              )
+                            }
+                          />
+                        </td>
+                      </>
                     )}
                   </tr>
                 ))
@@ -235,7 +248,19 @@ export default function UpdateAttendance({
                       ></td>
                     </ContextMenuForAttendance>
                   )}
-
+                  <td>
+                    <div className="flex items-center">
+                      <Input
+                        className="w-[70px] mx-auto"
+                        type="number"
+                        value={item.hourOverTime}
+                        onChange={(event) => {
+                          updateOverTime(index, event.target.value);
+                        }}
+                      />
+                      <div>giờ</div>
+                    </div>
+                  </td>
                   <td>
                     <input
                       className="size-[30px]"
