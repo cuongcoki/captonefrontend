@@ -59,7 +59,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                                         href={link.href}
                                         className={cn(
                                             buttonVariants({  
-                                                variant: link.href === pathname || pathname.includes(`${link.href}/roles`) || pathname.includes(`${link.href}/users`) ? 'colorCompany' : 'ghost',                                       
+                                                variant: link.href === pathname ? 'colorCompany' : 'ghost',                                       
                                                 size: "icon" }),
                                             "h-9 w-9",
                                             link.variant === "colorCompany" &&

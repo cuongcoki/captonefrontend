@@ -1,27 +1,12 @@
 
-
-
-export const Gender = [
+export const IsInProcessing = [
   {
-    value: "Male",
-    label: "Nam",
+    value: true,
+    label: 'Đang xử lý',
   },
   {
-    value: "Female",
-    label: "Nữ",
-  },
-
-]
-
-
-export const Role = [
-  {
-    value: 1,
-    label: 'admin',
-  },
-  {
-    value: 2,
-    label: "staff",
+    value: false,
+    label: "Ko xử lý",
   },
 
 ]

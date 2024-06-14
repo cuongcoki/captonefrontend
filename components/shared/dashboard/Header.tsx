@@ -30,7 +30,8 @@ export default function Header() {
                     <History size={25} />
                 </Button> */}
                 {/* Search */}
-                <CommandDemo />
+                {/* <CommandDemo /> */}
+                <h1 className="text-xl font-medium">Xin chào {user?.user?.firstName}  {user?.user?.lastName} </h1>
             </div>
             <div className="flex h-5 items-center space-x-4 text-sm">
                 <div><TooltipProvider>
@@ -47,12 +48,13 @@ export default function Header() {
                 </TooltipProvider></div>
                 <Separator orientation="vertical" className="bg-gray-300" />
 
-                <div className="flex items-center space-x-4 text-sm">
+                {/* <div className="flex items-center space-x-4 text-sm">
                     <UsersRound size={25} />
                     <Bell size={25} />
                     <Settings size={25} />
                 </div>
-                <Separator orientation="vertical" className="bg-gray-300" />
+
+                <Separator orientation="vertical" className="bg-gray-300" /> */}
 
                 <div>
                     <DropdownMenu>
@@ -63,12 +65,10 @@ export default function Header() {
                             </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" >
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                            <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Profile</DropdownMenuItem>
-                            <DropdownMenuItem>Billing</DropdownMenuItem>
-                            <DropdownMenuItem>Team</DropdownMenuItem>
-                            <DropdownMenuItem>Subscription</DropdownMenuItem>
+                            <DropdownMenuItem>Trang cá nhân</DropdownMenuItem>
+                            <DropdownMenuItem>Đăng xuất</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
