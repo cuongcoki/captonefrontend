@@ -1,10 +1,5 @@
 "use client";
-
-import exp from "constants";
-import { X } from "lucide-react";
-import { describe } from "node:test";
-import { list } from "postcss";
-import { date, z } from "zod";
+import { z } from "zod";
 
 export const attendanceSchema = z.object({
   date: z.string(),
