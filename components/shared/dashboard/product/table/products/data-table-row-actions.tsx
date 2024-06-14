@@ -1,4 +1,3 @@
-"use client"
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { Row } from "@tanstack/react-table"
@@ -8,18 +7,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
 
-import { userskSchema } from "./data/schema"
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -28,7 +21,6 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  // const user = userskSchema.parse(row.original)
 
   return (
     <DropdownMenu>
@@ -42,19 +34,20 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
+
         <DropdownMenuItem
-              onClick={() => console.log(row._valuesCache)}
-            >
-              CMND/CCCD
-            </DropdownMenuItem>
+          onClick={() => console.log(row._valuesCache.code)}
+        >
+          Lấy mã CODE
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
+        <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
+        <DropdownMenuItem>Chi Tiết</DropdownMenuItem>
         <DropdownMenuItem>
-          Delete
+          Xóa
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
+       
       </DropdownMenuContent>
     </DropdownMenu>
   )

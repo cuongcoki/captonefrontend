@@ -16,7 +16,7 @@ export const RegisterSchema = z.object({
 })
 
 export const SignInSchema = z.object({
-    id: z.string().min(1,{
+    id: z.string().min(1, {
         message: "hãy nhập số CCCD/CMND"
     }),
     password: z.string().min(6, {
@@ -26,7 +26,7 @@ export const SignInSchema = z.object({
 
 
 export const RoleSchema = z.object({
-    title: z.string().min(1,{
+    title: z.string().min(1, {
         message: "hãy nhập vai trò"
     }),
     description: z.string().min(6, {
@@ -35,20 +35,22 @@ export const RoleSchema = z.object({
 })
 
 export const ProductSchema = z.object({
-    productID: z.string().min(1, { message: "Product ID is required." }),
-    productName: z.string().min(1, { message: "Product Name is required." }),
-    Code: z.string().min(1, { message: "Code is required." }),
-    productPrice: z.string(),
-    isGroup: z.string(),
+    code: z.string().regex(/^[A-Za-z]{2}\d+$/, { message: "Product's code must start with two characters followed by numbers" }),
+    price: z.string().min(1, { message: "Price must be a non-negative number." }),
     size: z.string().min(1, { message: "Size is required." }),
     description: z.string().min(1, { message: "Description is required." }),
-    createdBy: z.string().min(1, { message: "Created By is required." })
-})
+    name: z.string().min(1, { message: "Product Name is required." }),
+    // imageRequests: z.array(z.object({
+    //     imageUrl: z.string().url({ message: "Image URL is required." }),
+    //     isBluePrint: z.boolean(),
+    //     isMainImage: z.boolean()
+    // }))
+});
 
 
 export const UsersSchema = z.object({
-    firstName: z.string().min(1,{ message: "First name is required." }),
-    lastName: z.string().min(1,{ message: "Last name is required." }),
+    firstName: z.string().min(1, { message: "First name is required." }),
+    lastName: z.string().min(1, { message: "Last name is required." }),
     dob: z.string().refine((dob) => {
         const dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
         return dobPattern.test(dob);
@@ -57,7 +59,7 @@ export const UsersSchema = z.object({
     gender: z.string().refine((gender) => {
         return gender === 'Male' || gender === 'Female';
     }, { message: "Gender must be either 'Male' or 'Female'" }),
-    address: z.string().min(1,{ message: "Address is required." }),
+    address: z.string().min(1, { message: "Address is required." }),
     phone: z.string().refine((phone) => {
         const phonePattern = /^\d{10}$/;
         return phonePattern.test(phone);
@@ -67,9 +69,9 @@ export const UsersSchema = z.object({
     }, { message: "Password must contain at least one uppercase letter" }).refine((password) => {
         return /[!@#$%^&*(),.?":{}|<>]/.test(password);
     }, { message: "Password must contain at least one special character" }),
-    roleId: z.number().min(1,{ message: "roleId is required." }),
+    roleId: z.number().min(1, { message: "roleId is required." }),
     isActive: z.boolean(),
-    facility: z.string().min(1,{ message: "Facility is required." }),
+    facility: z.string().min(1, { message: "Facility is required." }),
     id: z.string().refine((id) => {
         const idPattern = /^\d{12}$/;
         return idPattern.test(id);
