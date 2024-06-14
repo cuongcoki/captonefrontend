@@ -5,16 +5,21 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 
 import { DataTableRowActions } from "./data-table-row-actions"
-
+import Image from "next/image"
+import { IsInProcessing} from "./data/data"
 export type Product = {
-  productID: string;
-  productName: string;
-  Code: string;
-  productPrice: number
-  isGroup: string;
+  id: string;
+  name: string;
+  code: string;
+  price: number
   size: string;
   description: string;
-  createdBy: string;
+  isInProcessing: boolean;
+  imageResponses: Array<{
+    imageUrl: string,
+    isBluePrint: boolean,
+    isMainImage: boolean,
+  }>;
 }
 
 export const columns: ColumnDef<Product>[] = [
@@ -40,26 +45,70 @@ export const columns: ColumnDef<Product>[] = [
     enableSorting: false,
     enableHiding: false,
   },
+
   {
-    accessorKey: "productID",
+    accessorKey: "imageResponses",
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-      >
+      <Button variant="ghost">Hình ảnh</Button>
+    ),
+    cell: ({ row }) => {
+      const firstImage = row.original.imageResponses[0];
+      console.log('firstImagefirstImagefirstImagefirstImage', firstImage)
+      return firstImage ? (
+        <div className="w-[100px] h-[100px] rounded-lg bg-primary-backgroudPrimary">
+          <Image
+            src={`/${firstImage.imageUrl}`}
+            width={100}
+            height={100}
+            alt="Product Image"
+            className="w-[100px] h-[100px] rounded-lg object-contain"
+          />
+        </div>
+      ) : (
+        'no image'
+      );
+    },
+  },
+
+  {
+    accessorKey: "id",
+    header: ({ column }) => (
+      <Button variant="ghost">
         Mã sản phẩm
       </Button>
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("productID")}</div>,
-    enableSorting: false,
-    enableHiding: false,
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
   },
+
   {
-    accessorKey: "productName",
+    accessorKey: "isInProcessing", 
+    header: ({ column }) => (
+      <Button variant="ghost">
+        Đang xử lý
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const isInProcessing = IsInProcessing.find(
+        (item) => item.value === row.getValue("isInProcessing") 
+      );
+
+      if (!isInProcessing) {
+        return null;
+      }
+      
+      return (
+        <div className="flex w-[100px] items-center">
+          <span className={`${isInProcessing.value === true ?  'bg-slate-100' : ''} border px-2 py-1 rounded-full`}>{isInProcessing.label}</span>
+        </div>
+      );
+    },
+  },
+
+  {
+    accessorKey: "name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-        >
+        <Button variant="ghost" >
           Tên sản phẩm
         </Button>
       )
@@ -67,12 +116,11 @@ export const columns: ColumnDef<Product>[] = [
   },
 
   {
-    accessorKey: "Code",
+    accessorKey: "code",
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
-        >
+          variant="ghost">
           Mã CODE
         </Button>
       )
@@ -80,13 +128,22 @@ export const columns: ColumnDef<Product>[] = [
   },
 
   {
-    accessorKey: "productPrice",
+    accessorKey: "price",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-        >
-          Giá tiền sản phẩm
+        <Button variant="ghost">
+          Giá tiền 
+        </Button>
+      )
+    },
+  },
+
+  {
+    accessorKey: "size",
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost">
+          Kích thước
         </Button>
       )
     },
@@ -96,9 +153,7 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "description",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-        >
+        <Button variant="ghost">
           Mô tả sản phẩm
         </Button>
       )
@@ -106,18 +161,7 @@ export const columns: ColumnDef<Product>[] = [
   },
 
 
-  {
-    accessorKey: "createdBy",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Người tạo đơn
-        </Button>
-      )
-    },
-  },
+
 
 
   {

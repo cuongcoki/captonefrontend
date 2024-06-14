@@ -2,6 +2,8 @@ import ProductPage from "@/components/shared/dashboard/product/Product";
 
 export default function Page() {
     return (
-        <ProductPage />
+        <div className="h-screen">
+            <ProductPage />
+        </div>
     );
 }
