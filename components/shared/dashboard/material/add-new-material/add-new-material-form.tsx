@@ -1,6 +1,6 @@
-import { materialSchema, materialType } from "@/schema/material";
+import { AddMaterialSchema, AddMaterialType } from "@/schema/material";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,23 +12,22 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { DialogFooter } from "@/components/ui/dialog";
 import InputAnimation from "@/components/shared/common/input/input";
 import DragAndDropFile from "@/components/shared/common/input/drag&drop-file/drag&drop-file";
-import { number } from "zod";
+import { materialApi } from "@/apis/material.api";
+import { MyContext } from "@/components/shared/dashboard/material/table/data-table";
 
 export default function AddNewMeterialForm() {
   const [materialImage, setMaterialImage] = useState<any>("");
-
+  const { forceUpdate } = useContext(MyContext);
   const ChangeImage = (file: any) => {
     setMaterialImage(file);
   };
 
-  const form = useForm<materialType>({
-    resolver: zodResolver(materialSchema),
+  const form = useForm<AddMaterialType>({
+    resolver: zodResolver(AddMaterialSchema),
     defaultValues: {
-      id: "",
       name: "",
       unit: "",
       image: "",
@@ -37,9 +36,19 @@ export default function AddNewMeterialForm() {
     },
   });
 
-  const onSubmit = (data: materialType) => {
-    data.image = materialImage;
-    console.log(data);
+  const onSubmit = (data: AddMaterialType) => {
+    data.image = materialImage.base64;
+    console.log("DATA", data);
+    try {
+      materialApi.addMaterial(data).then(({ data }) => {
+        if (data.isSuccess) {
+          alert("Thêm thành công");
+          forceUpdate();
+        }
+      });
+    } catch (error) {
+      console.log("ERROR IN ADD MATERIAL", error);
+    }
   };
 
   return (

@@ -8,7 +8,7 @@ export const materialSchema = z.object({
   id: z.string(),
   name: z.string().min(1).max(255),
   unit: z.string(),
-  image: z.string(),
+  image: z.string().nullable(),
   description: z.string(),
   quantityPerUnit: z.string().refine(
     (value) => {
@@ -22,6 +22,24 @@ export const materialSchema = z.object({
 });
 
 export type materialType = z.infer<typeof materialSchema>;
+
+export const AddMaterialSchema = z.object({
+  name: z.string().min(1).max(255),
+  description: z.string(),
+  unit: z.string(),
+  quantityPerUnit: z.string().refine(
+    (value) => {
+      const parsedValue = parseFloat(value);
+      return !isNaN(parsedValue) && parsedValue > 0;
+    },
+    {
+      message: "Quantity must be a number greater than 0",
+    }
+  ),
+  image: z.string().nullable(),
+});
+
+export type AddMaterialType = z.infer<typeof materialSchema>;
 
 export const materialHistorySchema = z.object({
   materialHistoryID: z.string(),
