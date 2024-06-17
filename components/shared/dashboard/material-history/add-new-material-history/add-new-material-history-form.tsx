@@ -57,7 +57,7 @@ export default function AddNewMeterialHistoryForm() {
   });
 
   const onSubmit = (data: materialHistoryFormType) => {
-    console.log(data);
+    console.log("SUBMIT DATA", data);
     materiaHistoryApi
       .addMaterialHistory({
         materialId: data.materialID,
@@ -103,7 +103,16 @@ export default function AddNewMeterialHistoryForm() {
               {/* <FormLabel>Đơn vị</FormLabel> */}
               <FormControl>
                 {/* <Input placeholder="Nhập đơn vị ở đây" {...field} /> */}
-                <InputAnimation nameFor="Số lượng" {...field} />
+                <InputAnimation
+                  nameFor="Số lượng"
+                  {...field}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = event.target.value;
+                    const numericInput = inputValue.replace(/\D/g, "");
+
+                    field.onChange(numericInput);
+                  }}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />

@@ -180,9 +180,22 @@ export function DataTableForMaterialHistory<TData, TValue>({
                   alert("Ngày bắt đầu không được lớn hơn ngày kết thúc");
                   return;
                 }
+                if (format(event, "dd/MM/yyyy") === searchParams.from) {
+                  setSearchParams((prev) => {
+                    return {
+                      ...prev,
+                      from: "",
+                    };
+                  });
+                  return;
+                }
 
                 setSearchParams((prev) => {
-                  return { ...prev, from: format(event, "dd/MM/yyyy") };
+                  return {
+                    ...prev,
+                    from: format(event, "dd/MM/yyyy"),
+                    pageIndex: 1,
+                  };
                 });
                 console.log(format(event, "dd/MM/yyyy"));
               }}
@@ -197,8 +210,21 @@ export function DataTableForMaterialHistory<TData, TValue>({
                   alert("Ngày bắt đầu không được lớn hơn ngày kết thúc");
                   return;
                 }
+                if (format(event, "dd/MM/yyyy") === searchParams.to) {
+                  setSearchParams((prev) => {
+                    return {
+                      ...prev,
+                      to: "",
+                    };
+                  });
+                  return;
+                }
                 setSearchParams((prev) => {
-                  return { ...prev, to: format(event, "dd/MM/yyyy") };
+                  return {
+                    ...prev,
+                    to: format(event, "dd/MM/yyyy"),
+                    pageIndex: 1,
+                  };
                 });
                 console.log(format(event, "dd/MM/yyyy"));
               }}
