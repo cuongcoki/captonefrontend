@@ -15,7 +15,7 @@ export default function AddNewAttendanceSLot() {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="bg-[#004b24] ml-auto flex items-center ">
+          <Button className="bg-[#004b24] ml-auto text-wrap">
             <Plus /> Tạo báo cáo mới
           </Button>
         </DialogTrigger>

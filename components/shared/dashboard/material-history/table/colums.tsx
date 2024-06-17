@@ -11,8 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { materialHistoryType } from "@/schema/material";
+import { materialHistoryType } from "@/types/material-history.type";
 import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 
@@ -37,10 +38,13 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
             className="w-10 h-10 mr-2"
             width={10}
             height={10}
-            src={row.original.material.image}
-            alt={row.original.material.name}
+            src={
+              // row.original.image ||
+              "https://images2.thanhnien.vn/528068263637045248/2024/1/25/e093e9cfc9027d6a142358d24d2ee350-65a11ac2af785880-17061562929701875684912.jpg"
+            }
+            alt={row.original.image}
           />
-          <span>{row.original.material.name}</span>
+          <span>{row.original.materialName}</span>
         </div>
       );
     },
@@ -68,7 +72,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
     },
   },
   {
-    accessorKey: "importAt",
+    accessorKey: "importDate",
     header: ({ column }) => {
       return (
         <Button
@@ -81,6 +85,9 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      return format(row.original.importDate, "dd/MM/yyyy");
+    },
   },
   {
     id: "totalMoney",
@@ -89,9 +96,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
       const payment = row.original;
 
       return (
-        (
-          Number.parseInt(payment.quantity) * Number.parseInt(payment.price)
-        ).toLocaleString("en-US") + " VND"
+        (payment.price * payment.quantity).toLocaleString("en-US") + " VND"
       );
     },
   },
@@ -115,7 +120,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
               <DropdownMenuItem
                 onClick={(event) => {
                   // event.preventDefault();
-                  const edit = document.getElementById("edit");
+                  const edit = document.getElementById(payment.id);
                   if (edit) {
                     edit.click();
                   }
@@ -127,8 +132,8 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
               <DropdownMenuItem>Xóa nguyên liệu</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <UpdateMaterialHistory id={payment.materialID}>
-            <div id="edit" className="hidden">
+          <UpdateMaterialHistory id={payment.id}>
+            <div id={payment.id} className="hidden">
               Chỉnh sửa
             </div>
           </UpdateMaterialHistory>

@@ -39,10 +39,10 @@ export function ComboboxForForm({
 }) {
   const materialID = form.getValues(name);
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState(materialID);
+  const [value, setValue] = React.useState(String(materialID));
 
   React.useEffect(() => {
-    setValue(materialID);
+    setValue(String(materialID));
   }, [materialID]);
 
   return (
@@ -55,7 +55,7 @@ export function ComboboxForForm({
           className="w-full justify-between"
         >
           {value
-            ? data.find((component) => component.value === value)?.label
+            ? data.find((component) => component.value == value)?.label
             : title}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -72,7 +72,7 @@ export function ComboboxForForm({
                   value={component.value}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
-                    form.setValue(name, currentValue);
+                    form.setValue(name, String(currentValue));
                     setOpen(false);
                   }}
                 >
