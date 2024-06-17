@@ -191,7 +191,11 @@ export function DataTableForMaterialHistory<TData, TValue>({
                 }
 
                 setSearchParams((prev) => {
-                  return { ...prev, from: format(event, "dd/MM/yyyy") };
+                  return {
+                    ...prev,
+                    from: format(event, "dd/MM/yyyy"),
+                    pageIndex: 1,
+                  };
                 });
                 console.log(format(event, "dd/MM/yyyy"));
               }}
@@ -216,7 +220,11 @@ export function DataTableForMaterialHistory<TData, TValue>({
                   return;
                 }
                 setSearchParams((prev) => {
-                  return { ...prev, to: format(event, "dd/MM/yyyy") };
+                  return {
+                    ...prev,
+                    to: format(event, "dd/MM/yyyy"),
+                    pageIndex: 1,
+                  };
                 });
                 console.log(format(event, "dd/MM/yyyy"));
               }}
