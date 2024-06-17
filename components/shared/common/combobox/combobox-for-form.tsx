@@ -45,6 +45,9 @@ export function ComboboxForForm({
     setValue(String(materialID));
   }, [materialID]);
 
+  React.useEffect(() => {
+    console.log("Value in combobox: ", value);
+  }, [value]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -69,10 +72,10 @@ export function ComboboxForForm({
               {data.map((component) => (
                 <CommandItem
                   key={component.value}
-                  value={component.value}
+                  value={component.label}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    form.setValue(name, String(currentValue));
+                    // setValue(currentValue === value ? "" : currentValue);
+                    form.setValue(name, String(component.value));
                     setOpen(false);
                   }}
                 >
