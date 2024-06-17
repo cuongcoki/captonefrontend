@@ -23,7 +23,7 @@ export default function UpdateMaterial({
     <>
       <Dialog>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className=" max-w-[825px]">
+        <DialogContent className=" max-w-[340px] md:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>Cập nhật nguyên liệu</DialogTitle>
           </DialogHeader>

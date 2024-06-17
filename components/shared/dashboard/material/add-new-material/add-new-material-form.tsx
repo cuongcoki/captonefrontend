@@ -54,14 +54,13 @@ export default function AddNewMeterialForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        <div className="flex space-x-5 justify-center items-end">
-          <div className="space-y-7 w-[400px]">
+        <div className="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1 md:space-x-5">
+          <div className="space-y-7">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Tên vật liệu</FormLabel> */}
                   <FormControl>
                     <InputAnimation nameFor="Tên vật liệu" {...field} />
                   </FormControl>
@@ -75,9 +74,7 @@ export default function AddNewMeterialForm() {
               name="unit"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Đơn vị</FormLabel> */}
                   <FormControl>
-                    {/* <Input placeholder="Nhập đơn vị ở đây" {...field} /> */}
                     <InputAnimation nameFor="Đơn vị" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
@@ -114,9 +111,7 @@ export default function AddNewMeterialForm() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Miêu tả</FormLabel> */}
                   <FormControl>
-                    {/* <Input placeholder="Nhập miêu tả ở đây" {...field} /> */}
                     <InputAnimation nameFor="Miêu tả" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
@@ -132,11 +127,6 @@ export default function AddNewMeterialForm() {
               <FormItem>
                 <FormLabel>Hình ảnh</FormLabel>
                 <FormControl>
-                  {/* <MaterialFormContext.Provider
-                    value={{ ChangeImage: ChangeImage }}
-                  >
-                    <DragAndDropFile />
-                  </MaterialFormContext.Provider> */}
                   <DragAndDropFile ChangeImage={ChangeImage} />
                 </FormControl>
                 <FormDescription></FormDescription>

@@ -19,10 +19,10 @@ import Image from "next/image";
 // You can use a Zod schema here if you want.
 
 export const columnsForMaterial: ColumnDef<materialType>[] = [
-  {
-    accessorKey: "id",
-    header: "ID",
-  },
+  // {
+  //   accessorKey: "id",
+  //   header: "ID",
+  // },
   {
     accessorKey: "name",
     header: ({ column }) => {

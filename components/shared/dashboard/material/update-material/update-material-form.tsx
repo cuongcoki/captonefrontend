@@ -90,8 +90,8 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="">
-        <div className="flex space-x-5 justify-center items-end">
-          <div className="space-y-7 w-[400px]">
+        <div className="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1 md:space-x-5">
+          <div className="space-y-7">
             <FormField
               control={form.control}
               name="name"

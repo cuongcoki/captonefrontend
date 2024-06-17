@@ -10,6 +10,10 @@ type Props = {
 };
 
 export default async function page({ searchParams }: Props) {
+  searchParams.pageIndex = searchParams.pageIndex || 1;
+  searchParams.searchTerm = searchParams.searchTerm || "";
+  searchParams.from = searchParams.from || "";
+  searchParams.to = searchParams.to || "";
   return (
     <>
       <Card className="p-2">

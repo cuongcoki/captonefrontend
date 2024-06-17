@@ -26,8 +26,7 @@ import { Input } from "@/components/ui/input";
 import AddNewMeterial from "@/components/shared/dashboard/material/add-new-material/add-new-material";
 import { materialApi } from "@/apis/material.api";
 import { usePathname, useRouter } from "next/navigation";
-import { useMaterialStore } from "@/components/shared/dashboard/material/material-store";
-import { error } from "console";
+import "./material.css";
 
 type ContexType = {
   forceUpdate: () => void;
@@ -108,11 +107,14 @@ export function DataTableForMaterial<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex flex-col sm:flex-row justify-center items-center py-4">
         <Input
           placeholder="Filter name..."
           value={searchTerm}
-          onChange={(event) => setSearchTerm(event.target.value)}
+          onChange={(event) => {
+            setPageIndex(1);
+            setSearchTerm(event.target.value);
+          }}
           className="max-w-sm shadow-sm"
         />
         <MyContext.Provider value={{ forceUpdate }}>
@@ -121,13 +123,13 @@ export function DataTableForMaterial<TData, TValue>({
       </div>
       <div className="rounded-md border">
         <MyContext.Provider value={{ forceUpdate }}>
-          <Table>
+          <Table className="material-table">
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead key={header.id}>
+                      <TableHead key={header.id} className={`${header.id}`}>
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -142,21 +144,24 @@ export function DataTableForMaterial<TData, TValue>({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
+                table.getRowModel().rows.map((row) => {
+                  // console.log("row", row);
+                  return (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className={row.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell
@@ -183,7 +188,7 @@ export function DataTableForMaterial<TData, TValue>({
             variant="outline"
             size="sm"
             onClick={() => setPageIndex((prev) => Number(prev) + 1)}
-            // disabled={pageIndex < totalPages}
+            disabled={pageIndex >= totalPages}
           >
             Next
           </Button>

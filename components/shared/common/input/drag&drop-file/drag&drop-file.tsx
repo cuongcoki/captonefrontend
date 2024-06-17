@@ -88,7 +88,7 @@ export default function DragAndDropFile({
 
   return (
     <div>
-      <div className="drag-area relative">
+      <div className="drag-area relative w-full">
         <div className="icon">
           <i className="fas fa-cloud-upload-alt"></i>
         </div>

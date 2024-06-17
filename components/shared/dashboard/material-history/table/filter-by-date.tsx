@@ -12,6 +12,7 @@ import {
   materialHistoryFilterType,
 } from "@/schema/material";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
 import React from "react";
 import { useForm } from "react-hook-form";
 
@@ -35,8 +36,8 @@ export default function FillterByDate() {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
-          <div className="grid grid-cols-3 gap-x-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7 my-5">
+          <div className="grid grid-cols-2 gap-x-6">
             <FormField
               control={form.control}
               name="from"
@@ -47,7 +48,10 @@ export default function FillterByDate() {
                       name="from"
                       form={form}
                       title="Từ ngày"
-                      className="w-[200px]"
+                      className="w-full"
+                      onDayClick={(event: any) => {
+                        console.log(format(event, "dd/MM/yyyy"));
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -64,7 +68,7 @@ export default function FillterByDate() {
                       name="to"
                       form={form}
                       title="Đến ngày"
-                      className="w-[200px]"
+                      className="w-full"
                     />
                   </FormControl>
                   <FormMessage />

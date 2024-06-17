@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { materialHistoryType } from "@/types/material-history.type";
 import { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 
@@ -71,7 +72,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
     },
   },
   {
-    accessorKey: "importAt",
+    accessorKey: "importDate",
     header: ({ column }) => {
       return (
         <Button
@@ -83,6 +84,9 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      return format(row.original.importDate, "dd/MM/yyyy");
     },
   },
   {
@@ -116,7 +120,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
               <DropdownMenuItem
                 onClick={(event) => {
                   // event.preventDefault();
-                  const edit = document.getElementById("edit");
+                  const edit = document.getElementById(payment.id);
                   if (edit) {
                     edit.click();
                   }
@@ -129,7 +133,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
             </DropdownMenuContent>
           </DropdownMenu>
           <UpdateMaterialHistory id={payment.id}>
-            <div id="edit" className="hidden">
+            <div id={payment.id} className="hidden">
               Chỉnh sửa
             </div>
           </UpdateMaterialHistory>
