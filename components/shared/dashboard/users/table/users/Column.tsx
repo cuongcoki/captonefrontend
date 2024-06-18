@@ -4,9 +4,10 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 
-import { Gender, Role } from "./data/data"
+import { Gender, Role,isActive } from "./data/data"
 import { DataTableRowActions } from "./data-table-row-actions"
 import Link from "next/link"
+
 
 export type Roles = {
   id: string
@@ -28,29 +29,31 @@ export type Employee = {
   salaryByDay: number;
 }
 
+
+
 export const columns: ColumnDef<Employee>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && "indeterminate")
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false,
+  // },
   {
     accessorKey: "id",
     header: ({ column }) => (
@@ -211,6 +214,22 @@ export const columns: ColumnDef<Employee>[] = [
         >
           Hoạt động
         </Button>
+      )
+    },
+    cell: ({ row }) => {
+      const isactive = isActive.find(
+        (isactive) => isactive.value === row.getValue("isActive")
+      )
+
+      if (!isactive) {
+        return null
+      }
+
+      return (
+        <div className="flex w-[100px] items-center">
+
+          <span>{isactive.label}</span>
+        </div>
       )
     },
   },

@@ -60,33 +60,33 @@ export default function RenderTableUsers({ searchParams }: Props) {
   console.log("Data:", data);
   return (
     <div className="px-3 ">
-      <div className="flex items-center justify-between  mb-4">
-        <TableUserFeature searchOptions={searchParams} />
+      <div className="flex flex-col md:flex-row items-center justify-between mb-4">
 
-        <div>
+        <div className="w-full md:w-auto mb-4 md:mb-0">
+          <TableUserFeature searchOptions={searchParams} />
+        </div>
+
+        <div className="w-full md:w-auto">
           <div className="flex items-center justify-end p-3">
             <div className="flex items-center space-x-2">
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger>
-                  <Button variant={"colorCompany"} className="text-xs">
-                    Thêm mới người dùng
+                  <Button variant={"colorCompany"} className="text-xs w-full md:w-auto">
+                    Thêm nhân viên mới
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="min-w-[50%]">
+                <DialogContent className="w-full min-w-[90%] md:min-w-[70%]">
                   <DialogTitle className="text-2xl text-primary-backgroudPrimary">
-                    Thêm mới người dùng
+                    Thêm nhân viên mới
                   </DialogTitle>
                   <Separator className="h-1" />
                   <UsersForm setOpen={setOpen} />
                 </DialogContent>
               </Dialog>
-              <Button variant={"outline"}>
-                {" "}
-                <EllipsisVertical size={20} />
-              </Button>
             </div>
           </div>
         </div>
+
       </div>
       <>
         <DataTable columns={columns} data={data} />

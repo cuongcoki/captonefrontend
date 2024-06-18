@@ -13,7 +13,7 @@ export default function UsersPage({ searchParams }: Props) {
       <div className="!mb-15">
         <CardTitle>
           <h1 className="p-3 text-2xl text-primary-backgroudPrimary font-medium">
-            NGƯỜI DÙNG
+            NHÂN VIÊN
           </h1>
         </CardTitle>
         <RenderTableUsers searchParams={searchParams} />

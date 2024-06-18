@@ -114,7 +114,7 @@ const AuthProvider = ({ children }: Props) => {
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
     window.localStorage.removeItem(authConfig.onTokenExpiration)
-    router.push('/login')
+    router.push('/sign-in')
   }
 
   const values = {

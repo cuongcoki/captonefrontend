@@ -21,6 +21,8 @@ import { Separator } from "@/components/ui/separator";
 import { Upload } from "lucide-react";
 import ImageDisplay from "./ImageDisplay";
 import storage from "@/lib/storage";
+import { productApi } from "@/apis/product.api";
+import toast from "react-hot-toast";
 
 interface ProductFormProps {
     setOpen: (open: boolean) => void;
@@ -34,12 +36,12 @@ const initialImageRequests = [
 ];
 export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
     const [loading, setLoading] = useState(false);
-    const [imageUrls, setImageUrls] = useState<string[]>([]); 
+    const [imageUrls, setImageUrls] = useState<string[]>([]);
     const form = useForm({
         resolver: zodResolver(ProductSchema),
         defaultValues: {
             code: "",
-            price: "",
+            price: 1,
             size: "",
             description: "",
             name: "",
@@ -59,17 +61,17 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
     // const fetchImageUpload = async (file: File): Promise<string> => {
     //     const formData = new FormData();
     //     formData.append("image", file);
-      
+
     //     try {
     //         const response = await fetch("https://capstone-backend.online/api/files", {
     //             method: "POST",
     //             body: formData,
     //         });
-    
+
     //         if (!response.ok) {
     //             throw new Error("Failed to upload image");
     //         }
-    
+
     //         const data = await response.json();
     //         return data.imageUrl; // Trả về link ảnh từ phản hồi của server
     //     } catch (error) {
@@ -143,13 +145,13 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
     const stogae = localStorage.getItem('accessToken');
 
     // ** hàm Submit
-    // const onSubmit = async (data: any) => {
+    // const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
     //     console.log('data', data)
     //     setLoading(true);
     //     const formData = new FormData();
 
     //     // Thêm các giá trị từ form vào formData
-    //     formData.append('code', data.code);
+    //     formData.append('code', data?.code);
     //     formData.append('price', data.price.toString()); // Chuyển price sang string để tránh lỗi
     //     formData.append('size', data.size);
     //     formData.append('description', data.description);
@@ -174,7 +176,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
     //         // const responseData = await response.json();
     //         // console.log(responseData);
 
-          
+
     //     } catch (error) {
     //         console.error('Error submitting form:', error);
     //     } finally {
@@ -183,11 +185,52 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
     //     // setOpen(false)
     // };
 
-    const onSubmit = async (data: any) => {
-        setLoading(true);
+    // const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
+    //     setLoading(true);
+    //     console.log('data',data)
+    //     try {
+    //         // Tạo object JSON để gửi lên server
+    //         const requestBody = {
+    //             code: data.code,
+    //             price: data.price,
+    //             size: data.size,
+    //             description: data.description,
+    //             name: data.name,
+    //             imageRequests: imageRequests.map(image => ({
+    //                 imageUrl: image.imageUrl,
+    //                 isBluePrint: image.isBluePrint,
+    //                 isMainImage: image.isMainImage
+    //             }))
+    //         };
+    //         console.log('requestBody', requestBody)
 
+
+    //         // Gửi requestBody lên server bằng fetch hoặc axios
+    //         const response = await fetch('http://localhost/api/products', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${stogae}`,
+    //             },
+    //             body: JSON.stringify(requestBody),
+    //         });
+
+    //         const responseData = await response.json();
+    //         console.log(responseData);
+
+    //         // setOpen(false); // Đóng form sau khi submit thành công
+    //     } catch (error) {
+    //         console.error('Error submitting form:', error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+    const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
+        setLoading(true);
+        // console.log('datadatadata', data)
+     
         try {
-            // Tạo object JSON để gửi lên server
             const requestBody = {
                 code: data.code,
                 price: data.price,
@@ -200,29 +243,26 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
                     isMainImage: image.isMainImage
                 }))
             };
-            console.log('requestBody',requestBody)
-            
-
-            // Gửi requestBody lên server bằng fetch hoặc axios
-            const response = await fetch('https://capstone-backend.online/api/products', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${stogae}`,
-                },
-                body: JSON.stringify(requestBody),
-            });
-
-            const responseData = await response.json();
-            console.log(responseData);
-
-            // setOpen(false); // Đóng form sau khi submit thành công
+            console.log('requestBody', requestBody)
+            const response = await productApi.createProduct(requestBody);
+            if (response.data.isSuccess) {
+                toast.success(response.data.message);
+                setTimeout(() => {
+                    setOpen(false);
+                    toast.error(response.data.message);
+                    window.location.href = '/dashboard/product';
+                }, 2000);
+            } else {
+            }
         } catch (error) {
             console.error('Error submitting form:', error);
+            toast.error('Đã xảy ra lỗi khi tạo sản phẩm.');
         } finally {
             setLoading(false);
         }
+      
     };
+
 
     // console.log('imageRequests', imageRequests)
 
@@ -231,71 +271,58 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
         <Form {...form} >
 
 
-            <div className="flex justify-between gap-4 ">
-                {/* Phần đăng hình ảnh  */}
-                <div className="w-[70%]  flex items-center justify-between relative ">
+            <div className="flex flex-col md:flex-row md:justify-between gap-4">
+                {/* Phần đăng hình ảnh */}
+                <div className="md:w-[60%] flex items-center justify-between relative">
                     <div>
-                        {/* nếu không có ảnh nào thì hiện input này  */}
-
-                        {
-                            imageRequests.length < 1 && (
-                                <div style={{ width: '100%', height: '100%' }}>
-                                    <input id='image'
-                                        type='file'
-                                        style={{ display: 'none' }}
-                                        accept='image/*'
-                                        onChange={e => handleUploadPhotos(e)}
-                                        multiple
-                                    />
-                                    <label htmlFor='image' className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" >
-                                        <Upload size={100} className="text-white flex items-center justify-center bg-primary-backgroudPrimary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto" />
-                                        <span className="text-l text-gray-500 font-medium">Hãy tải ảnh sản phẩm lên</span>
-                                    </label>
-                                </div>
-                            )
-                        }
+                        {/* nếu không có ảnh nào thì hiện input này */}
+                        {imageRequests.length < 1 && (
+                            <div style={{ width: '100%', height: '100%' }}>
+                                <input
+                                    id='image'
+                                    type='file'
+                                    style={{ display: 'none' }}
+                                    accept='image/*'
+                                    onChange={e => handleUploadPhotos(e)}
+                                    multiple
+                                />
+                                <label htmlFor='image' className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                                    <Upload size={100} className="text-white flex items-center justify-center bg-primary-backgroudPrimary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto" />
+                                    <span className="text-l text-gray-500 font-medium">Hãy tải ảnh sản phẩm lên</span>
+                                </label>
+                            </div>
+                        )}
 
                         {/* nếu có trên 1 ảnh thì hiện input này */}
+                        {imageRequests.length > 0 && (
+                            <div className="relative w-full h-full">
+                                {/* phần hiển thị ảnh xem trước */}
+                                <ImageDisplay
+                                    images={imageRequests}
+                                    onDelete={handleDeleteImage}
+                                    onToggleBlueprint={handleToggleBlueprint}
+                                    onToggleMainImage={handleToggleMainImage}
+                                />
 
-                        {
-                            imageRequests.length > 0 && (
-                                <div className="relative w-[100%] h-[100%]">
-
-                                    {/* phần hiển thị ảnh xem trước */}
-
-                                    <ImageDisplay
-                                        images={imageRequests}
-                                        onDelete={handleDeleteImage}
-                                        onToggleBlueprint={handleToggleBlueprint}
-                                        onToggleMainImage={handleToggleMainImage}
-                                    />
-
-                                    {/* Phần add thêm image */}
-
-                                    <input
-                                        id='image'
-                                        type='file'
-                                        style={{ display: 'none' }}
-                                        accept='image/*'
-                                        onChange={e => handleUploadPhotos(e)}
-                                        multiple
-                                    />
-                                    <label htmlFor='image' className="absolute bottom-0">
-                                        <Upload size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" />
-                                    </label>
-                                </div>
-                            )
-                        }
+                                {/* Phần add thêm image */}
+                                <input
+                                    id='image'
+                                    type='file'
+                                    style={{ display: 'none' }}
+                                    accept='image/*'
+                                    onChange={e => handleUploadPhotos(e)}
+                                    multiple
+                                />
+                                <label htmlFor='image' className="absolute bottom-0">
+                                    <Upload size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" />
+                                </label>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="w-[30%] "
-                >
-
+                <form onSubmit={form.handleSubmit(onSubmit)} className="md:w-[40%]">
                     {/* Phần nhập dữ liệu thông tin */}
-
                     <div className="w-full flex flex-col gap-4">
                         {/* code */}
                         <FormField
@@ -319,10 +346,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
                                 <FormItem>
                                     <FormLabel className="flex items-center text-primary-backgroudPrimary">Giá sản phẩm</FormLabel>
                                     <FormControl>
-                                        <Input type="text" {...field} />
+                                        <Input type="number" {...field} />
                                     </FormControl>
                                     <FormMessage />
-
                                 </FormItem>
                             )}
                         />
@@ -369,13 +395,13 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
                             )}
                         />
                         <Separator className="h-1" />
-                        <FormLabel className="flex items-center "></FormLabel>
                         <Button type="submit" className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90" disabled={pending}>
                             {loading ? "Loading..." : "GỬI"}
                         </Button>
                     </div>
                 </form>
             </div>
+
         </Form>
     );
 }

@@ -53,6 +53,7 @@ export default function TableUserFeature({ searchOptions }: Props) {
     } else {
       params.delete(name);
     }
+    params.set("page", "1"); // Reset page to 1 on search
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 

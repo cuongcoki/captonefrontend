@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 type Props = {
   user: Employee;
@@ -23,6 +24,9 @@ export default function UserBanButton({ user }: Props) {
       .changeUserStatus(user.id, !user.isActive)
       .then((data) => {
         console.log("changeUserStatus", data);
+        setTimeout(() => {
+          window.location.href = '/dashboard/user';
+        }, 2000);
       })
       .catch((error) => {
         console.log("changeUserStatus", error);
@@ -30,9 +34,9 @@ export default function UserBanButton({ user }: Props) {
   };
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger>
-        {user.isActive ? "Nghỉ việc" : "Làm lại"}
+    <AlertDialog >
+      <AlertDialogTrigger className="w-full">
+        <Button variant={"outline"} className="border-none w-full flex items-start">{user.isActive ? "Nghỉ việc" : "Làm lại"}</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
