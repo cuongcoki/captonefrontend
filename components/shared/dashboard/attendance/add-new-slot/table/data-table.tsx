@@ -21,26 +21,32 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import AddNewMeterialHistory from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history";
 import DatePicker from "@/components/shared/common/datapicker/date-picker";
 import FillterByDate from "@/components/shared/dashboard/material-history/table/filter-by-date";
 import AddNewAttendanceSLot from "@/components/shared/dashboard/attendance/add-new-slot/add-new-slot";
+import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
+import { attendanceApi } from "@/apis/attendance.api";
+import { CreateAttendanceSlotBody } from "@/types/attendance.type";
+import { set } from "date-fns";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
 }
 
 export function DataTableForAttendanceForm<TData, TValue>({
   columns,
-  data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [data, setData] = React.useState<TData[]>(
+    useAttendanceStore().listUser as TData[]
+  );
+  const [selectedValue, setSelectedValue] = useState("");
 
   const table = useReactTable({
     data,
@@ -57,12 +63,34 @@ export function DataTableForAttendanceForm<TData, TValue>({
     },
   });
 
+  useEffect(() => {}, []);
+
   const createSlot = () => {
-    const combobox = document.getElementById("slot") as HTMLSelectElement;
-    const slot = combobox.value;
-    console.log(
-      table.getRowModel().rows.map((row) => ({ ...row.original, slot: slot }))
-    );
+    const tableData = table
+      .getRowModel()
+      .rows.filter((row: any) => row.original.select == true)
+      .map((row: any) => ({
+        userId: row.original.id,
+        isManufacture: row.original.isManufactureSelected || false,
+        isSalaryByProduct: row.original.isSalaryByProductSelected || false,
+      }));
+    const createAttendanceSlotBody: CreateAttendanceSlotBody = {
+      slotId: selectedValue,
+      createAttendances: tableData,
+    };
+
+    console.log("createAttendanceSlotBody", createAttendanceSlotBody);
+
+    attendanceApi
+      .createAttendance(createAttendanceSlotBody)
+      .then(({ data }) => {
+        console.log(data);
+        alert("Tạo báo cáo thành công");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Tạo báo cáo thất bại");
+      });
   };
 
   return (
@@ -79,14 +107,26 @@ export function DataTableForAttendanceForm<TData, TValue>({
           className="max-w-sm shadow-ssm"
         />
         <div className="ml-5 h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ">
-          <select id="slot">
+          <select
+            id="slot"
+            value={selectedValue}
+            onChange={(event: any) => {
+              setSelectedValue(event.target.value);
+            }}
+          >
             <option value={1}>Slot Sáng</option>
             <option value={2}>Slot Chiều</option>
             <option value={3}>Tăng ca</option>
           </select>
         </div>
 
-        <Button className="ml-auto" onClick={createSlot}>
+        <Button
+          className="ml-auto"
+          onClick={createSlot}
+          onChange={(event: any) => {
+            setSelectedValue(event.target.value);
+          }}
+        >
           Tạo báo cáo
         </Button>
       </div>

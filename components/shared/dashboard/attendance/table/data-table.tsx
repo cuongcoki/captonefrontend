@@ -21,26 +21,31 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import AddNewMeterialHistory from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history";
 import DatePicker from "@/components/shared/common/datapicker/date-picker";
 import FillterByDate from "@/components/shared/dashboard/material-history/table/filter-by-date";
 import AddNewAttendanceSLot from "@/components/shared/dashboard/attendance/add-new-slot/add-new-slot";
+import { attendanceApi } from "@/apis/attendance.api";
+import { AttendanceOverallProps } from "@/types/attendance.type";
+import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  searchParams: AttendanceOverallProps;
 }
 
 export function DataTableForAttendance<TData, TValue>({
   columns,
-  data,
+  searchParams,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [data, setData] = React.useState<TData[]>([]);
+  const { listUser, setListUser } = useAttendanceStore();
 
   const table = useReactTable({
     data,
@@ -57,14 +62,43 @@ export function DataTableForAttendance<TData, TValue>({
     },
   });
 
+  useEffect(() => {
+    attendanceApi
+      .searchAttendance({
+        PageIndex: searchParams.PageIndex,
+        StartDate:
+          searchParams.StartDate === "" ? "01/01/0001" : searchParams.StartDate,
+        EndDate:
+          searchParams.EndDate === "" ? "30/12/3000" : searchParams.EndDate,
+        PageSize: searchParams.PageSize,
+      })
+      .then(({ data }) => {
+        setData(data.data.data as TData[]);
+        console.log("Attendance Data: ", data.data.data);
+      });
+  }, [searchParams]);
+
+  useEffect(() => {
+    attendanceApi
+      .getUers({
+        SearchTerm: "",
+        IsActive: "true",
+        PageIndex: "1",
+        PageSize: "200",
+        RoleId: "2",
+      })
+      .then(({ data }) => {
+        setListUser(data.data.data);
+      });
+  }, [setListUser]);
+
   return (
     <div>
       <div className="my-2 grid grid-cols-2">
         <div className="mr-auto h-10 rounded-md border border-input bg-background px-3 py-2 text-sm w-max">
           <select id="slot">
-            <option value={1}>Slot Sáng</option>
-            <option value={2}>Slot Chiều</option>
-            <option value={3}>Tăng ca</option>
+            <option value={1}>Cơ sở 1</option>
+            <option value={2}>Cơ sở 2</option>
           </select>
         </div>
         <AddNewAttendanceSLot />

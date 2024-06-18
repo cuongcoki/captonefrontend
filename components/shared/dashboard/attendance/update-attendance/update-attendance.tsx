@@ -8,15 +8,16 @@ import { ContextMenuForAttendance } from "@/components/shared/dashboard/attendan
 import { Button } from "@/components/ui/button";
 import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
 import { Input } from "@/components/ui/input";
+import { attendanceApi } from "@/apis/attendance.api";
+import {
+  AttendanceForUpdate,
+  UpdateAttendanceBody,
+} from "@/types/attendance.type";
 
 export default function UpdateAttendance({
-  warehouseID,
-  data,
   date,
   slot,
 }: {
-  warehouseID: string;
-  data: AttendanceDetailType[];
   date: string;
   slot: string;
 }): JSX.Element {
@@ -25,6 +26,35 @@ export default function UpdateAttendance({
 
   const colorSlaryByProduct = "bg-[#f1eeee]";
 
+  useEffect(() => {
+    attendanceApi
+      .getAttendance({
+        Date: date,
+        SlotId: slot,
+        PageIndex: "1",
+        PageSize: "100",
+        SearchTerm: "",
+      })
+      .then(({ data }) => {
+        console.log("data", data.data.data);
+        const attendanceData = data.data.data.map(
+          (item): AttendanceDetailType => {
+            return {
+              userID: item.userId,
+              userName: item.fullName,
+              image: "",
+              hourOverTime: item.hourOverTime,
+              isAttendance: item.isAttendance,
+              isSalaryByProduct: item.isSalaryByProduct,
+              isManufacture: item.isManufacture,
+              products: [],
+            };
+          }
+        );
+        setTableData(attendanceData);
+      });
+  }, [date, slot, setTableData]);
+
   const saveDraft = () => {
     console.log("Save draft");
     if (typeof window !== "undefined") {
@@ -32,19 +62,35 @@ export default function UpdateAttendance({
     }
   };
 
-  useEffect(() => {
-    setTableData(data);
-  }, [data, setTableData]);
+  const handleSubmit = () => {
+    const updateData: UpdateAttendanceBody = {
+      slotId: slot,
+      date: date,
+      updateAttendances: tableData.map((item): AttendanceForUpdate => {
+        return {
+          userId: item.userID,
+          hourOverTime: item.hourOverTime,
+          isAttendance: item.isAttendance,
+          isOverTime: "false",
+          isSalaryByProduct: item.isSalaryByProduct,
+          isManufacture: item.isManufacture,
+        };
+      }),
+    };
+    console.log("updateData", updateData);
 
-  useEffect(() => {
-    console.log("tableData", tableData);
-  }, [tableData]);
+    attendanceApi.updateAttendance(updateData).then(({ data }) => {
+      console.log(data);
+      alert("Cập nhật thành công");
+    });
+  };
+
   return (
     <Card>
       <div className="flex justify-center text-[2rem]">FORM ĐIỂM DANH</div>
       <div className="flex items-center m-5">
         <div className="">
-          <div>Cơ sở: {warehouseID}</div>
+          {/* <div>Cơ sở: {warehouseID}</div> */}
           <div>Ngày: {date}</div>
           <div>Slot: {slot}</div>
         </div>
@@ -89,13 +135,13 @@ export default function UpdateAttendance({
                       <>
                         <td rowSpan={item.products.length}>
                           <div className="w-[90px] h-[120px] bg-gray-400 mx-auto">
-                            <Image
+                            {/* <Image
                               width={90}
                               height={120}
                               src={item.image}
                               alt={item.userName}
                               className="object-cover w-full h-full"
-                            />
+                            /> */}
                           </div>
                         </td>
                         <td rowSpan={item.products.length}>{item.userName}</td>
@@ -181,13 +227,13 @@ export default function UpdateAttendance({
                 <tr>
                   <td>
                     <div className="w-[90px] h-[120px] bg-gray-400 mx-auto">
-                      <Image
+                      {/* <Image
                         width={90}
                         height={120}
                         src={item.image}
                         alt={item.userName}
                         className="object-cover w-full h-full"
-                      />
+                      /> */}
                     </div>
                   </td>
                   <td>{item.userName}</td>
@@ -281,7 +327,10 @@ export default function UpdateAttendance({
         <Button className="bg-[#00a9ff] hover:bg-[#0087cc]" onClick={saveDraft}>
           Lưu bản nháp
         </Button>
-        <Button className="bg-[#00dd00] hover:bg-[#00aa00]">
+        <Button
+          className="bg-[#00dd00] hover:bg-[#00aa00]"
+          onClick={handleSubmit}
+        >
           Lưu thay đổi
         </Button>
       </div>
