@@ -75,6 +75,9 @@ export function DataTableForAttendance<TData, TValue>({
       .then(({ data }) => {
         setData(data.data.data as TData[]);
         console.log("Attendance Data: ", data.data.data);
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
       });
   }, [searchParams]);
 
@@ -85,10 +88,13 @@ export function DataTableForAttendance<TData, TValue>({
         IsActive: "true",
         PageIndex: "1",
         PageSize: "200",
-        RoleId: "2",
+        RoleId: "1",
       })
       .then(({ data }) => {
         setListUser(data.data.data);
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
       });
   }, [setListUser]);
 

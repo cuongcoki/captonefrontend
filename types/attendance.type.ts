@@ -55,24 +55,24 @@ type AttendanceDetail = {
   date: string;
   fullName: string;
   hourOverTime: string;
-  isAttendance: string;
-  isOverTime: string;
-  isSalaryByProduct: string;
-  isManufacture: string;
+  isAttendance: boolean;
+  isOverTime: boolean;
+  isSalaryByProduct: boolean;
+  isManufacture: boolean;
 };
 export type GetAttendanceResponse = SearchResponse<AttendanceDetail[]>;
 
 export type AttendanceForUpdate = {
   userId: string;
   hourOverTime: string;
-  isAttendance: string;
-  isOverTime: string;
-  isSalaryByProduct: string;
-  isManufacture: string;
+  isAttendance: boolean;
+  isOverTime: boolean;
+  isSalaryByProduct: boolean;
+  isManufacture: boolean;
 };
 
 export type UpdateAttendanceBody = {
-  slotId: string;
+  slotId: number;
   date: string;
   updateAttendances: AttendanceForUpdate[];
 };

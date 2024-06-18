@@ -51,6 +51,7 @@ export default function UpdateAttendance({
             };
           }
         );
+        console.log("attendanceData", attendanceData);
         setTableData(attendanceData);
       });
   }, [date, slot, setTableData]);
@@ -61,28 +62,37 @@ export default function UpdateAttendance({
       localStorage.setItem("DataAttendanceDetail", JSON.stringify(tableData));
     }
   };
+  useEffect(() => {
+    console.log("tableData", tableData);
+  }, [tableData]);
 
   const handleSubmit = () => {
     const updateData: UpdateAttendanceBody = {
-      slotId: slot,
+      slotId: Number(slot),
       date: date,
       updateAttendances: tableData.map((item): AttendanceForUpdate => {
         return {
           userId: item.userID,
           hourOverTime: item.hourOverTime,
-          isAttendance: item.isAttendance,
-          isOverTime: "false",
-          isSalaryByProduct: item.isSalaryByProduct,
-          isManufacture: item.isManufacture,
+          isAttendance: Boolean(item.isAttendance),
+          isOverTime: false,
+          isSalaryByProduct: Boolean(item.isSalaryByProduct),
+          isManufacture: Boolean(item.isManufacture),
         };
       }),
     };
     console.log("updateData", updateData);
 
-    attendanceApi.updateAttendance(updateData).then(({ data }) => {
-      console.log(data);
-      alert("Cập nhật thành công");
-    });
+    attendanceApi
+      .updateAttendance(updateData)
+      .then(({ data }) => {
+        console.log(data);
+        alert("Cập nhật thành công");
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Cập nhật thất bại");
+      });
   };
 
   return (
@@ -128,7 +138,7 @@ export default function UpdateAttendance({
         <tbody>
           {tableData.map((item, index) => (
             <React.Fragment key={index}>
-              {item.products.length > 0 && item.isManufacture === "true" ? (
+              {item.products.length > 0 && item.isManufacture === true ? (
                 item.products.map((product, productIndex) => (
                   <tr key={product.productID}>
                     {productIndex === 0 && (
@@ -151,7 +161,7 @@ export default function UpdateAttendance({
                     <ContextMenuForAttendance index={index}>
                       <td
                         className={
-                          item.isSalaryByProduct === "true"
+                          item.isSalaryByProduct === true
                             ? ""
                             : colorSlaryByProduct
                         }
@@ -165,7 +175,7 @@ export default function UpdateAttendance({
                     <ContextMenuForAttendance index={index}>
                       <td
                         className={
-                          item.isSalaryByProduct === "true"
+                          item.isSalaryByProduct === true
                             ? ""
                             : colorSlaryByProduct
                         }
@@ -179,7 +189,7 @@ export default function UpdateAttendance({
                     <ContextMenuForAttendance index={index}>
                       <td
                         className={
-                          item.isSalaryByProduct === "true"
+                          item.isSalaryByProduct === true
                             ? ""
                             : colorSlaryByProduct
                         }
@@ -190,7 +200,7 @@ export default function UpdateAttendance({
                         {product.quantity}
                       </td>
                     </ContextMenuForAttendance>
-                    {productIndex === 0 && (
+                    {productIndex == 0 && (
                       <>
                         <td rowSpan={item.products.length}>
                           <div className="flex items-center">
@@ -209,7 +219,7 @@ export default function UpdateAttendance({
                           <input
                             className="size-[30px]"
                             type="checkbox"
-                            checked={item.isAttendance === "true"}
+                            checked={item.isAttendance === true}
                             onChange={(event) =>
                               handleAttendanceChange(
                                 index,
@@ -238,12 +248,12 @@ export default function UpdateAttendance({
                   </td>
                   <td>{item.userName}</td>
                   <td>{item.userID}</td>
-                  {item.isManufacture === "true" ? (
+                  {item.isManufacture === true ? (
                     <>
                       <ContextMenuForAttendance index={index}>
                         <td
                           className={
-                            item.isSalaryByProduct === "true"
+                            item.isSalaryByProduct === true
                               ? ""
                               : colorSlaryByProduct
                           }
@@ -257,7 +267,7 @@ export default function UpdateAttendance({
                       <ContextMenuForAttendance index={index}>
                         <td
                           className={
-                            item.isSalaryByProduct === "true"
+                            item.isSalaryByProduct === true
                               ? ""
                               : colorSlaryByProduct
                           }
@@ -271,7 +281,7 @@ export default function UpdateAttendance({
                       <ContextMenuForAttendance index={index}>
                         <td
                           className={
-                            item.isSalaryByProduct === "true"
+                            item.isSalaryByProduct === true
                               ? ""
                               : colorSlaryByProduct
                           }
@@ -311,7 +321,7 @@ export default function UpdateAttendance({
                     <input
                       className="size-[30px]"
                       type="checkbox"
-                      checked={item.isAttendance === "true"}
+                      checked={item.isAttendance === true}
                       onChange={(event) =>
                         handleAttendanceChange(index, event.target.checked)
                       }
@@ -324,9 +334,9 @@ export default function UpdateAttendance({
         </tbody>
       </table>
       <div className="flex justify-end items-center gap-5 m-5 mt-10">
-        <Button className="bg-[#00a9ff] hover:bg-[#0087cc]" onClick={saveDraft}>
+        {/* <Button className="bg-[#00a9ff] hover:bg-[#0087cc]" onClick={saveDraft}>
           Lưu bản nháp
-        </Button>
+        </Button> */}
         <Button
           className="bg-[#00dd00] hover:bg-[#00aa00]"
           onClick={handleSubmit}

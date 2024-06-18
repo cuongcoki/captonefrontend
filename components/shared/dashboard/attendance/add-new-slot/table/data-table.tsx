@@ -46,7 +46,7 @@ export function DataTableForAttendanceForm<TData, TValue>({
   const [data, setData] = React.useState<TData[]>(
     useAttendanceStore().listUser as TData[]
   );
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("1");
 
   const table = useReactTable({
     data,

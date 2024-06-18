@@ -149,7 +149,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
         );
       })
       .catch((err) => {
-        if (err.response.status === 400) {
+        if (err.response?.status === 400) {
           setData([]);
         }
         console.log("ERROR", err);
