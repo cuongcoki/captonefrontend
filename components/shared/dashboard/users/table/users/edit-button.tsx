@@ -17,9 +17,10 @@ import { Form } from "@/components/ui/form";
 import { formatDate } from "@/lib/utils";
 import { UserUpdateFormType, UserUpdateSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
+import { MyContext } from "./RenderTable";
 
 type Props = {
   user: Employee;
@@ -27,7 +28,7 @@ type Props = {
 
 export default function UserEditButton({ user }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { forceUpdate } = useContext(MyContext);
   const data: UserUpdateFormType = {
     ...user,
     facility: user?.facilityID?.toString(),
@@ -55,7 +56,8 @@ export default function UserEditButton({ user }: Props) {
         toast.success(data.data.message);
         setTimeout(() => {
           setIsOpen(false);
-          window.location.href = '/dashboard/user';
+          forceUpdate();
+          // window.location.href = '/dashboard/user';
         }, 2000);
       })
       .catch((error) => {

@@ -94,11 +94,11 @@ const RedirectCell = ({
           <div>
             Sĩ số: {data.present}/{data.totalUser}
           </div>
-          <div>
+          <div className="hidden">
             Vắng: {parseInt(data.totalUser, 10) - parseInt(data.present, 10)}
           </div>
-          <div>Tổng sản phẩm: {data.totalProduct}</div>
-          <div>Tổng thời gian: {data.overTime}</div>
+          <div className="hidden">Tổng sản phẩm: {data.totalProduct}</div>
+          <div className="hidden">Tổng thời gian: {data.overTime}</div>
         </div>
       ) : (
         <div>Không có dữ liệu</div>

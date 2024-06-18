@@ -19,7 +19,7 @@ export default function AddNewMeterialHistory() {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="bg-[#004b24] ml-auto flex items-center">
+          <Button className="bg-[#004b24] mb-2 ml-auto mt-4 md:col-start-2 xl:col-start-3 xl:mt-0">
             <Plus /> Nhập mới
           </Button>
         </DialogTrigger>

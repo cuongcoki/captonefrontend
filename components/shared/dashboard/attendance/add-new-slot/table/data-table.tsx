@@ -85,6 +85,7 @@ export function DataTableForAttendanceForm<TData, TValue>({
             <option value={3}>Tăng ca</option>
           </select>
         </div>
+
         <Button className="ml-auto" onClick={createSlot}>
           Tạo báo cáo
         </Button>

@@ -19,9 +19,10 @@ export const SignInSchema = z.object({
   id: z.string().min(1, {
     message: "hãy nhập số CCCD/CMND",
   }),
-  password: z.string().min(6, {
-    message: "mật khẩu phải lớn hơn 6 ký tự",
-  }),
+  // password: z.string().min(6, {
+  //   message: "mật khẩu phải lớn hơn 6 ký tự",
+  // }),
+  password: z.string(),
 });
 
 export const RoleSchema = z.object({

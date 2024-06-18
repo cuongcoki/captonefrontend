@@ -1,0 +1,24 @@
+/* Ẩn cột thứ 4 của bảng mặc định */
+.material-table td:nth-child(4),
+.material-table th:nth-child(4) {
+  display: none;
+}
+.material-table td:nth-child(3),
+.material-table th:nth-child(3) {
+  display: none;
+}
+
+/* Hiển thị cột thứ 4 của bảng khi chiều rộng màn hình tối thiểu là 625px */
+@media (min-width: 625px) {
+  .material-table td:nth-child(4),
+  .material-table th:nth-child(4) {
+    display: table-cell;
+  }
+}
+
+@media (min-width: 450px) {
+  .material-table td:nth-child(3),
+  .material-table th:nth-child(3) {
+    display: table-cell;
+  }
+}

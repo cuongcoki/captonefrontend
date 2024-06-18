@@ -15,7 +15,7 @@ import { UseFormReturn } from "react-hook-form";
 
 interface DatePickerProps {
   name: string;
-  form: UseFormReturn<any>;
+  form?: UseFormReturn<any>;
   title: string;
   className?: string;
   [key: string]: any;
@@ -25,7 +25,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
   ({ title, className, name, form, ...props }, ref) => {
     const [date, setDate] = React.useState<Date>();
 
-    const dateFromForm = form.getValues(name);
+    const dateFromForm = form?.getValues(name);
 
     React.useEffect(() => {
       if (dateFromForm) {

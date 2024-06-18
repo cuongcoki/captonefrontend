@@ -13,17 +13,7 @@ const InputAnimation = React.forwardRef<HTMLInputElement, InputAnimationProps>(
     // const [value, setValue] = React.useState("");
     return (
       <div className={`inputBox ${className}`}>
-        <input
-          type={type}
-          {...props}
-          ref={ref}
-          placeholder=""
-          // value={value}
-          // onChange={(currentValue) => {
-          //   setValue(currentValue.target.value);
-          //   console.log(currentValue.target.value);
-          // }}
-        />
+        <input type={type} ref={ref} placeholder="" {...props} />
         <span>{nameFor}</span>
       </div>
     );

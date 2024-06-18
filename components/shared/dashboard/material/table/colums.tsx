@@ -19,6 +19,10 @@ import Image from "next/image";
 // You can use a Zod schema here if you want.
 
 export const columnsForMaterial: ColumnDef<materialType>[] = [
+  // {
+  //   accessorKey: "id",
+  //   header: "ID",
+  // },
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -66,7 +70,8 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
     id: "actions",
     header: "Hành động",
     cell: ({ row }) => {
-      const payment = row.original;
+      const rowData = row.original;
+      // console.log("rowData", rowData);
 
       return (
         <>
@@ -82,7 +87,7 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
               <DropdownMenuItem
                 onClick={(event) => {
                   // event.preventDefault();
-                  const edit = document.getElementById("edit");
+                  const edit = document.getElementById(`${rowData.id}-edit`);
                   if (edit) {
                     edit.click();
                   }
@@ -94,8 +99,8 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
               <DropdownMenuItem>Xóa nguyên liệu</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <UpdateMaterial id={payment.id}>
-            <div id="edit" className="hidden">
+          <UpdateMaterial id={rowData.id}>
+            <div id={`${rowData.id}-edit`} className="hidden">
               Chỉnh sửa
             </div>
           </UpdateMaterial>

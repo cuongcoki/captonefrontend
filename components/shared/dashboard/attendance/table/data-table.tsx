@@ -59,7 +59,14 @@ export function DataTableForAttendance<TData, TValue>({
 
   return (
     <div>
-      <div className="my-2">
+      <div className="my-2 grid grid-cols-2">
+        <div className="mr-auto h-10 rounded-md border border-input bg-background px-3 py-2 text-sm w-max">
+          <select id="slot">
+            <option value={1}>Slot Sáng</option>
+            <option value={2}>Slot Chiều</option>
+            <option value={3}>Tăng ca</option>
+          </select>
+        </div>
         <AddNewAttendanceSLot />
       </div>
 

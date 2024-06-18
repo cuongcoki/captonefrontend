@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import {
   InputOTP,
@@ -26,6 +26,7 @@ import { Separator } from "@/components/ui/separator";
 import { UsersSchema } from "@/schema";
 import { userApi } from "@/apis/user.api";
 import { useRouter } from "next/navigation";
+import { MyContext } from "../table/users/RenderTable";
 
 interface UsersFormProps {
   setOpen: (open: boolean) => void;
@@ -41,6 +42,8 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
 
   // ** Hooks
   const router = useRouter();
+  const { forceUpdate } = useContext(MyContext);
+
   const form = useForm({
     resolver: zodResolver(UsersSchema),
     defaultValues: {
@@ -96,7 +99,7 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
           toast.success(data.message);
           setTimeout(() => {
             setOpen(false);
-            window.location.href = '/dashboard/user';
+            forceUpdate();
           }, 2000);
         }
       })

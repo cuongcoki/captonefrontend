@@ -21,23 +21,47 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import AddNewMeterial from "@/components/shared/dashboard/material/add-new-material/add-new-material";
+import { materialApi } from "@/apis/material.api";
+import { usePathname, useRouter } from "next/navigation";
+import "./material.css";
 
+type ContexType = {
+  forceUpdate: () => void;
+};
+export const MyContext = React.createContext<ContexType>({
+  forceUpdate: () => {},
+});
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  searchTermProp: string;
+  pageIndexProp: number;
 }
 
 export function DataTableForMaterial<TData, TValue>({
   columns,
-  data,
+  searchTermProp,
+  pageIndexProp,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [pageIndex, setPageIndex] = React.useState<number>(
+    (pageIndexProp as number) || 1
+  );
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [totalPages, setTotalPages] = React.useState<number>(1);
+  const [data, setData] = React.useState<TData[]>([]);
+  const [searchTerm, setSearchTerm] = React.useState<string>(
+    searchTermProp || ""
+  );
+  const [force, setForce] = React.useState<number>(1);
+  const forceUpdate = () => setForce((prev) => prev + 1);
+
+  const pathname = usePathname();
+  const router = useRouter();
 
   const table = useReactTable({
     data,
@@ -54,83 +78,117 @@ export function DataTableForMaterial<TData, TValue>({
     },
   });
 
+  useEffect(() => {
+    console.log("Call API");
+
+    const searchMaterial = (searchTerm: string) => {
+      console.log("searchTerm", searchTerm);
+      materialApi
+        .searchMaterial({
+          SearchTerm: searchTerm,
+          pageIndex: pageIndex,
+          pageSize: 10,
+        })
+        .then((data) => {
+          console.log("DATA Call API", data);
+          setData(data.data.data.data as TData[]);
+          setTotalPages(data.data.data.totalPages);
+        })
+        .catch((error) => console.log(error))
+        .finally(() => {
+          router.push(
+            `${pathname}?searchTerm=${searchTerm || ""}&pageIndex=${pageIndex}`
+          );
+        });
+    };
+
+    searchMaterial(searchTerm);
+  }, [searchTerm, pathname, router, pageIndex, force]);
+
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex flex-col sm:flex-row justify-center items-center py-4">
         <Input
           placeholder="Filter name..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
-          }
+          value={searchTerm}
+          onChange={(event) => {
+            setPageIndex(1);
+            setSearchTerm(event.target.value);
+          }}
           className="max-w-sm shadow-sm"
         />
-        <AddNewMeterial />
+        <MyContext.Provider value={{ forceUpdate }}>
+          <AddNewMeterial />
+        </MyContext.Provider>
       </div>
-
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+        <MyContext.Provider value={{ forceUpdate }}>
+          <Table className="material-table">
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id} className={`${header.id}`}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => {
+                  // console.log("row", row);
+                  return (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className={row.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </MyContext.Provider>
         <div className="flex items-center justify-end space-x-2 py-4">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => setPageIndex((prev) => Number(prev) - 1)}
+            disabled={Number(pageIndex) === 1}
           >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => setPageIndex((prev) => Number(prev) + 1)}
+            disabled={pageIndex >= totalPages}
           >
             Next
           </Button>
