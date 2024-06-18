@@ -4,13 +4,20 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useParams, } from 'next/navigation'
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
 import { userApi } from "@/apis/user.api";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import Link from "next/link";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+
+import { Card } from "@/components/ui/card";
 import { DataTablePagination } from "../data-table-pagination";
+
+
+import toast, { Toaster } from "react-hot-toast";
+import { Pencil } from "lucide-react";
+import UserEditButton from "../edit-button";
+import { Employee } from "../Column";
+
 interface User {
     firstName: string;
     id: string;
@@ -21,6 +28,8 @@ interface User {
     phone: string;
     roleId: number;
     salaryByDay: number;
+    isActive: boolean;
+    facilityID: number;
 }
 
 export default function UserIDPage() {
@@ -34,20 +43,9 @@ export default function UserIDPage() {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [pageSize, setPageSize] = useState<number>(10);
+    const [pageSize, setPageSize] = useState<number>(5);
     const [open, setOpen] = useState<boolean>(false);
-    const [userId, setUserId] = useState<User>({
-        id: "",
-        firstName: "",
-        lastName: "",
-        dob: "",
-        gender: "",
-        address: "",
-        phone: "",
-        roleId: 0,
-        salaryByDay: 0,
-    });
-
+    const [userId, setUserId] = useState<any>([])
 
     useEffect(() => {
 
@@ -72,7 +70,9 @@ export default function UserIDPage() {
             setLoading(true);
             userApi.getUserId(params.id)
                 .then(res => {
-                    setUserId(res.data.data);
+                    const userData = res.data.data;
+                    setUserId(userData);
+                    // setUserId(res.data.data);
                 })
                 .catch(error => {
                     console.error('Error fetching user data:', error);
@@ -86,73 +86,65 @@ export default function UserIDPage() {
         fetchDataUserId()
 
     }, [roleId, value, isActive, currentPage, pageSize, params.id])
-    console.log('datadata', data)
+
+
+console.log('iddd',userId)
+
+
     return (
         <Card className="" >
-            <div className="bg-white flex justify-between h-[825px] w-full overflow-auto">
-                <div className="w-[20%]">
-                    {
-                        loading ? (
-                            <div className="flex flex-col p-3 ">
-                                <div className='my-3 flex flex-col justify-between '>
-                                    <Skeleton className="w-full h-[20px]" />
-                                    <Skeleton className="w-full h-[20px]" />
-                                </div>
-                                <div className='my-3 flex flex-col justify-between '>
-                                    <Skeleton className="w-full h-[20px]" />
-                                    <Skeleton className="w-full h-[20px]" />
-                                </div>
-                                <div className='my-3 flex flex-col justify-between '>
-                                    <Skeleton className="w-full h-[20px]" />
-                                    <Skeleton className="w-full h-[20px]" />
-                                </div>
-                                <div className='my-3 flex flex-col justify-between '>
-                                    <Skeleton className="w-full h-[20px]" />
-                                    <Skeleton className="w-full h-[20px]" />
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="flex flex-col p-3  overflow-auto h-[825px]">
-                                <DataTablePagination
-                                    currentPage={currentPage}
-                                    totalPages={totalPages}
-                                    setCurrentPage={setCurrentPage}
-                                />
-                                {
-                                    data.map((dataId: any, index: any) => (
-                                        <Link href={`/dashboard/user/${dataId.id}`} key={index}>
-                                            <Card key={index} className={cn('my-3 p-2 flex flex-col items-start ', { 'font-medium text-l border-primary-backgroudPrimary ': dataId.id === params.id })}>
-                                                <span className={cn('btn', { 'font-medium text-l text-primary-backgroudPrimary ': dataId.id === params.id })}>CMND/CCCD : {dataId.id}</span>
-                                                <span className={cn('btn', { 'font-medium text-l text-primary-backgroudPrimary mb-5': dataId.id === params.id })}>NGƯỜI DÙNG : {dataId.firstName} {dataId.lastName}</span>
-                                                <Separator className={cn('h-[2px]', { 'm bg-primary-backgroudPrimary ': dataId.id === params.id })} />
-                                            </Card>
-                                        </Link>
-                                    ))
-                                }
+            <Toaster />
+            <div className="bg-white flex justify-between  w-full ">
 
-                            </div>
-                        )
+                {/* phần sidebar để chuyển trang userId */}
+                <div className="hidden md:flex flex-col p-3">
+                    <DataTablePagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        setCurrentPage={setCurrentPage}
+                    />
+                    {
+                        data.map((dataId: any, index: any) => (
+                            <Link href={`/dashboard/user/${dataId.id}`} key={index}>
+                                <Card key={index} className={cn('my-3 p-2 flex flex-col items-start hover:bg-slate-100', { 'font-medium text-l border-primary-backgroudPrimary': dataId.id === params.id })}>
+                                    <div className="flex items-center gap-4">
+                                        <div className="font-medium dark:text-white flex flex-col justify-center">
+                                            <span className={cn('btn', { 'font-medium text-l text-primary-backgroudPrimary': dataId.id === params.id })}>{dataId.id}</span>
+                                            <span className={cn('btn', { 'font-medium text-l text-primary-backgroudPrimary mb-5': dataId.id === params.id })}>{dataId.firstName} {dataId.lastName}</span>
+                                        </div>
+                                    </div>
+                                    <Separator className={cn('h-[2px]', { 'm bg-primary-backgroudPrimary': dataId.id === params.id })} />
+                                </Card>
+                            </Link>
+                        ))
                     }
                 </div>
+
 
                 <div className="flex-1 border-l-8 border-slate-100">
                     <div className="p-3">
                         <div className="px-4 space-y-6 md:px-6">
-                            <header className="space-y-1.5">
+                            {/* phần đầu có ảnh và thông tin và nút chỉnh sữa */}
+                            <header className="space-y-1.5 flex justify-between">
                                 <div className="flex items-center space-x-4">
                                     <img src={
                                         `${userId.gender === 'Male' ? `https://avatar.iran.liara.run/public/boy?username=${userId.firstName}` :
                                             `https://avatar.iran.liara.run/public/boy?username=${userId.firstName}`}`
                                     }
-
-
                                         alt="Avatar" width="96" height="96" className="border rounded-full" />
                                     <div className="space-y-1.5">
                                         <h1 className="text-2xl font-bold">{userId?.lastName} {userId?.firstName}</h1>
                                         <p className="text-gray-500 dark:text-gray-400">{userId?.dob}</p>
                                     </div>
                                 </div>
+
+                                <div>
+                                    {/* <UserEditButton user={userId as Employee}/> */}
+                                    <Pencil size={25}/>
+                                </div>
                             </header>
+
+                            {/* hiển thị userId ở đây */}
                             <div className="space-y-6">
                                 <div className="space-y-2">
                                     <h2 className="text-lg font-semibold">THÔNG TIN CÁ NHÂN</h2>
@@ -212,13 +204,21 @@ export default function UserIDPage() {
                                                 {userId?.id}
                                             </span>
                                         </div>
+
+                                        <div className="flex flex-col justify-center space-y-2">
+                                            <Label htmlFor="name">Hoạt động</Label>
+                                            <span className="text-gray-400 font-medium w-full py-2 border-solid border-2 border-gray-100 rounded-md px-1">
+                                                {userId?.isActive ? 'Đi làm' : 'Nghỉ việc'}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
-        </Card>
+        </Card >
     );
 }

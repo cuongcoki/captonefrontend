@@ -53,6 +53,7 @@ export default function TableUserFeature({ searchOptions }: Props) {
     } else {
       params.delete(name);
     }
+    params.set("page", "1"); // Reset page to 1 on search
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
@@ -62,7 +63,7 @@ export default function TableUserFeature({ searchOptions }: Props) {
         placeholder="CMND/CCCD..."
         value={searchTearm}
         onChange={searchTearmChange}
-        className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+          className="max-w-sm shadow-sm"
       />
       <Select value={roleId} onValueChange={(value) => roleIdChange(value)}>
         <SelectTrigger className="w-[180px]">
@@ -75,7 +76,7 @@ export default function TableUserFeature({ searchOptions }: Props) {
         </SelectContent>
       </Select>
       <Select value={isActive} onValueChange={(value) => isActiveChange(value)}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-[180px] ">
           <SelectValue placeholder="Trạng thái" />
         </SelectTrigger>
         <SelectContent>

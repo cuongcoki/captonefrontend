@@ -17,9 +17,10 @@ import { Form } from "@/components/ui/form";
 import { formatDate } from "@/lib/utils";
 import { UserUpdateFormType, UserUpdateSchema } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
+import { MyContext } from "./RenderTable";
 
 type Props = {
   user: Employee;
@@ -27,7 +28,7 @@ type Props = {
 
 export default function UserEditButton({ user }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { forceUpdate } = useContext(MyContext);
   const data: UserUpdateFormType = {
     ...user,
     facility: user?.facilityID?.toString(),
@@ -53,7 +54,11 @@ export default function UserEditButton({ user }: Props) {
       .updateUser(updateUser)
       .then((data) => {
         toast.success(data.data.message);
-        setIsOpen(false);
+        setTimeout(() => {
+          setIsOpen(false);
+          forceUpdate();
+          // window.location.href = '/dashboard/user';
+        }, 2000);
       })
       .catch((error) => {
         console.log("UpdateError", error);
@@ -61,15 +66,17 @@ export default function UserEditButton({ user }: Props) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen} >
+
       <DialogTrigger asChild>
-        <Button variant="outline">Chỉnh sửa</Button>
+        <Button variant="outline" className="border-none w-full flex items-center justify-center ">Chỉnh sửa</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
           <DialogTitle>Chỉnh sửa profile</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
+          <Toaster />
           <Form {...form}>
             <form
               className="w-full flex flex-col gap-4"
@@ -121,7 +128,7 @@ export default function UserEditButton({ user }: Props) {
                 label="Căn cước công dân (*)"
               />
               <DialogFooter>
-                <Button type="submit">Chỉnh sửa</Button>
+                <Button type="submit" className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90" >Chỉnh sửa</Button>
               </DialogFooter>
             </form>
           </Form>

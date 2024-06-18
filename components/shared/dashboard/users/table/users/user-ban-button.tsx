@@ -12,17 +12,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { MyContext } from "./RenderTable";
+import { useContext } from "react";
 
 type Props = {
   user: Employee;
 };
 
 export default function UserBanButton({ user }: Props) {
+  const { forceUpdate } = useContext(MyContext);
   const handleClick = () => {
     userApi
       .changeUserStatus(user.id, !user.isActive)
       .then((data) => {
         console.log("changeUserStatus", data);
+        forceUpdate();
       })
       .catch((error) => {
         console.log("changeUserStatus", error);
@@ -30,9 +35,9 @@ export default function UserBanButton({ user }: Props) {
   };
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger>
-        {user.isActive ? "Nghỉ việc" : "Làm lại"}
+    <AlertDialog >
+      <AlertDialogTrigger className="w-full">
+        <Button variant={"outline"} className="border-none w-full flex items-start">{user.isActive ? "Nghỉ việc" : "Làm lại"}</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

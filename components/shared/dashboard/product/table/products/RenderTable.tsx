@@ -21,7 +21,7 @@ export default  function RenderTableProduct() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(5);
   const [open, setOpen] = useState<boolean>(false);
   const [isInProcessing, setIsInProcessing] = useState<boolean>(true);
   const [data, setData] = useState<Product[]>([]);
@@ -65,14 +65,13 @@ export default  function RenderTableProduct() {
               <Dialog  open={open} onOpenChange={setOpen}>
                 <DialogTrigger>
                   <Button variant={"colorCompany"} className="text-xs">
-                    Thêm mới người dùng
+                    Thêm sản phầm mới
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-[50%] min-h-[70%]">
+                <DialogContent className="max-w-[70%] min-h-[90%]">
                   <ProductForm setOpen={setOpen} />
                 </DialogContent>
               </Dialog>
-              <Button variant={"outline"}> <EllipsisVertical size={20} /></Button>
             </div>
           </div>
         </div>

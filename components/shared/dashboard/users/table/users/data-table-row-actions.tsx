@@ -37,13 +37,15 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <UserEditButton user={row._valuesCache as Employee} />
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
+    
         <DropdownMenuItem onClick={() => console.log(row._valuesCache)}>
           CMND/CCCD
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => console.log(row._valuesCache)}>
+          Chi tiết
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
+        <UserEditButton user={row._valuesCache as Employee} />
         <UserBanButton user={row._valuesCache as Employee} />
       </DropdownMenuContent>
     </DropdownMenu>
