@@ -108,7 +108,7 @@ export default function UpdateMaterialHistoryForm({ id }: { id: string }) {
       .then((res) => {
         console.log("UPDATE MATERIAL HISTORY SUCCESS", res.data);
         ForceRender();
-        toast.error("Cập nhật thành công");
+        toast.success("Cập nhật thành công");
       });
   };
 

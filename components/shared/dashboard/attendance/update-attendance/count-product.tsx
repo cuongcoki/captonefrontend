@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,22 +17,35 @@ import { Combobox } from "@/components/shared/common/combobox/combobox";
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import { X } from "lucide-react";
 import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
+import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
 export default function CountProduct({ index }: { index: number }) {
   const { tableData, updateQuantityOfProduct, addNewProduct, removeProduct } =
     useUpdateAttendanceStore();
   const UserData = tableData[index];
   const [productValue, setProductValue] = useState<string>("");
   const [phaseValue, setPhaseValue] = useState<string>("");
-  const dataProduct: ComboboxDataType[] = [
-    { label: "Sản phẩm 1", value: "0" },
-    { label: "Sản phẩm 2", value: "1" },
-    { label: "Sản phẩm 3", value: "2" },
-  ];
-  const dataPhase: ComboboxDataType[] = [
-    { label: "Công đoạn 1", value: "0" },
-    { label: "Công đoạn 2", value: "1" },
-    { label: "Công đoạn 3", value: "2" },
-  ];
+  const { listProduct, listPhase } = useAttendanceStore();
+
+  const [dataProduct, setDataProduct] = useState<ComboboxDataType[]>([]);
+  const [dataPhase, setDataPhase] = useState<ComboboxDataType[]>([]);
+
+  useEffect(() => {
+    setDataProduct(
+      listProduct.data.data.map((product) => ({
+        label: product.name,
+        value: product.id,
+      }))
+    );
+  }, [listProduct]);
+
+  useEffect(() => {
+    setDataPhase(
+      listPhase.data.map((phase) => ({
+        label: phase.name,
+        value: phase.id,
+      }))
+    );
+  }, [listPhase]);
 
   const AddNewProductForUser = () => {
     addNewProduct(index, {

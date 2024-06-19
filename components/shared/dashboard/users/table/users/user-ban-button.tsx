@@ -35,13 +35,18 @@ export default function UserBanButton({ user }: Props) {
   };
 
   return (
-    <AlertDialog >
+    <AlertDialog>
       <AlertDialogTrigger className="w-full">
-        <Button variant={"outline"} className="border-none w-full flex items-start">{user.isActive ? "Nghỉ việc" : "Làm lại"}</Button>
+        <Button
+          variant={"outline"}
+          className="border-none w-full flex items-start"
+        >
+          {user.isActive ? "Nghỉ việc" : "Làm lại"}
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{`Bạn có muốn chuyển trạng thái của ${user.firstName} ${user.lastName} không`}</AlertDialogTitle>
+          <AlertDialogTitle>{`Bạn có muốn chuyển trạng thái của ${user.firstName} ${user.lastName} không?`}</AlertDialogTitle>
           <AlertDialogDescription>
             Sau khi chuyển bạn vẫn có thể đổi lại được
           </AlertDialogDescription>

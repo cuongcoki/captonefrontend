@@ -1,4 +1,4 @@
-import { SearchResponse } from "@/types/util.type";
+import { SearchResponse, SuccessResponse } from "@/types/util.type";
 
 export type AttendanceOverallProps = {
   StartDate: string;
@@ -50,6 +50,15 @@ export type GetAttendanceBody = {
   PageIndex: string;
   PageSize: string;
 };
+type EmployeeProductResponse = {
+  imageUrl: string;
+  productId: string;
+  productName: string;
+  phaseId: string;
+  phaseName: string;
+  quantity: number;
+};
+
 type AttendanceDetail = {
   userId: string;
   date: string;
@@ -59,6 +68,7 @@ type AttendanceDetail = {
   isOverTime: boolean;
   isSalaryByProduct: boolean;
   isManufacture: boolean;
+  employeeProductResponses: EmployeeProductResponse[];
 };
 export type GetAttendanceResponse = SearchResponse<AttendanceDetail[]>;
 
@@ -76,7 +86,7 @@ export type UpdateAttendanceBody = {
   date: string;
   updateAttendances: AttendanceForUpdate[];
 };
-
+//-------------------------------------------- USER --------------------------------------------
 export type GetUsersBody = {
   SearchTerm: string;
   RoleId: string;
@@ -104,3 +114,41 @@ export type AttendanceDetailProps = {
   date: string;
   slot: string;
 };
+
+//-------------------------------------------- Product --------------------------------------------
+export type GetAllProductBody = {
+  SearchTerm: string;
+  IsInProcessing: boolean;
+  PageIndex: Number;
+  PageSize: Number;
+};
+
+type ImageResponse = {
+  id: string;
+  imageUrl: string;
+  isBluePrint: boolean;
+  isMainImage: boolean;
+};
+
+type Product = {
+  id: string;
+  name: string;
+  code: string;
+  price: Number;
+  size: string;
+  description: string;
+  isInProcessing: boolean;
+  imageResponses: ImageResponse[];
+};
+
+export type GetAllProductResponse = SearchResponse<Product[]>;
+
+//-------------------------------------------- Phase --------------------------------------------
+
+type Phase = {
+  id: string;
+  name: string;
+  description: string;
+};
+
+export type GetAllPhaseResponse = SuccessResponse<Phase[]>;
