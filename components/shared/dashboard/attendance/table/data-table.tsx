@@ -51,7 +51,7 @@ export function DataTableForAttendance<TData, TValue>({
     []
   );
   const [data, setData] = React.useState<TData[]>([]);
-  const { setListUser } = useAttendanceStore();
+  const { setListUser, setListPhase, setListProduct } = useAttendanceStore();
   const [force, setForce] = React.useState(0);
   const pathname = usePathname();
   const router = useRouter();
@@ -116,6 +116,34 @@ export function DataTableForAttendance<TData, TValue>({
       });
   }, [setListUser]);
 
+  useEffect(() => {
+    attendanceApi
+      .getALlProduct({
+        SearchTerm: "",
+        pageIndex: 1,
+        pageSize: 10000,
+      })
+      .then(({ data }) => {
+        console.log("Product Data: ", data);
+        setListProduct(data);
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+      });
+  }, [setListProduct]);
+
+  useEffect(() => {
+    attendanceApi
+      .getAllPhase()
+      .then(({ data }) => {
+        console.log("Phase Data: ", data);
+        setListPhase(data);
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+      });
+  }, [setListPhase]);
+
   return (
     <div>
       <div className="my-2 grid grid-cols-2">
@@ -131,61 +159,63 @@ export function DataTableForAttendance<TData, TValue>({
       </div>
 
       <div className="rounded-md attendance-table-overall">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      className="border border-gray-200"
-                      key={header.id}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  className="hover:bg-white"
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      className="hover:bg-gray-100 border border-gray-200"
-                      key={cell.id}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+        <AttendanceContext.Provider value={{ ForceRender }}>
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead
+                        className="border border-gray-200"
+                        key={header.id}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    className="hover:bg-white"
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell
+                        className="hover:bg-gray-100 border border-gray-200"
+                        key={cell.id}
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </AttendanceContext.Provider>
         <div className="flex items-center justify-end space-x-2 py-4">
           <Button
             variant="outline"

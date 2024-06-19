@@ -20,12 +20,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
 import { attendanceApi } from "@/apis/attendance.api";
 import { CreateAttendanceSlotBody } from "@/types/attendance.type";
 import toast, { Toaster } from "react-hot-toast";
+import { AttendanceContext } from "@/components/shared/dashboard/attendance/table/data-table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -44,6 +45,7 @@ export function AddEmployeeToAttendance<TData, TValue>({
   );
   const [data, setData] = React.useState<TData[]>([]);
   const { listUser } = useAttendanceStore();
+  const { ForceRender } = useContext(AttendanceContext);
 
   const table = useReactTable({
     data,
@@ -106,6 +108,7 @@ export function AddEmployeeToAttendance<TData, TValue>({
       .createAttendance(createAttendanceSlotBody)
       .then(({ data }) => {
         console.log(data);
+        ForceRender();
         toast.success("data.message");
       })
       .catch((error) => {
