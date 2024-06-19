@@ -33,6 +33,7 @@ import { materiaHistoryApi } from "@/apis/material-history.api";
 import { useMaterialHistoryStore } from "@/components/shared/dashboard/material-history/table/material-history-store";
 import { format } from "date-fns";
 import { MaterialHistoryContext } from "@/components/shared/dashboard/material-history/table/data-table";
+import toast from "react-hot-toast";
 
 const linkImage =
   "https://images.pexels.com/photos/986733/pexels-photo-986733.jpeg?cs=srgb&dl=pexels-nickoloui-986733.jpg&fm=jpg";
@@ -107,7 +108,7 @@ export default function UpdateMaterialHistoryForm({ id }: { id: string }) {
       .then((res) => {
         console.log("UPDATE MATERIAL HISTORY SUCCESS", res.data);
         ForceRender();
-        alert("Cập nhật thành công");
+        toast.error("Cập nhật thành công");
       });
   };
 

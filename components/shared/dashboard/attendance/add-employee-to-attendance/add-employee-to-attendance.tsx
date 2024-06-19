@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
 import { attendanceApi } from "@/apis/attendance.api";
 import { CreateAttendanceSlotBody } from "@/types/attendance.type";
+import toast, { Toaster } from "react-hot-toast";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -105,11 +106,11 @@ export function AddEmployeeToAttendance<TData, TValue>({
       .createAttendance(createAttendanceSlotBody)
       .then(({ data }) => {
         console.log(data);
-        alert("Tạo báo cáo thành công");
+        toast.success("data.message");
       })
       .catch((error) => {
         console.log(error);
-        alert("Tạo báo cáo thất bại");
+        toast.error("error.message");
       });
   };
 

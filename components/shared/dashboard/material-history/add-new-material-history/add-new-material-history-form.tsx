@@ -33,6 +33,7 @@ import {
 import { useMaterialHistoryStore } from "@/components/shared/dashboard/material-history/table/material-history-store";
 import { materiaHistoryApi } from "@/apis/material-history.api";
 import { MaterialHistoryContext } from "@/components/shared/dashboard/material-history/table/data-table";
+import toast from "react-hot-toast";
 
 export default function AddNewMeterialHistoryForm() {
   const [comboboxData, setComboboxData] = useState<ComboboxDataType[]>([]);
@@ -69,7 +70,7 @@ export default function AddNewMeterialHistoryForm() {
         description: "1",
       })
       .then(() => {
-        alert("Thêm thành công");
+        toast.success("Thêm mới lịch sử nhập hàng thành công");
         ForceRender();
       });
   };

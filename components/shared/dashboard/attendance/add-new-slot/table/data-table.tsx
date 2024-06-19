@@ -32,6 +32,7 @@ import { attendanceApi } from "@/apis/attendance.api";
 import { CreateAttendanceSlotBody } from "@/types/attendance.type";
 import { set } from "date-fns";
 import { AttendanceContext } from "@/components/shared/dashboard/attendance/table/data-table";
+import toast from "react-hot-toast";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -88,11 +89,11 @@ export function DataTableForAttendanceForm<TData, TValue>({
       .then(({ data }) => {
         console.log(data);
         ForceRender();
-        alert("Tạo báo cáo thành công");
+        toast.success(data.message);
       })
       .catch((error) => {
         console.log(error);
-        alert("Tạo báo cáo thất bại");
+        toast.error(error.message);
       });
   };
 

@@ -13,6 +13,7 @@ import {
   AttendanceForUpdate,
   UpdateAttendanceBody,
 } from "@/types/attendance.type";
+import toast from "react-hot-toast";
 
 export default function UpdateAttendance({
   date,
@@ -92,11 +93,11 @@ export default function UpdateAttendance({
       .then(({ data }) => {
         console.log(data);
         ForceRender();
-        alert("Cập nhật thành công");
+        toast.success(data.message);
       })
       .catch((error) => {
         console.log("Update error", error.response.data.error);
-        alert("Cập nhật thất bại: ");
+        toast.error(error.response.data.error);
       });
   };
 
