@@ -53,7 +53,7 @@ export default function SideNavbar({}: Props) {
                 variant: "colorCompany",
               },
               {
-                title: "Người dùng",
+                title: "Nhân Viên",
                 href: "/dashboard/user",
                 icon: UserRound,
                 variant: "ghost",

@@ -20,6 +20,15 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import toast, { Toaster } from "react-hot-toast";
 import { Separator } from "@/components/ui/separator";
@@ -56,7 +65,7 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
       password: "",
       roleId: 1,
       isActive: true,
-      facility: "",
+      companyId: "",
       id: "",
       salaryByDay: 0,
     },
@@ -73,12 +82,12 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
       password,
       roleId,
       isActive,
-      facility,
+      companyId,
       id,
       salaryByDay,
     } = data;
     setLoading(true);
-
+    console.log('dataCreateUser',data)
     userApi
       .createUser({
         firstName,
@@ -90,7 +99,7 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
         password,
         roleId,
         isActive,
-        facility,
+        companyId,
         id,
         salaryByDay,
       })
@@ -150,7 +159,7 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
                 return (
                   <FormItem>
                     <FormLabel className="text-primary-backgroudPrimary">
-                      Họ tên nhân viên*
+                      Họ Nhân Viên*
                     </FormLabel>
                     <FormControl>
                       <Input type="text" {...field} />
@@ -171,7 +180,7 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
                 return (
                   <FormItem>
                     <FormLabel className="text-primary-backgroudPrimary">
-                      Địa chỉ, nơi ở
+                      Địa chỉ cư trú
                     </FormLabel>
                     <FormControl>
                       <Input type="text" {...field} />
@@ -190,7 +199,7 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
                 return (
                   <FormItem>
                     <FormLabel className="text-primary-backgroudPrimary">
-                      Điện thoại
+                      Số điện thoại
                     </FormLabel>
                     <FormControl>
                       <Input type="text" {...field} />
@@ -222,24 +231,33 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
               }}
             />
 
-            {/* facility */}
+            {/* companyId */}
             <FormField
               control={form.control}
-              name="facility"
+              name="companyId"
               render={({ field }) => {
                 return (
                   <FormItem>
                     <FormLabel className="text-primary-backgroudPrimary">
                       Cơ sở nào *
                     </FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <Input type="text" {...field} />
+                      <SelectTrigger>
+                        <SelectValue placeholder="Hãy chọn cơ sở" defaultValue={'4f45353f-3ff1-4a0e-b44b-69268ddc63b2'}/>
+                      </SelectTrigger>
                     </FormControl>
+                    <SelectContent>
+                      <SelectItem value="4f45353f-3ff1-4a0e-b44b-69268ddc63b2">Cơ Sở Sơn Nguyễn</SelectItem>
+                    </SelectContent>
+                  </Select>
                     <FormMessage />
                   </FormItem>
                 );
               }}
             />
+
+            
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -250,7 +268,7 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-primary-backgroudPrimary">
-                    Ngày/tháng/năm sinh
+                    Ngày sinh
                   </FormLabel>
                   <FormControl>
                     <Input type="text" placeholder="DD/MM/YYYY" {...field} />
@@ -279,7 +297,7 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
               }}
             />
           </div>
-          
+
           {/* gender */}
           <FormField
             control={form.control}
@@ -347,7 +365,7 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
           className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
           disabled={loading}
         >
-          {loading ? "Loading..." : "GỬI"}
+          {loading ? "Loading..." : "Thêm Nhân Viên"}
         </Button>
       </form>
     </Form>

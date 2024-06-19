@@ -18,12 +18,43 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { authApi } from "@/apis/auth.api";
+import toast, { Toaster } from "react-hot-toast";
+import { error } from "console";
+import { useState } from "react";
 
 export default function Header() {
+    // ** state
+    const [loading, setLoading] = useState<boolean>(false);
+    // ** hooks
     const user = useAuth();
-    
+
+    const router = useRouter();
+
+    const handleLogout = () => {
+        setLoading(true)
+        const id: any = user.user?.id;
+
+        authApi
+            .logout(id)
+            .then(({ data }) => {
+                console.log('dataLogout', data);
+                user.logout();
+                router.push('/sign-in'); 
+                toast.success(data.message)
+            })
+            .catch(error => {
+                toast.error(error.message);
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    };
     return (
         <div className=" bg-slate-100 h-12 flex items-center justify-between p-8 border-b border-slate-300 shadow-md">
+            <Toaster />
             <div className="flex items-center">
                 {/* Recent activities */}
                 {/* <Button className="" variant={'ghost'}>
@@ -67,8 +98,8 @@ export default function Header() {
                         <DropdownMenuContent align="end" >
                             <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Trang cá nhân</DropdownMenuItem>
-                            <DropdownMenuItem>Đăng xuất</DropdownMenuItem>
+                            <DropdownMenuItem><Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link></DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleLogout}>Đăng xuất</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
