@@ -20,6 +20,7 @@ import DragAndDropFile from "@/components/shared/common/input/drag&drop-file/dra
 import { number } from "zod";
 import { materialApi } from "@/apis/material.api";
 import { MyContext } from "@/components/shared/dashboard/material/table/data-table";
+import toast from "react-hot-toast";
 
 const linkImage =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQnXcFa9HVz9wxTvYDQRoPe76rcZuhUPbH2g&s";
@@ -79,11 +80,12 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       .then(({ data }) => {
         if (data.isSuccess) {
           forceUpdate();
-          alert("Cập nhật thành công");
+          toast.success(data.message);
         }
       })
       .catch((error) => {
         console.log("ERROR IN UPDATE MATERIAL", error);
+        toast.error(error.response.data.message);
       });
   };
 

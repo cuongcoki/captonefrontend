@@ -29,16 +29,16 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
     handleAttendanceChange: (index, checked) => {
       set((state) => {
         const newData = [...state.tableData];
-        newData[index].isAttendance = checked ? "true" : "false";
+        newData[index].isAttendance = checked;
         return { tableData: newData };
       });
     },
     updateManufacture: (index, value) => {
       set((state) => {
         const newData = [...state.tableData];
-        newData[index].isManufacture = value ? "true" : "false";
+        newData[index].isManufacture = value;
         if (!value) {
-          newData[index].isSalaryByProduct = "false";
+          newData[index].isSalaryByProduct = false;
         }
         return { tableData: newData };
       });
@@ -46,7 +46,7 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
     updateSalaryByProduct(index, value) {
       set((state) => {
         const newData = [...state.tableData];
-        newData[index].isSalaryByProduct = value ? "true" : "false";
+        newData[index].isSalaryByProduct = value;
         return { tableData: newData };
       });
     },

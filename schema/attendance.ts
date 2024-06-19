@@ -105,7 +105,7 @@ export const AttendanceDetailSchema = z.object({
   userName: z.string(),
   userID: z.string(),
   products: z.array(AttendanceDetailProductSchema),
-  isAttendance: z.string(),
+  isAttendance: z.boolean(),
   hourOverTime: z.string().refine(
     (value) => {
       const parsedValue = parseFloat(value);
@@ -115,8 +115,8 @@ export const AttendanceDetailSchema = z.object({
       message: "HourOverTime must be a number greater than 0",
     }
   ),
-  isSalaryByProduct: z.string(),
-  isManufacture: z.string(),
+  isSalaryByProduct: z.boolean(),
+  isManufacture: z.boolean(),
 });
 
 export type AttendanceDetailType = z.infer<typeof AttendanceDetailSchema>;
