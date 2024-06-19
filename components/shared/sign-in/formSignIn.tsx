@@ -113,7 +113,7 @@ export default function FormSignIn() {
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel className="flex items-center text-secondary-backgroudPrimary">
-                                NHẬP MẬT KHẨU
+                                MẬT KHẨU
                             </FormLabel>
                             <div className="relative">
                                 <FormControl >

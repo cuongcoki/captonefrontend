@@ -85,7 +85,7 @@ export const UsersSchema = z.object({
     ),
   roleId: z.number().min(1, { message: "roleId is required." }),
   isActive: z.boolean(),
-  facility: z.string().min(1, { message: "Facility is required." }),
+  companyId: z.string().min(1, { message: "Facility is required." }),
   id: z.string().refine(
     (id) => {
       const idPattern = /^\d{12}$/;

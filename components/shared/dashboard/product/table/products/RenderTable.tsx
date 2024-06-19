@@ -53,7 +53,7 @@ export default  function RenderTableProduct() {
     <div className="px-3 ">
       <div className="flex items-center justify-between  mb-4">
         <Input
-          placeholder="CMND/CCCD..."
+          placeholder="	Mã CODE..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-[30%]"

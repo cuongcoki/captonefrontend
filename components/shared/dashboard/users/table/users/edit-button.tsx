@@ -31,7 +31,7 @@ export default function UserEditButton({ user }: Props) {
   const { forceUpdate } = useContext(MyContext);
   const data: UserUpdateFormType = {
     ...user,
-    facility: user?.facilityID?.toString(),
+    companyId: user?.companyId?.toString(),
   };
   const form = useForm({
     resolver: zodResolver(UserUpdateSchema),
@@ -43,7 +43,7 @@ export default function UserEditButton({ user }: Props) {
       address: data.address,
       phone: data.phone,
       roleId: data.roleId,
-      facility: data.facility,
+      companyId: data.companyId,
       id: data.id,
       salaryByDay: data.salaryByDay,
     },
@@ -73,7 +73,7 @@ export default function UserEditButton({ user }: Props) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
-          <DialogTitle>Chỉnh sửa profile</DialogTitle>
+          <DialogTitle>Thay Đổi thông tin của Nhân viên</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
           <Toaster />
@@ -95,7 +95,7 @@ export default function UserEditButton({ user }: Props) {
               <AppUserInput
                 formControl={form.control}
                 name="dob"
-                label="Ngày tháng năm sinh (*)"
+                label="Ngày sinh (*)"
               />
               <AppUserInput
                 formControl={form.control}
@@ -105,7 +105,7 @@ export default function UserEditButton({ user }: Props) {
               <AppUserInput
                 formControl={form.control}
                 name="address"
-                label="Địa chỉ (*)"
+                label="Địa chỉ cư trú (*)"
               />
               <AppUserInput
                 formControl={form.control}
@@ -119,13 +119,13 @@ export default function UserEditButton({ user }: Props) {
               />
               <AppUserInput
                 formControl={form.control}
-                name="facility"
+                name="companyId"
                 label="Cơ sở (*)"
               />
               <AppUserInput
                 formControl={form.control}
                 name="id"
-                label="Căn cước công dân (*)"
+                label="Số định danh cá nhân/CMND (*)"
               />
               <DialogFooter>
                 <Button type="submit" className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90" >Chỉnh sửa</Button>

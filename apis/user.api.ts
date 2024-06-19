@@ -29,7 +29,7 @@ type userType = {
   gender: string;
   salaryByDay: number;
   isActive: boolean;
-  facility: string;
+  companyId: string;
 };
 
 export const userApi = {

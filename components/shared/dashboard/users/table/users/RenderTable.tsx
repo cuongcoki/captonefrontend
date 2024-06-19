@@ -66,7 +66,7 @@ export default function RenderTableUsers({ searchParams }: Props) {
     fetchData();
   }, [searchParams, currentPage, pageSize, force]);
 
-  console.log("Data:", data);
+  // console.log("Data:", data);
   return (
     <div className="px-3 ">
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">

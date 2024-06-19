@@ -25,7 +25,7 @@ export type Employee = {
   phone: string;
   roleId: number;
   isActive: boolean;
-  facilityID: number;
+  companyId: string;
   salaryByDay: number;
 }
 
@@ -63,7 +63,7 @@ export const columns: ColumnDef<Employee>[] = [
         CMND/CCCD
       </Button>
     ),
-    cell: ({ row }) => <Link href={`/dashboard/user/${row.getValue("id")}`}><div className="w-[80px]">{row.getValue("id")}</div></Link>,
+    cell: ({ row }) => <Link href={`/profile/${row.getValue("id")}`}><div className="w-[80px]">{row.getValue("id")}</div></Link>,
     enableSorting: false,
     enableHiding: false,
   },
@@ -204,6 +204,19 @@ export const columns: ColumnDef<Employee>[] = [
       )
     },
   },
+
+  // {
+  //   accessorKey: "companyId",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //       >
+  //        companyId 
+  //       </Button>
+  //     )
+  //   },
+  // },
 
   {
     accessorKey: "isActive",
