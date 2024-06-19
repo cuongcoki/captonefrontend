@@ -26,4 +26,6 @@ export const authApi = {
       `${endPointConstant.BASE_URL}/auth/confirm/forgetpassword`,
       body
     ),
+  logout: (id: string) =>
+    axiosClient.post(`${endPointConstant.BASE_URL}/auth/logout/${id}`),
 };

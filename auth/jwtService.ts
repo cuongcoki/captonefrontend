@@ -1,74 +1,79 @@
 // ** Axios import
-import axios from "axios"
+import axios from "axios";
 
 // ** Config import
-import jwtConfig from "@/configs/auth"
-import { authService } from "./authService"
-import { setupCache } from 'axios-cache-interceptor';
-const axiosInstance  = axios.create({
+import jwtConfig from "@/configs/auth";
+import { authService } from "./authService";
+import { setupCache } from "axios-cache-interceptor";
+const axiosInstance = axios.create({
   headers: {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   },
-  responseType: "json"
-})
+  responseType: "json",
+});
 const cache = setupCache(axiosInstance, {
-  ttl: 15 * 60 * 1000 // Thời gian bộ nhớ đệm (15 phút)
+  ttl: 15 * 60 * 1000, // Thời gian bộ nhớ đệm (15 phút)
 });
 const axiosClient = cache;
 axiosClient.interceptors.request.use(
-  async config => {
-    const jwtToken = localStorage.getItem(jwtConfig.storageTokenKeyName)
+  async (config) => {
+    const jwtToken = localStorage.getItem(jwtConfig.storageTokenKeyName);
     if (jwtToken && config.headers) {
-      config.headers.Authorization = `${jwtConfig.tokenType} ${jwtToken}`
+      config.headers.Authorization = `${jwtConfig.tokenType} ${jwtToken}`;
     }
 
-    return config
+    return config;
   },
-  async error => {
-    return Promise.reject(error.response.data.errors[0].message)
+  async (error) => {
+    return Promise.reject(error.response.data.errors[0].message);
   }
-)
+);
 axiosClient.interceptors.response.use(
-  async response => {
-    return response
+  async (response) => {
+    return response;
   },
-  async error => {
-    console.log(error)
+  async (error) => {
+    console.log(error);
     if (error.response) {
       // const { code } = error
-      const config = error.config
+      const config = error.config;
       if (error.response.status === 401) {
         return authService
           .refreshToken()
-          .then(rs => {
+          .then((rs) => {
             if (rs.data?.data?.accessToken) {
-              const payload = rs.data.data
+              const payload = rs.data.data;
               config.headers = {
                 ...config.headers,
-                Authorization: `${jwtConfig.tokenType} ${payload.accessToken}`
-              }
-              authService.updateStorageWhenRefreshToken(payload)
+                Authorization: `${jwtConfig.tokenType} ${payload.accessToken}`,
+              };
+              authService.updateStorageWhenRefreshToken(payload);
 
-              return axiosClient(config)
+              return axiosClient(config);
             } else {
-              console.log("loi2")
-              authService.removeLocalStorageWhenLogout()
-              window.location.href = jwtConfig.loginEndpoint
+              console.log("loi2");
+              authService.removeLocalStorageWhenLogout();
+              window.location.href = jwtConfig.loginEndpoint;
             }
           })
-          .catch(err => {
-            console.log("loi1")
-            console.log(err)
-            authService.removeLocalStorageWhenLogout()
+          .catch((err) => {
+            console.log("loi1");
+            console.log(err);
+            authService.removeLocalStorageWhenLogout();
 
-            window.location.href = jwtConfig.loginEndpoint
-          })
+            window.location.href = jwtConfig.loginEndpoint;
+          });
       }
 
-      return Promise.reject(error)
+      return Promise.reject(error);
     }
 
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
-export default axiosClient
+);
+
+const clearCache = (url: string) => {
+  axiosClient.storage.remove(url);
+};
+
+export default axiosClient;

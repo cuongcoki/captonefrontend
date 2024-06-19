@@ -1,6 +1,3 @@
-
-
-
 export const Gender = [
   {
     value: "Male",
@@ -9,6 +6,19 @@ export const Gender = [
   {
     value: "Female",
     label: "Nữ",
+  },
+
+]
+
+
+export const isActive = [
+  {
+    value: true,
+    label: "Đi làm",
+  },
+  {
+    value: false,
+    label: "Nghỉ việc",
   },
 
 ]

@@ -30,39 +30,21 @@ import {
   ComboboxDataType,
   ComboboxForForm,
 } from "@/components/shared/common/combobox/combobox-for-form";
-
-const FakeDataCombobox: ComboboxDataType[] = [
-  {
-    value: "1",
-    label: "Option 1",
-  },
-  {
-    value: "2",
-    label: "Option 2",
-  },
-  {
-    value: "3",
-    label: "Option 3",
-  },
-  {
-    value: "4",
-    label: "Option 4",
-  },
-  {
-    value: "5",
-    label: "Option 5",
-  },
-];
+import { useMaterialHistoryStore } from "@/components/shared/dashboard/material-history/table/material-history-store";
+import { materiaHistoryApi } from "@/apis/material-history.api";
+import { MaterialHistoryContext } from "@/components/shared/dashboard/material-history/table/data-table";
 
 export default function AddNewMeterialHistoryForm() {
   const [comboboxData, setComboboxData] = useState<ComboboxDataType[]>([]);
+  const { listMaterial } = useMaterialHistoryStore();
+  const { ForceRender } = React.useContext(MaterialHistoryContext);
 
   useEffect(() => {
     const getComboboxData = async () => {
-      setComboboxData(FakeDataCombobox);
+      setComboboxData(listMaterial);
     };
     getComboboxData();
-  }, [comboboxData]);
+  }, [listMaterial]);
 
   const form = useForm<materialHistoryFormType>({
     resolver: zodResolver(materialHistoryFormSchema),
@@ -75,17 +57,26 @@ export default function AddNewMeterialHistoryForm() {
   });
 
   const onSubmit = (data: materialHistoryFormType) => {
-    console.log(data);
+    console.log("SUBMIT DATA", data);
+    materiaHistoryApi
+      .addMaterialHistory({
+        materialId: data.materialID,
+        quantity: data.quantity,
+        price: data.price,
+        importDate: data.importAt,
+        quantityPerUnit: "1",
+        quantityInStock: "1",
+        description: "1",
+      })
+      .then(() => {
+        alert("Thêm thành công");
+        ForceRender();
+      });
   };
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit((data: materialHistoryFormType) => {
-          console.log(data);
-        })}
-        className="space-y-7"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
         <FormField
           control={form.control}
           name="materialID"
@@ -112,7 +103,16 @@ export default function AddNewMeterialHistoryForm() {
               {/* <FormLabel>Đơn vị</FormLabel> */}
               <FormControl>
                 {/* <Input placeholder="Nhập đơn vị ở đây" {...field} /> */}
-                <InputAnimation nameFor="Số lượng" {...field} />
+                <InputAnimation
+                  nameFor="Số lượng"
+                  {...field}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = event.target.value;
+                    const numericInput = inputValue.replace(/\D/g, "");
+
+                    field.onChange(numericInput);
+                  }}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />

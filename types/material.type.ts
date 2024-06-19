@@ -1,5 +1,5 @@
 export type searchMaterial = {
-  serachTerm: string;
+  SearchTerm: string;
   pageIndex: number;
   pageSize: number;
 };

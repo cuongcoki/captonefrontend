@@ -36,7 +36,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
     onToggleBlueprint,
     onToggleMainImage
 }) => {
-    // console.log('images', images)
+    console.log('images', images)
     return (
         <div className="flex items-center justify-center w-full h-full ">
             <Carousel className="w-full h-full flex flex-col">
