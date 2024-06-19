@@ -7,7 +7,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -21,34 +20,29 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import AddNewMeterialHistory from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history";
-import DatePicker from "@/components/shared/common/datapicker/date-picker";
-import FillterByDate from "@/components/shared/dashboard/material-history/table/filter-by-date";
-import AddNewAttendanceSLot from "@/components/shared/dashboard/attendance/add-new-slot/add-new-slot";
 import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
 import { attendanceApi } from "@/apis/attendance.api";
 import { CreateAttendanceSlotBody } from "@/types/attendance.type";
-import { set } from "date-fns";
-import { AttendanceContext } from "@/components/shared/dashboard/attendance/table/data-table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
+  date: string;
+  slot: string;
 }
 
-export function DataTableForAttendanceForm<TData, TValue>({
+export function AddEmployeeToAttendance<TData, TValue>({
   columns,
+  date,
+  slot,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [data, setData] = React.useState<TData[]>(
-    useAttendanceStore().listUser as TData[]
-  );
-  const [selectedValue, setSelectedValue] = useState("1");
-  const { ForceRender } = useContext(AttendanceContext);
+  const [data, setData] = React.useState<TData[]>([]);
+  const { listUser } = useAttendanceStore();
 
   const table = useReactTable({
     data,
@@ -65,6 +59,30 @@ export function DataTableForAttendanceForm<TData, TValue>({
     },
   });
 
+  useEffect(() => {
+    attendanceApi
+      .getAttendance({
+        Date: date,
+        SlotId: slot,
+        PageIndex: "1",
+        PageSize: "100",
+        SearchTerm: "",
+      })
+      .then(({ data }) => {
+        console.log("data", data.data.data);
+        const dataAttend = data.data.data;
+        const setDataAttendance: Set<string> = new Set();
+        dataAttend.forEach((item) => {
+          setDataAttendance.add(item.userId);
+        });
+        const userLeftOver = listUser.filter((user) => {
+          return !setDataAttendance.has(user.id);
+        });
+        // console.log("userLeftOver", userLeftOver);
+        setData(userLeftOver as TData[]);
+      });
+  }, [date, slot, listUser]);
+
   useEffect(() => {}, []);
 
   const createSlot = () => {
@@ -77,7 +95,7 @@ export function DataTableForAttendanceForm<TData, TValue>({
         isSalaryByProduct: row.original.isSalaryByProductSelected || false,
       }));
     const createAttendanceSlotBody: CreateAttendanceSlotBody = {
-      slotId: selectedValue,
+      slotId: slot,
       createAttendances: tableData,
     };
 
@@ -87,7 +105,6 @@ export function DataTableForAttendanceForm<TData, TValue>({
       .createAttendance(createAttendanceSlotBody)
       .then(({ data }) => {
         console.log(data);
-        ForceRender();
         alert("Tạo báo cáo thành công");
       })
       .catch((error) => {
@@ -98,7 +115,13 @@ export function DataTableForAttendanceForm<TData, TValue>({
 
   return (
     <>
-      <div className="w-full grid grid-rows-2 py-4">
+      <div className="w-full flex items-center space-x-5">
+        <div className="font-semibold text-xl">Tạo thêm nhân viên</div>
+        <div>
+          {date} - Slot {slot}
+        </div>
+      </div>
+      <div className="grid grid-rows-2 sm:grid-cols-2 sm:grid-rows-1 py-4">
         <Input
           placeholder="Filter name..."
           value={
@@ -109,31 +132,10 @@ export function DataTableForAttendanceForm<TData, TValue>({
           }
           className="max-w-sm shadow-ssm"
         />
-        <div className="flex items-center mt-4">
-          <div className=" h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ">
-            <select
-              id="slot"
-              value={selectedValue}
-              onChange={(event: any) => {
-                setSelectedValue(event.target.value);
-              }}
-            >
-              <option value={1}>Slot Sáng</option>
-              <option value={2}>Slot Chiều</option>
-              <option value={3}>Tăng ca</option>
-            </select>
-          </div>
 
-          <Button
-            className="ml-auto"
-            onClick={createSlot}
-            onChange={(event: any) => {
-              setSelectedValue(event.target.value);
-            }}
-          >
-            Tạo báo cáo
-          </Button>
-        </div>
+        <Button className="ml-auto mt-2 sm:mt-0" onClick={createSlot}>
+          Thêm nhân viên
+        </Button>
       </div>
       <div className="rounded-md border w-full overflow-auto">
         <Table>
