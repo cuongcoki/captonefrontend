@@ -17,6 +17,7 @@ import InputAnimation from "@/components/shared/common/input/input";
 import DragAndDropFile from "@/components/shared/common/input/drag&drop-file/drag&drop-file";
 import { materialApi } from "@/apis/material.api";
 import { MyContext } from "@/components/shared/dashboard/material/table/data-table";
+import toast from "react-hot-toast";
 
 export default function AddNewMeterialForm() {
   const [materialImage, setMaterialImage] = useState<any>("");
@@ -42,7 +43,7 @@ export default function AddNewMeterialForm() {
     try {
       materialApi.addMaterial(data).then(({ data }) => {
         if (data.isSuccess) {
-          alert("Thêm thành công");
+          toast.success(data.message);
           forceUpdate();
         }
       });

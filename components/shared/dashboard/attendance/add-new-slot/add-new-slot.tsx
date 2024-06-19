@@ -1,4 +1,5 @@
-import AddNewAttendanceSlotForm from "@/components/shared/dashboard/attendance/add-new-slot/add-new-slot-form";
+import { columnsForAttendanceForm } from "@/components/shared/dashboard/attendance/add-new-slot/table/colums";
+import { DataTableForAttendanceForm } from "@/components/shared/dashboard/attendance/add-new-slot/table/data-table";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,7 +21,7 @@ export default function AddNewAttendanceSLot() {
           </Button>
         </DialogTrigger>
         <DialogContent
-          className=" max-w-[825px] max-h-[600px] overflow-auto"
+          className=" max-w-[80vw] max-h-[80vh]  overflow-y-auto"
           style={{
             msOverflowStyle: "none" /* IE, Edge */,
             scrollbarWidth: "none" /* Firefox */,
@@ -36,7 +37,7 @@ export default function AddNewAttendanceSLot() {
               Tạo báo cáo điểm danh mới
             </DialogTitle>
           </DialogHeader>
-          <AddNewAttendanceSlotForm />
+          <DataTableForAttendanceForm columns={columnsForAttendanceForm} />
         </DialogContent>
       </Dialog>
     </>
