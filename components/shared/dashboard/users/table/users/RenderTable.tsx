@@ -4,7 +4,7 @@ import { userApi } from "@/apis/user.api";
 import { Employee, columns } from "./Column";
 import { DataTable } from "./DataTable";
 import { DataTablePagination } from "./data-table-pagination";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EllipsisVertical } from "lucide-react";
@@ -23,6 +23,12 @@ import TableUserFeature from "@/components/shared/dashboard/users/table/users/us
 type Props = {
   searchParams: UserSearchParams;
 };
+type ContexType = {
+  forceUpdate: () => void;
+};
+export const MyContext = createContext<ContexType>({
+  forceUpdate: () => { },
+});
 
 export default function RenderTableUsers({ searchParams }: Props) {
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,6 +37,9 @@ export default function RenderTableUsers({ searchParams }: Props) {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(5);
   const [open, setOpen] = useState<boolean>(false);
+
+  const [force, setForce] = useState<number>(1);
+  const forceUpdate = () => setForce((prev) => prev + 1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,47 +64,52 @@ export default function RenderTableUsers({ searchParams }: Props) {
     };
 
     fetchData();
-  }, [searchParams, currentPage, pageSize]);
+  }, [searchParams, currentPage, pageSize, force]);
 
-  console.log("Data:", data);
+  // console.log("Data:", data);
   return (
     <div className="px-3 ">
-      <div className="flex items-center justify-between  mb-4">
-        <TableUserFeature searchOptions={searchParams} />
+      <div className="flex flex-col md:flex-row items-center justify-between mb-4">
 
-        <div>
-          <div className="flex items-center justify-end p-3">
-            <div className="flex items-center space-x-2">
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger>
-                  <Button variant={"colorCompany"} className="text-xs">
-                    Thêm mới người dùng
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="min-w-[50%]">
-                  <DialogTitle className="text-2xl text-primary-backgroudPrimary">
-                    Thêm mới người dùng
-                  </DialogTitle>
-                  <Separator className="h-1" />
-                  <UsersForm setOpen={setOpen} />
-                </DialogContent>
-              </Dialog>
-              <Button variant={"outline"}>
-                {" "}
-                <EllipsisVertical size={20} />
-              </Button>
+        <div className="w-full md:w-auto mb-4 md:mb-0">
+          <TableUserFeature searchOptions={searchParams} />
+        </div>
+
+        <MyContext.Provider value={{ forceUpdate }}>
+          <div className="w-full md:w-auto">
+            <div className="flex items-center justify-end p-3">
+              <div className="flex items-center space-x-2">
+                <Dialog open={open} onOpenChange={setOpen}>
+                  <DialogTrigger>
+                    <Button variant={"colorCompany"} className="text-xs w-full hidden md:block">
+                      Thêm nhân viên mới
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="w-full min-w-[90%] md:min-w-[70%]">
+                    <DialogTitle className="text-2xl text-primary-backgroudPrimary">
+                      Thêm nhân viên mới
+                    </DialogTitle>
+                    <Separator className="h-1" />
+                    <UsersForm setOpen={setOpen} />
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
           </div>
-        </div>
+        </MyContext.Provider>
+
       </div>
-      <>
-        <DataTable columns={columns} data={data} />
-        <DataTablePagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          setCurrentPage={setCurrentPage}
-        />
-      </>
+      <MyContext.Provider value={{ forceUpdate }}>
+        <>
+          <DataTable columns={columns} data={data} />
+          <DataTablePagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
+        </>
+      </MyContext.Provider>
+
     </div>
   );
 }

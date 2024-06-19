@@ -74,17 +74,16 @@ export default function AppUserInput({ formControl, name, label }: Props) {
       render={({ field }) => {
         return (
           <FormItem>
-            <div className="flex items-center justify-between">
+         
               <FormLabel className="flex items-center text-primary-backgroudPrimary">
                 {label}
               </FormLabel>
-              <div className="w-[70%]">
+            
                 <FormControl>
                   <UserInput name={name} field={field} />
                 </FormControl>
                 <FormMessage />
-              </div>
-            </div>
+            
           </FormItem>
         );
       }}
