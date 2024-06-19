@@ -26,8 +26,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-
+} from "@/components/ui/select";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import toast, { Toaster } from "react-hot-toast";
@@ -87,7 +86,7 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
       salaryByDay,
     } = data;
     setLoading(true);
-    console.log('dataCreateUser',data)
+    console.log("dataCreateUser", data);
     userApi
       .createUser({
         firstName,
@@ -130,7 +129,6 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
         className="w-full flex flex-col gap-4"
       >
         <div className="space-y-3">
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* firstName */}
             <FormField
@@ -241,23 +239,34 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
                     <FormLabel className="text-primary-backgroudPrimary">
                       Cơ sở nào *
                     </FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Hãy chọn cơ sở" defaultValue={'4f45353f-3ff1-4a0e-b44b-69268ddc63b2'}/>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="4f45353f-3ff1-4a0e-b44b-69268ddc63b2">Cơ Sở Sơn Nguyễn</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder="Hãy chọn cơ sở"
+                            defaultValue={
+                              "d4d0cf88-a8ea-4bb7-8ee6-bfddae0da374"
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="d4d0cf88-a8ea-4bb7-8ee6-bfddae0da374">
+                          Cơ Sở Sơn Nguyễn
+                        </SelectItem>
+                        <SelectItem value="d642d7a4-0261-4ce8-a197-df78076bfb02">
+                          Cơ Sở Vinh Nguyễn
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 );
               }}
             />
-
-            
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -331,9 +340,6 @@ export const UsersForm: React.FC<UsersFormProps> = ({ setOpen }) => {
               </FormItem>
             )}
           />
-
-
-
 
           {/* pin */}
           <FormField
