@@ -4,6 +4,8 @@ import axiosClient from "../auth/jwtService";
 import { endPointConstant } from "@/constants/endpoint";
 import {
   CreateAttendanceSlotBody,
+  GetAllPhaseResponse,
+  GetAllProductResponse,
   GetAttendanceBody,
   GetAttendanceResponse,
   GetUsersBody,
@@ -101,6 +103,7 @@ export const attendanceApi = {
       }
     );
   },
+  // -------------------------------------------- USER --------------------------------------------
   getUsers: (requestBody: GetUsersBody) => {
     const cacheId = createCacheId("get-users", requestBody);
     console.log("Added usersCacheId:", cacheId); // Log cache ID khi thêm
@@ -110,6 +113,21 @@ export const attendanceApi = {
         params: requestBody,
         id: cacheId,
       }
+    );
+  },
+  //-------------------------------------------- PRODUCT --------------------------------------------
+  getALlProduct: (requestBody: searchMaterial) => {
+    return axiosClient.get<GetAllProductResponse>(
+      `${endPointConstant.BASE_URL}/products`,
+      {
+        params: requestBody,
+      }
+    );
+  },
+  // -------------------------------------------- PHASE --------------------------------------------
+  getAllPhase: () => {
+    return axiosClient.get<GetAllPhaseResponse>(
+      `${endPointConstant.BASE_URL}/phase`
     );
   },
 };

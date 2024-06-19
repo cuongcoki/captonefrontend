@@ -1,6 +1,9 @@
 "use client";
 import React, { use, useEffect, useState } from "react";
-import { AttendanceDetailType } from "@/schema/attendance";
+import {
+  AttendanceDetailProductType,
+  AttendanceDetailType,
+} from "@/schema/attendance";
 import Image from "next/image";
 import "./style-update-attendance.css";
 import { Card } from "@/components/ui/card";
@@ -37,7 +40,7 @@ export default function UpdateAttendance({
         Date: date,
         SlotId: slot,
         PageIndex: "1",
-        PageSize: "100",
+        PageSize: "1000",
         SearchTerm: "",
       })
       .then(({ data }) => {
@@ -52,7 +55,18 @@ export default function UpdateAttendance({
               isAttendance: item.isAttendance,
               isSalaryByProduct: item.isSalaryByProduct,
               isManufacture: item.isManufacture,
-              products: [],
+              products: item.employeeProductResponses.map(
+                (product): AttendanceDetailProductType => {
+                  return {
+                    productID: product.productId,
+                    productName: product.productName,
+                    image: product.imageUrl,
+                    phaseID: product.phaseId,
+                    phaseName: product.phaseName,
+                    quantity: product.quantity.toString(),
+                  };
+                }
+              ),
             };
           }
         );
@@ -96,8 +110,8 @@ export default function UpdateAttendance({
         toast.success(data.message);
       })
       .catch((error) => {
-        console.log("Update error", error.response.data.error);
-        toast.error(error.response.data.error);
+        // console.log("Update error", error.response.data.error);
+        // toast.error(error.response.data.error);
       });
   };
 
