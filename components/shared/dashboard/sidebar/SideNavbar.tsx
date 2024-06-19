@@ -72,7 +72,7 @@ export default function SideNavbar({}: Props) {
               },
               {
                 title: "Vật liệu",
-                href: "/dashboard/material/history",
+                href: "/dashboard/material",
                 icon: InspectionPanel,
                 variant: "ghost",
               },
