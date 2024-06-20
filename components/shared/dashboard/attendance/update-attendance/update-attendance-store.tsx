@@ -6,6 +6,7 @@ import { create } from "zustand";
 
 interface UpdateAttendanceStore {
   tableData: AttendanceDetailType[];
+  setTableDataIndex: (index: number, data: AttendanceDetailType) => void;
   setTableData: (data: AttendanceDetailType[]) => void;
   handleAttendanceChange: (index: number, checked: boolean) => void;
   updateManufacture: (index: number, value: boolean) => void;
@@ -25,6 +26,13 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
     tableData: [],
     setTableData: (data) => {
       set({ tableData: data });
+    },
+    setTableDataIndex: (index, data) => {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData[index] = data;
+        return { tableData: newData };
+      });
     },
     handleAttendanceChange: (index, checked) => {
       set((state) => {

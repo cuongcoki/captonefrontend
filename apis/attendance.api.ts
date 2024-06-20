@@ -11,6 +11,7 @@ import {
   GetUsersBody,
   GetUsersResponse,
   UpdateAttendanceBody,
+  UpdateEmployeeProductBody,
   searchAttendanceOverallBody,
   searchAttendanceOverallResponse,
 } from "@/types/attendance.type";
@@ -128,6 +129,13 @@ export const attendanceApi = {
   getAllPhase: () => {
     return axiosClient.get<GetAllPhaseResponse>(
       `${endPointConstant.BASE_URL}/phase`
+    );
+  },
+  // -------------------------------------------- Employee Product -------------------------------------
+  updateEmployeeProduct: (requestBody: UpdateEmployeeProductBody) => {
+    return axiosClient.post<SuccessResponse<null>>(
+      `${endPointConstant.BASE_URL}/EmployeeProduct`,
+      requestBody
     );
   },
 };

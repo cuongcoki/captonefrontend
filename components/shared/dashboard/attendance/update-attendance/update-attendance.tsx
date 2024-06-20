@@ -14,9 +14,12 @@ import { Input } from "@/components/ui/input";
 import { attendanceApi } from "@/apis/attendance.api";
 import {
   AttendanceForUpdate,
+  ProductEmployee,
   UpdateAttendanceBody,
+  UpdateEmployeeProductBody,
 } from "@/types/attendance.type";
 import toast from "react-hot-toast";
+import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
 
 export default function UpdateAttendance({
   date,
@@ -27,6 +30,7 @@ export default function UpdateAttendance({
 }): JSX.Element {
   const { tableData, setTableData, handleAttendanceChange, updateOverTime } =
     useUpdateAttendanceStore();
+  const { setListProduct, setListPhase } = useAttendanceStore();
   const [force, setForce] = useState(0);
   const ForceRender = () => {
     setForce(force + 1);
@@ -74,6 +78,33 @@ export default function UpdateAttendance({
         setTableData(attendanceData);
       });
   }, [date, slot, setTableData, force]);
+  useEffect(() => {
+    attendanceApi
+      .getALlProduct({
+        SearchTerm: "",
+        pageIndex: 1,
+        pageSize: 10000,
+      })
+      .then(({ data }) => {
+        console.log("Product Data: ", data);
+        setListProduct(data);
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+      });
+  }, [setListProduct]);
+
+  useEffect(() => {
+    attendanceApi
+      .getAllPhase()
+      .then(({ data }) => {
+        console.log("Phase Data: ", data);
+        setListPhase(data);
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+      });
+  }, [setListPhase]);
 
   const saveDraft = () => {
     console.log("Save draft");
@@ -107,6 +138,35 @@ export default function UpdateAttendance({
       .then(({ data }) => {
         console.log(data);
         ForceRender();
+        toast.success(data.message);
+      })
+      .catch((error) => {
+        // console.log("Update error", error.response.data.error);
+        // toast.error(error.response.data.error);
+      });
+
+    const employeeProductData: ProductEmployee[] = [];
+    tableData.forEach((item) => {
+      item.products.forEach((product) => {
+        employeeProductData.push({
+          productId: product.productID,
+          phaseId: product.phaseID,
+          userId: item.userID,
+          quantity: Number(product.quantity),
+          isMold: true,
+        });
+      });
+    });
+    const updateEmployeeProductData: UpdateEmployeeProductBody = {
+      date: date,
+      slotId: Number(slot),
+      createQuantityProducts: employeeProductData,
+    };
+    console.log("updateEmployeeProductData", updateEmployeeProductData);
+    attendanceApi
+      .updateEmployeeProduct(updateEmployeeProductData)
+      .then(({ data }) => {
+        console.log(data);
         toast.success(data.message);
       })
       .catch((error) => {
