@@ -1,87 +1,87 @@
 "use client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { AttendanceFormEmployeeType } from "@/schema/attendance";
+import { User } from "@/types/attendance.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
 import { el } from "date-fns/locale";
 import Image from "next/image";
 import React from "react";
 
-export const columnsForAttendanceForm: ColumnDef<AttendanceFormEmployeeType>[] =
-  [
-    {
-      accessorKey: "select",
-      header: ({ table }) => (
-        <ColumnCheckboxHeader
-          table={table}
-          columnId="select"
-          label="Chọn nhân viên"
-        />
-      ),
-      cell: ({ row }) => <CheckboxCell row={row} columnId="select" />,
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
-      accessorKey: "image",
-      header: () => <div className="text-center">Ảnh</div>,
-      cell: ({ row }) => (
-        <div className="flex justify-center items-center w-[60px] h-[80px] bg-gray-400">
-          <Image src={row.original.image} width={60} height={80} alt="Ảnh" />
-        </div>
-      ),
-    },
-    {
-      accessorKey: "userName",
-      header: "Tên nhân viên",
-      cell: ({ row }) => (
-        <div className="flex justify-center items-center">
-          {row.original.userName}
-        </div>
-      ),
-    },
-    {
-      accessorKey: "isManufactureSelected",
-      header: ({ table }) => (
-        <ColumnCheckboxHeader
-          table={table}
-          columnId="isManufactureSelected"
-          label="Có tạo sản phẩm"
-        />
-      ),
-      cell: ({ row }) => (
-        <CheckboxCell
-          row={row}
-          columnId="isManufactureSelected"
-          dependentOn="select"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
-      accessorKey: "isSalaryByProductSelected",
-      header: ({ table }) => (
-        <ColumnCheckboxHeader
-          table={table}
-          columnId="isSalaryByProductSelected"
-          label="Lương theo sản phẩm"
-        />
-      ),
-      cell: ({ row }) => (
-        <CheckboxCell
-          row={row}
-          columnId="isSalaryByProductSelected"
-          dependentOn="select"
-          dependentOnSecondary="isManufactureSelected" // Thêm phụ thuộc thứ hai
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-  ];
+export const columnsForAttendanceForm: ColumnDef<User>[] = [
+  {
+    accessorKey: "select",
+    header: ({ table }) => (
+      <ColumnCheckboxHeader
+        table={table}
+        columnId="select"
+        label="Chọn nhân viên"
+      />
+    ),
+    cell: ({ row }) => <CheckboxCell row={row} columnId="select" />,
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "image",
+    header: () => <div className="text-center">Ảnh</div>,
+    cell: ({ row }) => (
+      <div className="flex justify-center items-center w-[60px] h-[80px] bg-gray-400">
+        {/* <Image src={row.original.image} width={60} height={80} alt="Ảnh" /> */}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "userName",
+    header: "Tên nhân viên",
+    cell: ({ row }) => (
+      <div className="flex justify-center items-center">
+        {row.original.firstName + " " + row.original.lastName}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "isManufactureSelected",
+    header: ({ table }) => (
+      <ColumnCheckboxHeader
+        table={table}
+        columnId="isManufactureSelected"
+        label="Có tạo sản phẩm"
+      />
+    ),
+    cell: ({ row }) => (
+      <CheckboxCell
+        row={row}
+        columnId="isManufactureSelected"
+        dependentOn="select"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "isSalaryByProductSelected",
+    header: ({ table }) => (
+      <ColumnCheckboxHeader
+        table={table}
+        columnId="isSalaryByProductSelected"
+        label="Lương theo sản phẩm"
+      />
+    ),
+    cell: ({ row }) => (
+      <CheckboxCell
+        row={row}
+        columnId="isSalaryByProductSelected"
+        dependentOn="select"
+        dependentOnSecondary="isManufactureSelected" // Thêm phụ thuộc thứ hai
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+];
 
 interface ColumnCheckboxHeaderProps {
-  table: Table<AttendanceFormEmployeeType>;
+  table: Table<User>;
   columnId: string;
   label: string;
 }

@@ -33,6 +33,7 @@ import { useMaterialHistoryStore } from "@/components/shared/dashboard/material-
 import { materialApi } from "@/apis/material.api";
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import "./material-history.css";
+import toast from "react-hot-toast";
 
 type MaterialHistoryContextType = {
   ForceRender: () => void;
@@ -89,6 +90,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
     let formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
     return formattedDate;
   }
+
   useEffect(() => {
     materialApi
       .searchMaterial({
@@ -106,6 +108,9 @@ export function DataTableForMaterialHistory<TData, TValue>({
           }
         );
         setListMaterial(listMaterial);
+      })
+      .catch((err) => {
+        console.log("ERROR", err);
       });
     setListMaterial;
   }, [setListMaterial]);
@@ -116,7 +121,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
         new Date(convertDateFormat(searchParams.from)) >
         new Date(convertDateFormat(searchParams.to))
       ) {
-        alert("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+        toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
         return false;
       }
     }
@@ -133,7 +138,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
         EndDateImport: searchParams.to || "",
       })
       .then((res) => {
-        console.log("MATERIAL_HISTORY_DATA", res.data.data);
+        console.log("MATERIAL_HISTORY_DATA", res.data);
 
         setTotalPage(res.data.data.totalPages);
 
@@ -145,7 +150,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
         );
       })
       .catch((err) => {
-        if (err.response.status === 400) {
+        if (err.response?.status === 400) {
           setData([]);
         }
         console.log("ERROR", err);
@@ -177,7 +182,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
               value={"2024-06-16"}
               onDayClick={(event: any) => {
                 if (event > new Date(convertDateFormat(searchParams.to))) {
-                  alert("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+                  toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
                   return;
                 }
                 if (format(event, "dd/MM/yyyy") === searchParams.from) {
@@ -207,7 +212,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
               className="w-full"
               onDayClick={(event: any) => {
                 if (new Date(convertDateFormat(searchParams.from)) > event) {
-                  alert("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+                  toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
                   return;
                 }
                 if (format(event, "dd/MM/yyyy") === searchParams.to) {

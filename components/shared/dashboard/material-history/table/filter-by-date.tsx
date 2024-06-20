@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import React from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 export default function FillterByDate() {
   const form = useForm<materialHistoryFilterType>({
@@ -27,7 +28,7 @@ export default function FillterByDate() {
 
   const onSubmit = (data: materialHistoryFilterType) => {
     if (data.from > data.to) {
-      alert("Ngày bắt đầu phải nhỏ hơn ngày kết thúc");
+      toast.error("Ngày bắt đầu phải nhỏ hơn ngày kết thúc");
       return;
     }
     console.log(data);
