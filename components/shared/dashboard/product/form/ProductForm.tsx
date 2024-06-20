@@ -22,7 +22,7 @@ import { Upload } from "lucide-react";
 import ImageDisplay from "./ImageDisplay";
 import storage from "@/lib/storage";
 import { productApi } from "@/apis/product.api";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 interface ProductFormProps {
     setOpen: (open: boolean) => void;
@@ -229,7 +229,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
     const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
         setLoading(true);
         // console.log('datadatadata', data)
-     
+
         try {
             const requestBody = {
                 code: data.code,
@@ -253,14 +253,25 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
                     window.location.href = '/dashboard/product';
                 }, 2000);
             } else {
+                // toast.error(response.data.message);
             }
-        } catch (error) {
-            console.error('Error submitting form:', error);
-            toast.error('Đã xảy ra lỗi khi tạo sản phẩm.');
+        } catch (error: any) {
+            // console.error('Error submitting form:', error.response.data);
+            // console.error('Error submitting form:', error.response.data.error.Code);
+
+            if (error.response.data.error.ImageRequests && error.response.data.error.Code) {
+                toast.error(error.response.data.error.ImageRequests)
+                toast.error(error.response.data.error.Code)
+            } else if(error.response.data.error.Code){
+                toast.error(error.response.data.error.Code);
+            } else{
+                toast.error(error.response.data.error.ImageRequests);
+            }
+
         } finally {
             setLoading(false);
         }
-      
+
     };
 
 
@@ -269,8 +280,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
     const { pending } = useFormStatus();
     return (
         <Form {...form} >
-
-
+            <Toaster />
             <div className="flex flex-col md:flex-row md:justify-between gap-4">
                 {/* Phần đăng hình ảnh */}
                 <div className="md:w-[60%] flex items-center justify-between relative">
