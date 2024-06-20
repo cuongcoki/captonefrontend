@@ -96,7 +96,7 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
                 <label>Chỉnh sửa</label>
               </DropdownMenuItem>
               {/* <DropdownMenuSeparator /> */}
-              <DropdownMenuItem>Xóa nguyên liệu</DropdownMenuItem>
+              {/* <DropdownMenuItem>Xóa nguyên liệu</DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
           <UpdateMaterial id={rowData.id}>

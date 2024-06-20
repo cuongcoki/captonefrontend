@@ -51,7 +51,7 @@ export function DataTableForAttendance<TData, TValue>({
     []
   );
   const [data, setData] = React.useState<TData[]>([]);
-  const { setListUser, setListPhase, setListProduct } = useAttendanceStore();
+  const { setListUser } = useAttendanceStore();
   const [force, setForce] = React.useState(0);
   const pathname = usePathname();
   const router = useRouter();
@@ -115,34 +115,6 @@ export function DataTableForAttendance<TData, TValue>({
         console.log("Error: ", error);
       });
   }, [setListUser]);
-
-  useEffect(() => {
-    attendanceApi
-      .getALlProduct({
-        SearchTerm: "",
-        pageIndex: 1,
-        pageSize: 10000,
-      })
-      .then(({ data }) => {
-        console.log("Product Data: ", data);
-        setListProduct(data);
-      })
-      .catch((error) => {
-        console.log("Error: ", error);
-      });
-  }, [setListProduct]);
-
-  useEffect(() => {
-    attendanceApi
-      .getAllPhase()
-      .then(({ data }) => {
-        console.log("Phase Data: ", data);
-        setListPhase(data);
-      })
-      .catch((error) => {
-        console.log("Error: ", error);
-      });
-  }, [setListPhase]);
 
   return (
     <div>

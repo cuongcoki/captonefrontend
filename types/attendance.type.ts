@@ -152,3 +152,17 @@ type Phase = {
 };
 
 export type GetAllPhaseResponse = SuccessResponse<Phase[]>;
+
+//-------------------------------------------- Employee Product-----------------------------------
+export type ProductEmployee = {
+  productId: string;
+  phaseId: string;
+  quantity: Number;
+  userId: string;
+  isMold: boolean;
+};
+export type UpdateEmployeeProductBody = {
+  date: string;
+  slotId: Number;
+  createQuantityProducts: ProductEmployee[];
+};
