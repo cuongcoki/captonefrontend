@@ -83,6 +83,12 @@ export default function SideNavbar({}: Props) {
                 variant: "ghost",
               },
               {
+                title: "Xem điểm danh",
+                href: "/employee/view-attendance",
+                icon: UserRound,
+                variant: "ghost",
+              },
+              {
                 title: "Cài đặt",
                 href: "/dashboard/settings",
                 icon: Settings,

@@ -166,3 +166,27 @@ export type UpdateEmployeeProductBody = {
   slotId: Number;
   createQuantityProducts: ProductEmployee[];
 };
+
+//-------------------------------------------- Employee --------------------------------------------
+export type AttendanceDateData = {
+  date: string;
+  isAttendanceSlot1: boolean;
+  isAttendanceSlot2: boolean;
+  isAttendanceSlot3: boolean;
+  isMakeProduct: boolean;
+};
+export type GetEmployeeAttendanceResponse = SuccessResponse<{
+  userId: string;
+  record: AttendanceDateData[];
+}>;
+
+export type EmployeeAttendanceDetailType = {
+  slotId: number;
+  products: {
+    name: string;
+    phase: string;
+    quantity: number;
+  }[];
+  overTime: number;
+  isAttendance: boolean;
+};
