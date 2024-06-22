@@ -281,9 +281,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
     return (
         <Form {...form} >
             <Toaster />
-            <div className="flex flex-col md:flex-row md:justify-between gap-4">
+            <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
                 {/* Phần đăng hình ảnh */}
-                <div className="md:w-[60%] flex items-center justify-between relative">
+                <div className=" w-full col-span-2 relative">
                     <div>
                         {/* nếu không có ảnh nào thì hiện input này */}
                         {imageRequests.length < 1 && (
@@ -294,7 +294,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
                                     style={{ display: 'none' }}
                                     accept='image/*'
                                     onChange={e => handleUploadPhotos(e)}
-                                    multiple
+                                    
                                 />
                                 <label htmlFor='image' className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                     <Upload size={100} className="text-white flex items-center justify-center bg-primary-backgroudPrimary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto" />
@@ -321,7 +321,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
                                     style={{ display: 'none' }}
                                     accept='image/*'
                                     onChange={e => handleUploadPhotos(e)}
-                                    multiple
+                                 
                                 />
                                 <label htmlFor='image' className="absolute bottom-0">
                                     <Upload size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" />
@@ -331,7 +331,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
                     </div>
                 </div>
 
-                <form onSubmit={form.handleSubmit(onSubmit)} className="md:w-[40%]">
+                <form onSubmit={form.handleSubmit(onSubmit)} >
                     {/* Phần nhập dữ liệu thông tin */}
                     <div className="w-full flex flex-col gap-4">
                         {/* code */}

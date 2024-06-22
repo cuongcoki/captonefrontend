@@ -19,6 +19,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { UserSearchParams } from "@/types/userTypes";
 import TableUserFeature from "@/components/shared/dashboard/users/table/users/user-table-feature";
+import toast from "react-hot-toast";
+import LoadingPage from "@/components/shared/loading/loading-page";
 
 type Props = {
   searchParams: UserSearchParams;
@@ -56,23 +58,31 @@ export default function RenderTableUsers({ searchParams }: Props) {
         setCurrentPage(res.data.data.currentPage);
         setTotalPages(res.data.data.totalPages);
         console.log("Response:", res);
-      } catch (error) {
-        // console.error('Error fetching user data:', error?.response);
+      } catch (error: any) {
+        console.error('Error fetching user data:',);
+        if (error?.response.data.status === 400) {
+          toast.error(error?.response.data.message);
+        }
+
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [searchParams, currentPage, pageSize, force]);
+  }, [searchParams, currentPage, pageSize, force, data]);
 
   // console.log("Data:", data);
+
+
   return (
     <div className="px-3 ">
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
 
         <div className="w-full md:w-auto mb-4 md:mb-0">
-          <TableUserFeature searchOptions={searchParams} />
+          <MyContext.Provider value={{ forceUpdate }}>
+            <TableUserFeature searchOptions={searchParams} />
+          </MyContext.Provider>
         </div>
 
         <MyContext.Provider value={{ forceUpdate }}>

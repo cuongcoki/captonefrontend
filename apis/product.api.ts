@@ -4,8 +4,7 @@ import axiosClient from '../auth/jwtService'
 // ** Constants import
 import { endPointConstant } from '@/constants/endpoint'
 
-import { ProductType } from '@/types/product.type'
-
+import { ProductType, ProductUpdateType } from '@/types/product.type'
 
 export const productApi = {
     allProducts: ( IsInProcessing?: any, PageIndex?:any ,PageSize?:any , searchTerm?: string) =>
@@ -16,5 +15,8 @@ export const productApi = {
 
     getProductId: (id: string) =>
         axiosClient.get(`${endPointConstant.BASE_URL}/products/${id}`),
+
+    updateProduct:(data:ProductUpdateType ,productId:string) =>
+        axiosClient.put(`${endPointConstant.BASE_URL}/products/${productId}`,data),
 }
        

@@ -1,0 +1,84 @@
+import { Product, columns } from "./Column"
+import {  DataTableSet } from "./DataTable"
+import { useEffect, useState } from "react";
+import { DataTablePagination } from "./data-table-pagination";
+import { productApi } from "@/apis/product.api";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { setApi } from "@/apis/set.api";
+
+
+export default  function RenderTableProduct() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(5);
+  const [open, setOpen] = useState<boolean>(false);
+  const [isInProcessing, setIsInProcessing] = useState<boolean>(true);
+  const [data, setData] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchDataProduct =  () => {
+      setLoading(true);
+      setApi
+        .allSet( currentPage, pageSize, searchTerm)
+        .then(response => {
+          console.log(response.data.data)
+          setData(response.data.data.data);
+          setCurrentPage(response.data.data.currentPage)
+          setTotalPages(response.data.data.totalPages)
+        })
+        .catch(error => {
+          console.error('Error fetching product data:', error);
+        })
+        .finally(() => {
+          setLoading(false);
+        })
+    };
+    console.log('data', data)
+    fetchDataProduct();
+  }, [currentPage, pageSize, searchTerm, isInProcessing]);
+
+
+  return (
+    <div className="px-3 ">
+      <div className="flex items-center justify-between  mb-4">
+        <Input
+          placeholder="	Mã CODE..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-[30%]"
+        />
+
+        <div>
+          <div className="flex items-center justify-end p-3">
+            <div className="flex items-center space-x-2">
+              <Dialog  open={open} onOpenChange={setOpen}>
+                <DialogTrigger>
+                  <Button variant={"colorCompany"} className="text-xs">
+                    Thêm sản phầm mới
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-[70%] min-h-[90%]">
+                  {/* <ProductForm setOpen={setOpen} /> */}
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+        </div>
+      </div>
+      <>
+        <DataTableSet columns={columns} data={data} />
+        <DataTablePagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage}/>
+      </>
+    </div>
+  );
+}

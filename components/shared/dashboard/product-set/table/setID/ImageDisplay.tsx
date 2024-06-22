@@ -24,37 +24,27 @@ import { Trash2, EllipsisVertical } from "lucide-react"
 import { Label } from "@/components/ui/label"
 
 interface ImageDisplayProps {
-    images: { imageUrl: string; isBluePrint: boolean; isMainImage: boolean }[];
-    onDelete: (index: number) => void;
-    onToggleBlueprint: (index: number) => void;
-    onToggleMainImage: (index: number) => void;
+    images: {id:string, imageUrl: string; isBluePrint: boolean; isMainImage: boolean }[];
 }
 
 const ImageDisplay: React.FC<ImageDisplayProps> = ({
     images,
-    onDelete,
-    onToggleBlueprint,
-    onToggleMainImage
 }) => {
     // console.log('images', images)
     return (
-        <div className="flex items-center justify-center w-full h-full ">
+        <div className="flex items-center justify-center md:w-[500px] md:h-[500px] w-[520px] h-[350px] aspect-square ">
             <Carousel className="w-full h-full flex flex-col">
-                <CarouselContent className="w-full h-full">
-
+                <CarouselContent >
                     {images.map((image, index) => (
                         <CarouselItem className="w-full h-full flex items-center justify-center" key={index}>
                             <CardContent className="w-full h-full relative flex aspect-square items-center justify-center p-6 bg-black">
                                 <Image src={image.imageUrl} alt={`image-${index}`} width={500} height={500} className="h-full w-full object-contain bg-cover bg-center  bg-no-repeat  pointer-events-none" />
-                                <button type='button' className="absolute right-0 top-0 " onClick={() => onDelete(index)}>
-                                    <Trash2 size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" />
-                                </button>
-
+                            
                                 <button type='button' className="absolute right-0 bottom-0 ">
                                     <Popover >
-                                        <PopoverTrigger>
+                                        <PopoverTrigger asChild>
                                             <EllipsisVertical size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" />
-                                        </PopoverTrigger>
+                                        </PopoverTrigger >
                                         <PopoverContent className="" align="end">
                                             <div className="grid gap-4">
                                                 <div className="space-y-2">
@@ -66,11 +56,11 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
                                                 <div className="grid gap-2">
                                                     <div className="flex justify-between items-center">
                                                         <Label htmlFor={`isBluePrint-${index}`}>[Ảnh] bản thiết kế</Label>
-                                                        <Switch className="data-[state=checked]:bg-primary-backgroudPrimary" id={`isBluePrint-${index}`} checked={image.isBluePrint} onCheckedChange={() => onToggleBlueprint(index)} />
+                                                        <Switch className="data-[state=checked]:bg-primary-backgroudPrimary" id={`isBluePrint-${index}`} checked={image.isBluePrint} />
                                                     </div>
                                                     <div className="flex justify-between items-center">
                                                         <Label htmlFor={`isMainImage-${index}`}>[Ảnh] Chính</Label>
-                                                        <Switch className="data-[state=checked]:bg-primary-backgroudPrimary" id={`isMainImage-${index}`} checked={image.isMainImage} onCheckedChange={() => onToggleMainImage(index)} />
+                                                        <Switch className="data-[state=checked]:bg-primary-backgroudPrimary" id={`isMainImage-${index}`} checked={image.isMainImage}  />
                                                     </div>
                                                 </div>
                                             </div>
