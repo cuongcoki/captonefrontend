@@ -21,10 +21,16 @@ type Props = {
 export default function DayOfCalender({ dayData, month, year }: Props) {
   const day = new Date(dayData.date);
   const isDayOfMonth = day.getMonth() + 1 === month;
-  const oneEffort = dayData.isAttendanceSlot1 && dayData.isAttendanceSlot2;
+
+  const oneEffort =
+    dayData.attedanceDateReport.isPresentSlot1 &&
+    dayData.attedanceDateReport.isPresentSlot2;
   const halfEffort =
-    !oneEffort && (dayData.isAttendanceSlot1 || dayData.isAttendanceSlot2);
-  const noEffort = !oneEffort && !halfEffort && !dayData.isAttendanceSlot3;
+    !oneEffort &&
+    (dayData.attedanceDateReport.isPresentSlot1 ||
+      dayData.attedanceDateReport.isPresentSlot2);
+  const noEffort =
+    !oneEffort && !halfEffort && !dayData.attedanceDateReport.isPresentSlot3;
   return (
     <>
       {isDayOfMonth ? (
@@ -45,10 +51,11 @@ export default function DayOfCalender({ dayData, month, year }: Props) {
                   {halfEffort && (
                     <DotStatus variant="yellow" className="ml-auto mr-1" />
                   )}
-                  {dayData.isMakeProduct && (
-                    <DotStatus variant="blue" className="ml-auto mr-1" />
-                  )}
-                  {dayData.isAttendanceSlot3 && (
+                  {dayData.attedanceDateReport.isSalaryByProduct &&
+                    !noEffort && (
+                      <DotStatus variant="blue" className="ml-auto mr-1" />
+                    )}
+                  {dayData.attedanceDateReport.isPresentSlot3 && (
                     <DotStatus variant="orange" className="ml-auto mr-1" />
                   )}
                 </div>
@@ -71,7 +78,11 @@ export default function DayOfCalender({ dayData, month, year }: Props) {
             <DialogHeader>
               <DialogTitle className="mb-5">Chi tiết điểm danh</DialogTitle>
             </DialogHeader>
-            <EmployeeAttendanceDetail />
+            <EmployeeAttendanceDetail
+              Date={`${day.getDate()}/${
+                month < 10 ? "0" + month : month
+              }/${year}`}
+            />
           </DialogContent>
         </Dialog>
       ) : (

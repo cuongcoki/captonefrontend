@@ -3,11 +3,16 @@ import axiosClient from "../auth/jwtService";
 
 import { endPointConstant } from "@/constants/endpoint";
 import {
+  CreateAttendanceBody,
   CreateAttendanceSlotBody,
   GetAllPhaseResponse,
   GetAllProductResponse,
   GetAttendanceBody,
   GetAttendanceResponse,
+  GetEmployeeAttendanceBody,
+  GetEmployeeAttendanceDetailBody,
+  GetEmployeeAttendanceDetailResponse,
+  GetEmployeeAttendanceResponse,
   GetUsersBody,
   GetUsersResponse,
   UpdateAttendanceBody,
@@ -38,7 +43,7 @@ export const attendanceApi = {
       }
     );
   },
-  createAttendance: (requestBody: CreateAttendanceSlotBody) => {
+  createAttendance: (requestBody: CreateAttendanceBody) => {
     return axiosClient.post<SuccessResponse<null>>(
       `${endPointConstant.BASE_URL}/attendance/batch`,
       requestBody,
@@ -135,7 +140,46 @@ export const attendanceApi = {
   updateEmployeeProduct: (requestBody: UpdateEmployeeProductBody) => {
     return axiosClient.post<SuccessResponse<null>>(
       `${endPointConstant.BASE_URL}/EmployeeProduct`,
-      requestBody
+      requestBody,
+      {
+        cache: {
+          update: () => {
+            const attendanceDetailCacheId = attendanceDetailCacheIds.get(
+              requestBody.date + requestBody.slotId
+            );
+            if (attendanceDetailCacheId) {
+              axiosClient.storage.remove(attendanceDetailCacheId);
+              attendanceDetailCacheIds.delete(
+                requestBody.date + requestBody.slotId
+              );
+              console.log(
+                "Removed attendanceDetailCacheId:",
+                attendanceDetailCacheId
+              ); // Log cache ID sau khi xóa
+            }
+          },
+        },
+      }
+    );
+  },
+  // -------------------------------------------- Employee Attendance --------------------------------------------
+  getEmployeeAttendance: (requestBody: GetEmployeeAttendanceBody) => {
+    return axiosClient.get<GetEmployeeAttendanceResponse>(
+      `${endPointConstant.BASE_URL}/attendance/users`,
+      {
+        params: requestBody,
+      }
+    );
+  },
+
+  getEmployeeAttendanceDetail: (
+    requestBody: GetEmployeeAttendanceDetailBody
+  ) => {
+    return axiosClient.get<GetEmployeeAttendanceDetailResponse>(
+      `${endPointConstant.BASE_URL}/attendance/users/detail`,
+      {
+        params: requestBody,
+      }
     );
   },
 };

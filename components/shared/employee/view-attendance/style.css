@@ -1,19 +1,19 @@
-table {
+.employee-attendance-table table {
   width: 100%;
   border-collapse: collapse;
 }
 
-th,
-td {
+.employee-attendance-table th,
+.employee-attendance-table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
 
-th {
+.employee-attendance-table th {
   background-color: #f2f2f2;
 }
 
-th[colspan] {
+.employee-attendance-table th[colspan] {
   text-align: center;
 }

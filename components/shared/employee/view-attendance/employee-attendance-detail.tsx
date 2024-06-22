@@ -1,41 +1,36 @@
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import "./style.css";
-import { EmployeeAttendanceDetailType } from "@/types/attendance.type";
+import { AttendanceSlotDetail } from "@/types/attendance.type";
+import { attendanceApi } from "@/apis/attendance.api";
 
-const FakeData: EmployeeAttendanceDetailType[] = [
-  {
-    slotId: 1,
-    products: [
-      { name: "Product A", phase: "Phase 1", quantity: 10 },
-      { name: "Product B", phase: "Phase 2", quantity: 5 },
-    ],
-    overTime: 2,
-    isAttendance: true,
-  },
-  {
-    slotId: 2,
-    products: [
-      { name: "Product C", phase: "Phase 1", quantity: 8 },
-      { name: "Product D", phase: "Phase 3", quantity: 12 },
-    ],
-    overTime: 1.5,
-    isAttendance: true,
-  },
-  {
-    slotId: 3,
-    products: [
-      { name: "Product E", phase: "Phase 2", quantity: 15 },
-      { name: "Product F", phase: "Phase 1", quantity: 7 },
-    ],
-    overTime: 3,
-    isAttendance: false,
-  },
-];
+type Props = {
+  Date: string;
+};
 
-export default function EmployeeAttendanceDetail() {
-  const [data, setData] = useState<EmployeeAttendanceDetailType[]>(FakeData);
+const SlotName: { [key: number]: string } = {
+  1: "Sáng",
+  2: "Chiều",
+  3: "Tối",
+};
+
+export default function EmployeeAttendanceDetail({ Date }: Props) {
+  const [data, setData] = useState<AttendanceSlotDetail[]>([]);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userData") || "");
+    attendanceApi
+      .getEmployeeAttendanceDetail({
+        UserId: user.id,
+        Date: Date,
+      })
+      .then(({ data }) => {
+        console.log("Attendance Detail", data.data.attendanceSlotReports);
+        setData(data.data.attendanceSlotReports);
+      });
+  }, [Date]);
   return (
-    <div className="bg-white w-full overflow-auto">
+    <div className="employee-attendance-table bg-white w-full overflow-auto">
       <table>
         <thead>
           <tr>
@@ -53,24 +48,38 @@ export default function EmployeeAttendanceDetail() {
         <tbody>
           {data.map((item, index) => (
             <React.Fragment key={index}>
-              {item.products.map((product, index) => (
-                <tr key={index}>
-                  {index === 0 ? (
-                    <td rowSpan={item.products.length}>{item.slotId}</td>
-                  ) : null}
-                  <td>{product.name}</td>
-                  <td>{product.phase}</td>
-                  <td>{product.quantity}</td>
-                  {index === 0 ? (
-                    <td rowSpan={item.products.length}>{item.overTime}</td>
-                  ) : null}
-                  {index === 0 ? (
-                    <td rowSpan={item.products.length}>
-                      {item.isAttendance ? "Có" : "Không"}
-                    </td>
-                  ) : null}
+              {item.employeeProductResponses.length > 0 ? (
+                item.employeeProductResponses.map((product, index) => (
+                  <tr key={index}>
+                    {index === 0 ? (
+                      <td rowSpan={item.employeeProductResponses.length}>
+                        {SlotName[item.slotId]}
+                      </td>
+                    ) : null}
+                    <td>{product.productName}</td>
+                    <td>{product.phaseName}</td>
+                    <td>{product.quantity}</td>
+                    {index === 0 ? (
+                      <td rowSpan={item.employeeProductResponses.length}>
+                        {item.hourOverTime}h
+                      </td>
+                    ) : null}
+                    {index === 0 ? (
+                      <td rowSpan={item.employeeProductResponses.length}>
+                        {item.isAttendance ? "Có" : "Không"}
+                      </td>
+                    ) : null}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td>{SlotName[item.slotId]}</td>
+                  <td colSpan={3} className="bg-gray-300"></td>
+
+                  <td>{item.hourOverTime}h</td>
+                  <td>{item.isAttendance ? "Có" : "Không"}</td>
                 </tr>
-              ))}
+              )}
             </React.Fragment>
           ))}
         </tbody>

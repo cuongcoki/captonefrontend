@@ -78,7 +78,7 @@ export default function SideNavbar({}: Props) {
               },
               {
                 title: "Điểm danh",
-                href: "/dashboard/attendance",
+                href: "/dashboard/attendance/update-attendance",
                 icon: CalendarSearch,
                 variant: "ghost",
               },

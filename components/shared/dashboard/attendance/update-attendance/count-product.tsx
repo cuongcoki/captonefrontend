@@ -98,7 +98,11 @@ export default function CountProduct({ index }: { index: number }) {
   useEffect(() => {
     if (!dialogIsOpen && isUpdate) {
       console.log("Update Table Data");
-      setTableDataIndex(index, userData);
+      const data = userData;
+      data.products = data.products.filter(
+        (product) => product.quantity !== "0"
+      );
+      setTableDataIndex(index, data);
       setIsUpdate(false);
     }
   }, [dialogIsOpen, userData, index, setTableDataIndex, isUpdate]);
