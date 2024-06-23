@@ -13,16 +13,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ProductSchema } from "@/schema";
 
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator";
 import { Upload } from "lucide-react";
 import ImageDisplay from "./ImageDisplay";
-import storage from "@/lib/storage";
-import { productApi } from "@/apis/product.api";
+
 import toast, { Toaster } from "react-hot-toast";
+
+import { productApi } from "@/apis/product.api";
+import { filesApi } from "@/apis/files.api";
+
+import { MyContext } from "../table/products/RenderTable";
 
 interface ProductFormProps {
     setOpen: (open: boolean) => void;
@@ -36,7 +40,8 @@ const initialImageRequests = [
 ];
 export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
     const [loading, setLoading] = useState(false);
-    const [imageUrls, setImageUrls] = useState<string[]>([]);
+    const [imageUrls, setImageUrls] = useState<any>([]);
+    const [nameImage, setNameImage] = useState<string[]>([]);
     const form = useForm({
         resolver: zodResolver(ProductSchema),
         defaultValues: {
@@ -48,7 +53,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
             imageRequests: initialImageRequests,
         },
     });
-
+    const { forceUpdate } = useContext(MyContext);
 
     const [imageRequests, setImageRequests] = useState<
         {
@@ -58,53 +63,37 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
         }[]
     >([]);
 
-    // const fetchImageUpload = async (file: File): Promise<string> => {
-    //     const formData = new FormData();
-    //     formData.append("image", file);
+    //    console.log('imageRequests',imageRequests)
+    // console.log('imageUrls', imageUrls)
 
-    //     try {
-    //         const response = await fetch("https://capstone-backend.online/api/files", {
-    //             method: "POST",
-    //             body: formData,
-    //         });
+    console.log('imageRequests', imageRequests)
 
-    //         if (!response.ok) {
-    //             throw new Error("Failed to upload image");
-    //         }
-
-    //         const data = await response.json();
-    //         return data.imageUrl; // Trả về link ảnh từ phản hồi của server
-    //     } catch (error) {
-    //         console.error("Error uploading image", error);
-    //         throw error; // Xử lý lỗi khi gửi yêu cầu lên server
-    //     }
-    // };
-
-    // ** hàm đăng ảnh
-    // Hàm xử lý upload ảnh lên backend
-    // const handleUploadPhotos = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const files = Array.from(e.target.files || []);
-
-    //     // Lưu các link ảnh từ backend
-    //     const uploadedImageUrls: string[] = [];
-
-    //     // Duyệt từng file ảnh để upload
-    //     for (const file of files) {
-    //         try {
-    //             const imageUrl = await fetchImageUpload(file); // Gửi file ảnh lên backend và nhận link ảnh về
-    //             uploadedImageUrls.push(imageUrl); // Lưu link ảnh vào mảng
-    //         } catch (error) {
-    //             console.error("Error uploading image", error);
-    //             // Xử lý lỗi khi upload ảnh
-    //         }
-    //     }
-
-    //     setImageUrls(uploadedImageUrls); // Lưu các link ảnh vào state để sử dụng khi submit form
-    // };
 
     const handleUploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
-        const newImageRequests = files.map(file => ({
+
+        const validImageTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+        const maxTotalSize = 1200000; // 1200 KB
+
+        let currentTotalSize = imageRequests.reduce((total, req: any) => total + req.file.size, 0);
+
+        const newImageRequests = files.filter(file => {
+            if (!validImageTypes.includes(file.type)) {
+                toast.error(`File ${file.name} is not a valid image type.`);
+                return false;
+            }
+            if (file.size > 1000000) { // 1000 KB
+                toast.error(`File ${file.name} exceeds the size limit of 1000 KB.`);
+                return false;
+            }
+            if (currentTotalSize + file.size > maxTotalSize) {
+                toast.error(`Adding file ${file.name} exceeds the total size limit of 1200 KB.`);
+                return false;
+            }
+            currentTotalSize += file.size;
+            return true;
+        }).map(file => ({
+            file: file,
             imageUrl: URL.createObjectURL(file),
             isBluePrint: false,
             isMainImage: false,
@@ -114,14 +103,18 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
             ...prevImageRequests,
             ...newImageRequests
         ]);
+        setImageUrls((prevImageRequests: any) => [
+            ...prevImageRequests,
+            ...newImageRequests.map((item) => item.file)
+        ]);
     };
-
 
     // ** hàm xóa ảnh theo index
     const handleDeleteImage = (index: number) => {
         setImageRequests(prevImageRequests =>
             prevImageRequests.filter((_, i) => i !== index)
         );
+        setImageUrls((prevImageUrls: any) => prevImageUrls.filter((_: any, i: any) => i !== index));
     };
 
     // ** hàm set true false cho Blueprint
@@ -142,136 +135,111 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
         );
     };
 
-    const stogae = localStorage.getItem('accessToken');
 
-    // ** hàm Submit
-    // const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
-    //     console.log('data', data)
-    //     setLoading(true);
-    //     const formData = new FormData();
-
-    //     // Thêm các giá trị từ form vào formData
-    //     formData.append('code', data?.code);
-    //     formData.append('price', data.price.toString()); // Chuyển price sang string để tránh lỗi
-    //     formData.append('size', data.size);
-    //     formData.append('description', data.description);
-    //     formData.append('name', data.name);
-
-    //     // Thêm các hình ảnh từ imageRequests vào formData
-    //     imageRequests.forEach((image, index) => {
-    //         formData.append(`imageRequests[${index}][imageUrl]`, image.imageUrl);
-    //         formData.append(`imageRequests[${index}][isBluePrint]`, String(image.isBluePrint));
-    //         formData.append(`imageRequests[${index}][isMainImage]`, String(image.isMainImage));
-    //     });
-
-    //     console.log('formData',formData)
-    //     try {
-    //         // Gửi formData đến server hoặc xử lý formData ở đây
-    //         // Ví dụ:
-    //         // const response = await fetch('url_api', {
-    //         //     method: 'POST',
-    //         //     body: formData,
-    //         //     // headers: {'Content-Type': 'multipart/form-data'}, // Thêm header nếu cần thiết
-    //         // });
-    //         // const responseData = await response.json();
-    //         // console.log(responseData);
+    const handlePostImage = async () => {
+        setLoading(true);
+        const formData = new FormData();
+        imageUrls.forEach((imageUrl: any) => {
+            formData.append('receivedFiles', imageUrl); // Đảm bảo rằng tên trường tương ứng với server
+        });
+        try {
+            const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
+            console.log('Upload successful:', response.data);
+            // Xử lý các hành động sau khi tải lên thành công
+        } catch (error) {
+            console.error('Error uploading files:', error);
+            // Xử lý lỗi khi tải lên không thành công
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
-    //     } catch (error) {
-    //         console.error('Error submitting form:', error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    //     // setOpen(false)
-    // };
 
-    // const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
-    //     setLoading(true);
-    //     console.log('data',data)
-    //     try {
-    //         // Tạo object JSON để gửi lên server
-    //         const requestBody = {
-    //             code: data.code,
-    //             price: data.price,
-    //             size: data.size,
-    //             description: data.description,
-    //             name: data.name,
-    //             imageRequests: imageRequests.map(image => ({
-    //                 imageUrl: image.imageUrl,
-    //                 isBluePrint: image.isBluePrint,
-    //                 isMainImage: image.isMainImage
-    //             }))
-    //         };
-    //         console.log('requestBody', requestBody)
+    const handelGetImage = async () => {
+        setLoading(true);
+        try {
+            const fileNames = imageUrls.map((imageUrl: any) => imageUrl.name);
 
+            const nameImagePromises = fileNames.map(async (fileName: any) => {
+                try {
+                    const { data } = await filesApi.getFile(fileName);
+                    return data.data; // Assuming data.data contains the image name
+                } catch (error) {
+                    console.error('Error getting file:', error);
+                    throw error;
+                }
+            });
 
-    //         // Gửi requestBody lên server bằng fetch hoặc axios
-    //         const response = await fetch('http://localhost/api/products', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': `Bearer ${stogae}`,
-    //             },
-    //             body: JSON.stringify(requestBody),
-    //         });
+            const names = await Promise.all(nameImagePromises);
+            setNameImage(names);
+            console.log('Processed image names:', names);
+        } catch (error) {
+            console.error('Error getting image names:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    //         const responseData = await response.json();
-    //         console.log(responseData);
-
-    //         // setOpen(false); // Đóng form sau khi submit thành công
-    //     } catch (error) {
-    //         console.error('Error submitting form:', error);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
+    console.log('nameImage', nameImage)
 
     const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
         setLoading(true);
-        // console.log('datadatadata', data)
-
         try {
+            await handlePostImage();
+
+            // Wait for `handelGetImage` to complete
+            await handelGetImage();
+
+            // Ensure `nameImage` has been updated
+
             const requestBody = {
                 code: data.code,
                 price: data.price,
                 size: data.size,
                 description: data.description,
                 name: data.name,
-                imageRequests: imageRequests.map(image => ({
-                    imageUrl: image.imageUrl,
+                imageRequests: imageRequests.map((image, index) => ({
+                    imageUrl: nameImage[index],
                     isBluePrint: image.isBluePrint,
-                    isMainImage: image.isMainImage
+                    isMainImage: image.isMainImage,
                 }))
             };
-            console.log('requestBody', requestBody)
+
+            console.log('requestBody', requestBody);
+
             const response = await productApi.createProduct(requestBody);
             if (response.data.isSuccess) {
                 toast.success(response.data.message);
                 setTimeout(() => {
                     setOpen(false);
+                    forceUpdate();
                     toast.error(response.data.message);
-                    window.location.href = '/dashboard/product';
+                    // window.location.href = '/dashboard/product';
                 }, 2000);
             } else {
-                // toast.error(response.data.message);
+                toast.error(response.data.message);
             }
-        } catch (error: any) {
-            // console.error('Error submitting form:', error.response.data);
-            // console.error('Error submitting form:', error.response.data.error.Code);
 
-            if (error.response.data.error.ImageRequests && error.response.data.error.Code) {
-                toast.error(error.response.data.error.ImageRequests)
-                toast.error(error.response.data.error.Code)
-            } else if(error.response.data.error.Code){
-                toast.error(error.response.data.error.Code);
-            } else{
-                toast.error(error.response.data.error.ImageRequests);
+        } catch (error: any) {
+            // Handle errors from form submission or API calls
+            if (error.response && error.response.data && error.response.data.error) {
+                if (error.response.data.error.ImageRequests && error.response.data.error.Code) {
+                    toast.error(error.response.data.error.ImageRequests);
+                    toast.error(error.response.data.error.Code);
+                } else if (error.response.data.error.Code) {
+                    toast.error(error.response.data.error.Code);
+                } else {
+                    toast.error(error.response.data.error.ImageRequests);
+                }
+            } else {
+                console.error('Error submitting form:', error);
+                toast.error('Error submitting form');
             }
 
         } finally {
             setLoading(false);
         }
-
     };
 
 
@@ -294,7 +262,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
                                     style={{ display: 'none' }}
                                     accept='image/*'
                                     onChange={e => handleUploadPhotos(e)}
-                                    
+                                    multiple
                                 />
                                 <label htmlFor='image' className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                     <Upload size={100} className="text-white flex items-center justify-center bg-primary-backgroudPrimary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto" />
@@ -321,7 +289,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
                                     style={{ display: 'none' }}
                                     accept='image/*'
                                     onChange={e => handleUploadPhotos(e)}
-                                 
+                                    multiple
                                 />
                                 <label htmlFor='image' className="absolute bottom-0">
                                     <Upload size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" />

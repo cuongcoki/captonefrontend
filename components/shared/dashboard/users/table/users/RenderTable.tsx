@@ -120,6 +120,22 @@ export default function RenderTableUsers({ searchParams }: Props) {
         </>
       </MyContext.Provider>
 
+      <div className="w-full py-3 md:hidden">
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger>
+            <Button variant={"colorCompany"} className="text-xs ">
+              Thêm nhân viên mới
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="w-full min-w-[90%] md:min-w-[70%]">
+            <DialogTitle className="text-2xl text-primary-backgroudPrimary">
+              Thêm nhân viên mới
+            </DialogTitle>
+            <Separator className="h-1" />
+            <UsersForm setOpen={setOpen} />
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
 }

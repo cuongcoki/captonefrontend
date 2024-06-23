@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -11,6 +11,7 @@ import { ProductUpdateSchema } from '@/schema/product';
 import toast, { Toaster } from 'react-hot-toast';
 import { productApi } from '@/apis/product.api';
 import { z } from 'zod';
+import { MyContext } from "../table/products/RenderTable";
 
 import {
     Select,
@@ -19,6 +20,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { filesApi } from '@/apis/files.api';
 
 interface ProductData {
     code: string;
@@ -38,10 +40,12 @@ interface ProductData {
 
 interface ProductID {
     productId?: ProductData;
+    setOpen1: (open: boolean) => void;
 }
 
-export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
+export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) => {
     const [loading, setLoading] = useState(false);
+    const { forceUpdate } = useContext(MyContext);
 
     // Initialize image requests from productId if available
     const initialImageRequests = productId?.imageResponses.map((image) => ({
@@ -50,6 +54,14 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
         isBluePrint: image.isBluePrint,
         isMainImage: image.isMainImage,
     })) || [];
+
+    const initialAddImageRequests = [
+        {
+            imageUrl: "", // Chỉ cần khởi tạo các trường cần thiết, nếu không có giá trị thực tế
+            isBluePrint: false,
+            isMainImage: false,
+        },
+    ];
 
     // useForm hook for managing form state and validation
     const form = useForm({
@@ -66,21 +78,64 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
         },
     });
 
+    const [imageUrls, setImageUrls] = useState<any>([]);
+    const [nameImage, setNameImage] = useState<string[]>([]);
+    const [imageAddRequests, setImageAddRequests] = useState<
+        {
+            imageUrl: string;
+            isBluePrint: boolean;
+            isMainImage: boolean
+        }[]
+    >([]);
+
     // State to manage image requests
     const [imageRequests, setImageRequests] = useState(initialImageRequests);
     const [idsImageDelete, setIdsImageDelete] = useState<string[]>([]);
-    console.log('idsImageDelete',idsImageDelete)
+    console.log('idsImageDelete', idsImageDelete)
     // Handle uploading new photos
     const handleUploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
-        const newImageRequests = files.map((file) => ({
-            id:'',
+
+        const validImageTypes = ['image/png', 'image/jpg', 'image/jpeg'];
+        const maxTotalSize = 1200000; // 1200 KB
+
+        let currentTotalSize = imageAddRequests.reduce((total, req: any) => total + req.file.size, 0);
+
+        const newImageRequests = files.filter(file => {
+            if (!validImageTypes.includes(file.type)) {
+                toast.error(`File ${file.name} is not a valid image type.`);
+                return false;
+            }
+            if (file.size > 1000000) { // 1000 KB
+                toast.error(`File ${file.name} exceeds the size limit of 1000 KB.`);
+                return false;
+            }
+            if (currentTotalSize + file.size > maxTotalSize) {
+                toast.error(`Adding file ${file.name} exceeds the total size limit of 1200 KB.`);
+                return false;
+            }
+            currentTotalSize += file.size;
+            return true;
+        }).map(file => ({
+            id: '',
+            file: file,
             imageUrl: URL.createObjectURL(file),
             isBluePrint: false,
             isMainImage: false,
         }));
 
-        setImageRequests((prevImageRequests) => [...prevImageRequests, ...newImageRequests]);
+        setImageRequests(prevImageRequests => [
+            ...prevImageRequests,
+            ...newImageRequests
+        ]);
+        setImageAddRequests(prevImageRequests => [
+            ...prevImageRequests,
+            ...newImageRequests
+        ]);
+        setImageUrls((prevImageRequests: any) => [
+            ...prevImageRequests,
+            ...newImageRequests.map((item) => item.file)
+        ]);
     };
 
     // Handle deleting an image
@@ -93,6 +148,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
             // Filter out the image at the specified index
             return prevImageRequests.filter((_, i) => i !== index);
         });
+        setImageUrls((prevImageUrls: any) => prevImageUrls.filter((_: any, i: any) => i !== index));
     };
 
     // Handle toggling blueprint flag for an image
@@ -113,10 +169,63 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
         );
     };
 
-    // Handle form submission
-    const onSubmit = async (formData: z.infer<typeof ProductUpdateSchema>) => {
+
+    const handlePostImage = async () => {
+        setLoading(true);
+        const formData = new FormData();
+        imageUrls.forEach((imageUrl: any) => {
+            formData.append('receivedFiles', imageUrl); // Đảm bảo rằng tên trường tương ứng với server
+        });
+        try {
+            const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
+            console.log('Upload successful:', response.data);
+            // Xử lý các hành động sau khi tải lên thành công
+        } catch (error) {
+            console.error('Error uploading files:', error);
+            // Xử lý lỗi khi tải lên không thành công
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    const handelGetImage = async () => {
         setLoading(true);
         try {
+            const fileNames = imageUrls.map((imageUrl: any) => imageUrl.name);
+
+            const nameImagePromises = fileNames.map(async (fileName: any) => {
+                try {
+                    const { data } = await filesApi.getFile(fileName);
+                    return data.data; // Assuming data.data contains the image name
+                } catch (error) {
+                    console.error('Error getting file:', error);
+                    throw error;
+                }
+            });
+
+            const names = await Promise.all(nameImagePromises);
+            setNameImage(names);
+            console.log('Processed image names:', names);
+        } catch (error) {
+            console.error('Error getting image names:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    // Handle form submission
+    const onSubmit = async (formData: z.infer<typeof ProductUpdateSchema>) => {
+        if (isSubmitting) return; // Ngăn chặn việc submit nhiều lần
+        setIsSubmitting(true);
+        setLoading(true);
+        try {
+            await handlePostImage();
+
+            // Wait for `handelGetImage` to complete
+            await handelGetImage();
+
+            // Ensure `nameImage` has been updated
             const requestBody = {
                 id: formData.id,
                 code: formData.code,
@@ -125,26 +234,37 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                 description: formData.description,
                 name: formData.name,
                 isInProcessing: formData.isInProcessing,
-                addImagesRequest: imageRequests.map(image => ({
-                    imageUrl: image.imageUrl,
+                addImagesRequest: imageAddRequests.map((image, index) => ({
+                    imageUrl: nameImage[index],
                     isBluePrint: image.isBluePrint,
-                    isMainImage: image.isMainImage
+                    isMainImage: image.isMainImage,
                 })),
                 deleteImagesRequest: idsImageDelete,
             };
             console.log('requestBody', requestBody);
-
-            const response = await productApi.updateProduct(requestBody, formData.id);
-            toast.success(response.data.message); // Assuming your API returns a message field in the response
-            console.log('Update Successful:', response);
+     
+                const response = await productApi.updateProduct(requestBody, formData.id);
+                toast.success(response.data.message); // Assuming your API returns a message field in the response
+                console.log('Update Successful:', response);
+                setTimeout(() => {
+                    setOpen1(false);
+                    forceUpdate();
+                    toast.error(response.data.message);
+                    // window.location.href = '/dashboard/product';
+                }, 2000);
 
         } catch (error) {
             console.error('Error updating product:', error);
             toast.error('Failed to update product');
         } finally {
             setLoading(false);
+            setIsSubmitting(false); // Reset trạng thái submit
         }
     };
+    
+   
+    useEffect(() => {
+    },[onSubmit])
 
     return (
         <Form {...form}>
@@ -294,8 +414,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                         />
 
                         {/* Submit button */}
-                        <Button type="submit" className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90" disabled={loading}>
-                            {loading ? 'Loading...' : 'GỬI'}
+                        <Button type="submit" className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90" disabled={isSubmitting}>
+                            {isSubmitting ? 'Loading...' : 'GỬI'}
                         </Button>
                     </div>
                 </form>

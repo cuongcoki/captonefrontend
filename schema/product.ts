@@ -22,11 +22,11 @@ export const ProductUpdateSchema = z.object({
     description: z.string().min(1, { message: "Mô tả là bắt buộc." }),
     name: z.string().min(1, { message: "Tên sản phẩm là bắt buộc." }),
     isInProcessing: z.boolean({ message: "Trạng thái xử lý là bắt buộc." }),
-    addImagesRequest: z.array(z.object({
-        imageUrl: z.string().url({ message: "URL hình ảnh không hợp lệ." }),
-        isBluePrint: z.boolean({ message: "Phải là giá trị boolean." }),
-        isMainImage: z.boolean({ message: "Phải là giá trị boolean." }),
-    })).nonempty({ message: "Phải có ít nhất một hình ảnh." }),
+    // addImagesRequest: z.array(z.object({
+    //     imageUrl: z.string().url({ message: "URL hình ảnh không hợp lệ." }),
+    //     isBluePrint: z.boolean({ message: "Phải là giá trị boolean." }),
+    //     isMainImage: z.boolean({ message: "Phải là giá trị boolean." }),
+    // })).nonempty({ message: "Phải có ít nhất một hình ảnh." }),
 });
 
 

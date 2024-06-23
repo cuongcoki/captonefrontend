@@ -27,3 +27,10 @@ export type ProductUpdateType = {
   price: number;
   size: string;
 }
+
+export type ProductSearchParams = {
+  isInProcessing: string;
+  pageIndex: number;
+  pageSize: number;
+  searchTearm: string;
+};
