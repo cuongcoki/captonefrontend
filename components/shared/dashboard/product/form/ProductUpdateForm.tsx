@@ -249,10 +249,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
                 setTimeout(() => {
                     setOpen1(false);
                     forceUpdate();
-                    toast.error(response.data.message);
                     // window.location.href = '/dashboard/product';
                 }, 2000);
-
+              
         } catch (error) {
             console.error('Error updating product:', error);
             toast.error('Failed to update product');

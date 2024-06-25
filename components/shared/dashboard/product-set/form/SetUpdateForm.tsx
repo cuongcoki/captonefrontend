@@ -360,10 +360,9 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
         };
         console.log('requestBody', requestBody);
         const response = await setApi.updateSet(requestBody, setProductId.id);
-        toast.success(response.data.message); // Assuming your API returns a message field in the response
         console.log('Update Successful:', response);
         setTimeout(() => {
-            toast.error(response.data.message);
+            toast.success(response.data.message); 
             window.location.href = '/dashboard/set';
         }, 2000);
     };
