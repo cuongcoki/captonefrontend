@@ -63,8 +63,8 @@ export default function SetProduct({ setProduct }: SetProductProps) {
         setSelectedProduct(pro);
         setOpen(true);
     };
-    console.log('setProductdetaill', setProduct)
-    console.log('selectedProduct', selectedProduct)
+    // console.log('setProductdetaill', setProduct)
+    // console.log('selectedProduct', selectedProduct)
     return (
         <Card x-chunk="dashboard-07-chunk-1">
             <CardHeader>

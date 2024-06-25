@@ -17,6 +17,18 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
+
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -24,6 +36,8 @@ import { authApi } from "@/apis/auth.api";
 import toast, { Toaster } from "react-hot-toast";
 import { error } from "console";
 import { useState } from "react";
+
+import { MyDrawer } from "@/components/ui/my-drawer";
 
 export default function Header() {
     // ** state
@@ -42,7 +56,7 @@ export default function Header() {
             .then(({ data }) => {
                 console.log('dataLogout', data);
                 user.logout();
-                router.push('/sign-in'); 
+                router.push('/sign-in');
                 toast.success(data.message)
             })
             .catch(error => {
@@ -62,7 +76,8 @@ export default function Header() {
                 </Button> */}
                 {/* Search */}
                 {/* <CommandDemo /> */}
-                <h1 className="text-xl font-medium">Xin chào {user?.user?.firstName}  {user?.user?.lastName} </h1>
+                {/* <h1 className="text-xl font-medium">Xin chào {user?.user?.firstName}  {user?.user?.lastName} </h1> */}
+                <MyDrawer />
             </div>
             <div className="flex h-5 items-center space-x-4 text-sm">
                 <div><TooltipProvider>

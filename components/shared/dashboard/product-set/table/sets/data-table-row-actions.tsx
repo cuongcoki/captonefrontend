@@ -34,20 +34,11 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-
-        <DropdownMenuItem
-          onClick={() => console.log(row._valuesCache.code)}
-        >
-          Lấy mã CODE
-        </DropdownMenuItem>
+    
         <DropdownMenuSeparator />
         <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
         <DropdownMenuItem>Chi Tiết</DropdownMenuItem>
-        <DropdownMenuItem>
-          Xóa
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
-       
+
       </DropdownMenuContent>
     </DropdownMenu>
   )

@@ -192,34 +192,40 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
             await handelGetImage();
 
             // Ensure `nameImage` has been updated
+            if (imageRequests && nameImage) {
+                const requestBody = {
+                    code: data.code,
+                    price: data.price,
+                    size: data.size,
+                    description: data.description,
+                    name: data.name,
+                    imageRequests: imageRequests.map((image, index) => ({
+                        imageUrl: nameImage[index],
+                        isBluePrint: image.isBluePrint,
+                        isMainImage: image.isMainImage,
+                    }))
+                };
 
-            const requestBody = {
-                code: data.code,
-                price: data.price,
-                size: data.size,
-                description: data.description,
-                name: data.name,
-                imageRequests: imageRequests.map((image, index) => ({
-                    imageUrl: nameImage[index],
-                    isBluePrint: image.isBluePrint,
-                    isMainImage: image.isMainImage,
-                }))
-            };
+                console.log('requestBody', requestBody);
 
-            console.log('requestBody', requestBody);
-
-            const response = await productApi.createProduct(requestBody);
-            if (response.data.isSuccess) {
-                toast.success(response.data.message);
-                setTimeout(() => {
-                    setOpen(false);
-                    forceUpdate();
+                const response = await productApi.createProduct(requestBody);
+                if (response.data.isSuccess) {
+                    toast.success(response.data.message);
+                    setTimeout(() => {
+                        setOpen(false);
+                        forceUpdate();
+                        toast.error(response.data.message);
+                        // window.location.href = '/dashboard/product';
+                    }, 2000);
+                } else {
                     toast.error(response.data.message);
-                    // window.location.href = '/dashboard/product';
-                }, 2000);
+                }
+
             } else {
-                toast.error(response.data.message);
+                // Xử lý khi nameImage không có giá trị
+                toast.error('imageUrl (nameImage) is not valid');
             }
+
 
         } catch (error: any) {
             // Handle errors from form submission or API calls
@@ -299,7 +305,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
                     </div>
                 </div>
 
-                <form onSubmit={form.handleSubmit(onSubmit)} >
+                <form onSubmit={form.handleSubmit(onSubmit)} className="md:w-[40%]">
                     {/* Phần nhập dữ liệu thông tin */}
                     <div className="w-full flex flex-col gap-4">
                         {/* code */}

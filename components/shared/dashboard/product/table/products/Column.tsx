@@ -35,13 +35,13 @@ export const columns: ColumnDef<Product>[] = [
       const firstImage = row.original.imageResponses[0];
       return firstImage ? (
         <Link href={`/dashboard/product/${row.original.id}`}>
-          <div className="w-[100px] h-[100px] rounded-lg bg-primary-backgroudPrimary">
+          <div className="w-[50px] h-[50px] rounded-lg ">
             <Image
               src={`${firstImage.imageUrl}`}
               width={100}
               height={100}
               alt="Product Image"
-              className="w-[100px] h-[100px] rounded-lg object-cover"
+              className="w-[50px] h-[50px] rounded-lg object-contain"
             />
           </div>
         </Link>

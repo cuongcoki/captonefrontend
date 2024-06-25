@@ -10,14 +10,14 @@ import {
     CarouselPrevious,
 } from "@/components/ui/carousel"
 
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+
 
 import { Switch } from "@/components/ui/switch"
-
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
 
 import Image from "next/image"
 import { Trash2, EllipsisVertical } from "lucide-react"
@@ -40,33 +40,31 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
                             <CardContent className="w-full h-full relative flex aspect-square items-center justify-center p-6 bg-black">
                                 <Image src={image.imageUrl} alt={`image-${index}`} width={500} height={500} className="h-full w-full object-contain bg-cover bg-center  bg-no-repeat  pointer-events-none" />
                             
-                                <button type='button' className="absolute right-0 bottom-0 ">
-                                    <Popover >
-                                        <PopoverTrigger asChild>
-                                            <EllipsisVertical size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" />
-                                        </PopoverTrigger >
-                                        <PopoverContent className="" align="end">
-                                            <div className="grid gap-4">
-                                                <div className="space-y-2">
-                                                    <h4 className="font-medium leading-none">Loại ảnh</h4>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
-                                                    </p>
+                                <HoverCard>
+                                    <HoverCardTrigger className="absolute left-0 top-0 "><EllipsisVertical size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" /></HoverCardTrigger>
+                                    <HoverCardContent align="start" className="w-full">
+                                        <div className="grid gap-4">
+                                            <div className="space-y-2">
+                                                <h4 className="font-medium leading-none">Loại ảnh</h4>
+                                                <p className="text-sm text-muted-foreground">
+                                                    Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
+                                                </p>
+                                            </div>
+                                            <div className="grid gap-2">
+                                                <div className="flex justify-between items-center">
+                                                    <Label htmlFor={`isBluePrint-${index}`}>[Ảnh] bản thiết kế</Label>
+                                                    <Switch className="data-[state=checked]:bg-primary-backgroudPrimary" id={`isBluePrint-${index}`} checked={image.isBluePrint} />
                                                 </div>
-                                                <div className="grid gap-2">
-                                                    <div className="flex justify-between items-center">
-                                                        <Label htmlFor={`isBluePrint-${index}`}>[Ảnh] bản thiết kế</Label>
-                                                        <Switch className="data-[state=checked]:bg-primary-backgroudPrimary" id={`isBluePrint-${index}`} checked={image.isBluePrint} />
-                                                    </div>
-                                                    <div className="flex justify-between items-center">
-                                                        <Label htmlFor={`isMainImage-${index}`}>[Ảnh] Chính</Label>
-                                                        <Switch className="data-[state=checked]:bg-primary-backgroudPrimary" id={`isMainImage-${index}`} checked={image.isMainImage}  />
-                                                    </div>
+                                                <div className="flex justify-between items-center">
+                                                    <Label htmlFor={`isMainImage-${index}`}>[Ảnh] Chính</Label>
+                                                    <Switch className="data-[state=checked]:bg-primary-backgroudPrimary" id={`isMainImage-${index}`} checked={image.isMainImage} />
                                                 </div>
                                             </div>
-                                        </PopoverContent>
-                                    </Popover>
-                                </button>
+                                        </div>
+                                    </HoverCardContent>
+                                </HoverCard>
+
+                               
                             </CardContent>
                         </CarouselItem>
                     ))}

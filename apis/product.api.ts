@@ -69,6 +69,10 @@ export const productApi = {
                 },
             },
         }),
+
+        searchProduct:(searchTerm?: string) =>axiosClient.get(`${endPointConstant.BASE_URL}/products/search?search=${searchTerm}`),
+        
+        
 };
 
 

@@ -1,5 +1,5 @@
 import { Product, columns } from "./Column"
-import {  DataTableSet } from "./DataTable"
+import { DataTableSet } from "./DataTable"
 import { useEffect, useState } from "react";
 import { DataTablePagination } from "./data-table-pagination";
 import { productApi } from "@/apis/product.api";
@@ -13,9 +13,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { setApi } from "@/apis/set.api";
+import { SetForm } from "../../form/SetForm";
+import { filesApi } from "@/apis/files.api";
 
 
-export default  function RenderTableProduct() {
+export default function RenderTableProduct() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -26,27 +28,46 @@ export default  function RenderTableProduct() {
   const [data, setData] = useState<Product[]>([]);
 
   useEffect(() => {
-    const fetchDataProduct =  () => {
+    const fetchDataProduct = async () => {
       setLoading(true);
-      setApi
-        .allSet( currentPage, pageSize, searchTerm)
-        .then(response => {
-          console.log(response.data.data)
-          setData(response.data.data.data);
-          setCurrentPage(response.data.data.currentPage)
-          setTotalPages(response.data.data.totalPages)
-        })
-        .catch(error => {
-          console.error('Error fetching product data:', error);
-        })
-        .finally(() => {
-          setLoading(false);
-        })
+      try {
+        const response = await setApi.allSet(currentPage, pageSize, searchTerm);
+        const newData = response.data.data.data;
+        const totalPages = response.data.data.totalPages;
+        
+        // Update imageUrl with links fetched from filesApi
+        const updatedData = await Promise.all(newData.map(async (item:any) => {
+          try {
+            const { data } = await filesApi.getFile(item.imageUrl);
+            return {
+              ...item,
+              imageUrl: data.data 
+            };
+          } catch (error) {
+            console.error('Error getting file:', error);
+            return {
+              ...item,
+              imageUrl: '' // Handle error case if needed
+            };
+          }
+        }));
+        
+        setData(updatedData);
+        setCurrentPage(response.data.data.currentPage);
+        setTotalPages(totalPages);
+      } catch (error) {
+        console.error('Error fetching product data:', error);
+      } finally {
+        setLoading(false);
+      }
     };
-    console.log('data', data)
-    fetchDataProduct();
+  
+   
+
+    fetchDataProduct()
   }, [currentPage, pageSize, searchTerm, isInProcessing]);
 
+  console.log('data', data)
 
   return (
     <div className="px-3 ">
@@ -61,14 +82,14 @@ export default  function RenderTableProduct() {
         <div>
           <div className="flex items-center justify-end p-3">
             <div className="flex items-center space-x-2">
-              <Dialog  open={open} onOpenChange={setOpen}>
+              <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger>
                   <Button variant={"colorCompany"} className="text-xs">
                     Thêm sản phầm mới
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-[70%] min-h-[90%]">
-                  {/* <ProductForm setOpen={setOpen} /> */}
+                  <SetForm setOpen={setOpen} />
                 </DialogContent>
               </Dialog>
             </div>
@@ -77,7 +98,7 @@ export default  function RenderTableProduct() {
       </div>
       <>
         <DataTableSet columns={columns} data={data} />
-        <DataTablePagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage}/>
+        <DataTablePagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
       </>
     </div>
   );
