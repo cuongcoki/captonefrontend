@@ -66,17 +66,21 @@ export default function UserEditButton({ user }: Props) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen} >
-
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="border-none w-full flex items-center justify-center ">Chỉnh sửa</Button>
+        <Button
+          variant="outline"
+          className="border-none w-full flex items-center justify-center "
+        >
+          Chỉnh sửa
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px]">
         <DialogHeader>
           <DialogTitle>Thay Đổi thông tin của Nhân viên</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-2">
-          <Toaster />
+          {/* <Toaster /> */}
           <Form {...form}>
             <form
               className="w-full flex flex-col gap-4"
@@ -128,7 +132,12 @@ export default function UserEditButton({ user }: Props) {
                 label="Số định danh cá nhân/CMND (*)"
               />
               <DialogFooter>
-                <Button type="submit" className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90" >Chỉnh sửa</Button>
+                <Button
+                  type="submit"
+                  className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
+                >
+                  Chỉnh sửa
+                </Button>
               </DialogFooter>
             </form>
           </Form>

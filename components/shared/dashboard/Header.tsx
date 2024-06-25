@@ -1,4 +1,12 @@
-import { Bell, ChevronDown, History, Plus, Settings, UsersRound, LayoutGrid } from "lucide-react";
+import {
+    Bell,
+    ChevronDown,
+    History,
+    Plus,
+    Settings,
+    UsersRound,
+    LayoutGrid,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CommandDemo from "./Command";
 import {
@@ -6,8 +14,8 @@ import {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
 
 import {
     DropdownMenu,
@@ -48,7 +56,7 @@ export default function Header() {
     const router = useRouter();
 
     const handleLogout = () => {
-        setLoading(true)
+        setLoading(true);
         const id: any = user.user?.id;
 
         authApi
@@ -104,17 +112,23 @@ export default function Header() {
 
                 <div>
                     <DropdownMenu>
-                        <DropdownMenuTrigger >
+                        <DropdownMenuTrigger>
                             <div className="flex items-center space-x-1">
-                                <span>{user?.user?.firstName} {user?.user?.lastName}</span>
+                                <span>
+                                    {user?.user?.firstName} {user?.user?.lastName}
+                                </span>
                                 <ChevronDown className="mr-2 h-3 w-3 shrink-0 opacity-50" />
                             </div>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" >
+                        <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem><Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link></DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleLogout}>Đăng xuất</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleLogout}>
+                                Đăng xuất
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
