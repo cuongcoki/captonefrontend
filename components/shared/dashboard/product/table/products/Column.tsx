@@ -7,6 +7,7 @@ import Link from "next/link"
 import { DataTableRowActions } from "./data-table-row-actions"
 import Image from "next/image"
 import { IsInProcessing } from "./data/data"
+import { ArrowUpDown } from "lucide-react"
 export type Product = {
   id: string;
   name: string;
@@ -34,13 +35,13 @@ export const columns: ColumnDef<Product>[] = [
       const firstImage = row.original.imageResponses[0];
       return firstImage ? (
         <Link href={`/dashboard/product/${row.original.id}`}>
-          <div className="w-[100px] h-[100px] rounded-lg bg-primary-backgroudPrimary">
+          <div className="w-[50px] h-[50px] rounded-lg ">
             <Image
               src={`${firstImage.imageUrl}`}
               width={100}
               height={100}
               alt="Product Image"
-              className="w-[100px] h-[100px] rounded-lg object-contain"
+              className="w-[50px] h-[50px] rounded-lg object-contain"
             />
           </div>
         </Link>
@@ -79,6 +80,7 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <div className="flex w-[100px] items-center">
           <span className={`${isInProcessing.value === true ? 'bg-slate-100' : ''} border px-2 py-1 rounded-full`}>{isInProcessing.label}</span>
+          
         </div>
       );
     },

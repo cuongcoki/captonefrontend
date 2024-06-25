@@ -1,4 +1,12 @@
-import { Bell, ChevronDown, History, Plus, Settings, UsersRound, LayoutGrid } from "lucide-react";
+import {
+    Bell,
+    ChevronDown,
+    History,
+    Plus,
+    Settings,
+    UsersRound,
+    LayoutGrid,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CommandDemo from "./Command";
 import {
@@ -6,8 +14,8 @@ import {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { Separator } from "@/components/ui/separator"
+} from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
 
 import {
     DropdownMenu,
@@ -17,6 +25,18 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerDescription,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
+
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -24,6 +44,8 @@ import { authApi } from "@/apis/auth.api";
 import toast, { Toaster } from "react-hot-toast";
 import { error } from "console";
 import { useState } from "react";
+
+import { MyDrawer } from "@/components/ui/my-drawer";
 
 export default function Header() {
     // ** state
@@ -34,7 +56,7 @@ export default function Header() {
     const router = useRouter();
 
     const handleLogout = () => {
-        setLoading(true)
+        setLoading(true);
         const id: any = user.user?.id;
 
         authApi
@@ -42,7 +64,7 @@ export default function Header() {
             .then(({ data }) => {
                 console.log('dataLogout', data);
                 user.logout();
-                router.push('/sign-in'); 
+                router.push('/sign-in');
                 toast.success(data.message)
             })
             .catch(error => {
@@ -62,7 +84,8 @@ export default function Header() {
                 </Button> */}
                 {/* Search */}
                 {/* <CommandDemo /> */}
-                <h1 className="text-xl font-medium">Xin chào {user?.user?.firstName}  {user?.user?.lastName} </h1>
+                {/* <h1 className="text-xl font-medium">Xin chào {user?.user?.firstName}  {user?.user?.lastName} </h1> */}
+                <MyDrawer />
             </div>
             <div className="flex h-5 items-center space-x-4 text-sm">
                 <div><TooltipProvider>
@@ -89,17 +112,23 @@ export default function Header() {
 
                 <div>
                     <DropdownMenu>
-                        <DropdownMenuTrigger >
+                        <DropdownMenuTrigger>
                             <div className="flex items-center space-x-1">
-                                <span>{user?.user?.firstName} {user?.user?.lastName}</span>
+                                <span>
+                                    {user?.user?.firstName} {user?.user?.lastName}
+                                </span>
                                 <ChevronDown className="mr-2 h-3 w-3 shrink-0 opacity-50" />
                             </div>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" >
+                        <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Tài khoản của tôi</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem><Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link></DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleLogout}>Đăng xuất</DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleLogout}>
+                                Đăng xuất
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

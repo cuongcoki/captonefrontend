@@ -11,6 +11,7 @@ import {
   PackageSearch,
   InspectionPanel,
   CalendarSearch,
+  PackagePlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -71,6 +72,12 @@ export default function SideNavbar({}: Props) {
                 variant: "ghost",
               },
               {
+                title: "Đặt sản phẩm",
+                href: "/dashboard/set",
+                icon: PackagePlus ,
+                variant: "ghost",
+              },
+              {
                 title: "Vật liệu",
                 href: "/dashboard/material",
                 icon: InspectionPanel,
@@ -78,8 +85,14 @@ export default function SideNavbar({}: Props) {
               },
               {
                 title: "Điểm danh",
-                href: "/dashboard/attendance",
+                href: "/dashboard/attendance/update-attendance",
                 icon: CalendarSearch,
+                variant: "ghost",
+              },
+              {
+                title: "Xem điểm danh",
+                href: "/employee/view-attendance",
+                icon: UserRound,
                 variant: "ghost",
               },
               {

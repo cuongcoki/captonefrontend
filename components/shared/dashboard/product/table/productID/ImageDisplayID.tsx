@@ -22,23 +22,23 @@ interface ImageDisplayProps {
 const ImageDisplayID: React.FC<ImageDisplayProps> = ({
     images,
 }) => {
-    console.log('images', images)
+    // console.log('images', images)
     return (
         <div className="flex items-center justify-center w-full h-full">
             {images && images.length > 0 ? (
-                <Carousel className="w-full h-full flex flex-col">
-                    <CarouselContent className="w-full h-full">
+                <Carousel className="flex flex-col w-full h-full">
+                    <CarouselContent >
                         {images.map((image, index) => (
                             <CarouselItem
-                                className="w-full h-full flex items-center justify-center"
+                                className=" w-full h-full flex items-center justify-center"
                                 key={index}
                             >
-                                <CardContent className="relative flex aspect-square items-center justify-center p-6 bg-black">
+                                <CardContent className="w-full h-full relative flex aspect-square items-center justify-center p-6 bg-black">
                                     <Image
                                         src={image.imageUrl}
                                         alt={`image-${index}`}
-                                        width={500}
-                                        height={500}
+                                        width={900}
+                                        height={900}
                                         className="h-full w-full object-contain bg-cover bg-center bg-no-repeat pointer-events-none"
                                     />
                                 </CardContent>

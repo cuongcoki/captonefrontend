@@ -11,14 +11,15 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import Link from "next/link"
 
 
 
-interface DataTableRowActionsProps<TData> {
+interface DataTableRowActionsProps<TData extends {id:string}> {
   row: Row<TData>
 }
 
-export function DataTableRowActions<TData>({
+export function DataTableRowActions<TData extends {id:string}>({
   row,
 }: DataTableRowActionsProps<TData>) {
 
@@ -42,12 +43,7 @@ export function DataTableRowActions<TData>({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
-        <DropdownMenuItem>Chi Tiết</DropdownMenuItem>
-        <DropdownMenuItem>
-          Xóa
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
-       
+        <DropdownMenuItem><Link href={`/dashboard/product/${row.original.id}`}>Chi tiết</Link></DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
