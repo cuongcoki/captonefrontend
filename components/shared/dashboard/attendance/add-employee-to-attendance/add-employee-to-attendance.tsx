@@ -104,17 +104,17 @@ export function AddEmployeeToAttendance<TData, TValue>({
 
     console.log("createAttendanceSlotBody", createAttendanceSlotBody);
 
-    attendanceApi
-      .createAttendance(createAttendanceSlotBody)
-      .then(({ data }) => {
-        console.log(data);
-        ForceRender();
-        toast.success("data.message");
-      })
-      .catch((error) => {
-        console.log(error);
-        toast.error("error.message");
-      });
+    // attendanceApi
+    //   .createAttendance(createAttendanceSlotBody)
+    //   .then(({ data }) => {
+    //     console.log(data);
+    //     ForceRender();
+    //     toast.success("data.message");
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //     toast.error("error.message");
+    //   });
   };
 
   return (

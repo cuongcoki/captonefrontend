@@ -86,6 +86,11 @@ export type UpdateAttendanceBody = {
   date: string;
   updateAttendances: AttendanceForUpdate[];
 };
+export type CreateAttendanceBody = {
+  slotId: number;
+  date: string;
+  createAttendances: AttendanceForUpdate[];
+};
 //-------------------------------------------- USER --------------------------------------------
 export type GetUsersBody = {
   SearchTerm: string;
@@ -166,3 +171,54 @@ export type UpdateEmployeeProductBody = {
   slotId: Number;
   createQuantityProducts: ProductEmployee[];
 };
+
+//-------------------------------------------- Employee --------------------------------------------
+export type AttendanceDateData = {
+  date: string;
+  attedanceDateReport: {
+    isPresentSlot1: boolean;
+    isPresentSlot2: boolean;
+    isPresentSlot3: boolean;
+    isSalaryByProduct: boolean;
+    isOverTime: boolean;
+  };
+};
+export type GetEmployeeAttendanceResponse = SuccessResponse<{
+  userId: string;
+  month: number;
+  year: number;
+  attendances: AttendanceDateData[];
+}>;
+
+export type GetEmployeeAttendanceBody = {
+  UserId: string;
+  Year: number;
+  Month: number;
+};
+
+export type GetEmployeeAttendanceDetailBody = {
+  UserId: string;
+  Date: string;
+};
+
+export type AttendanceSlotDetail = {
+  slotId: number;
+  isAttendance: boolean;
+  isOvertime: boolean;
+  hourOverTime: number;
+  isSalaryByProduct: boolean;
+  employeeProductResponses: {
+    imageUrl: string;
+    productName: string;
+    productId: string;
+    phaseId: string;
+    phaseName: string;
+    quantity: number;
+  }[];
+};
+
+export type GetEmployeeAttendanceDetailResponse = SuccessResponse<{
+  date: string;
+  userId: string;
+  attendanceSlotReports: AttendanceSlotDetail[];
+}>;

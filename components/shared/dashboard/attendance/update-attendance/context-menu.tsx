@@ -44,10 +44,8 @@ export function ContextMenuForAttendance({
           {children}
         </ContextMenuTrigger>
         <ContextMenuContent className="w-64">
-          {indexData?.getAttribute("data-ismanufacture") === "true" ? (
-            <>
-              <CountProduct index={index} />
-              <ContextMenuSeparator />
+          <CountProduct index={index} />
+          {/* <ContextMenuSeparator />
               <div
                 className="hover:bg-slate-100 pl-8 relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
                 id="updateProduct"
@@ -63,13 +61,9 @@ export function ContextMenuForAttendance({
               >
                 Thay đổi phương thức tính lương
               </div>
-              <ContextMenuSeparator />
-            </>
-          ) : (
-            <></>
-          )}
+              <ContextMenuSeparator /> */}
 
-          <div
+          {/* <div
             className="hover:bg-slate-100 pl-8 relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
             id="updateProduct"
             onClick={() => {
@@ -79,7 +73,7 @@ export function ContextMenuForAttendance({
             }}
           >
             Cập nhập có tạo sản phẩm ?
-          </div>
+          </div> */}
         </ContextMenuContent>
       </ContextMenu>
     </>

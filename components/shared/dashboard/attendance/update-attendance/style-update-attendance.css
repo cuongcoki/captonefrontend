@@ -1,19 +1,19 @@
-table {
+.update-attendance-table table {
   width: 100%;
   border-collapse: collapse;
 }
 
-th,
-td {
+.update-attendance-table th,
+.update-attendance-table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
 
-th {
+.update-attendance-table th {
   background-color: #f2f2f2;
 }
 
-th[colspan] {
+.update-attendance-table th[colspan] {
   text-align: center;
 }
