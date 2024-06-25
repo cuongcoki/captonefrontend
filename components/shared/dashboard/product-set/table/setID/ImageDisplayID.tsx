@@ -27,7 +27,7 @@ const ImageDisplayID: React.FC<ImageDisplayProps> = ({
         <div className="flex items-center justify-center w-full h-full">
             {images && images.length > 0 ? (
                 <Carousel className="flex flex-col w-full h-full">
-                    <CarouselContent >
+                    <CarouselContent className="w-full h-full">
                         {images.map((image, index) => (
                             <CarouselItem
                                 className=" w-full h-full flex items-center justify-center"
