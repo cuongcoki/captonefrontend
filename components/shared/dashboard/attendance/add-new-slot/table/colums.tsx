@@ -25,14 +25,15 @@ export const columnsForAttendanceForm: ColumnDef<User>[] = [
     accessorKey: "image",
     header: () => <div className="text-center">Ảnh</div>,
     cell: ({ row }) => (
-      <div className="flex justify-center items-center w-[60px] h-[80px] bg-gray-400">
+      <div className="flex justify-center items-center ">
+        <div className="w-[60px] h-[80px] bg-gray-400"></div>
         {/* <Image src={row.original.image} width={60} height={80} alt="Ảnh" /> */}
       </div>
     ),
   },
   {
     accessorKey: "userName",
-    header: "Tên nhân viên",
+    header: () => <div className="text-center">Tên nhân viên </div>,
     cell: ({ row }) => (
       <div className="flex justify-center items-center">
         {row.original.firstName + " " + row.original.lastName}

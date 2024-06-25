@@ -2,10 +2,12 @@ import {
   AttendanceDetailProductType,
   AttendanceDetailType,
 } from "@/schema/attendance";
+import { User } from "@/types/attendance.type";
 import { create } from "zustand";
 
 interface UpdateAttendanceStore {
   tableData: AttendanceDetailType[];
+  setTableDataIndex: (index: number, data: AttendanceDetailType) => void;
   setTableData: (data: AttendanceDetailType[]) => void;
   handleAttendanceChange: (index: number, checked: boolean) => void;
   updateManufacture: (index: number, value: boolean) => void;
@@ -18,6 +20,10 @@ interface UpdateAttendanceStore {
   ) => void;
   addNewProduct: (index: number, product: AttendanceDetailProductType) => void;
   removeProduct: (index: number, productIndex: number) => void;
+  user: User[];
+  setUser: (data: User[]) => void;
+  checkAllSalaryByProduct: (checked: boolean) => void;
+  checkAllAttendance: (checked: boolean) => void;
 }
 
 export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
@@ -26,10 +32,20 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
     setTableData: (data) => {
       set({ tableData: data });
     },
+    setTableDataIndex: (index, data) => {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData[index] = data;
+        return { tableData: newData };
+      });
+    },
     handleAttendanceChange: (index, checked) => {
       set((state) => {
         const newData = [...state.tableData];
         newData[index].isAttendance = checked;
+        if (!checked) {
+          newData[index].hourOverTime = "0";
+        }
         return { tableData: newData };
       });
     },
@@ -72,9 +88,34 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
       });
     },
     updateOverTime(index, value) {
+      if (Number(value) < 0) {
+        return;
+      }
       set((state) => {
         const newData = [...state.tableData];
         newData[index].hourOverTime = value;
+        return { tableData: newData };
+      });
+    },
+    user: [],
+    setUser: (data) => {
+      set({ user: data });
+    },
+    checkAllSalaryByProduct: (checked) => {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData.forEach((item) => {
+          item.isSalaryByProduct = checked;
+        });
+        return { tableData: newData };
+      });
+    },
+    checkAllAttendance: (checked) => {
+      set((state) => {
+        const newData = [...state.tableData];
+        newData.forEach((item) => {
+          item.isAttendance = checked;
+        });
         return { tableData: newData };
       });
     },

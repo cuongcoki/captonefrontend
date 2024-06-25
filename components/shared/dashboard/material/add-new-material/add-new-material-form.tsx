@@ -39,6 +39,7 @@ export default function AddNewMeterialForm() {
 
   const onSubmit = (data: AddMaterialType) => {
     data.image = materialImage.base64;
+    console.log("MAterial Image", materialImage);
     console.log("DATA", data);
     try {
       materialApi.addMaterial(data).then(({ data }) => {

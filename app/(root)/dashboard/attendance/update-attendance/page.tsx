@@ -7,10 +7,20 @@ type Props = {
 };
 
 export default async function page({ searchParams }: Props) {
+  const day = new Date();
+  const month =
+    day.getMonth() + 1 < 10 ? "0" + (day.getMonth() + 1) : day.getMonth() + 1;
+  const toDay = day.getDate() + "/" + month + "/" + day.getFullYear();
+  searchParams.date = searchParams.date || toDay;
+  const slot = day.getHours() < 12 ? "1" : day.getHours() < 18 ? "2" : "3";
+  searchParams.slot = searchParams.slot || slot;
   console.log("searchParams", searchParams);
   return (
     <>
-      <UpdateAttendance date={searchParams.date} slot={searchParams.slot} />
+      <UpdateAttendance
+        dateProp={searchParams.date}
+        slotProp={searchParams.slot}
+      />
     </>
   );
 }

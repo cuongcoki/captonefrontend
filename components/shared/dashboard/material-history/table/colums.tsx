@@ -129,7 +129,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
                 <label>Chỉnh sửa</label>
               </DropdownMenuItem>
               {/* <DropdownMenuSeparator /> */}
-              <DropdownMenuItem>Xóa nguyên liệu</DropdownMenuItem>
+              {/* <DropdownMenuItem>Xóa nguyên liệu</DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
           <UpdateMaterialHistory id={payment.id}>
