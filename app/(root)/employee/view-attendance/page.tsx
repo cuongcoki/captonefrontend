@@ -260,7 +260,7 @@ export default function Page({ searchParams }: Props) {
           );
         })}
       </div>
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap mt-3">
         <div className="flex flex-auto">
           <DotStatus className="my-auto" variant="yellow" />
           &nbsp; 0.5 công
@@ -271,7 +271,7 @@ export default function Page({ searchParams }: Props) {
         </div>
         <div className="flex flex-auto">
           <DotStatus className="my-auto" variant="blue" />
-          &nbsp; làm sp
+          &nbsp; lương theo sản phẩm
         </div>
         <div className="flex flex-auto">
           <DotStatus className="my-auto" variant="orange" />

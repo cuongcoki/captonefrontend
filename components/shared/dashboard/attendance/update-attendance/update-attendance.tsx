@@ -233,6 +233,7 @@ export default function UpdateAttendance({
       .updateEmployeeProduct(updateEmployeeProductData)
       .then(({ data }) => {
         console.log(data);
+
         // toast.success(data.message);
       });
   };
@@ -278,12 +279,14 @@ export default function UpdateAttendance({
         .then(({ data }) => {
           console.log(data);
           updateEmployeeProduct();
-          ForceRender();
           toast.success(data.message);
         })
         .catch((error) => {
           console.log("Create error", error.response.data);
           toast.error(error.response.data.message);
+        })
+        .finally(() => {
+          ForceRender();
         });
     } else {
       attendanceApi
@@ -291,12 +294,15 @@ export default function UpdateAttendance({
         .then(({ data }) => {
           console.log(data);
           updateEmployeeProduct();
-          ForceRender();
+
           toast.success(data.message);
         })
         .catch((error) => {
           console.log("Update error", error.response.data);
           toast.error(error.response.data.message);
+        })
+        .finally(() => {
+          ForceRender();
         });
     }
   };
@@ -565,15 +571,13 @@ export default function UpdateAttendance({
                         </ContextMenuForAttendance>
                       </>
                     ) : (
-                      <ContextMenuForAttendance index={index}>
-                        <td
-                          className="bg-[#f1eeee]"
-                          colSpan={3}
-                          data-index={index}
-                          data-ismanufacture={item.isManufacture}
-                          data-issalarybyproduct={item.isSalaryByProduct}
-                        ></td>
-                      </ContextMenuForAttendance>
+                      <td
+                        className="bg-[#f1eeee]"
+                        colSpan={3}
+                        data-index={index}
+                        data-ismanufacture={item.isManufacture}
+                        data-issalarybyproduct={item.isSalaryByProduct}
+                      ></td>
                     )}
                     <td>
                       <div className="flex items-center">
