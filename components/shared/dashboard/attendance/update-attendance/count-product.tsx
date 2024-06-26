@@ -17,30 +17,76 @@ import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-f
 import { X } from "lucide-react";
 import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
 import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
-export default function CountProduct({ index }: { index: number }) {
+import SearchAndChose from "@/components/shared/common/search";
+import { GetAllProductResponse, Product } from "@/types/attendance.type";
+import { attendanceApi } from "@/apis/attendance.api";
+export default function CountProduct({
+  index,
+  children,
+}: {
+  index: number;
+  children: React.ReactNode;
+}) {
   const { tableData, setTableDataIndex } = useUpdateAttendanceStore();
   // const UserData = tableData[index];
   const [userData, setUserData] = useState(tableData[index]);
   const [productValue, setProductValue] = useState<string>("");
   const [phaseValue, setPhaseValue] = useState<string>("");
-  const { listProduct, listPhase } = useAttendanceStore();
+  // const { listProduct, listPhase } = useAttendanceStore();
+  const [listProduct, setListProduct] = useState(
+    useAttendanceStore().listProduct
+  );
+  const [listPhase, setListPhase] = useState(useAttendanceStore().listPhase);
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
 
   const [dataProduct, setDataProduct] = useState<ComboboxDataType[]>([]);
   const [dataPhase, setDataPhase] = useState<ComboboxDataType[]>([]);
 
-  useEffect(() => {}, []);
-  useEffect(() => {
-    setDataProduct(
-      listProduct.data.data.map((product) => ({
-        label: product.name,
-        value: product.id,
-      }))
-    );
-  }, [listProduct]);
+  // useEffect(() => {
+  //   console.log("List Product", listProduct);
+  //   setDataProduct(
+  //     listProduct.data.data.map((product) => ({
+  //       label: product.name,
+  //       value: product.id,
+  //     }))
+  //   );
+  // }, [listProduct]);
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [searchData, setSearchData] = useState<GetAllProductResponse | null>(
+    null
+  );
 
   useEffect(() => {
+    if (searchInput) {
+      attendanceApi
+        .getALlProduct({
+          SearchTerm: searchInput,
+          pageIndex: 1,
+          pageSize: 10,
+        })
+        .then(({ data }) => {
+          console.log("Search Data: ", data);
+          const setProduct = new Set<string>();
+          userData.products.forEach((product) => {
+            setProduct.add(product.productID);
+          });
+          data.data.data = data.data.data.filter(
+            (product) => !setProduct.has(product.id)
+          );
+          setSearchData(data);
+        })
+        .catch((error) => {
+          if (error.response.data.status === 404) {
+          }
+        });
+    } else {
+      setSearchData(null); // Clear search data when input is empty
+    }
+  }, [searchInput, userData]);
+
+  useEffect(() => {
+    console.log("List Phase", listPhase);
     setDataPhase(
       listPhase.data.map((phase) => ({
         label: phase.name,
@@ -49,19 +95,17 @@ export default function CountProduct({ index }: { index: number }) {
     );
   }, [listPhase]);
 
-  const AddNewProductForUser = () => {
+  const AddNewProductForUser = (product: Product) => {
     setUserData((prev) => {
       return {
         ...prev,
         products: [
           ...prev.products,
           {
-            productID: productValue,
-            productName: dataProduct.find(
-              (product) => product.value === productValue
-            )?.label as string,
-            image: "",
-            phaseID: phaseValue,
+            productID: product.id,
+            productName: product.name,
+            image: product.imageResponses[0].imageUrl || "",
+            phaseID: dataPhase[0].value as string,
             phaseName: dataPhase.find((phase) => phase.value === phaseValue)
               ?.label as string,
             quantity: "0",
@@ -75,6 +119,21 @@ export default function CountProduct({ index }: { index: number }) {
     setUserData((prev) => {
       const newProducts = [...prev.products];
       newProducts[indexP].quantity = value;
+      return {
+        ...prev,
+        products: newProducts,
+      };
+    });
+    setIsUpdate(true);
+  };
+
+  const updatePhaseOfProduct = (indexP: number, value: string) => {
+    setUserData((prev) => {
+      const newProducts = [...prev.products];
+      newProducts[indexP].phaseID = value;
+      newProducts[indexP].phaseName = dataPhase.find(
+        (phase) => phase.value === value
+      )?.label as string;
       return {
         ...prev,
         products: newProducts,
@@ -110,46 +169,77 @@ export default function CountProduct({ index }: { index: number }) {
   return (
     <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
       <DialogTrigger asChild>
-        <div
+        {/* <div
           className="hover:bg-slate-100 pl-8 relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
           id="updateProduct"
         >
           Cập nhật sản phẩm tạo ra
-        </div>
+        </div> */}
+        {children}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[725px]">
         <DialogHeader>
           <DialogTitle>Cập nhật sản phẩm tạo ra</DialogTitle>
           <DialogDescription>{tableData[index].userName}</DialogDescription>
         </DialogHeader>
-        <div className="flex items-center gap-5 ml-auto mt-3">
-          <Combobox
-            title="Chọn sản phẩm thêm"
-            data={dataProduct}
-            value={productValue}
-            setValue={(value: string) => {
-              setProductValue(value);
-            }}
-          />
-          <Combobox
-            title="Chọn giai đoạn "
-            data={dataPhase}
-            value={phaseValue}
-            setValue={(value: string) => {
-              setPhaseValue(value);
-            }}
-          />
-          <Button
-            disabled={productValue === "" || phaseValue === ""}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              // setDialogIsOpen(true);
-              AddNewProductForUser();
-            }}
-          >
-            Thêm sản phẩm
-          </Button>
+        <div className="mr-auto ">
+          <div style={{ position: "relative", width: "400px" }}>
+            <Input
+              value={searchInput}
+              onChange={(event) => {
+                setSearchInput(event.target.value);
+              }}
+              placeholder="Nhập tên sản phẩm ..."
+            />
+            {searchData && (
+              <ul
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  right: 0,
+                  backgroundColor: "white",
+                  border: "1px solid #ccc",
+                  zIndex: 1000,
+                  maxHeight: "200px",
+                  overflowY: "auto",
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                }}
+              >
+                {searchData.data.data.map((item) => (
+                  <li
+                    key={item.id}
+                    style={{ padding: "8px", borderBottom: "1px solid #ddd" }}
+                    className="hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
+                      AddNewProductForUser(item);
+                      setSearchInput("");
+                    }}
+                  >
+                    {item.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {searchInput !== "" && !searchData && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  left: 0,
+                  right: 0,
+                  backgroundColor: "white",
+                  border: "1px solid #ccc",
+                  zIndex: 1000,
+                  padding: "8px",
+                }}
+              >
+                No data found
+              </div>
+            )}
+          </div>
         </div>
         <table>
           <thead>
@@ -177,8 +267,25 @@ export default function CountProduct({ index }: { index: number }) {
                     />
                   </div>
                 </td>
-                <td>{product.productName}</td>
-                <td>{product.phaseName}</td>
+                <td className="text-center">{product.productName}</td>
+                {/* <td className="text-center">{product.phaseName}</td> */}
+                <td className="text-center">
+                  <select
+                    onChange={(event) => {
+                      updatePhaseOfProduct(indexP, event.target.value);
+                    }}
+                  >
+                    {dataPhase.map((phase) => (
+                      <option
+                        key={phase.value}
+                        value={phase.value}
+                        selected={phase.value === product.phaseID}
+                      >
+                        {phase.label}
+                      </option>
+                    ))}
+                  </select>
+                </td>
                 <td>
                   <Input
                     type="number"
