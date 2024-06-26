@@ -85,15 +85,27 @@ export default function CountProduct({
     }
   }, [searchInput, userData]);
 
+  // GET PHASE DATA
   useEffect(() => {
-    console.log("List Phase", listPhase);
-    setDataPhase(
-      listPhase.data.map((phase) => ({
-        label: phase.name,
-        value: phase.id,
-      }))
-    );
-  }, [listPhase]);
+    attendanceApi
+      .getAllPhase()
+      .then(({ data }) => {
+        console.log("Phase Data: ", data);
+        setDataPhase(
+          data.data.map((phase) => ({
+            label: phase.name,
+            value: phase.id,
+          }))
+        );
+      })
+      .catch((error) => {
+        console.log("Error getAllPhase: ", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log("dataPhase", dataPhase);
+  }, [dataPhase]);
 
   const AddNewProductForUser = (product: Product) => {
     setUserData((prev) => {
@@ -104,10 +116,9 @@ export default function CountProduct({
           {
             productID: product.id,
             productName: product.name,
-            image: product.imageResponses[0].imageUrl || "",
+            image: product.imageResponses[0]?.imageUrl || "",
             phaseID: dataPhase[0].value as string,
-            phaseName: dataPhase.find((phase) => phase.value === phaseValue)
-              ?.label as string,
+            phaseName: dataPhase[0].label as string,
             quantity: "0",
           },
         ],
@@ -116,6 +127,7 @@ export default function CountProduct({
     setIsUpdate(true);
   };
   const updateQuantityOfProduct = (indexP: number, value: string) => {
+    if (Number(value) < 0) return;
     setUserData((prev) => {
       const newProducts = [...prev.products];
       newProducts[indexP].quantity = value;
@@ -274,12 +286,13 @@ export default function CountProduct({
                     onChange={(event) => {
                       updatePhaseOfProduct(indexP, event.target.value);
                     }}
+                    value={product.phaseID}
                   >
                     {dataPhase.map((phase) => (
                       <option
                         key={phase.value}
                         value={phase.value}
-                        selected={phase.value === product.phaseID}
+                        // selected={phase.value === product.phaseID}
                       >
                         {phase.label}
                       </option>

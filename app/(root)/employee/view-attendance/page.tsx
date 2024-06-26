@@ -64,11 +64,8 @@ export default function Page({ searchParams }: Props) {
   }
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userData") || "");
-    // console.log("User Attendance", user);
     attendanceApi
       .getEmployeeAttendance({
-        UserId: user.id,
         Year: year,
         Month: month,
       })

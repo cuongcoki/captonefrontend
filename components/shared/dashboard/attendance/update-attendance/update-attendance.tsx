@@ -44,13 +44,25 @@ const comboboxData: ComboboxDataType[] = [
     value: "3",
   },
 ];
+const wareHouseData: ComboboxDataType[] = [
+  {
+    label: "Cơ sở chính",
+    value: "b6897f71-491b-43d4-9234-36bef2290c2b",
+  },
+  {
+    label: "Cơ sở phụ",
+    value: "f6a24556-9ae6-4aed-95f9-34289595db21",
+  },
+];
 
 export default function UpdateAttendance({
   dateProp,
   slotProp,
+  warehouseProp,
 }: {
   dateProp: string;
   slotProp: string;
+  warehouseProp: string;
 }): JSX.Element {
   const colorSlaryByProduct = "bg-[#f1eeee]";
   const {
@@ -71,11 +83,13 @@ export default function UpdateAttendance({
   };
   const [date, setDate] = useState<string>(dateProp);
   const [slot, setSlot] = useState<string>(slotProp);
+  const [warehouse, setWarehouse] = useState<string>(warehouseProp);
   const [users, setUsers] = useState<User[]>(user);
   const [isCreated, setIsCreated] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
+  // GET USERS DATA
   useEffect(() => {
     if (users.length > 0) return;
     attendanceApi
@@ -92,7 +106,7 @@ export default function UpdateAttendance({
         setUser(data.data.data);
       });
   }, [users, setUser]);
-
+  // GET ATTENDANCE DATA
   useEffect(() => {
     const setUser = new Set<string>();
     attendanceApi
@@ -102,6 +116,7 @@ export default function UpdateAttendance({
         PageIndex: "1",
         PageSize: "1000",
         SearchTerm: "",
+        CompanyId: warehouse,
       })
       .then(({ data }) => {
         console.log("data", data.data.data);
@@ -169,10 +184,12 @@ export default function UpdateAttendance({
         }
       })
       .finally(() => {
-        router.push(`${pathname}?date=${date}&slot=${slot}`);
+        router.push(
+          `${pathname}?warehouse=${warehouse}&date=${date}&slot=${slot}`
+        );
       });
-  }, [date, slot, setTableData, force, router, pathname, users]);
-
+  }, [date, slot, setTableData, force, router, pathname, users, warehouse]);
+  // GET PRODUCT DATA
   useEffect(() => {
     attendanceApi
       .getALlProduct({
@@ -188,18 +205,6 @@ export default function UpdateAttendance({
         console.log("Error getALlProduct: ", error);
       });
   }, [setListProduct]);
-
-  useEffect(() => {
-    attendanceApi
-      .getAllPhase()
-      .then(({ data }) => {
-        console.log("Phase Data: ", data);
-        setListPhase(data);
-      })
-      .catch((error) => {
-        console.log("Error getAllPhase: ", error);
-      });
-  }, [setListPhase]);
 
   // const saveDraft = () => {
   //   console.log("Save draft");
@@ -227,6 +232,7 @@ export default function UpdateAttendance({
     const updateEmployeeProductData: UpdateEmployeeProductBody = {
       date: date,
       slotId: Number(slot),
+      companyId: warehouse,
       createQuantityProducts: employeeProductData,
     };
     console.log("updateEmployeeProductData", updateEmployeeProductData);
@@ -245,6 +251,7 @@ export default function UpdateAttendance({
       DataBody = {
         slotId: Number(slot),
         date: date,
+        companyId: warehouse,
         createAttendances: tableData.map((item): AttendanceForUpdate => {
           return {
             userId: item.userID,
@@ -260,6 +267,7 @@ export default function UpdateAttendance({
       DataBody = {
         slotId: Number(slot),
         date: date,
+        companyId: warehouse,
         updateAttendances: tableData.map((item): AttendanceForUpdate => {
           return {
             userId: item.userID,
@@ -318,6 +326,14 @@ export default function UpdateAttendance({
     <Card>
       <div className="flex justify-center text-[2rem]">QUẢN LÝ ĐIỂM DANH</div>
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap">
+        <Combobox
+          title="Vui lòng chọn cơ sở"
+          data={wareHouseData}
+          value={warehouse}
+          setValue={(value: string) => {
+            setWarehouse(value);
+          }}
+        />
         <div className="">
           <DatePicker
             selected={new Date(convertDateFormat(date || ""))}
@@ -494,6 +510,7 @@ export default function UpdateAttendance({
                                 onChange={(event) => {
                                   updateOverTime(index, event.target.value);
                                 }}
+                                disabled={item.isAttendance === false}
                               />
                               <div>giờ</div>
                             </div>
@@ -589,6 +606,7 @@ export default function UpdateAttendance({
                           onChange={(event) => {
                             updateOverTime(index, event.target.value);
                           }}
+                          disabled={item.isAttendance === false}
                         />
                         <div>giờ</div>
                       </div>
