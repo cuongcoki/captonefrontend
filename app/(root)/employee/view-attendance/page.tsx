@@ -1,5 +1,6 @@
 "use client";
 import { attendanceApi } from "@/apis/attendance.api";
+import { ConvertDateToUtc } from "@/components/shared/common/conver_date_to_utc";
 import DayOfCalender from "@/components/shared/employee/view-attendance/day-of-calender";
 import DotStatus from "@/components/shared/employee/view-attendance/dot-status";
 import { Card } from "@/components/ui/card";
@@ -74,7 +75,7 @@ export default function Page({ searchParams }: Props) {
         setAttendanceData(
           data.data.attendances.map((item) => {
             return {
-              date: convertDateToISO(item.date) || "",
+              date: ConvertDateToUtc(convertDateToISO(item.date) || ""),
               attedanceDateReport: {
                 isPresentSlot1: item.attedanceDateReport.isPresentSlot1,
                 isPresentSlot2: item.attedanceDateReport.isPresentSlot2,

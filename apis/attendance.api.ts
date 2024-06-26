@@ -65,7 +65,7 @@ export const attendanceApi = {
     const cacheId = createCacheId("get-attendance", requestBody);
 
     attendanceDetailCacheIds.add(cacheId);
-    console.log("Added attendanceDetailCacheId:", cacheId); // Log cache ID khi thêm
+    // console.log("Added attendanceDetailCacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<GetAttendanceResponse>(
       `${endPointConstant.BASE_URL}/attendances`,
       {
@@ -83,7 +83,7 @@ export const attendanceApi = {
           update: () => {
             // Xóa tất cả cache cua attendanceDetailCacheIds
             attendanceDetailCacheIds.forEach((cacheId) => {
-              console.log("Removed attendanceDetailCacheId:", cacheId); // Log cache ID khi xóa
+              // console.log("Removed attendanceDetailCacheId:", cacheId); // Log cache ID khi xóa
               axiosClient.storage.remove(cacheId);
             });
             attendanceCacheIds.clear();
