@@ -62,29 +62,29 @@ export function AddEmployeeToAttendance<TData, TValue>({
     },
   });
 
-  useEffect(() => {
-    attendanceApi
-      .getAttendance({
-        Date: date,
-        SlotId: slot,
-        PageIndex: "1",
-        PageSize: "100",
-        SearchTerm: "",
-      })
-      .then(({ data }) => {
-        console.log("data", data.data.data);
-        const dataAttend = data.data.data;
-        const setDataAttendance: Set<string> = new Set();
-        dataAttend.forEach((item) => {
-          setDataAttendance.add(item.userId);
-        });
-        const userLeftOver = listUser.filter((user) => {
-          return !setDataAttendance.has(user.id);
-        });
-        // console.log("userLeftOver", userLeftOver);
-        setData(userLeftOver as TData[]);
-      });
-  }, [date, slot, listUser]);
+  // useEffect(() => {
+  //   attendanceApi
+  //     .getAttendance({
+  //       Date: date,
+  //       SlotId: slot,
+  //       PageIndex: "1",
+  //       PageSize: "100",
+  //       SearchTerm: "",
+  //     })
+  //     .then(({ data }) => {
+  //       console.log("data", data.data.data);
+  //       const dataAttend = data.data.data;
+  //       const setDataAttendance: Set<string> = new Set();
+  //       dataAttend.forEach((item) => {
+  //         setDataAttendance.add(item.userId);
+  //       });
+  //       const userLeftOver = listUser.filter((user) => {
+  //         return !setDataAttendance.has(user.id);
+  //       });
+  //       // console.log("userLeftOver", userLeftOver);
+  //       setData(userLeftOver as TData[]);
+  //     });
+  // }, [date, slot, listUser]);
 
   useEffect(() => {}, []);
 
