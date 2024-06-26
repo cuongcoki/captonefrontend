@@ -61,7 +61,7 @@ export default function SideNavbar({}: Props) {
               },
               {
                 title: "Đơn đặt hàng",
-                href: "/dashboard/orders",
+                href: "/dashboard/order",
                 icon: ShoppingCart,
                 variant: "ghost",
               },

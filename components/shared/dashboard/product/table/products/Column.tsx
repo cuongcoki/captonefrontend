@@ -26,30 +26,30 @@ export type Product = {
 export const columns: ColumnDef<Product>[] = [
 
 
-  {
-    accessorKey: "imageResponses",
-    header: ({ column }) => (
-      <Button variant="ghost">Hình ảnh</Button>
-    ),
-    cell: ({ row }) => {
-      const firstImage = row.original.imageResponses[0];
-      return firstImage ? (
-        <Link href={`/dashboard/product/${row.original.id}`}>
-          <div className="w-[50px] h-[50px] rounded-lg ">
-            <Image
-              src={`${firstImage.imageUrl}`}
-              width={100}
-              height={100}
-              alt="Product Image"
-              className="w-[50px] h-[50px] rounded-lg object-contain"
-            />
-          </div>
-        </Link>
-      ) : (
-        'no image'
-      );
-    },
-  },
+  // {
+  //   accessorKey: "imageResponses",
+  //   header: ({ column }) => (
+  //     <Button variant="ghost">Hình ảnh</Button>
+  //   ),
+  //   cell: ({ row }) => {
+  //     const firstImage = row.original.imageResponses[0];
+  //     return firstImage ? (
+  //       <Link href={`/dashboard/product/${row.original.id}`}>
+  //         <div className="w-[50px] h-[50px] rounded-lg ">
+  //           <Image
+  //             src={`${firstImage.imageUrl}`}
+  //             width={100}
+  //             height={100}
+  //             alt="Product Image"
+  //             className="w-[50px] h-[50px] rounded-lg object-contain"
+  //           />
+  //         </div>
+  //       </Link>
+  //     ) : (
+  //       'no image'
+  //     );
+  //   },
+  // },
 
   // {
   //   accessorKey: "id",

@@ -102,7 +102,7 @@ export default function ProductIDPage() {
     }, [params.id, force])
 
 
-    console.log('iddd product', productId)
+    // console.log('iddd product', productId)
 
 
 

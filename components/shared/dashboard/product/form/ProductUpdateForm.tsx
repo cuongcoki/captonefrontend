@@ -91,7 +91,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
     // State to manage image requests
     const [imageRequests, setImageRequests] = useState(initialImageRequests);
     const [idsImageDelete, setIdsImageDelete] = useState<string[]>([]);
-    console.log('idsImageDelete', idsImageDelete)
+  
     // Handle uploading new photos
     const handleUploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
@@ -137,19 +137,36 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
             ...newImageRequests.map((item) => item.file)
         ]);
     };
+    const [removeImageIds, setRemoveImageIds] = useState<string[]>([]);
 
+    // const handleDeleteImage = (index:number,imageID: string) => {
+    //     setRemoveImageIds([...removeImageIds, imageID]);
+    //     setImageUrls((prevImageUrls: any) => prevImageUrls.filter((_: any, i: any) => i !== index));
+    // };
     // Handle deleting an image
-    const handleDeleteImage = (index: number) => {
+    const handleDeleteImage = (index:number,imageID: string) => {
+        setRemoveImageIds([...removeImageIds, imageID]);
         setImageRequests((prevImageRequests) => {
             const imageToDelete = prevImageRequests[index];
-            if (imageToDelete.id) {
-                setIdsImageDelete((prevIds) => [...prevIds, imageToDelete.id]);
-            }
             // Filter out the image at the specified index
             return prevImageRequests.filter((_, i) => i !== index);
         });
         setImageUrls((prevImageUrls: any) => prevImageUrls.filter((_: any, i: any) => i !== index));
     };
+    console.log('removeImageIds',removeImageIds)
+   
+    // const handleDeleteProducts = (productID: string) => {
+    //     setRemoveProductIds([...removeProductIds, productID]);
+    //     const updatedProductsRequest = updateProducts.filter(
+    //         (item) => item.productId !== productID
+    //     );
+    //     setUpdateProducts(updatedProductsRequest);
+    //     const updateProUpdate = getDetailsProUpdate.filter(
+    //         (item) => item.productId !== productID
+    //     );
+    //     setGetDetailsProUpdate(updateProUpdate);
+    //     toast.success("Đã xóa sản phẩm khỏi danh sách");
+    // };
 
     // Handle toggling blueprint flag for an image
     const handleToggleBlueprint = (index: number) => {
@@ -239,7 +256,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
                     isBluePrint: image.isBluePrint,
                     isMainImage: image.isMainImage,
                 })),
-                deleteImagesRequest: idsImageDelete,
+                removeImageIds: removeImageIds,
             };
             console.log('requestBody', requestBody);
      
@@ -263,7 +280,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
     
    
     useEffect(() => {
-    },[onSubmit])
+    },[removeImageIds])
 
     return (
         <Form {...form}>
