@@ -268,15 +268,15 @@ export default function Page({ searchParams }: Props) {
         </div>
         <div className="flex flex-auto">
           <DotStatus className="my-auto" variant="blue" />
-          &nbsp; lương theo sản phẩm
+          &nbsp; Lương theo sản phẩm
         </div>
         <div className="flex flex-auto">
           <DotStatus className="my-auto" variant="orange" />
-          &nbsp; tăng ca
+          &nbsp; Tăng ca
         </div>
         <div className="flex flex-auto">
           <DotStatus className="my-auto" variant="gray" />
-          &nbsp; không làm
+          &nbsp; Không làm
         </div>
       </div>
     </Card>

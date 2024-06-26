@@ -91,21 +91,19 @@ export default function UpdateAttendance({
 
   // GET USERS DATA
   useEffect(() => {
-    if (users.length > 0) return;
     attendanceApi
-      .getUsers({
-        SearchTerm: "",
-        PageIndex: "1",
-        PageSize: "1000",
-        IsActive: "true",
-        RoleId: "1",
+      .getUserByCompanyId({
+        CompanyId: warehouse,
       })
       .then(({ data }) => {
-        console.log("GetUSERS:", data.data.data);
-        setUsers(data.data.data);
-        setUser(data.data.data);
+        console.log("GetUSERS:", data.data);
+        setUsers(data.data);
+        setUser(data.data);
+      })
+      .catch((error) => {
+        console.log("Error getUserByCompanyId: ", error);
       });
-  }, [users, setUser]);
+  }, [users, setUser, warehouse]);
   // GET ATTENDANCE DATA
   useEffect(() => {
     const setUser = new Set<string>();
@@ -119,7 +117,7 @@ export default function UpdateAttendance({
         CompanyId: warehouse,
       })
       .then(({ data }) => {
-        console.log("data", data.data.data);
+        // console.log("data", data.data.data);
         setIsCreated(true);
         const attendanceData = data.data.data.map(
           (item): AttendanceDetailType => {
@@ -188,6 +186,7 @@ export default function UpdateAttendance({
           `${pathname}?warehouse=${warehouse}&date=${date}&slot=${slot}`
         );
       });
+    console.log("RERENDER DATA ATTENDANCE");
   }, [date, slot, setTableData, force, router, pathname, users, warehouse]);
   // GET PRODUCT DATA
   useEffect(() => {
@@ -205,16 +204,6 @@ export default function UpdateAttendance({
         console.log("Error getALlProduct: ", error);
       });
   }, [setListProduct]);
-
-  // const saveDraft = () => {
-  //   console.log("Save draft");
-  //   if (typeof window !== "undefined") {
-  //     localStorage.setItem("DataAttendanceDetail", JSON.stringify(tableData));
-  //   }
-  // };
-  useEffect(() => {
-    console.log("tableData", tableData);
-  }, [tableData]);
 
   const updateEmployeeProduct = () => {
     const employeeProductData: ProductEmployee[] = [];
@@ -240,7 +229,7 @@ export default function UpdateAttendance({
       .updateEmployeeProduct(updateEmployeeProductData)
       .then(({ data }) => {
         console.log(data);
-        ForceRender();
+        // ForceRender();
         // toast.success(data.message);
       });
   };
@@ -295,7 +284,7 @@ export default function UpdateAttendance({
           toast.error(error.response.data.message);
         })
         .finally(() => {
-          ForceRender();
+          // ForceRender();
         });
     } else {
       attendanceApi
@@ -311,7 +300,7 @@ export default function UpdateAttendance({
           toast.error(error.response.data.message);
         })
         .finally(() => {
-          ForceRender();
+          // ForceRender();
         });
     }
   };
@@ -321,7 +310,9 @@ export default function UpdateAttendance({
     let formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
     return formattedDate;
   }
-
+  useEffect(() => {
+    console.log("tableData", tableData);
+  }, [tableData]);
   return (
     <Card>
       <div className="flex justify-center text-[2rem]">QUẢN LÝ ĐIỂM DANH</div>
@@ -558,45 +549,52 @@ export default function UpdateAttendance({
                         }
                       />
                     </td>
-                    {item.products.length === 0 && item.isSalaryByProduct ? (
-                      <>
-                        <CountProduct index={index}>
-                          <td
-                            data-index={index}
-                            data-ismanufacture={item.isManufacture}
-                            data-issalarybyproduct={item.isSalaryByProduct}
-                          >
-                            Nhấn vào
-                          </td>
-                        </CountProduct>
-                        <CountProduct index={index}>
-                          <td
-                            data-index={index}
-                            data-ismanufacture={item.isManufacture}
-                            data-issalarybyproduct={item.isSalaryByProduct}
-                          >
-                            Để tạo
-                          </td>
-                        </CountProduct>
-                        <CountProduct index={index}>
-                          <td
-                            data-index={index}
-                            data-ismanufacture={item.isManufacture}
-                            data-issalarybyproduct={item.isSalaryByProduct}
-                          >
-                            Sản phẩm
-                          </td>
-                        </CountProduct>
-                      </>
-                    ) : (
-                      <td
-                        className="bg-[#f1eeee]"
-                        colSpan={3}
-                        data-index={index}
-                        data-ismanufacture={item.isManufacture}
-                        data-issalarybyproduct={item.isSalaryByProduct}
-                      ></td>
-                    )}
+
+                    <>
+                      <CountProduct index={index}>
+                        <td
+                          data-index={index}
+                          data-ismanufacture={item.isManufacture}
+                          data-issalarybyproduct={item.isSalaryByProduct}
+                          className={`${
+                            item.isSalaryByProduct === true
+                              ? ""
+                              : "bg-[#f1eeee]"
+                          }`}
+                        >
+                          Nhấn vào
+                        </td>
+                      </CountProduct>
+                      <CountProduct index={index}>
+                        <td
+                          data-index={index}
+                          data-ismanufacture={item.isManufacture}
+                          data-issalarybyproduct={item.isSalaryByProduct}
+                          className={`${
+                            item.isSalaryByProduct === true
+                              ? ""
+                              : "bg-[#f1eeee]"
+                          }`}
+                        >
+                          Để tạo
+                        </td>
+                      </CountProduct>
+                      <CountProduct index={index}>
+                        <td
+                          data-index={index}
+                          data-ismanufacture={item.isManufacture}
+                          data-issalarybyproduct={item.isSalaryByProduct}
+                          className={`${
+                            item.isSalaryByProduct === true
+                              ? ""
+                              : "bg-[#f1eeee]"
+                          }`}
+                        >
+                          Sản phẩm
+                        </td>
+                      </CountProduct>
+                    </>
+
                     <td>
                       <div className="flex items-center">
                         <Input
