@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
     <div className="flex items-start justify-between ">
       <Suspense fallback={<LoadingDashboard />}>
-        <div className="sticky   lg:flex  min-h-screen  top-0">
+        <div className="sticky hidden  sm:flex  min-h-screen  top-0">
           <SideNavbar />
         </div>
         <main className={`flex-1 bg-slate-100  transition-all duration-300 grid w-full h-full`}>

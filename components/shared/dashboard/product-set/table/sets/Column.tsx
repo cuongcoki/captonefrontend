@@ -7,20 +7,13 @@ import Link from "next/link"
 import { DataTableRowActions } from "./data-table-row-actions"
 import Image from "next/image"
 import { IsInProcessing } from "./data/data"
-import { ArrowUpDown } from "lucide-react"
 export type Product = {
   id: string;
   name: string;
   code: string;
-  price: number
-  size: string;
   description: string;
-  isInProcessing: boolean;
-  imageResponses: Array<{
-    imageUrl: string,
-    isBluePrint: boolean,
-    isMainImage: boolean,
-  }>;
+  imageUrl: string;
+ 
 }
 
 export const columns: ColumnDef<Product>[] = [
@@ -32,12 +25,12 @@ export const columns: ColumnDef<Product>[] = [
       <Button variant="ghost">Hình ảnh</Button>
     ),
     cell: ({ row }) => {
-      const firstImage = row.original.imageResponses[0];
+      const firstImage = row.original.imageUrl;
       return firstImage ? (
-        <Link href={`/dashboard/product/${row.original.id}`}>
+        <Link href={`/dashboard/set/${row.original.id}`}>
           <div className="w-[50px] h-[50px] rounded-lg ">
             <Image
-              src={`${firstImage.imageUrl}`}
+              src={`${firstImage}`}
               width={100}
               height={100}
               alt="Product Image"
@@ -47,41 +40,6 @@ export const columns: ColumnDef<Product>[] = [
         </Link>
       ) : (
         'no image'
-      );
-    },
-  },
-
-  // {
-  //   accessorKey: "id",
-  //   header: ({ column }) => (
-  //     <Button variant="ghost">
-  //       Mã sản phẩm
-  //     </Button>
-  //   ),
-  //   cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
-  // },
-
-  {
-    accessorKey: "isInProcessing",
-    header: ({ column }) => (
-      <Button variant="ghost">
-        Đang xử lý
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const isInProcessing = IsInProcessing.find(
-        (item) => item.value === row.getValue("isInProcessing")
-      );
-
-      if (!isInProcessing) {
-        return null;
-      }
-
-      return (
-        <div className="flex w-[100px] items-center">
-          <span className={`${isInProcessing.value === true ? 'bg-slate-100' : ''} border px-2 py-1 rounded-full`}>{isInProcessing.label}</span>
-          
-        </div>
       );
     },
   },
@@ -109,28 +67,7 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
 
-  {
-    accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost">
-          Giá tiền
-        </Button>
-      )
-    },
-  },
-
-  {
-    accessorKey: "size",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost">
-          Kích thước
-        </Button>
-      )
-    },
-  },
-
+ 
   {
     accessorKey: "description",
     header: ({ column }) => {
@@ -141,8 +78,6 @@ export const columns: ColumnDef<Product>[] = [
       )
     },
   },
-
-
 
 
 
