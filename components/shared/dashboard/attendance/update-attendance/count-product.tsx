@@ -17,7 +17,6 @@ import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-f
 import { X } from "lucide-react";
 import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
 import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
-import SearchAndChose from "@/components/shared/common/search";
 import { GetAllProductResponse, Product } from "@/types/attendance.type";
 import { attendanceApi } from "@/apis/attendance.api";
 export default function CountProduct({
@@ -90,7 +89,7 @@ export default function CountProduct({
     attendanceApi
       .getAllPhase()
       .then(({ data }) => {
-        console.log("Phase Data: ", data);
+        // console.log("Phase Data: ", data);
         setDataPhase(
           data.data.map((phase) => ({
             label: phase.name,
@@ -102,10 +101,6 @@ export default function CountProduct({
         console.log("Error getAllPhase: ", error);
       });
   }, []);
-
-  useEffect(() => {
-    console.log("dataPhase", dataPhase);
-  }, [dataPhase]);
 
   const AddNewProductForUser = (product: Product) => {
     setUserData((prev) => {

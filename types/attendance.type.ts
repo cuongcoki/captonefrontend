@@ -118,6 +118,12 @@ export type User = {
 
 export type GetUsersResponse = SearchResponse<User[]>;
 
+export type GetUserByCompanyIdBody = {
+  CompanyId: string;
+};
+
+export type GetUserByCompanyIdResponse = SuccessResponse<User[]>;
+
 export type AttendanceDetailProps = {
   date: string;
   slot: string;
