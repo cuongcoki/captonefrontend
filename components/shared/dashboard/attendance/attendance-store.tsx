@@ -21,18 +21,7 @@ export const useAttendanceStore = create<IAttendanceStore>((set) => ({
     data: {
       currentPage: 0,
       totalPages: 0,
-      data: [
-        {
-          id: "",
-          name: "",
-          code: "",
-          price: 0,
-          size: "",
-          description: "",
-          isInProcessing: false,
-          imageResponses: [],
-        },
-      ],
+      data: [],
     },
     isSuccess: false,
     message: "",
