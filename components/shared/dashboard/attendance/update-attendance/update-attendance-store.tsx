@@ -67,9 +67,18 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
       });
     },
     updateQuantityOfProduct(index, productIndex, value) {
+      if (value === "") {
+        set((state) => {
+          const newData = [...state.tableData];
+          newData[index].products[productIndex].quantity = "0";
+          return { tableData: newData };
+        });
+        return;
+      }
       set((state) => {
         const newData = [...state.tableData];
-        newData[index].products[productIndex].quantity = value;
+        newData[index].products[productIndex].quantity =
+          Number(value).toString();
         return { tableData: newData };
       });
     },
@@ -88,12 +97,20 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
       });
     },
     updateOverTime(index, value) {
-      if (Number(value) < 0) {
+      if (value === "") {
+        set((state) => {
+          const newData = [...state.tableData];
+          newData[index].hourOverTime = "0";
+          return { tableData: newData };
+        });
+        return;
+      }
+      if (Number(value) < 0 || Number(value) > 5) {
         return;
       }
       set((state) => {
         const newData = [...state.tableData];
-        newData[index].hourOverTime = value;
+        newData[index].hourOverTime = Number(value).toString();
         return { tableData: newData };
       });
     },
