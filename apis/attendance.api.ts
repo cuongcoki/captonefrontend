@@ -36,7 +36,7 @@ export const attendanceApi = {
     attendanceCacheIds.add(cacheId); // Lưu cache ID
     // console.log("Added attendanceCacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<searchAttendanceOverallResponse>(
-      `${endPointConstant.BASE_URL}/attendance/overall`,
+      `${endPointConstant.BASE_URL}/attendances/overall`,
       {
         params: requestBody,
         id: cacheId,
@@ -45,7 +45,7 @@ export const attendanceApi = {
   },
   createAttendance: (requestBody: CreateAttendanceBody) => {
     return axiosClient.post<SuccessResponse<null>>(
-      `${endPointConstant.BASE_URL}/attendance/batch`,
+      `${endPointConstant.BASE_URL}/attendances/batch`,
       requestBody,
       {
         cache: {
@@ -71,7 +71,7 @@ export const attendanceApi = {
     ); // Lưu cache ID với ID của attendance
     // console.log("Added attendanceDetailCacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<GetAttendanceResponse>(
-      `${endPointConstant.BASE_URL}/attendance`,
+      `${endPointConstant.BASE_URL}/attendances`,
       {
         params: requestBody,
         id: cacheId,
@@ -80,7 +80,7 @@ export const attendanceApi = {
   },
   updateAttendance: (requestBody: UpdateAttendanceBody) => {
     return axiosClient.put<SuccessResponse<null>>(
-      `${endPointConstant.BASE_URL}/attendance`,
+      `${endPointConstant.BASE_URL}/attendances`,
       requestBody,
       {
         cache: {
@@ -165,7 +165,7 @@ export const attendanceApi = {
   // -------------------------------------------- Employee Attendance --------------------------------------------
   getEmployeeAttendance: (requestBody: GetEmployeeAttendanceBody) => {
     return axiosClient.get<GetEmployeeAttendanceResponse>(
-      `${endPointConstant.BASE_URL}/attendance/users`,
+      `${endPointConstant.BASE_URL}/attendances/users`,
       {
         params: requestBody,
       }
@@ -176,7 +176,7 @@ export const attendanceApi = {
     requestBody: GetEmployeeAttendanceDetailBody
   ) => {
     return axiosClient.get<GetEmployeeAttendanceDetailResponse>(
-      `${endPointConstant.BASE_URL}/attendance/users/detail`,
+      `${endPointConstant.BASE_URL}/attendances/users/detail`,
       {
         params: requestBody,
       }

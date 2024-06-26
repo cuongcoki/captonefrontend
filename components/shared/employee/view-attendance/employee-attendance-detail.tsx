@@ -18,10 +18,8 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
   const [data, setData] = useState<AttendanceSlotDetail[]>([]);
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userData") || "");
     attendanceApi
       .getEmployeeAttendanceDetail({
-        UserId: user.id,
         Date: Date,
       })
       .then(({ data }) => {

@@ -46,6 +46,7 @@ export type CreateAttendanceSlotBody = {
 export type GetAttendanceBody = {
   SearchTerm: string;
   Date: string;
+  CompanyId: string;
   SlotId: string;
   PageIndex: string;
   PageSize: string;
@@ -84,11 +85,13 @@ export type AttendanceForUpdate = {
 export type UpdateAttendanceBody = {
   slotId: number;
   date: string;
+  companyId: string;
   updateAttendances: AttendanceForUpdate[];
 };
 export type CreateAttendanceBody = {
   slotId: number;
   date: string;
+  companyId: string;
   createAttendances: AttendanceForUpdate[];
 };
 //-------------------------------------------- USER --------------------------------------------
@@ -118,6 +121,7 @@ export type GetUsersResponse = SearchResponse<User[]>;
 export type AttendanceDetailProps = {
   date: string;
   slot: string;
+  warehouse: string;
 };
 
 //-------------------------------------------- Product --------------------------------------------
@@ -169,6 +173,7 @@ export type ProductEmployee = {
 export type UpdateEmployeeProductBody = {
   date: string;
   slotId: Number;
+  companyId: string;
   createQuantityProducts: ProductEmployee[];
 };
 
@@ -191,13 +196,11 @@ export type GetEmployeeAttendanceResponse = SuccessResponse<{
 }>;
 
 export type GetEmployeeAttendanceBody = {
-  UserId: string;
   Year: number;
   Month: number;
 };
 
 export type GetEmployeeAttendanceDetailBody = {
-  UserId: string;
   Date: string;
 };
 
