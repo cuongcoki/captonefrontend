@@ -135,7 +135,7 @@ type ImageResponse = {
   isMainImage: boolean;
 };
 
-type Product = {
+export type Product = {
   id: string;
   name: string;
   code: string;

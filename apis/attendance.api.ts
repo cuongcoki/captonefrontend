@@ -34,7 +34,7 @@ export const attendanceApi = {
   searchAttendance: (requestBody: searchAttendanceOverallBody) => {
     const cacheId = createCacheId("search-attendance", requestBody);
     attendanceCacheIds.add(cacheId); // Lưu cache ID
-    console.log("Added attendanceCacheId:", cacheId); // Log cache ID khi thêm
+    // console.log("Added attendanceCacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<searchAttendanceOverallResponse>(
       `${endPointConstant.BASE_URL}/attendance/overall`,
       {
@@ -50,14 +50,14 @@ export const attendanceApi = {
       {
         cache: {
           update: () => {
-            console.log("Clearing attendanceCacheIds:", attendanceCacheIds); // Log trước khi xóa
+            // console.log("Clearing attendanceCacheIds:", attendanceCacheIds); // Log trước khi xóa
             // Xóa tất cả cache ID của searchAttendance
             attendanceCacheIds.forEach((id) => axiosClient.storage.remove(id));
             attendanceCacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
-            console.log(
-              "attendanceCacheIds after clearing:",
-              attendanceCacheIds
-            ); // Log sau khi xóa
+            // console.log(
+            //   "attendanceCacheIds after clearing:",
+            //   attendanceCacheIds
+            // ); // Log sau khi xóa
           },
         },
       }
@@ -69,7 +69,7 @@ export const attendanceApi = {
       requestBody.Date + requestBody.SlotId,
       cacheId
     ); // Lưu cache ID với ID của attendance
-    console.log("Added attendanceDetailCacheId:", cacheId); // Log cache ID khi thêm
+    // console.log("Added attendanceDetailCacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<GetAttendanceResponse>(
       `${endPointConstant.BASE_URL}/attendance`,
       {
@@ -85,7 +85,7 @@ export const attendanceApi = {
       {
         cache: {
           update: () => {
-            console.log("Clearing attendanceCacheIds:", attendanceCacheIds); // Log trước khi xóa
+            // console.log("Clearing attendanceCacheIds:", attendanceCacheIds); // Log trước khi xóa
             // Xóa tất cả cache ID của searchAttendance
             attendanceCacheIds.forEach((id) => axiosClient.storage.remove(id));
             attendanceCacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
@@ -99,10 +99,10 @@ export const attendanceApi = {
               attendanceDetailCacheIds.delete(
                 requestBody.date + requestBody.slotId
               );
-              console.log(
-                "Removed attendanceDetailCacheId:",
-                attendanceDetailCacheId
-              ); // Log cache ID sau khi xóa
+              // console.log(
+              //   "Removed attendanceDetailCacheId:",
+              //   attendanceDetailCacheId
+              // ); // Log cache ID sau khi xóa
             }
           },
         },
@@ -112,7 +112,7 @@ export const attendanceApi = {
   // -------------------------------------------- USER --------------------------------------------
   getUsers: (requestBody: GetUsersBody) => {
     const cacheId = createCacheId("get-users", requestBody);
-    console.log("Added usersCacheId:", cacheId); // Log cache ID khi thêm
+    // console.log("Added usersCacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<GetUsersResponse>(
       `${endPointConstant.BASE_URL}/users`,
       {
@@ -152,10 +152,10 @@ export const attendanceApi = {
               attendanceDetailCacheIds.delete(
                 requestBody.date + requestBody.slotId
               );
-              console.log(
-                "Removed attendanceDetailCacheId:",
-                attendanceDetailCacheId
-              ); // Log cache ID sau khi xóa
+              // console.log(
+              //   "Removed attendanceDetailCacheId:",
+              //   attendanceDetailCacheId
+              // ); // Log cache ID sau khi xóa
             }
           },
         },

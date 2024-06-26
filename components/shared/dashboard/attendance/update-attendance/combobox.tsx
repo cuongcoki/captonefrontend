@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/popover";
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 
-export function Combobox({
+export function ComboboxAttendanceProduct({
   title,
   data,
   value,
@@ -33,8 +33,8 @@ export function Combobox({
 }) {
   const [open, setOpen] = React.useState(false);
   React.useEffect(() => {
-    console.log("data combobx", open);
-  }, [open]);
+    console.log("data combobx", data);
+  }, [title, data, value, setValue]);
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
