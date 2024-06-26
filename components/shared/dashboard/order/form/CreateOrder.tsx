@@ -307,7 +307,7 @@ export default function CreateOrder() {
                                     </form>
                                 </Form>
 
-                                <Form {...form}>
+                                {/* <Form {...form}>
                                     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6" >
                                         <div className="">
                                             <Card>
@@ -481,7 +481,7 @@ export default function CreateOrder() {
                                         </Card>
 
                                     </form>
-                                </Form>
+                                </Form> */}
 
                             </div>
                         </div>

@@ -7,7 +7,7 @@ import {
 import Image from "next/image";
 import "./style-update-attendance.css";
 import { Card } from "@/components/ui/card";
-import { ContextMenuForAttendance } from "@/components/shared/dashboard/attendance/update-attendance/context-menu";
+
 import { Button } from "@/components/ui/button";
 import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,7 @@ import { format, set } from "date-fns";
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import { Combobox } from "@/components/shared/common/combobox/combobox";
 import { usePathname, useRouter } from "next/navigation";
+import CountProduct from "@/components/shared/dashboard/attendance/update-attendance/count-product";
 
 const comboboxData: ComboboxDataType[] = [
   {
@@ -233,7 +234,7 @@ export default function UpdateAttendance({
       .updateEmployeeProduct(updateEmployeeProductData)
       .then(({ data }) => {
         console.log(data);
-
+        ForceRender();
         // toast.success(data.message);
       });
   };
@@ -440,7 +441,7 @@ export default function UpdateAttendance({
                           </td>
                         </>
                       )}
-                      <ContextMenuForAttendance index={index}>
+                      <CountProduct index={index}>
                         <td
                           className={
                             item.isSalaryByProduct === true
@@ -453,8 +454,8 @@ export default function UpdateAttendance({
                         >
                           {product.productName}
                         </td>
-                      </ContextMenuForAttendance>
-                      <ContextMenuForAttendance index={index}>
+                      </CountProduct>
+                      <CountProduct index={index}>
                         <td
                           className={
                             item.isSalaryByProduct === true
@@ -467,8 +468,8 @@ export default function UpdateAttendance({
                         >
                           {product.phaseName}
                         </td>
-                      </ContextMenuForAttendance>
-                      <ContextMenuForAttendance index={index}>
+                      </CountProduct>
+                      <CountProduct index={index}>
                         <td
                           className={
                             item.isSalaryByProduct === true
@@ -481,7 +482,7 @@ export default function UpdateAttendance({
                         >
                           {product.quantity}
                         </td>
-                      </ContextMenuForAttendance>
+                      </CountProduct>
                       {productIndex == 0 && (
                         <>
                           <td rowSpan={item.products.length}>
@@ -542,16 +543,16 @@ export default function UpdateAttendance({
                     </td>
                     {item.products.length === 0 && item.isSalaryByProduct ? (
                       <>
-                        <ContextMenuForAttendance index={index}>
+                        <CountProduct index={index}>
                           <td
                             data-index={index}
                             data-ismanufacture={item.isManufacture}
                             data-issalarybyproduct={item.isSalaryByProduct}
                           >
-                            Click chuột phải
+                            Nhấn vào
                           </td>
-                        </ContextMenuForAttendance>
-                        <ContextMenuForAttendance index={index}>
+                        </CountProduct>
+                        <CountProduct index={index}>
                           <td
                             data-index={index}
                             data-ismanufacture={item.isManufacture}
@@ -559,8 +560,8 @@ export default function UpdateAttendance({
                           >
                             Để tạo
                           </td>
-                        </ContextMenuForAttendance>
-                        <ContextMenuForAttendance index={index}>
+                        </CountProduct>
+                        <CountProduct index={index}>
                           <td
                             data-index={index}
                             data-ismanufacture={item.isManufacture}
@@ -568,7 +569,7 @@ export default function UpdateAttendance({
                           >
                             Sản phẩm
                           </td>
-                        </ContextMenuForAttendance>
+                        </CountProduct>
                       </>
                     ) : (
                       <td
