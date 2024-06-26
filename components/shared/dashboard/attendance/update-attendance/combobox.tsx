@@ -32,9 +32,7 @@ export function ComboboxAttendanceProduct({
   setValue: (value: string) => void;
 }) {
   const [open, setOpen] = React.useState(false);
-  React.useEffect(() => {
-    console.log("data combobx", data);
-  }, [title, data, value, setValue]);
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>

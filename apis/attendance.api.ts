@@ -13,6 +13,8 @@ import {
   GetEmployeeAttendanceDetailBody,
   GetEmployeeAttendanceDetailResponse,
   GetEmployeeAttendanceResponse,
+  GetUserByCompanyIdBody,
+  GetUserByCompanyIdResponse,
   GetUsersBody,
   GetUsersResponse,
   UpdateAttendanceBody,
@@ -28,7 +30,7 @@ const createCacheId = (base: string, params: Record<string, any>): string => {
 };
 
 const attendanceCacheIds: Set<string> = new Set();
-const attendanceDetailCacheIds: Map<string, string> = new Map();
+const attendanceDetailCacheIds: Set<string> = new Set();
 
 export const attendanceApi = {
   searchAttendance: (requestBody: searchAttendanceOverallBody) => {
@@ -50,14 +52,10 @@ export const attendanceApi = {
       {
         cache: {
           update: () => {
-            // console.log("Clearing attendanceCacheIds:", attendanceCacheIds); // Log trước khi xóa
-            // Xóa tất cả cache ID của searchAttendance
-            attendanceCacheIds.forEach((id) => axiosClient.storage.remove(id));
-            attendanceCacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
-            // console.log(
-            //   "attendanceCacheIds after clearing:",
-            //   attendanceCacheIds
-            // ); // Log sau khi xóa
+            attendanceDetailCacheIds.forEach((cacheId) => {
+              axiosClient.storage.remove(cacheId);
+            });
+            attendanceDetailCacheIds.clear();
           },
         },
       }
@@ -65,11 +63,9 @@ export const attendanceApi = {
   },
   getAttendance: (requestBody: GetAttendanceBody) => {
     const cacheId = createCacheId("get-attendance", requestBody);
-    attendanceDetailCacheIds.set(
-      requestBody.Date + requestBody.SlotId,
-      cacheId
-    ); // Lưu cache ID với ID của attendance
-    // console.log("Added attendanceDetailCacheId:", cacheId); // Log cache ID khi thêm
+
+    attendanceDetailCacheIds.add(cacheId);
+    console.log("Added attendanceDetailCacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<GetAttendanceResponse>(
       `${endPointConstant.BASE_URL}/attendances`,
       {
@@ -85,25 +81,12 @@ export const attendanceApi = {
       {
         cache: {
           update: () => {
-            // console.log("Clearing attendanceCacheIds:", attendanceCacheIds); // Log trước khi xóa
-            // Xóa tất cả cache ID của searchAttendance
-            attendanceCacheIds.forEach((id) => axiosClient.storage.remove(id));
-            attendanceCacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
-
-            // Xóa cache ID của getAttendance có cùng ID
-            const attendanceDetailCacheId = attendanceDetailCacheIds.get(
-              requestBody.date + requestBody.slotId
-            );
-            if (attendanceDetailCacheId) {
-              axiosClient.storage.remove(attendanceDetailCacheId);
-              attendanceDetailCacheIds.delete(
-                requestBody.date + requestBody.slotId
-              );
-              // console.log(
-              //   "Removed attendanceDetailCacheId:",
-              //   attendanceDetailCacheId
-              // ); // Log cache ID sau khi xóa
-            }
+            // Xóa tất cả cache cua attendanceDetailCacheIds
+            attendanceDetailCacheIds.forEach((cacheId) => {
+              console.log("Removed attendanceDetailCacheId:", cacheId); // Log cache ID khi xóa
+              axiosClient.storage.remove(cacheId);
+            });
+            attendanceCacheIds.clear();
           },
         },
       }
@@ -121,6 +104,18 @@ export const attendanceApi = {
       }
     );
   },
+  getUserByCompanyId: (requestBody: GetUserByCompanyIdBody) => {
+    const cacheId = createCacheId("get-users", requestBody);
+    // console.log("Added usersCacheId:", cacheId); // Log cache ID khi thêm
+    return axiosClient.get<GetUserByCompanyIdResponse>(
+      `${endPointConstant.BASE_URL}/users/Company`,
+      {
+        params: requestBody,
+        id: cacheId,
+      }
+    );
+  },
+
   //-------------------------------------------- PRODUCT --------------------------------------------
   getALlProduct: (requestBody: searchMaterial) => {
     return axiosClient.get<GetAllProductResponse>(
@@ -144,19 +139,10 @@ export const attendanceApi = {
       {
         cache: {
           update: () => {
-            const attendanceDetailCacheId = attendanceDetailCacheIds.get(
-              requestBody.date + requestBody.slotId
-            );
-            if (attendanceDetailCacheId) {
-              axiosClient.storage.remove(attendanceDetailCacheId);
-              attendanceDetailCacheIds.delete(
-                requestBody.date + requestBody.slotId
-              );
-              // console.log(
-              //   "Removed attendanceDetailCacheId:",
-              //   attendanceDetailCacheId
-              // ); // Log cache ID sau khi xóa
-            }
+            attendanceDetailCacheIds.forEach((cacheId) => {
+              axiosClient.storage.remove(cacheId);
+            });
+            attendanceDetailCacheIds.clear();
           },
         },
       }
