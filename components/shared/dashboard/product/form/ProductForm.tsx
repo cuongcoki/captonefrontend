@@ -56,7 +56,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
     const { forceUpdate } = useContext(MyContext);
 
     const [imageRequests, setImageRequests] = useState<
-        {
+        {   id:string
             imageUrl: string;
             isBluePrint: boolean;
             isMainImage: boolean
@@ -99,7 +99,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ setOpen }) => {
             isMainImage: false,
         }));
 
-        setImageRequests(prevImageRequests => [
+        setImageRequests((prevImageRequests:any) => [
             ...prevImageRequests,
             ...newImageRequests
         ]);
