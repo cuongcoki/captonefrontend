@@ -30,8 +30,8 @@ import { Trash2, EllipsisVertical } from "lucide-react"
 import { Label } from "@/components/ui/label"
 
 interface ImageDisplayProps {
-    images: { imageUrl: string; isBluePrint: boolean; isMainImage: boolean }[];
-    onDelete: (index: number) => void;
+    images: {id: string;  imageUrl: string; isBluePrint: boolean; isMainImage: boolean }[];
+    onDelete: (index:number,imageID: string) => void;
     onToggleBlueprint: (index: number) => void;
     onToggleMainImage: (index: number) => void;
 }
@@ -52,7 +52,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
                         <CarouselItem className="w-full h-full flex items-center justify-center" key={index}>
                             <CardContent className="w-full h-full relative flex aspect-square items-center justify-center p-6 bg-black">
                                 <Image src={image.imageUrl} alt={`image-${index}`} width={500} height={500} className="h-full w-full object-contain bg-cover bg-center  bg-no-repeat  pointer-events-none" />
-                                <button type='button' className="absolute right-0 top-0 " onClick={() => onDelete(index)}>
+                                <button type='button' className="absolute right-0 top-0 " onClick={() => onDelete(index,image.id)}>
                                     <Trash2 size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" />
                                 </button>
 
