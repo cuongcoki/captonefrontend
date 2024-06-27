@@ -55,9 +55,36 @@ import toast from "react-hot-toast";
 import { productApi } from "@/apis/product.api";
 import ImageDisplayDialog from "./imageDisplayDialog";
 
+interface ImageResponse {
+    id: string;
+    imageUrl: string;
+    isBluePrint: boolean;
+    isMainImage: boolean;
+}
+
 interface SetID {
     setId: string;
 }
+
+interface Product {
+    id: string;
+    name: string;
+    code: string;
+    price: number;
+    size: string;
+    description: string;
+    isInProcessing: boolean;
+    imageResponses: ImageResponse[];
+}
+
+interface SetProduct {
+    setId: string;
+    productId: string;
+    quantity: number;
+    product: Product;
+}
+
+
 
 export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
     // console.log('setId',setId)
@@ -149,8 +176,42 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
                 const res = await setApi.getSetId(setId);
                 const userData = res.data.data;
                 const productData = userData.setProducts;
+                console.log('productData', productData)
 
-                setGetDetailsProUpdate(productData);
+                // Fetch image responses for each product in setProducts
+                const updatedSetProducts: SetProduct[] = await Promise.all(productData.map(async (setProduct: any) => {
+                    const productData: Product = setProduct.product;
+
+                    // Fetch image response for the first image only
+                    const firstImageResponse: ImageResponse = productData.imageResponses[0];
+
+                    try {
+                        // Fetch image response for the first image
+                        const { data } = await filesApi.getFile(firstImageResponse.imageUrl);
+                        const updatedFirstImageResponse: ImageResponse = {
+                            ...firstImageResponse,
+                            imageUrl: data.data // Assuming data.data is the updated image URL
+                        };
+
+                        // Update the product with updated first image response
+                        const updatedProduct: Product = {
+                            ...productData,
+                            imageResponses: [updatedFirstImageResponse] // Replace with the updated first image response
+                        };
+
+                        return {
+                            ...setProduct,
+                            product: updatedProduct
+                        };
+                    } catch (error) {
+                        console.error('Error getting file:', error);
+
+                        // Handle error case if needed, return original setProduct
+                        return setProduct;
+                    }
+                }));
+
+                setGetDetailsProUpdate(updatedSetProducts);
                 setProductSetId(userData);
 
                 // Call filesApi.getFile using async/await
@@ -371,15 +432,12 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
         setProductsRequest(updatedProductsRequest);
     };
 
+
     console.log("productsRequest", productsRequest);
     console.log("removeProductIds", removeProductIds);
     console.log("updateProducts", updateProducts);
 
     const onSubmit = async (data: z.infer<typeof SetUpdateSchema>) => {
-        console.log("data", data);
-
-        console.log("productsRequest", nameImage);
-
         // Ensure `nameImage` has been updated
         const requestBody = {
             setId: setProductId.id,
@@ -391,15 +449,27 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
             update: updateProducts,
             removeProductIds: removeProductIds,
         };
-        console.log("requestBody", requestBody);
-        const response = await setApi.updateSet(requestBody, setProductId.id);
-        console.log("Update Successful:", response);
-        setTimeout(() => {
+    
+        try {
+            console.log("requestBody", requestBody);
+            const response = await setApi.updateSet(requestBody, setProductId.id);
+            console.log("Update Successful:", response);
+            
+            // Display success message and redirect after 2 seconds
             toast.success(response.data.message);
-            window.location.href = "/dashboard/set";
-        }, 2000);
+            setTimeout(() => {
+                // window.location.href = "/dashboard/set";
+            }, 2000);
+        } catch (error) {
+            console.error("Error updating set:", error);
+            toast.error("Failed to update set. Please try again.");
+        }
     };
 
+    useEffect(() => {
+    }, [onSubmit])
+
+    console.log('getDetailsProUpdate', getDetailsProUpdate)
     const { pending } = useFormStatus();
     return (
         <Dialog.Root open={open} onOpenChange={handleOnDialog}>
@@ -559,7 +629,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
                                                                                     <TableRow key={product.id}>
                                                                                         <TableCell className="font-medium">
                                                                                             <ImageDisplayDialog
-                                                                                                images={product?.imageResponses}
+                                                                                                images={product?.imageUrl}
                                                                                             />
                                                                                         </TableCell>
                                                                                         <TableCell>
@@ -606,30 +676,30 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
                                                                             key={index}
                                                                         >
                                                                             <div className="flex  gap-4">
-                                                                                <Image
-                                                                                    alt="ảnh mẫu"
-                                                                                    className="w-[100px] h-[100px] object-cover"
-                                                                                    width={900}
-                                                                                    height={900}
-                                                                                    src={
-                                                                                        product?.product.imageResponses[0]
-                                                                                            .imageUrl
-                                                                                    }
-                                                                                />
+                                                                                {product.product.imageResponses.length > 0 && (
+                                                                                    <Image
+                                                                                        src={product.product.imageResponses[0].imageUrl} // Lấy ảnh đầu tiên từ mảng imageResponses
+                                                                                        alt="Ảnh mẫu"
+                                                                                        className="w-[100px] h-[100px] object-cover"
+                                                                                        width={900}
+                                                                                        height={900}
+                                                                                    />
+                                                                                )}
                                                                                 <div className="font-medium dark:text-white">
                                                                                     <div>
                                                                                         <b>Tên: </b>
-                                                                                        {product.product.name}
+                                                                                        {product?.product.name}
                                                                                     </div>
                                                                                     <div className="text-sm text-gray-500 dark:text-gray-400">
                                                                                         <b>Code: </b>
-                                                                                        {product.product.code}
+                                                                                        {product?.product.code}
                                                                                     </div>
                                                                                     <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                                                        <i>{product.product.description}</i>
+                                                                                        <i>{product?.product.description}</i>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
+
 
                                                                             <input
                                                                                 type="number"
@@ -642,6 +712,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
                                                                                 }
                                                                                 className="w-16 text-center outline-none"
                                                                             />
+
+
                                                                             <Button
                                                                                 variant="outline"
                                                                                 size="icon"
@@ -668,7 +740,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
                                                                             key={index}
                                                                         >
                                                                             <div className="flex  gap-4">
-                                                                                <Image
+                                                                                {/* <Image
                                                                                     alt="ảnh mẫu"
                                                                                     className="w-[100px] h-[100px] object-cover"
                                                                                     width={900}
@@ -676,7 +748,9 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
                                                                                     src={
                                                                                         product?.imageResponses[0].imageUrl
                                                                                     }
-                                                                                />
+                                                                                /> */}
+
+
                                                                                 <div className="font-medium dark:text-white">
                                                                                     <div>
                                                                                         <b>Tên: </b>
