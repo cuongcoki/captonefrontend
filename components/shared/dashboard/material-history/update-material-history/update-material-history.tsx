@@ -28,6 +28,7 @@ export default function UpdateMaterialHistory({
           <DialogHeader>
             <DialogTitle>Cập nhật lịch sử nhập</DialogTitle>
           </DialogHeader>
+          <DialogDescription></DialogDescription>
           <UpdateMaterialHistoryForm id={id} />
         </DialogContent>
       </Dialog>
