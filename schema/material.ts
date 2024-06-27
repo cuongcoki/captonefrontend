@@ -19,6 +19,18 @@ export const materialSchema = z.object({
         return !isNaN(parsedValue) && parsedValue > 0;
       },
       {
+        message: "Số lượng từng đơn vị phải lớn hơn 0",
+      }
+    ),
+  quantityInStock: z
+    .string()
+    .min(1, "Số lượng không được để trống")
+    .refine(
+      (value) => {
+        const parsedValue = parseFloat(value);
+        return !isNaN(parsedValue) && parsedValue > 0;
+      },
+      {
         message: "Số lượng phải lớn hơn 0",
       }
     ),
@@ -43,6 +55,18 @@ export const AddMaterialSchema = z.object({
       }
     ),
   image: z.string().nullable(),
+  quantityInStock: z
+    .string()
+    .min(1, "Số lượng không được để trống")
+    .refine(
+      (value) => {
+        const parsedValue = parseFloat(value);
+        return !isNaN(parsedValue) && parsedValue > 0;
+      },
+      {
+        message: "Số lượng phải lớn hơn 0",
+      }
+    ),
 });
 
 export type AddMaterialType = z.infer<typeof materialSchema>;

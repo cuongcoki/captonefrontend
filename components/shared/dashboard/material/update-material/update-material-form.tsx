@@ -50,6 +50,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       image: "",
       description: "",
       quantityPerUnit: "",
+      quantityInStock: "",
     },
   });
 
@@ -91,7 +92,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="z-[1000]">
         <div className="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1 md:space-x-5">
           <div className="space-y-7">
             <FormField
@@ -156,6 +157,30 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
                   <FormControl>
                     {/* <Input placeholder="Nhập miêu tả ở đây" {...field} /> */}
                     <InputAnimation nameFor="Miêu tả" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="quantityInStock"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputAnimation
+                      nameFor="Số lượng trong kho"
+                      {...field}
+                      onChange={(
+                        event: React.ChangeEvent<HTMLInputElement>
+                      ) => {
+                        const inputValue = event.target.value;
+                        const numericInput = inputValue.replace(/\D/g, "");
+
+                        field.onChange(numericInput.toString());
+                      }}
+                    />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />

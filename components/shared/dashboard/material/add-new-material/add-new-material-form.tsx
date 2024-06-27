@@ -34,23 +34,25 @@ export default function AddNewMeterialForm() {
       image: "",
       description: "",
       quantityPerUnit: "",
+      quantityInStock: "",
     },
   });
 
   const onSubmit = (data: AddMaterialType) => {
     data.image = materialImage.base64;
-    console.log("MAterial Image", materialImage);
-    console.log("DATA", data);
-    try {
-      materialApi.addMaterial(data).then(({ data }) => {
+    // console.log("MAterial Image", materialImage);
+    console.log("Submit DATA", data);
+    materialApi
+      .addMaterial(data)
+      .then(({ data }) => {
         if (data.isSuccess) {
           toast.success(data.message);
           forceUpdate();
         }
+      })
+      .catch((err) => {
+        console.log("Error in Add Material: ", err);
       });
-    } catch (error) {
-      console.log("ERROR IN ADD MATERIAL", error);
-    }
   };
 
   return (
@@ -115,6 +117,30 @@ export default function AddNewMeterialForm() {
                 <FormItem>
                   <FormControl>
                     <InputAnimation nameFor="Miêu tả" {...field} />
+                  </FormControl>
+                  <FormDescription></FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="quantityInStock"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputAnimation
+                      nameFor="Số lượng trong kho"
+                      {...field}
+                      onChange={(
+                        event: React.ChangeEvent<HTMLInputElement>
+                      ) => {
+                        const inputValue = event.target.value;
+                        const numericInput = inputValue.replace(/\D/g, "");
+
+                        field.onChange(numericInput);
+                      }}
+                    />
                   </FormControl>
                   <FormDescription></FormDescription>
                   <FormMessage />

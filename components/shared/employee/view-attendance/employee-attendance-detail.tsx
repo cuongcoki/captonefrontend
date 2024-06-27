@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import "./style.css";
 import { AttendanceSlotDetail } from "@/types/attendance.type";
 import { attendanceApi } from "@/apis/attendance.api";
-import { ConvertDateToUtc } from "@/components/shared/common/conver_date_to_utc";
 
 type Props = {
   Date: string;
@@ -21,7 +20,7 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
   useEffect(() => {
     attendanceApi
       .getEmployeeAttendanceDetail({
-        Date: ConvertDateToUtc(Date),
+        Date: Date,
       })
       .then(({ data }) => {
         console.log("Attendance Detail", data.data.attendanceSlotReports);

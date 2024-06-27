@@ -23,6 +23,7 @@ export default function AddNewMeterial() {
           </Button>
         </DialogTrigger>
         <DialogContent className=" max-w-[340px] md:max-w-[700px]">
+          <DialogDescription></DialogDescription>
           <DialogHeader>
             <DialogTitle>Thêm mới nguyên liệu</DialogTitle>
           </DialogHeader>
