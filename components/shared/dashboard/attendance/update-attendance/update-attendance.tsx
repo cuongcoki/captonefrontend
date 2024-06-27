@@ -146,20 +146,20 @@ export default function UpdateAttendance({
           }
         );
         console.log("attendanceData", attendanceData);
-        users.forEach((u) => {
-          if (!setUser.has(u.id)) {
-            attendanceData.push({
-              userID: u.id,
-              userName: u.firstName + " " + u.lastName,
-              image: "",
-              hourOverTime: "0",
-              isAttendance: false,
-              isSalaryByProduct: false,
-              isManufacture: false,
-              products: [],
-            });
-          }
-        });
+        // users.forEach((u) => {
+        //   if (!setUser.has(u.id)) {
+        //     attendanceData.push({
+        //       userID: u.id,
+        //       userName: u.firstName + " " + u.lastName,
+        //       image: "",
+        //       hourOverTime: "0",
+        //       isAttendance: false,
+        //       isSalaryByProduct: false,
+        //       isManufacture: false,
+        //       products: [],
+        //     });
+        //   }
+        // });
         setTableData(attendanceData);
       })
       .catch((error) => {

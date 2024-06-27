@@ -35,7 +35,7 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
     setTableDataIndex: (index, data) => {
       set((state) => {
         const newData = [...state.tableData];
-        newData[index] = data;
+        newData[index].products = data.products;
         return { tableData: newData };
       });
     },
