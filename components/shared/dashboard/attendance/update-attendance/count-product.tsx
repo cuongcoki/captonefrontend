@@ -169,6 +169,7 @@ export default function CountProduct({
       data.products = data.products.filter(
         (product) => product.quantity !== "0"
       );
+      console.log("Data Product Update: ", data);
       setTableDataIndex(index, data);
       setIsUpdate(false);
     }
