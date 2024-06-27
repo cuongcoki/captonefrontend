@@ -31,7 +31,7 @@ import {
 } from "@/components/shared/common/combobox/combobox-for-form";
 import { materiaHistoryApi } from "@/apis/material-history.api";
 import { useMaterialHistoryStore } from "@/components/shared/dashboard/material-history/table/material-history-store";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { MaterialHistoryContext } from "@/components/shared/dashboard/material-history/table/data-table";
 import toast from "react-hot-toast";
 
@@ -72,6 +72,7 @@ export default function UpdateMaterialHistoryForm({ id }: { id: string }) {
         quantity: String(res.data.data.quantity),
         price: String(res.data.data.price),
         importAt: res.data.data.importDate,
+        description: res.data.data.description,
       };
       setImportDate(res.data.data.importDate);
       form.reset(formData);
@@ -93,6 +94,10 @@ export default function UpdateMaterialHistoryForm({ id }: { id: string }) {
 
   const onSubmit = (data: materialHistoryFormType) => {
     data.importAt = convertDateFormat(importDate);
+    if (parse(data.importAt, "dd/MM/yyyy", new Date()) > new Date()) {
+      toast.error("Ngày nhập không được vượt quá ngày hiện tại ");
+      return;
+    }
     console.log("ON SUBMIT DATA:", data);
     materiaHistoryApi
       .updateMaterialHistory({
@@ -101,9 +106,7 @@ export default function UpdateMaterialHistoryForm({ id }: { id: string }) {
         quantity: Number(data.quantity),
         price: Number(data.price),
         importDate: data.importAt,
-        description: "",
-        quantityInStock: 0,
-        quantityPerUnit: 0,
+        description: data.description,
       })
       .then((res) => {
         console.log("UPDATE MATERIAL HISTORY SUCCESS", res.data);
@@ -164,6 +167,19 @@ export default function UpdateMaterialHistoryForm({ id }: { id: string }) {
                     field.onChange(numericInput);
                   }}
                 />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <InputAnimation nameFor="Ghi chú" {...field} />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />

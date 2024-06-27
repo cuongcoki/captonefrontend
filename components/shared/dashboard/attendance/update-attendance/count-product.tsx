@@ -122,6 +122,7 @@ export default function CountProduct({
     setIsUpdate(true);
   };
   const updateQuantityOfProduct = (indexP: number, value: string) => {
+    if (value === "") return;
     if (Number(value) < 0) return;
     setUserData((prev) => {
       const newProducts = [...prev.products];

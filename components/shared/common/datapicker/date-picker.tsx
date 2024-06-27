@@ -39,7 +39,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     }, [date, name, form]);
 
     return (
-      <Popover>
+      <Popover modal={true}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}

@@ -1,6 +1,5 @@
 "use client";
 import { attendanceApi } from "@/apis/attendance.api";
-import { ConvertDateToUtc } from "@/components/shared/common/conver_date_to_utc";
 import DayOfCalender from "@/components/shared/employee/view-attendance/day-of-calender";
 import DotStatus from "@/components/shared/employee/view-attendance/dot-status";
 import { Card } from "@/components/ui/card";
@@ -41,6 +40,7 @@ export default function Page({ searchParams }: Props) {
   const [attendanceData, setAttendanceData] = useState<AttendanceDateData[]>(
     []
   );
+  const [calenderData, setCalenderData] = useState<AttendanceDateData[]>([]);
   const [month, setMonth] = useState(
     Number(searchParams.month) || new Date().getMonth() + 1
   );
@@ -75,7 +75,7 @@ export default function Page({ searchParams }: Props) {
         setAttendanceData(
           data.data.attendances.map((item) => {
             return {
-              date: ConvertDateToUtc(convertDateToISO(item.date) || ""),
+              date: convertDateToISO(item.date) || "",
               attedanceDateReport: {
                 isPresentSlot1: item.attedanceDateReport.isPresentSlot1,
                 isPresentSlot2: item.attedanceDateReport.isPresentSlot2,
@@ -93,62 +93,37 @@ export default function Page({ searchParams }: Props) {
   }, [year, month]);
   useEffect(() => {
     console.log("Attendance Data", attendanceData);
-  }, [attendanceData]);
+    const attendanceDict: { [key: string]: AttendanceDateData } =
+      attendanceData?.reduce((acc: any, entry: any) => {
+        acc[entry.date] = entry;
+        return acc;
+      }, {});
+    function generateAttendanceGrid(
+      year: number,
+      month: number
+    ): AttendanceDateData[] {
+      const firstDayOfMonth = new Date(year, month - 1, 1);
+      const lastDayOfMonth = new Date(year, month, 0);
 
-  useEffect(() => {
-    router.push(`${pathName}?year=${year}&month=${month}`);
-  }, [router, pathName, year, month]);
+      const startDayOfWeek = firstDayOfMonth.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
 
-  const attendanceDict: { [key: string]: AttendanceDateData } =
-    attendanceData?.reduce((acc: any, entry: any) => {
-      acc[entry.date] = entry;
-      return acc;
-    }, {});
-  function generateAttendanceGrid(
-    year: number,
-    month: number
-  ): AttendanceDateData[] {
-    const firstDayOfMonth = new Date(year, month - 1, 1);
-    const lastDayOfMonth = new Date(year, month, 0);
+      // Calculate the number of days from the previous month to display
+      let daysInPreviousMonth = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1; // adjust to start week on Monday
 
-    const startDayOfWeek = firstDayOfMonth.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
+      // Get the actual last day of the previous month
+      const lastDayOfPreviousMonth = new Date(year, month - 1, 0).getDate();
 
-    // Calculate the number of days from the previous month to display
-    let daysInPreviousMonth = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1; // adjust to start week on Monday
+      const calendarGrid: AttendanceDateData[] = [];
 
-    // Get the actual last day of the previous month
-    const lastDayOfPreviousMonth = new Date(year, month - 1, 0).getDate();
-
-    const calendarGrid: AttendanceDateData[] = [];
-
-    // Add days from the previous month
-    for (let i = daysInPreviousMonth; i > 0; i--) {
-      const prevDate = new Date(
-        year,
-        month - 2,
-        lastDayOfPreviousMonth - i + 1
-      );
-      calendarGrid.push({
-        date: prevDate.toISOString().split("T")[0],
-        attedanceDateReport: {
-          isPresentSlot1: false,
-          isPresentSlot2: false,
-          isPresentSlot3: false,
-          isSalaryByProduct: false,
-          isOverTime: false,
-        },
-      });
-    }
-
-    // Add days from the current month
-    for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
-      const currentDate = new Date(year, month - 1, day);
-      const dateString = currentDate.toISOString().split("T")[0];
-      if (attendanceDict && attendanceDict[dateString]) {
-        calendarGrid.push(attendanceDict[dateString]);
-      } else {
+      // Add days from the previous month
+      for (let i = daysInPreviousMonth; i > 0; i--) {
+        const prevDate = new Date(
+          year,
+          month - 2,
+          lastDayOfPreviousMonth - i + 1
+        );
         calendarGrid.push({
-          date: dateString,
+          date: prevDate.toISOString().split("T")[0],
           attedanceDateReport: {
             isPresentSlot1: false,
             isPresentSlot2: false,
@@ -158,45 +133,70 @@ export default function Page({ searchParams }: Props) {
           },
         });
       }
+
+      // Add days from the current month
+      for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
+        const currentDate = new Date(year, month - 1, day);
+        const dateString = currentDate.toISOString().split("T")[0];
+        if (attendanceDict && attendanceDict[dateString]) {
+          calendarGrid.push(attendanceDict[dateString]);
+        } else {
+          calendarGrid.push({
+            date: dateString,
+            attedanceDateReport: {
+              isPresentSlot1: false,
+              isPresentSlot2: false,
+              isPresentSlot3: false,
+              isSalaryByProduct: false,
+              isOverTime: false,
+            },
+          });
+        }
+      }
+
+      // Add days from the next month to complete the grid (if needed)
+      let nextMonthDay = 1;
+      while (calendarGrid.length % 7 !== 0) {
+        const nextDate = new Date(year, month, nextMonthDay++);
+        calendarGrid.push({
+          date: nextDate.toISOString().split("T")[0],
+          attedanceDateReport: {
+            isPresentSlot1: false,
+            isPresentSlot2: false,
+            isPresentSlot3: false,
+            isSalaryByProduct: false,
+            isOverTime: false,
+          },
+        });
+      }
+
+      // Ensure the grid has exactly 42 entries
+      while (calendarGrid.length < 42) {
+        const nextDate = new Date(year, month, nextMonthDay++);
+        calendarGrid.push({
+          date: nextDate.toISOString().split("T")[0],
+          attedanceDateReport: {
+            isPresentSlot1: false,
+            isPresentSlot2: false,
+            isPresentSlot3: false,
+            isSalaryByProduct: false,
+            isOverTime: false,
+          },
+        });
+      }
+
+      return calendarGrid;
     }
+    setCalenderData(generateAttendanceGrid(year, month));
+  }, [attendanceData, year, month]);
 
-    // Add days from the next month to complete the grid (if needed)
-    let nextMonthDay = 1;
-    while (calendarGrid.length % 7 !== 0) {
-      const nextDate = new Date(year, month, nextMonthDay++);
-      calendarGrid.push({
-        date: nextDate.toISOString().split("T")[0],
-        attedanceDateReport: {
-          isPresentSlot1: false,
-          isPresentSlot2: false,
-          isPresentSlot3: false,
-          isSalaryByProduct: false,
-          isOverTime: false,
-        },
-      });
-    }
+  useEffect(() => {
+    router.push(`${pathName}?year=${year}&month=${month}`);
+  }, [router, pathName, year, month]);
 
-    // Ensure the grid has exactly 42 entries
-    while (calendarGrid.length < 42) {
-      const nextDate = new Date(year, month, nextMonthDay++);
-      calendarGrid.push({
-        date: nextDate.toISOString().split("T")[0],
-        attedanceDateReport: {
-          isPresentSlot1: false,
-          isPresentSlot2: false,
-          isPresentSlot3: false,
-          isSalaryByProduct: false,
-          isOverTime: false,
-        },
-      });
-    }
-
-    return calendarGrid;
-  }
-
-  const calenderData = generateAttendanceGrid(year, month);
-  console.log("calenderData", calenderData);
-
+  useEffect(() => {
+    console.log("Calender Data", calenderData);
+  }, [calenderData]);
   const handleIncreaseMonth = () => {
     if (month === 12) {
       setMonth(1);

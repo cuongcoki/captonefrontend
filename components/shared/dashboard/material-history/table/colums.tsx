@@ -14,7 +14,7 @@ import {
 import { materialHistoryType } from "@/types/material-history.type";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Edit, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 
 export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
@@ -89,16 +89,20 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
       return format(row.original.importDate, "dd/MM/yyyy");
     },
   },
-  {
-    id: "totalMoney",
-    header: "Thành tiền",
-    cell: ({ row }) => {
-      const payment = row.original;
+  // {
+  //   id: "totalMoney",
+  //   header: "Thành tiền",
+  //   cell: ({ row }) => {
+  //     const payment = row.original;
 
-      return (
-        (payment.price * payment.quantity).toLocaleString("en-US") + " VND"
-      );
-    },
+  //     return (
+  //       (payment.price * payment.quantity).toLocaleString("en-US") + " VND"
+  //     );
+  //   },
+  // },
+  {
+    accessorKey: "description",
+    header: "Ghi chú",
   },
   {
     id: "actions",
@@ -108,33 +112,9 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
 
       return (
         <>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Hành động</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={(event) => {
-                  // event.preventDefault();
-                  const edit = document.getElementById(payment.id);
-                  if (edit) {
-                    edit.click();
-                  }
-                }}
-              >
-                <label>Chỉnh sửa</label>
-              </DropdownMenuItem>
-              {/* <DropdownMenuSeparator /> */}
-              {/* <DropdownMenuItem>Xóa nguyên liệu</DropdownMenuItem> */}
-            </DropdownMenuContent>
-          </DropdownMenu>
           <UpdateMaterialHistory id={payment.id}>
-            <div id={payment.id} className="hidden">
-              Chỉnh sửa
+            <div id={payment.id}>
+              <Edit className="hover:cursor-pointer" />
             </div>
           </UpdateMaterialHistory>
         </>

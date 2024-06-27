@@ -29,7 +29,6 @@ import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-f
 import { Combobox } from "@/components/shared/common/combobox/combobox";
 import { usePathname, useRouter } from "next/navigation";
 import CountProduct from "@/components/shared/dashboard/attendance/update-attendance/count-product";
-import { ConvertDateToUtc } from "@/components/shared/common/conver_date_to_utc";
 
 const comboboxData: ComboboxDataType[] = [
   {
@@ -110,7 +109,7 @@ export default function UpdateAttendance({
     const setUser = new Set<string>();
     attendanceApi
       .getAttendance({
-        Date: ConvertDateToUtc(date),
+        Date: date,
         SlotId: slot,
         PageIndex: "1",
         PageSize: "1000",
@@ -220,7 +219,7 @@ export default function UpdateAttendance({
       });
     });
     const updateEmployeeProductData: UpdateEmployeeProductBody = {
-      date: ConvertDateToUtc(date),
+      date: date,
       slotId: Number(slot),
       companyId: warehouse,
       createQuantityProducts: employeeProductData,
@@ -240,7 +239,7 @@ export default function UpdateAttendance({
     if (isCreate) {
       DataBody = {
         slotId: Number(slot),
-        date: ConvertDateToUtc(date),
+        date: date,
         companyId: warehouse,
         createAttendances: tableData.map((item): AttendanceForUpdate => {
           return {
@@ -256,7 +255,7 @@ export default function UpdateAttendance({
     } else {
       DataBody = {
         slotId: Number(slot),
-        date: ConvertDateToUtc(date),
+        date: date,
         companyId: warehouse,
         updateAttendances: tableData.map((item): AttendanceForUpdate => {
           return {
