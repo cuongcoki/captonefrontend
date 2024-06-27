@@ -1,8 +1,26 @@
 "use client";
 
-import { X } from "lucide-react";
-import { describe } from "node:test";
 import { z } from "zod";
+import { parse, isValid } from "date-fns";
+
+// Create a custom date validation
+const importAtSchema = z.string().min(1, "Vui lòng chọn ngày nhập"); // Check for non-empty string
+// .refine(
+//   (val) => {
+//     const selectedDate = parse(val, "dd/MM/yyyy", new Date());
+//     const today = new Date();
+
+//     // Remove time part for comparison
+//     today.setHours(0, 0, 0, 0);
+//     console.log("Selected date: ", selectedDate);
+//     console.log("Today: ", today);
+
+//     return isValid(selectedDate) && selectedDate <= today;
+//   },
+//   {
+//     message: "Ngày nhập không được vượt quá ngày hiện tại hoặc không hợp lệ",
+//   }
+// );
 
 export const materialSchema = z.object({
   id: z.string(),
@@ -13,6 +31,18 @@ export const materialSchema = z.object({
   quantityPerUnit: z
     .string()
     .min(1, "Số lượng từng đơn vị không được để trống")
+    .refine(
+      (value) => {
+        const parsedValue = parseFloat(value);
+        return !isNaN(parsedValue) && parsedValue > 0;
+      },
+      {
+        message: "Số lượng từng đơn vị phải lớn hơn 0",
+      }
+    ),
+  quantityInStock: z
+    .string()
+    .min(1, "Số lượng không được để trống")
     .refine(
       (value) => {
         const parsedValue = parseFloat(value);
@@ -43,6 +73,18 @@ export const AddMaterialSchema = z.object({
       }
     ),
   image: z.string().nullable(),
+  quantityInStock: z
+    .string()
+    .min(1, "Số lượng không được để trống")
+    .refine(
+      (value) => {
+        const parsedValue = parseFloat(value);
+        return !isNaN(parsedValue) && parsedValue > 0;
+      },
+      {
+        message: "Số lượng phải lớn hơn 0",
+      }
+    ),
 });
 
 export type AddMaterialType = z.infer<typeof materialSchema>;
@@ -68,7 +110,7 @@ export const materialHistorySchema = z.object({
       message: "Giá phải lớn hơn 0",
     }
   ),
-  importAt: z.string(),
+  importAt: importAtSchema,
   importBy: z.string(),
   material: materialSchema,
 });
@@ -95,7 +137,8 @@ export const materialHistoryFormSchema = z.object({
       message: "Giá phải lớn hơn không",
     }
   ),
-  importAt: z.string().min(1, "Vui lòng chọn ngày nhập"),
+  importAt: importAtSchema,
+  description: z.string(),
 });
 
 export type materialHistoryFormType = z.infer<typeof materialHistoryFormSchema>;

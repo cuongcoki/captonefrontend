@@ -34,6 +34,8 @@ import { useMaterialHistoryStore } from "@/components/shared/dashboard/material-
 import { materiaHistoryApi } from "@/apis/material-history.api";
 import { MaterialHistoryContext } from "@/components/shared/dashboard/material-history/table/data-table";
 import toast from "react-hot-toast";
+import { ComboboxDemo } from "@/components/shared/common/combobox/combobox_demo";
+import { parse } from "date-fns";
 
 export default function AddNewMeterialHistoryForm() {
   const [comboboxData, setComboboxData] = useState<ComboboxDataType[]>([]);
@@ -54,20 +56,23 @@ export default function AddNewMeterialHistoryForm() {
       quantity: "",
       price: "",
       importAt: "",
+      description: "",
     },
   });
 
   const onSubmit = (data: materialHistoryFormType) => {
     console.log("SUBMIT DATA", data);
+    if (parse(data.importAt, "dd/MM/yyyy", new Date()) > new Date()) {
+      toast.error("Ngày nhập không được vượt quá ngày hiện tại ");
+      return;
+    }
     materiaHistoryApi
       .addMaterialHistory({
         materialId: data.materialID,
         quantity: data.quantity,
         price: data.price,
         importDate: data.importAt,
-        quantityPerUnit: "1",
-        quantityInStock: "1",
-        description: "1",
+        description: data.description,
       })
       .then(() => {
         toast.success("Thêm mới lịch sử nhập hàng thành công");
@@ -136,6 +141,19 @@ export default function AddNewMeterialHistoryForm() {
                     field.onChange(numericInput);
                   }}
                 />
+              </FormControl>
+              <FormDescription></FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <InputAnimation nameFor="Ghi chú" {...field} />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />

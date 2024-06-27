@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +27,7 @@ export default function UpdateMaterial({
           <DialogHeader>
             <DialogTitle>Cập nhật nguyên liệu</DialogTitle>
           </DialogHeader>
+          <DialogDescription></DialogDescription>
           <UpdateMaterialForm id={id} />
         </DialogContent>
       </Dialog>

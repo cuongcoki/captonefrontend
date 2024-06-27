@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import AddNewMeterialForm from "@/components/shared/dashboard/material/add-new-material/add-new-material-form";
 import AddNewMeterialHistoryForm from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history-form";
 export default function AddNewMeterialHistory() {
+  const [focus, setFocus] = React.useState(false);
   return (
     <>
       <Dialog>
@@ -24,6 +25,7 @@ export default function AddNewMeterialHistory() {
           </Button>
         </DialogTrigger>
         <DialogContent className=" max-w-[425px]">
+          <DialogDescription></DialogDescription>
           <DialogHeader>
             <DialogTitle className="mb-5">Nhập nguyên liệu</DialogTitle>
           </DialogHeader>
