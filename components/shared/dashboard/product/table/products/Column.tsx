@@ -26,30 +26,33 @@ export type Product = {
 export const columns: ColumnDef<Product>[] = [
 
 
-  // {
-  //   accessorKey: "imageResponses",
-  //   header: ({ column }) => (
-  //     <Button variant="ghost">Hình ảnh</Button>
-  //   ),
-  //   cell: ({ row }) => {
-  //     const firstImage = row.original.imageResponses[0];
-  //     return firstImage ? (
-  //       <Link href={`/dashboard/product/${row.original.id}`}>
-  //         <div className="w-[50px] h-[50px] rounded-lg ">
-  //           <Image
-  //             src={`${firstImage.imageUrl}`}
-  //             width={100}
-  //             height={100}
-  //             alt="Product Image"
-  //             className="w-[50px] h-[50px] rounded-lg object-contain"
-  //           />
-  //         </div>
-  //       </Link>
-  //     ) : (
-  //       'no image'
-  //     );
-  //   },
-  // },
+  {
+    accessorKey: "imageResponses",
+    header: ({ column }) => (
+      <Button variant="ghost">Hình ảnh</Button>
+    ),
+    cell: ({ row }) => {
+      const firstImage = row.original.imageResponses[0];
+      return firstImage ? (
+        <Link href={`/dashboard/product/${row.original.id}`}>
+          <div className="w-[50px] h-[50px] rounded-lg ">
+            <Image
+              src={`${firstImage.imageUrl}`}
+              width={100}
+              height={100}
+              alt="ảnh sp"
+              className="w-[50px] h-[50px] rounded-lg object-contain"
+            />
+          </div>
+        </Link>
+      ) : (
+        <Link href={`/dashboard/product/${row.original.id}`}>
+          <div className="w-[50px] h-[50px] text-white rounded-lg ">
+          </div>
+        </Link>
+      );
+    },
+  },
 
   // {
   //   accessorKey: "id",
@@ -61,30 +64,7 @@ export const columns: ColumnDef<Product>[] = [
   //   cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
   // },
 
-  {
-    accessorKey: "isInProcessing",
-    header: ({ column }) => (
-      <Button variant="ghost">
-        Đang xử lý
-      </Button>
-    ),
-    cell: ({ row }) => {
-      const isInProcessing = IsInProcessing.find(
-        (item) => item.value === row.getValue("isInProcessing")
-      );
 
-      if (!isInProcessing) {
-        return null;
-      }
-
-      return (
-        <div className="flex w-[100px] items-center">
-          <span className={`${isInProcessing.value === true ? 'bg-slate-100' : ''} border px-2 py-1 rounded-full`}>{isInProcessing.label}</span>
-          
-        </div>
-      );
-    },
-  },
 
   {
     accessorKey: "name",
@@ -143,7 +123,30 @@ export const columns: ColumnDef<Product>[] = [
   },
 
 
+  {
+    accessorKey: "isInProcessing",
+    header: ({ column }) => (
+      <Button variant="ghost">
+        Đang xử lý
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const isInProcessing = IsInProcessing.find(
+        (item) => item.value === row.getValue("isInProcessing")
+      );
 
+      if (!isInProcessing) {
+        return null;
+      }
+
+      return (
+        <div className="flex w-[100px] items-center">
+          <span className={`${isInProcessing.value === true ? 'bg-slate-100' : ''} border px-2 py-1 rounded-full`}>{isInProcessing.label}</span>
+
+        </div>
+      );
+    },
+  },
 
 
   {
