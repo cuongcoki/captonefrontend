@@ -111,11 +111,11 @@ export default function ProductIDPage() {
             <header className="">
 
                 <div className="flex items-center gap-4 justify-between">
-                    <Link href={'/dashboard/product'}>  
-                    <Button variant="outline" size="icon" className="h-7 w-7">
-                        <ChevronLeft className="h-4 w-4" />
-                        <span className="sr-only">Back</span>
-                    </Button>
+                    <Link href={'/dashboard/product'}>
+                        <Button variant="outline" size="icon" className="h-7 w-7">
+                            <ChevronLeft className="h-4 w-4" />
+                            <span className="sr-only">Back</span>
+                        </Button>
                     </Link>
                     <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
                         Sản phẩm
@@ -128,7 +128,7 @@ export default function ProductIDPage() {
                                     Chỉnh sửa
                                 </Button>
                             </DialogTrigger>
-                            <DialogContent className="w-full min-w-[90%] md:min-w-[70%]">
+                            <DialogContent className="max-w-full md:max-w-[70%] min-h-[90%]">
                                 <DialogTitle className="text-2xl text-primary-backgroudPrimary visible hidden">
                                     Chỉnh sửa
                                 </DialogTitle>
@@ -168,61 +168,36 @@ export default function ProductIDPage() {
                                 <div className="grid gap-6">
                                     <div className="grid gap-3">
                                         <Label htmlFor="name">Tên</Label>
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            className="w-full"
-                                            value={productId?.name}
-                                        />
+                                        <div className="border p-2 rounded-md border-gray-100">
+                                            {productId?.name}
+                                        </div>
                                     </div>
                                     <div className="grid gap-3">
                                         <Label htmlFor="description">Mô tả</Label>
-                                        <Textarea
-                                            id="description"
-                                            value={productId?.description}
-                                            className="min-h-32"
-                                        />
+                                        <div className="border p-2 rounded-md border-gray-100">
+                                            {productId?.description}
+                                        </div>
                                     </div>
                                     <div className="grid gap-3">
                                         <Label htmlFor="name">Mã CODE</Label>
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            className="w-full"
-                                            value={productId?.code}
-                                        />
+                                        <div className="border p-2 rounded-md border-gray-100">
+                                            {productId?.code}
+                                        </div>
                                     </div>
                                     <div className="grid gap-3">
                                         <Label htmlFor="name">Giá</Label>
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            className="w-full"
-                                            value={productId?.price}
-                                        />
+                                        <div className="border p-2 rounded-md border-gray-100">
+                                            {productId?.price} VNĐ
+                                        </div>
                                     </div>
                                     <div className="grid gap-3">
                                         <Label htmlFor="name">Kích thước</Label>
-                                        <Input
-                                            id="name"
-                                            type="text"
-                                            className="w-full"
-                                            value={productId?.size}
-                                        />
+                                        <div className="border p-2 rounded-md border-gray-100">
+                                            {productId?.size}
+                                        </div>
                                     </div>
                                     <div className="grid gap-3">
-                                        <Label htmlFor="status">Trạng thái</Label>
-                                        <Select
-                                            value={productId?.isInProcessing ? "true" : "false"}
-                                        >
-                                            <SelectTrigger className="w-[180px]">
-                                                <SelectValue>{productId?.isInProcessing ? "Đang xử lý" : "Chưa xử lý"}</SelectValue>
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="true">Đang xử lý</SelectItem>
-                                                <SelectItem value="false">Chưa xử lý</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <Label htmlFor="status">Trạng thái: <span className="px-2 py-2 rounded-full bg-slate-100">{productId?.isInProcessing ? "Đang xử lý" : "Chưa xử lý"}</span></Label>
                                     </div>
                                 </div>
                             </CardContent>

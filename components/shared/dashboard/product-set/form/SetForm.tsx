@@ -65,7 +65,6 @@ export const SetForm: React.FC<SetFormProps> = ({ setOpen }) => {
     const [imageRequests, setImageRequests] = useState<string | null>(null);
     const [imageUrls, setImageUrls] = useState<File | null>(null);
     const [nameImage, setNameImage] = useState<string | null>(null);
-
     const form = useForm({
         resolver: zodResolver(SetSchema),
         defaultValues: {
@@ -76,14 +75,39 @@ export const SetForm: React.FC<SetFormProps> = ({ setOpen }) => {
     });
     // ** các hàm để sử lý đăng ảnh
 
-
+    const generateRandomString = (length: number = 5) => {
+        const characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let result = "";
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    };
     // ** Xử lý khi người dùng tải lên hình ảnh mới
     const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files ? e.target.files[0] : null;
         if (file) {
             const newImageRequest = URL.createObjectURL(file);
             setImageRequests(newImageRequest);
-            setImageUrls(file);
+            const extension = file.name.substring(file.name.lastIndexOf("."));
+
+            const randomString = generateRandomString();
+            const date = new Date();
+            const year = date.getFullYear().toString();
+            const month = (date.getMonth() + 1).toString().padStart(2, "0");
+            const day = date.getDate().toString().padStart(2, "0");
+            const hour = date.getHours().toString().padStart(2, "0");
+            const minute = date.getMinutes().toString().padStart(2, "0");
+            const second = date.getSeconds().toString().padStart(2, "0");
+
+            const changedFileName = `images-${randomString}-${year}${month}${day}${hour}${minute}${second}${extension}`;
+            const newFile = new File([file], changedFileName, { type: file.type });
+            setImageUrls(newFile);
+            setNameImage(changedFileName);
+            console.log('imageUrls', imageUrls)
+
         }
     };
 
@@ -111,8 +135,8 @@ export const SetForm: React.FC<SetFormProps> = ({ setOpen }) => {
             const { data } = await filesApi.getFile(fileName);
 
             // Assuming data.data contains the image name
-            const names = data.data;
-            setNameImage(names);
+            // const names = data.data;
+            // setNameImage(fileName);
         } catch (error) {
             console.error('Error uploading files:', error);
             // Xử lý lỗi khi tải lên không thành công
@@ -240,7 +264,6 @@ export const SetForm: React.FC<SetFormProps> = ({ setOpen }) => {
 
         try {
             await handlePostImage();
-            await handleGetImage();
 
 
             if (nameImage) {
@@ -272,7 +295,6 @@ export const SetForm: React.FC<SetFormProps> = ({ setOpen }) => {
 
         } catch (error) {
             console.error('Error creating product:', error);
-            toast.error('Failed to create product'); // Hiển thị thông báo lỗi
         } finally {
             setLoading(false);
         }
@@ -318,7 +340,7 @@ export const SetForm: React.FC<SetFormProps> = ({ setOpen }) => {
                         )}
                     </div>
                 </div>
-                
+
                 <div className="w-full flex flex-col gap-4 ">
                     <form onSubmit={form.handleSubmit(onSubmit)} >
                         {/* Phần nhập dữ liệu thông tin */}
@@ -423,7 +445,7 @@ export const SetForm: React.FC<SetFormProps> = ({ setOpen }) => {
                                                                         searchResults !== null ? (
                                                                             searchResults.map((product) => (
                                                                                 <TableRow key={product.id}>
-                                                                                    <TableCell className="font-medium"><ImageDisplayDialog images={product?.imageResponses} /></TableCell>
+                                                                                    <TableCell className="font-medium"><ImageDisplayDialog images={product?.imageUrl} /></TableCell>
                                                                                     <TableCell>{product?.name}</TableCell>
                                                                                     <TableCell>{product?.code}</TableCell>
                                                                                     <TableCell className="text-right">{product?.description}</TableCell>
@@ -456,7 +478,7 @@ export const SetForm: React.FC<SetFormProps> = ({ setOpen }) => {
                                                                 <div className="flex justify-between items-center py-4" key={index}>
 
                                                                     <div className="flex  gap-4">
-                                                                        <Image alt="ảnh mẫu" className="w-[100px] h-[100px] object-cover" width={900} height={900} src={product?.imageResponses[0].imageUrl} />
+                                                                        <Image alt="ảnh mẫu" className="w-[100px] h-[100px] object-cover" width={900} height={900} src={product?.imageUrl} />
                                                                         <div className="font-medium dark:text-white">
                                                                             <div><b>Tên: </b>{product.name}</div>
                                                                             <div className="text-sm text-gray-500 dark:text-gray-400"><b>Code: </b>{product.code}</div>
@@ -488,7 +510,7 @@ export const SetForm: React.FC<SetFormProps> = ({ setOpen }) => {
                                                                 className="w-[100px] h-[100px] object-cover"
                                                                 width={100}
                                                                 height={100}
-                                                                src={product?.imageResponses[0]?.imageUrl}
+                                                                src={product?.imageUrl}
                                                             />
                                                             <div className="font-medium dark:text-white">
                                                                 <div>

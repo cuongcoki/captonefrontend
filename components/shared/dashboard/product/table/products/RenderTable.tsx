@@ -25,6 +25,7 @@ import {
 
 import { ProductForm } from "../../form/ProductForm";
 import { ProductSearchParams } from "@/types/product.type";
+import { filesApi } from "@/apis/files.api";
 
 type ContexType = {
   forceUpdate: () => void;
@@ -52,7 +53,7 @@ export default function RenderTableProduct() {
   type Props = {
     searchParams: ProductSearchParams;
   };
-
+  console.log('data', data)
   useEffect(() => {
     const fetchDataProduct = async () => {
       setLoading(true);
@@ -63,7 +64,32 @@ export default function RenderTableProduct() {
           pageSize,
           searchTerm
         );
-        setData(response.data.data.data);
+        const newData = response.data.data.data;
+
+        // Update imageUrl with links fetched from filesApi
+        const updatedData = await Promise.all(newData.map(async (item: any) => {
+          const updatedImageResponses = await Promise.all(item.imageResponses.map(async (image: any) => {
+            try {
+              const { data } = await filesApi.getFile(image.imageUrl);
+              return {
+                ...image,
+                imageUrl: data.data
+              };
+            } catch (error) {
+              console.error('Error getting file:', error);
+              return {
+                ...image,
+                imageUrl: '' // Handle error case if needed
+              };
+            }
+          }));
+          return {
+            ...item,
+            imageResponses: updatedImageResponses
+          };
+        }));
+
+        setData(updatedData);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
@@ -130,7 +156,7 @@ export default function RenderTableProduct() {
               <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger>
                   <Button variant="colorCompany" className="text-xs">
-                    <Plus className="block lg:hidden"/> <span className="hidden lg:block">Thêm sản phầm mới</span>
+                    <Plus className="block lg:hidden" /> <span className="hidden lg:block">Thêm sản phầm mới</span>
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-full md:max-w-[70%] min-h-[90%]">

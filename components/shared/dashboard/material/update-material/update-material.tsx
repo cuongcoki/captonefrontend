@@ -21,7 +21,7 @@ export default function UpdateMaterial({
 }) {
   return (
     <>
-      <Dialog>
+      <Dialog modal={true}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className=" max-w-[340px] md:max-w-[700px]">
           <DialogHeader>
