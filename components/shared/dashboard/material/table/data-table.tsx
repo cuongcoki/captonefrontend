@@ -27,6 +27,7 @@ import AddNewMeterial from "@/components/shared/dashboard/material/add-new-mater
 import { materialApi } from "@/apis/material.api";
 import { usePathname, useRouter } from "next/navigation";
 import "./material.css";
+import { filesApi } from "@/apis/files.api";
 
 type ContexType = {
   forceUpdate: () => void;
@@ -81,25 +82,35 @@ export function DataTableForMaterial<TData, TValue>({
   useEffect(() => {
     console.log("Call API");
 
-    const searchMaterial = (searchTerm: string) => {
+    const searchMaterial = async (searchTerm: string) => {
       console.log("searchTerm", searchTerm);
-      materialApi
-        .searchMaterial({
+      try {
+        const data = await materialApi.searchMaterial({
           SearchTerm: searchTerm,
           pageIndex: pageIndex,
           pageSize: 10,
-        })
-        .then((data) => {
-          console.log("DATA Call API", data);
-          setData(data.data.data.data as TData[]);
-          setTotalPages(data.data.data.totalPages);
-        })
-        .catch((error) => console.log(error))
-        .finally(() => {
-          router.push(
-            `${pathname}?searchTerm=${searchTerm || ""}&pageIndex=${pageIndex}`
-          );
         });
+        console.log("DATA Call API", data);
+
+        const tableData = data.data.data.data;
+        // const imagePromises = tableData.map(async (item) => {
+
+        //   const res = await filesApi.getFile(item.image as string);
+        //   item.image = res.data.data;
+        //   // console.log("Image" + item.name, item.image);
+        // });
+
+        // await Promise.all(imagePromises);
+
+        setData(tableData as TData[]);
+        setTotalPages(data.data.data.totalPages);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        router.push(
+          `${pathname}?searchTerm=${searchTerm || ""}&pageIndex=${pageIndex}`
+        );
+      }
     };
 
     searchMaterial(searchTerm);
@@ -175,7 +186,7 @@ export function DataTableForMaterial<TData, TValue>({
             </TableBody>
           </Table>
         </MyContext.Provider>
-        <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
           <Button
             variant="outline"
             size="sm"

@@ -1,6 +1,6 @@
 import { AddMaterialSchema, AddMaterialType } from "@/schema/material";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +18,7 @@ import DragAndDropFile from "@/components/shared/common/input/drag&drop-file/dra
 import { materialApi } from "@/apis/material.api";
 import { MyContext } from "@/components/shared/dashboard/material/table/data-table";
 import toast from "react-hot-toast";
+import { filesApi } from "@/apis/files.api";
 
 export default function AddNewMeterialForm() {
   const [materialImage, setMaterialImage] = useState<any>("");
@@ -38,10 +39,64 @@ export default function AddNewMeterialForm() {
     },
   });
 
-  const onSubmit = (data: AddMaterialType) => {
-    data.image = materialImage.base64;
-    // console.log("MAterial Image", materialImage);
+  const handlePostImage = async (file: File) => {
+    console.log("handlePostImage");
+    if (!file) {
+      console.error("No image selected");
+      return;
+    }
+
+    // setLoading(true);
+    const formData = new FormData();
+    formData.append("receivedFiles", file); // Đảm bảo rằng tên trường tương ứng với server và chỉ đăng một ảnh
+
+    try {
+      const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      // Xử lý lỗi khi tải lên không thành công
+    } finally {
+      // setLoading(false);
+    }
+  };
+  const generateRandomString = (length: number = 5) => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
+  const handleUploadPhoto = async (file: File) => {
+    if (file) {
+      const extension = file.name.substring(file.name.lastIndexOf("."));
+
+      const randomString = generateRandomString();
+      const date = new Date();
+      const year = date.getFullYear().toString();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      const hour = date.getHours().toString().padStart(2, "0");
+      const minute = date.getMinutes().toString().padStart(2, "0");
+      const second = date.getSeconds().toString().padStart(2, "0");
+
+      const changedFileName = `images-${randomString}-${year}${month}${day}${hour}${minute}${second}${extension}`;
+      const newFile = new File([file], changedFileName, { type: file.type });
+      return newFile;
+    }
+  };
+  const onSubmit = async (data: AddMaterialType) => {
+    const file = (await handleUploadPhoto(materialImage)) as File;
+    data.image = file.name;
+    // console.log("Material Image", materialImage);
     console.log("Submit DATA", data);
+    try {
+      await handlePostImage(file);
+    } catch (error) {
+      console.log("Error in Up Image", error);
+    }
     materialApi
       .addMaterial(data)
       .then(({ data }) => {
