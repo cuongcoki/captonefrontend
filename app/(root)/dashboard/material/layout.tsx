@@ -8,11 +8,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const selectStyle = "bg-[#83a8f1] text-white";
   return (
     <div className="overflow-auto">
-      <Card>
-        <div className="grid md:grid-cols-2 bg-white rounded-md p-1">
+      <Card className="w-[30%] mb-3 rounded-full">
+        <div className="grid md:grid-cols-2 bg-white rounded-full p-1 ">
           <Link href={"/dashboard/material/history"}>
             <div
-              className={`flex justify-center items-center h-10 rounded-md ${
+              className={`flex justify-center items-center h-10 rounded-full ${
                 path === "/dashboard/material/history" ? selectStyle : ""
               }`}
             >
@@ -22,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           <Link href={"/dashboard/material/manager"}>
             <div
-              className={`flex justify-center items-center h-10 rounded-md ${
+              className={`flex justify-center items-center h-10 rounded-full ${
                 path === "/dashboard/material/manager" ? selectStyle : ""
               }`}
             >

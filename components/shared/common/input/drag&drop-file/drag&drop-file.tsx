@@ -9,9 +9,9 @@ export default function DragAndDropFile({
   ChangeImage: (file: any) => void;
 }) {
   const changeEventRegistered = React.useRef(false);
-  const [imageSrc, setImageSrc] = React.useState(
-    "https://images.pexels.com/photos/20631973/pexels-photo-20631973/free-photo-of-g-anh-sang-ngh-thu-t-mua-dong.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-  );
+  // const [imageSrc, setImageSrc] = React.useState(
+  //   "https://images.pexels.com/photos/20631973/pexels-photo-20631973/free-photo-of-g-anh-sang-ngh-thu-t-mua-dong.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+  // );
 
   useEffect(() => {
     let file: File | null;
@@ -20,7 +20,7 @@ export default function DragAndDropFile({
     const dragText = dropArea?.querySelector("header");
     const button = dropArea?.querySelector("button");
     const input = dropArea?.querySelector("input");
-    const image = dropArea?.querySelector("img");
+    const image = dropArea?.querySelectorAll("img");
     const labelForImage = dropArea?.querySelector("#labelForIamge");
     // Declare the file variable
     if (!changeEventRegistered.current) {
@@ -71,8 +71,15 @@ export default function DragAndDropFile({
           let fileURL = fileReader.result;
 
           if (dropArea && image && labelForImage) {
-            setImageSrc(fileURL?.toString() as string);
+            // setImageSrc(fileURL?.toString() as string);
+            // console.log("Imgaesrc", imageSrc);
             (labelForImage as HTMLLabelElement).hidden = false;
+            const mainIamge = document.getElementsByClassName(
+              "main_image"
+            )[0] as HTMLImageElement;
+            mainIamge.removeAttribute("hidden");
+            mainIamge.setAttribute("srcset", fileURL?.toString() as string);
+            // mainIamge.src = fileURL?.toString() as string;
           } // Adding that created img tag inside dropArea container
         };
         if (file) fileReader.readAsDataURL(file);
@@ -98,13 +105,21 @@ export default function DragAndDropFile({
         <label className="w-max h-max" htmlFor="file">
           Browse File
         </label>
-        <label id="labelForIamge" className="w-max h-max" htmlFor="file" hidden>
+        <label
+          id="labelForIamge"
+          className="label_image w-max h-max"
+          htmlFor="file"
+          hidden
+        >
           <Image
             alt=""
-            src={imageSrc}
+            hidden={true}
+            src={
+              "https://images.pexels.com/photos/20631973/pexels-photo-20631973/free-photo-of-g-anh-sang-ngh-thu-t-mua-dong.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+            }
             width={1000}
             height={1000}
-            className="absolute top-0 left-0"
+            className="absolute top-0 left-0 w-full h-full object-cover z-50 main_image"
           />
         </label>
         <input type="file" hidden id="file" src="" />

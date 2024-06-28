@@ -21,6 +21,7 @@ import { number } from "zod";
 import { materialApi } from "@/apis/material.api";
 import { MyContext } from "@/components/shared/dashboard/material/table/data-table";
 import toast from "react-hot-toast";
+import { filesApi } from "@/apis/files.api";
 
 const linkImage =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQnXcFa9HVz9wxTvYDQRoPe76rcZuhUPbH2g&s";
@@ -28,12 +29,15 @@ const linkImage =
 export default function UpdateMaterialForm({ id }: { id: string }) {
   const [materialImage, setMaterialImage] = useState<any>("");
   const { forceUpdate } = useContext(MyContext);
+  const [imageLink, setImageLink] = useState<string>("");
+
   const fillImage = (fileURL: string) => {
-    const dropArea = document.querySelector(".drag-area");
-    let imgTag = `<img src="${fileURL}" alt="">`;
+    const dropArea = document.querySelector(".label_image") as HTMLElement;
+    let imgTag = `<img src="${fileURL}" class="absolute top-0 left-0 w-full h-full object-cover">`;
     if (dropArea) {
-      dropArea.innerHTML = imgTag;
-      dropArea.classList.add("active");
+      dropArea.innerHTML += imgTag;
+      dropArea.hidden = false;
+      // dropArea.classList.add("");
     }
   };
 
@@ -53,6 +57,54 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       quantityInStock: "",
     },
   });
+  const handlePostImage = async (file: File) => {
+    console.log("handlePostImage");
+    if (!file) {
+      console.error("No image selected");
+      return;
+    }
+
+    // setLoading(true);
+    const formData = new FormData();
+    formData.append("receivedFiles", file); // Đảm bảo rằng tên trường tương ứng với server và chỉ đăng một ảnh
+
+    try {
+      const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      // Xử lý lỗi khi tải lên không thành công
+    } finally {
+      // setLoading(false);
+    }
+  };
+  const generateRandomString = (length: number = 5) => {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  };
+  const handleUploadPhoto = async (file: File) => {
+    if (file) {
+      const extension = file.name.substring(file.name.lastIndexOf("."));
+
+      const randomString = generateRandomString();
+      const date = new Date();
+      const year = date.getFullYear().toString();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      const hour = date.getHours().toString().padStart(2, "0");
+      const minute = date.getMinutes().toString().padStart(2, "0");
+      const second = date.getSeconds().toString().padStart(2, "0");
+
+      const changedFileName = `images-${randomString}-${year}${month}${day}${hour}${minute}${second}${extension}`;
+      const newFile = new File([file], changedFileName, { type: file.type });
+      return newFile;
+    }
+  };
 
   useEffect(() => {
     materialApi
@@ -60,11 +112,16 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       .then((data) => {
         if (data.data.isSuccess) {
           console.log("DATA GET MATERIAL", data.data.data);
-          // fillImage(data.data.data.image);
-          fillImage(linkImage);
+          // fillImage(linkImage);
           data.data.data.quantityPerUnit =
             data.data.data.quantityPerUnit.toString();
+          data.data.data.quantityInStock =
+            data.data.data.quantityInStock.toString();
           form.reset(data.data.data);
+          filesApi.getFile(data.data.data.image as string).then((res) => {
+            // setImageLink(res.data.data);
+            fillImage(res.data.data);
+          });
         }
       })
       .catch((error) => {
@@ -74,8 +131,17 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
 
   const onSubmit = (data: materialType) => {};
 
-  const formSubmit = () => {
+  const formSubmit = async () => {
     console.log("DATA", form.getValues());
+    const file = (await handleUploadPhoto(materialImage)) as File;
+    if (file !== null && file !== undefined) {
+      form.setValue("image", file.name);
+    }
+    try {
+      await handlePostImage(file);
+    } catch (error) {
+      console.log("Error in Up Image", error);
+    }
     materialApi
       .updateMaterial(form.getValues())
       .then(({ data }) => {
@@ -178,7 +244,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
                         const inputValue = event.target.value;
                         const numericInput = inputValue.replace(/\D/g, "");
 
-                        field.onChange(numericInput.toString());
+                        field.onChange(numericInput);
                       }}
                     />
                   </FormControl>
