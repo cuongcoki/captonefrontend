@@ -35,13 +35,6 @@ export function DataTableRowActions<TData extends {id:string}>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-
-        <DropdownMenuItem
-          onClick={() => console.log(row._valuesCache.code)}
-        >
-          Lấy mã CODE
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
         <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
         <DropdownMenuItem><Link href={`/dashboard/product/${row.original.id}`}>Chi tiết</Link></DropdownMenuItem>
       </DropdownMenuContent>

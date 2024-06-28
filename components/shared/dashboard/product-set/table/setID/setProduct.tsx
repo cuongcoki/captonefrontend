@@ -24,6 +24,7 @@ import { Separator } from "@/components/ui/separator";
 import ImageDisplayID from "./ImageDisplayID";
 import ImageDisplay from "./ImageDisplay";
 import { Textarea } from "@/components/ui/textarea";
+import { filesApi } from "@/apis/files.api";
 
 interface ImageResponse {
     id: string;
@@ -59,12 +60,43 @@ export default function SetProduct({ setProduct }: SetProductProps) {
     const [open, setOpen] = useState<boolean>(false);
     const [selectedProduct, setSelectedProduct] = useState<SetProduct | null>(null);
 
-    const handleOpenDialog = (pro: SetProduct) => {
-        setSelectedProduct(pro);
-        setOpen(true);
+    const handleOpenDialog =  async (pro: SetProduct) => {
+        try {
+            const updatedImages = await Promise.all(
+                pro.product.imageResponses.map(async (image: ImageResponse) => {
+                    try {
+                        const { data } = await filesApi.getFile(image.imageUrl);
+                        return {
+                            ...image,
+                            imageUrl: data.data // Assuming data.data is the updated image URL
+                        };
+                    } catch (error) {
+                        console.error('Error getting file:', error);
+                        return {
+                            ...image,
+                            imageUrl: '' // Handle error case if needed
+                        };
+                    }
+                })
+            );
+
+            const updatedProduct: SetProduct = {
+                ...pro,
+                product: {
+                    ...pro.product,
+                    imageResponses: updatedImages
+                }
+            };
+
+            setSelectedProduct(updatedProduct);
+            setOpen(true);
+        } catch (error) {
+            console.error('Error updating images:', error);
+            // Handle error state if necessary
+        }
     };
     // console.log('setProductdetaill', setProduct)
-    // console.log('selectedProduct', selectedProduct)
+    console.log('selectedProductselectedProduct', selectedProduct)
     return (
         <Card x-chunk="dashboard-07-chunk-1">
             <CardHeader>

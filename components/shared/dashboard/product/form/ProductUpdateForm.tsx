@@ -43,25 +43,58 @@ interface ProductID {
     setOpen1: (open: boolean) => void;
 }
 
-export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) => {
+export const ProductUpdateForm: React.FC<ProductID> = ({ productId, setOpen1 }) => {
     const [loading, setLoading] = useState(false);
     const { forceUpdate } = useContext(MyContext);
+    console.log('productId', productId)
+    const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(undefined);
+    const [imageRequests, setImageRequests] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchUpdatedProduct = async () => {
+            if (productId) {
+                try {
+                    const updatedData = await Promise.all(productId.imageResponses.map(async (image) => {
+                        try {
+                            const { data } = await filesApi.getFile(image.imageUrl);
+                            return {
+                                ...image,
+                                imageUrl: data.data,
+                            };
+                        } catch (error) {
+                            console.error('Error getting file:', error);
+                            return {
+                                ...image,
+                                imageUrl: '', // Handle error case if needed
+                            };
+                        }
+                    }));
+                    setUpdatedProduct({ ...productId, imageResponses: updatedData });
+                    setImageRequests(updatedData);
+                } catch (error) {
+                    console.error('Error fetching updated product data:', error);
+                } finally {
+                    setLoading(false);
+                }
+            }
+        };
+
+        fetchUpdatedProduct();
+    }, [productId]);
+
 
     // Initialize image requests from productId if available
-    const initialImageRequests = productId?.imageResponses.map((image) => ({
+    const initialImageRequests = updatedProduct?.imageResponses.map((image) => ({
         id: image.id,
         imageUrl: image.imageUrl,
         isBluePrint: image.isBluePrint,
         isMainImage: image.isMainImage,
     })) || [];
+    console.log('initialImageRequests', initialImageRequests)
 
-    const initialAddImageRequests = [
-        {
-            imageUrl: "", // Chỉ cần khởi tạo các trường cần thiết, nếu không có giá trị thực tế
-            isBluePrint: false,
-            isMainImage: false,
-        },
-    ];
+    // State to manage image requests
+
+    console.log('imageRequests', imageRequests)
 
     // useForm hook for managing form state and validation
     const form = useForm({
@@ -88,18 +121,26 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
         }[]
     >([]);
 
-    // State to manage image requests
-    const [imageRequests, setImageRequests] = useState(initialImageRequests);
-    const [idsImageDelete, setIdsImageDelete] = useState<string[]>([]);
-  
+
+    const generateRandomString = (length: number = 5) => {
+        const characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let result = "";
+        const charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    };
+
     // Handle uploading new photos
     const handleUploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
 
         const validImageTypes = ['image/png', 'image/jpg', 'image/jpeg'];
-        const maxTotalSize = 1200000; // 1200 KB
+        const maxTotalSize = 2000000; // 2000 KB
 
-        let currentTotalSize = imageAddRequests.reduce((total, req: any) => total + req.file.size, 0);
+        let currentTotalSize = files.reduce((total, file) => total + file.size, 0);
 
         const newImageRequests = files.filter(file => {
             if (!validImageTypes.includes(file.type)) {
@@ -116,19 +157,35 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
             }
             currentTotalSize += file.size;
             return true;
-        }).map(file => ({
-            id: '',
-            file: file,
-            imageUrl: URL.createObjectURL(file),
-            isBluePrint: false,
-            isMainImage: false,
-        }));
+        }).map(file => {
+            const extension = file.name.substring(file.name.lastIndexOf("."));
+
+            const randomString = generateRandomString();
+            const date = new Date();
+            const year = date.getFullYear().toString();
+            const month = (date.getMonth() + 1).toString().padStart(2, "0");
+            const day = date.getDate().toString().padStart(2, "0");
+            const hour = date.getHours().toString().padStart(2, "0");
+            const minute = date.getMinutes().toString().padStart(2, "0");
+            const second = date.getSeconds().toString().padStart(2, "0");
+
+            const changedFileName = `images-${randomString}-${year}${month}${day}${hour}${minute}${second}${extension}`;
+            const newFile = new File([file], changedFileName, { type: file.type });
+
+            return {
+                file: newFile,
+                imageUrl: URL.createObjectURL(newFile),
+                isBluePrint: false,
+                isMainImage: false,
+                changedFileName: changedFileName,
+            };
+        });
 
         setImageRequests(prevImageRequests => [
             ...prevImageRequests,
             ...newImageRequests
         ]);
-        setImageAddRequests(prevImageRequests => [
+        setImageAddRequests((prevImageRequests: any) => [
             ...prevImageRequests,
             ...newImageRequests
         ]);
@@ -136,37 +193,27 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
             ...prevImageRequests,
             ...newImageRequests.map((item) => item.file)
         ]);
+        setNameImage((prevNameImage: any) => [
+            ...prevNameImage,
+            ...newImageRequests.map((item) => item.changedFileName)
+        ]);
     };
     const [removeImageIds, setRemoveImageIds] = useState<string[]>([]);
 
-    // const handleDeleteImage = (index:number,imageID: string) => {
-    //     setRemoveImageIds([...removeImageIds, imageID]);
-    //     setImageUrls((prevImageUrls: any) => prevImageUrls.filter((_: any, i: any) => i !== index));
-    // };
+
     // Handle deleting an image
-    const handleDeleteImage = (index:number,imageID: string) => {
-        setRemoveImageIds([...removeImageIds, imageID]);
+    const handleDeleteImage = (index: number, imageID: string) => {
+        if (imageID !== undefined) {
+            setRemoveImageIds([...removeImageIds, imageID]);
+        }
+
         setImageRequests((prevImageRequests) => {
-            const imageToDelete = prevImageRequests[index];
-            // Filter out the image at the specified index
             return prevImageRequests.filter((_, i) => i !== index);
         });
         setImageUrls((prevImageUrls: any) => prevImageUrls.filter((_: any, i: any) => i !== index));
     };
-    console.log('removeImageIds',removeImageIds)
-   
-    // const handleDeleteProducts = (productID: string) => {
-    //     setRemoveProductIds([...removeProductIds, productID]);
-    //     const updatedProductsRequest = updateProducts.filter(
-    //         (item) => item.productId !== productID
-    //     );
-    //     setUpdateProducts(updatedProductsRequest);
-    //     const updateProUpdate = getDetailsProUpdate.filter(
-    //         (item) => item.productId !== productID
-    //     );
-    //     setGetDetailsProUpdate(updateProUpdate);
-    //     toast.success("Đã xóa sản phẩm khỏi danh sách");
-    // };
+    console.log('removeImageIds', removeImageIds)
+
 
     // Handle toggling blueprint flag for an image
     const handleToggleBlueprint = (index: number) => {
@@ -206,30 +253,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
     };
 
 
-    const handelGetImage = async () => {
-        setLoading(true);
-        try {
-            const fileNames = imageUrls.map((imageUrl: any) => imageUrl.name);
 
-            const nameImagePromises = fileNames.map(async (fileName: any) => {
-                try {
-                    const { data } = await filesApi.getFile(fileName);
-                    return data.data; // Assuming data.data contains the image name
-                } catch (error) {
-                    console.error('Error getting file:', error);
-                    throw error;
-                }
-            });
-
-            const names = await Promise.all(nameImagePromises);
-            setNameImage(names);
-            console.log('Processed image names:', names);
-        } catch (error) {
-            console.error('Error getting image names:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
     const [isSubmitting, setIsSubmitting] = useState(false);
     // Handle form submission
     const onSubmit = async (formData: z.infer<typeof ProductUpdateSchema>) => {
@@ -239,10 +263,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
         try {
             await handlePostImage();
 
-            // Wait for `handelGetImage` to complete
-            await handelGetImage();
-
-            // Ensure `nameImage` has been updated
             const requestBody = {
                 id: formData.id,
                 code: formData.code,
@@ -256,10 +276,11 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
                     isBluePrint: image.isBluePrint,
                     isMainImage: image.isMainImage,
                 })),
-                removeImageIds: removeImageIds,
+                removeImageIds: removeImageIds === null ? removeImageIds : null,
             };
-            console.log('requestBody', requestBody);
-     
+            console.log('============requestBody', requestBody);
+
+            try {
                 const response = await productApi.updateProduct(requestBody, formData.id);
                 toast.success(response.data.message); // Assuming your API returns a message field in the response
                 console.log('Update Successful:', response);
@@ -268,28 +289,41 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
                     forceUpdate();
                     // window.location.href = '/dashboard/product';
                 }, 2000);
-              
-        } catch (error) {
+            } catch (error:any) {
+                if (error.response && error.response.data && error.response.data.message) {
+                    // Xử lý lỗi từ server
+                    toast.error(`Update error: ${error.response.data.message}`);
+                } else if (error.request) {
+                    // Xử lý lỗi khi không có phản hồi từ server
+                    toast.error('No response from server while updating. Please try again later.');
+                } else {
+                    // Xử lý các lỗi khác
+                    toast.error(`Unexpected error during update: ${error.message}`);
+                }
+                throw error; // Re-throw the error to stop further execution
+            }
+
+        } catch (error: any) {
             console.error('Error updating product:', error);
-            toast.error('Failed to update product');
         } finally {
             setLoading(false);
             setIsSubmitting(false); // Reset trạng thái submit
         }
     };
-    
-   
+
+
     useEffect(() => {
-    },[removeImageIds])
+    }, [removeImageIds])
 
     return (
         <Form {...form}>
             <Toaster />
             <div className="flex flex-col md:flex-row md:justify-between gap-4">
                 {/* Image upload/display section */}
+
+
                 <div className="md:w-[60%] flex items-center justify-between relative">
                     <div>
-                        {/* Show upload input if no images */}
                         {imageRequests.length < 1 && (
                             <div style={{ width: '100%', height: '100%' }}>
                                 <input
@@ -307,10 +341,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
                             </div>
                         )}
 
-                        {/* Display images if there are any */}
                         {imageRequests.length > 0 && (
                             <div className="relative w-full h-full">
-                                {/* phần hiển thị ảnh xem trước */}
                                 <ImageDisplay
                                     images={imageRequests}
                                     onDelete={handleDeleteImage}
@@ -318,7 +350,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
                                     onToggleMainImage={handleToggleMainImage}
                                 />
 
-                                {/* Phần add thêm image */}
                                 <input
                                     id='image'
                                     type='file'
@@ -334,6 +365,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId,setOpen1 }) =
                         )}
                     </div>
                 </div>
+
+
 
                 {/* Form input section */}
                 <form onSubmit={form.handleSubmit(onSubmit)} className="md:w-[40%]">
