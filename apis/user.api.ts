@@ -31,6 +31,18 @@ type userType = {
   isActive: boolean;
   companyId: string;
 };
+type userUpdateType = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  address: string;
+  roleId: number;
+  dob: string;
+  gender: string;
+  salaryByDay: number;
+  companyId: string;
+};
 
 export const userApi = {
   allUsers: (
@@ -144,4 +156,29 @@ export const userApi = {
         },
       }
     ),
+
+    userUpdate :(user:userUpdateType) =>
+      axiosClient.put<SuccessResponse<null>>(
+        `${endPointConstant.BASE_URL}/users`,
+        user,
+        {
+          cache: {
+            update: () => {
+              cacheIds.forEach((id) => {
+                axiosClient.storage.remove(id);
+              });
+              cacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
+  
+              // Xóa cache ID của getMaterial có cùng ID
+              const userCacheId = userCacheIds.get(user.id);
+              if (userCacheId) {
+                axiosClient.storage.remove(userCacheId);
+                userCacheIds.delete(user.id);
+                console.log("Removed materialCacheId:", userCacheId); // Log cache ID sau khi xóa
+              }
+            },
+          },
+        }
+      ),
+  
 };

@@ -34,7 +34,7 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const firstImage = row.original.imageResponses[0];
       return firstImage ? (
-        <Link href={`/dashboard/product/${row.original.id}`}>
+        <Link href={`/dashboard/products/product/${row.original.id}`} className="flex justify-center items-center">
           <div className="w-[50px] h-[50px] rounded-lg ">
             <Image
               src={`${firstImage.imageUrl}`}
@@ -140,10 +140,7 @@ export const columns: ColumnDef<Product>[] = [
       }
 
       return (
-        <div className="flex w-[100px] items-center">
           <span className={`${isInProcessing.value === true ? 'bg-slate-100' : ''} border px-2 py-1 rounded-full`}>{isInProcessing.label}</span>
-
-        </div>
       );
     },
   },

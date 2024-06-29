@@ -153,17 +153,7 @@ export default function RenderTableProduct() {
         <MyContext.Provider value={{ forceUpdate }}>
           <div className="flex items-center justify-end">
             <div className="flex items-center space-x-2">
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger>
-                  <Button variant="colorCompany" className="text-xs">
-                    <Plus className="block lg:hidden" /> <span className="hidden lg:block">Thêm sản phầm mới</span>
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-full md:max-w-[70%] min-h-[90%]">
-                  <DialogTitle className="hidden">ho</DialogTitle>
-                  <ProductForm setOpen={setOpen} />
-                </DialogContent>
-              </Dialog>
+              <ProductForm />
             </div>
           </div>
         </MyContext.Provider>
