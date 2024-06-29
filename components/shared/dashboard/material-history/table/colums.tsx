@@ -1,5 +1,6 @@
 "use client";
 
+import { filesApi } from "@/apis/files.api";
 import UpdateMaterialHistory from "@/components/shared/dashboard/material-history/update-material-history/update-material-history";
 import UpdateMaterial from "@/components/shared/dashboard/material/update-material/update-material";
 import { Button } from "@/components/ui/button";
@@ -31,15 +32,17 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => {
+    cell: async ({ row }) => {
+      const res = await filesApi.getFile(row.original.image as string);
+      const href = res.data.data;
       return (
         <div className="flex items-center space-x-2">
           <Image
             className="w-10 h-10 mr-2"
-            width={10}
-            height={10}
+            width={100}
+            height={100}
             src={
-              // row.original.image ||
+              href ||
               "https://images2.thanhnien.vn/528068263637045248/2024/1/25/e093e9cfc9027d6a142358d24d2ee350-65a11ac2af785880-17061562929701875684912.jpg"
             }
             alt={row.original.image}
