@@ -27,7 +27,7 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const firstImage = row.original.imageUrl;
       return firstImage ? (
-        <Link href={`/dashboard/set/${row.original.id}`}>
+        <Link href={`/dashboard/products/set/${row.original.id}`} className="flex justify-center items-center">
           <div className="w-[50px] h-[50px] rounded-lg ">
             <Image
               src={`${firstImage}`}

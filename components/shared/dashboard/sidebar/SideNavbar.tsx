@@ -67,16 +67,11 @@ export default function SideNavbar({}: Props) {
               },
               {
                 title: "Sản phẩm",
-                href: "/dashboard/product",
+                href: "/dashboard/products",
                 icon: PackageSearch,
                 variant: "ghost",
               },
-              {
-                title: "Đặt sản phẩm",
-                href: "/dashboard/set",
-                icon: PackagePlus ,
-                variant: "ghost",
-              },
+            
               {
                 title: "Vật liệu",
                 href: "/dashboard/material",

@@ -40,7 +40,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
                             <CardContent className="w-full h-full relative flex aspect-square items-center justify-center p-6 bg-black">
                                 <Image src={image.imageUrl} alt={`image-${index}`} width={500} height={500} className="h-full w-full object-contain bg-cover bg-center  bg-no-repeat  pointer-events-none" />
                             
-                                <HoverCard>
+                                {/* <HoverCard>
                                     <HoverCardTrigger className="absolute left-0 top-0 "><EllipsisVertical size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" /></HoverCardTrigger>
                                     <HoverCardContent align="start" className="w-full">
                                         <div className="grid gap-4">
@@ -62,7 +62,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
                                             </div>
                                         </div>
                                     </HoverCardContent>
-                                </HoverCard>
+                                </HoverCard> */}
 
                                
                             </CardContent>

@@ -22,14 +22,10 @@ import {
 } from "@/components/ui/select"
 
 
-import {
-    Dialog,
-    DialogContent,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+
 
 import { Textarea } from "@/components/ui/textarea";
+import * as Dialog from "@radix-ui/react-dialog";
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -37,7 +33,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { productApi } from "@/apis/product.api";
 
 // ** import icon
-import { ChevronLeft, PlusCircle, Upload } from "lucide-react";
+import { ChevronLeft, PencilLine, PlusCircle, Upload, X } from "lucide-react";
 
 // ** component 
 import ImageDisplayID from "./ImageDisplayID";
@@ -67,7 +63,13 @@ export const MyContext = createContext<ContexType>({
     forceUpdate: () => { },
 });
 export default function ProductIDPage() {
-
+    const [open, setOpen] = useState<boolean>(false);
+    const handleOffDialog = () => {
+        setOpen(false);
+    };
+    const handleOnDialog = () => {
+        setOpen(true);
+    };
     //state
     const [loading, setLoading] = useState<boolean>(false);
     const params = useParams<{ id: string }>()
@@ -109,32 +111,39 @@ export default function ProductIDPage() {
     return (
         <div className="flex flex-col gap-6 justify-center">
             <header className="">
-
                 <div className="flex items-center gap-4 justify-between">
-                    <Link href={'/dashboard/product'}>
+                    <Link href={'/dashboard/products/product'}>
                         <Button variant="outline" size="icon" className="h-7 w-7">
                             <ChevronLeft className="h-4 w-4" />
                             <span className="sr-only">Back</span>
                         </Button>
                     </Link>
-                    <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+                    <h1 className=" shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight ">
                         Sản phẩm
                     </h1>
-
-                    <div className="hidden items-center gap-2 md:ml-auto md:flex">
-                        <Dialog open={open1} onOpenChange={setOpen1}>
-                            <DialogTrigger>
-                                <Button variant={"colorCompany"} className="text-xs ">
-                                    Chỉnh sửa
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-full md:max-w-[70%] min-h-[90%]">
-                                <DialogTitle className="text-2xl text-primary-backgroudPrimary visible hidden">
-                                    Chỉnh sửa
-                                </DialogTitle>
-                                <ProductUpdateForm productId={productId} setOpen1={setOpen1} />
-                            </DialogContent>
-                        </Dialog>
+                    <div className=" items-center gap-2 md:ml-auto md:flex">
+                        <Dialog.Root open={open} onOpenChange={handleOnDialog}>
+                            <Dialog.Trigger className="rounded p-2 hover:bg-gray-200">
+                                <PencilLine onClick={handleOnDialog} />
+                            </Dialog.Trigger>
+                            <Dialog.Portal>
+                                <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
+                                    <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[900px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
+                                        <div className="bg-slate-100  flex flex-col ">
+                                            <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary  rounded-t-md">
+                                                <h2 className="text-2xl text-white">Chỉnh sửa bộ sản phẩm</h2>
+                                                <Button variant="outline" size="icon">
+                                                    <X className="w-4 h-4" onClick={handleOffDialog} />
+                                                </Button>
+                                            </div>
+                                            <div className="grid gap-4 p-4 overflow-y-auto h-[650px]">
+                                                <ProductUpdateForm productId={productId}  />
+                                            </div>
+                                        </div>
+                                    </Dialog.Content>
+                                </Dialog.Overlay>
+                            </Dialog.Portal>
+                        </Dialog.Root>
                     </div>
                 </div>
             </header >
@@ -203,9 +212,7 @@ export default function ProductIDPage() {
                             </CardContent>
                         </Card>
 
-                        <div className="flex items-center justify-center gap-2 md:hidden">
-                            <Button size="sm">Chỉnh sửa </Button>
-                        </div>
+
                     </div>
                 </div>
             </MyContext.Provider>
