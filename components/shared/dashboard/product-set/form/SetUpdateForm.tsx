@@ -44,7 +44,7 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { string, z } from "zod";
 import { useFormStatus } from "react-dom";
 
 import { SetUpdateSchema } from "@/schema/set";
@@ -331,19 +331,30 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
 
     // ** hàm thêm vào danh sách sản phẩm
     const handleAddProducts = (product: any) => {
-        console.log("product", product);
+        console.warn("product", product.id);
         setSearchTerm("");
+
+        //kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
+        const exstingDetailProUpdate = getDetailsProUpdate.some(
+            (item) => item.productId === product.id
+        )
+
+        if (exstingDetailProUpdate) {
+          return   toast.error("Sản phẩm đã tồn tại")
+        } 
 
         // Kiểm tra xem sản phẩm đã có trong danh sách getDetailsPro chưa
         const existingDetailProduct = getDetailsPro.find(
             (item) => item.id === product.id
         );
 
+
         if (!existingDetailProduct) {
             // Nếu chưa có, thêm sản phẩm vào danh sách getDetailsPro
             const updatedDetailsPro = [...getDetailsPro, product];
             setGetDetailsPro(updatedDetailsPro);
         }
+
 
         // Kiểm tra xem sản phẩm đã có trong danh sách productsRequest chưa
         const existingProduct = productsRequest.find(
@@ -365,6 +376,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
                 { productId: product.id, quantity: 1 },
             ]);
         }
+
+
     };
 
     // ** hàm xóa khỏi danh sách sản phẩm
@@ -449,16 +462,17 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
             update: updateProducts,
             removeProductIds: removeProductIds,
         };
-    
+
         try {
             console.log("requestBody", requestBody);
             const response = await setApi.updateSet(requestBody, setProductId.id);
             console.log("Update Successful:", response);
-            
+
             // Display success message and redirect after 2 seconds
             toast.success(response.data.message);
             setTimeout(() => {
                 // window.location.href = "/dashboard/set";
+                setOpen(false)
             }, 2000);
         } catch (error) {
             console.error("Error updating set:", error);
@@ -479,14 +493,14 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
                     <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[900px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
-                        <div className="bg-slate-100  flex flex-col overflow-y-auto">
+                        <div className="bg-slate-100  flex flex-col ">
                             <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary  rounded-t-md">
                                 <h2 className="text-2xl text-white">Chỉnh sửa bộ sản phẩm</h2>
-                                <Button variant="outline" size="icon">
-                                    <X className="w-4 h-4" onClick={handleOffDialog} />
+                                <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                                    <X className="w-4 h-4"  />
                                 </Button>
                             </div>
-                            <div className="grid gap-4 p-4">
+                            <div className="grid gap-4 p-4 overflow-y-auto h-[750px]">
                                 <Form {...form}>
                                     <form
                                         onSubmit={form.handleSubmit(onSubmit)}
@@ -740,15 +754,15 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
                                                                             key={index}
                                                                         >
                                                                             <div className="flex  gap-4">
-                                                                                {/* <Image
+                                                                                <Image
                                                                                     alt="ảnh mẫu"
                                                                                     className="w-[100px] h-[100px] object-cover"
                                                                                     width={900}
                                                                                     height={900}
                                                                                     src={
-                                                                                        product?.imageResponses[0].imageUrl
+                                                                                        product?.imageUrl
                                                                                     }
-                                                                                /> */}
+                                                                                />
 
 
                                                                                 <div className="font-medium dark:text-white">

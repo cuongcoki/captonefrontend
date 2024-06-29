@@ -161,27 +161,23 @@ export default function SetProduct({ setProduct }: SetProductProps) {
                                                     <div className="w-[100px]"><span className="text-xl font-medium"></span></div>
                                                     <div className="space-y-1">
                                                         <Label htmlFor="username">Tên</Label>
-                                                        <Input id="username" defaultValue={selectedProduct?.product.name} />
+                                                        <div className="border p-2 rounded-md border-gray-100">{selectedProduct?.product.name}</div>
                                                     </div>
                                                     <div className="space-y-1">
                                                         <Label htmlFor="username">Mã Code</Label>
-                                                        <Input id="username" defaultValue={selectedProduct?.product.code} />
+                                                        <div className="border p-2 rounded-md border-gray-100">{selectedProduct?.product.code}</div>
                                                     </div>
                                                     <div className="space-y-1">
                                                         <Label htmlFor="username">Giá</Label>
-                                                        <Input id="username" defaultValue={selectedProduct?.product.price} />
+                                                        <div className="border p-2 rounded-md border-gray-100">{selectedProduct?.product.price}</div>
                                                     </div>
                                                     <div className="space-y-1">
                                                         <Label htmlFor="username">Kích thước</Label>
-                                                        <Input id="username" defaultValue={selectedProduct?.product.size} />
+                                                        <div className="border p-2 rounded-md border-gray-100">{selectedProduct?.product.size}</div>
                                                     </div>
                                                     <div className="space-y-1">
                                                         <Label htmlFor="description">Mô tả</Label>
-                                                        <Textarea
-                                                            id="description"
-                                                            className="min-h-28"
-                                                            defaultValue={selectedProduct?.product.description}
-                                                        />
+                                                        <div className="border p-2 rounded-md border-gray-100">{selectedProduct?.product.description}</div>
                                                     </div>
                                                     {/* <div className="space-y-1">
                                                         <Label htmlFor="username">Kích thước</Label>

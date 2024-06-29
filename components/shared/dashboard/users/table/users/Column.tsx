@@ -63,10 +63,9 @@ export const columns: ColumnDef<Employee>[] = [
         CMND/CCCD
       </Button>
     ),
-    cell: ({ row }) => <Link href={`/profile/${row.getValue("id")}`}><div className="w-[80px]">{row.getValue("id")}</div></Link>,
-    enableSorting: false,
-    enableHiding: false,
+    cell: ({ row }) => <Link href={`/profile/${row.getValue("id")}`}><div >{row.getValue("id")}</div></Link>,
   },
+
   {
     accessorKey: "firstName",
     header: ({ column }) => {
@@ -125,10 +124,7 @@ export const columns: ColumnDef<Employee>[] = [
       }
 
       return (
-        <div className="flex w-[100px] items-center">
-
           <span>{gender.label}</span>
-        </div>
       )
     },
 
@@ -179,10 +175,7 @@ export const columns: ColumnDef<Employee>[] = [
       }
 
       return (
-        <div className="flex w-[100px] items-center">
-
           <span>{role.label}</span>
-        </div>
       )
     },
     filterFn: (row, id, value) => {
@@ -199,8 +192,17 @@ export const columns: ColumnDef<Employee>[] = [
         <Button
           variant="ghost"
         >
-          Lường ngày
+          Lương ngày
         </Button>
+      )
+    },
+    cell: ({ row }) => {
+   
+      const formatCurrency = (amount:any) => {
+        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+      };
+      return (
+          <span><i className="text-primary-backgroudPrimary">{formatCurrency(row.original.salaryByDay)}</i></span>
       )
     },
   },
@@ -239,10 +241,7 @@ export const columns: ColumnDef<Employee>[] = [
       }
 
       return (
-        <div className="flex w-[100px] items-center">
-
           <span>{isactive.label}</span>
-        </div>
       )
     },
   },

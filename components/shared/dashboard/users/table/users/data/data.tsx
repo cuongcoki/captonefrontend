@@ -22,16 +22,49 @@ export const isActive = [
   },
 
 ]
-
+const enumRole = [
+  {
+      id: 1,
+      RoleName: "MAIN_ADMIN"
+  },
+  {
+      id: 2,
+      RoleName: "BRANCH_ADMIN"
+  },
+  {
+      id: 3,
+      RoleName: "COUNTER"
+  },
+  {
+      id: 4,
+      RoleName: "DRIVER"
+  },
+  {
+      id: 5,
+      RoleName: "USER"
+  }
+]
 
 export const Role = [
   {
     value: 1,
-    label: 'admin',
+    label: 'CHỦ',
   },
   {
     value: 2,
-    label: "staff",
+    label: "QUẢN TRỊ CHI NHÁNH",
+  },
+  {
+    value: 3,
+    label: "NGƯỜI ĐẾM SẢN PHẨM",
+  },
+  {
+    value: 4,
+    label: "NGƯỜI VẬN CHUYỂN",
+  },
+  {
+    value: 5,
+    label: "NHÂN VIÊN",
   },
 
 ]

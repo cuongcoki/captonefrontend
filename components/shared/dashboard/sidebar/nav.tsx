@@ -69,7 +69,9 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         variant:
                           link.href === pathname ||
                           pathname.includes(`${link.href}/history`) ||
-                          pathname.includes(`${link.href}/manage`)
+                          pathname.includes(`${link.href}/manage`)  ||
+                          pathname.includes(`${link.href}/set`) ||
+                          pathname.includes(`${link.href}/product`) 
                             ? "colorCompany"
                             : "ghost",
                         size: "icon",
@@ -100,13 +102,17 @@ export function Nav({ links, isCollapsed }: NavProps) {
                       pathname === pathname
                         ? link.href === pathname ||
                           pathname.includes(`${link.href}/history`) ||
-                          pathname.includes(`${link.href}/manage`)
+                          pathname.includes(`${link.href}/manage`) ||
+                          pathname.includes(`${link.href}/set`) ||
+                          pathname.includes(`${link.href}/product`) 
                           ? "colorCompany"
                           : "ghost"
                         : pathname === pathname
                         ? link.href === pathname ||
                           pathname.includes(`${link.href}/history`) ||
-                          pathname.includes(`${link.href}/manage`)
+                          pathname.includes(`${link.href}/manage`) ||
+                          pathname.includes(`${link.href}/set`) ||
+                          pathname.includes(`${link.href}/product`) 
                           ? "colorCompany"
                           : "ghost"
                         : null,
