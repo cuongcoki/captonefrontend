@@ -40,7 +40,7 @@ export const companyApi = {
       }
     );
   },
-  updateCompany: (id: string, requestBody: UpdateCompanyBody) => {
+  updateCompany: (requestBody: UpdateCompanyBody) => {
     return axiosClient.put(
       `${endPointConstant.BASE_URL}/companies`,
       requestBody,

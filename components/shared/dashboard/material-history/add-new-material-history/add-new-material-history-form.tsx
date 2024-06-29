@@ -76,6 +76,7 @@ export default function AddNewMeterialHistoryForm() {
       })
       .then(() => {
         toast.success("Thêm mới lịch sử nhập hàng thành công");
+        form.reset();
         ForceRender();
       });
   };

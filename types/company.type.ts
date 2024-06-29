@@ -1,12 +1,19 @@
 import { SearchResponse, SuccessResponse } from "@/types/util.type";
 
+export type CompanyParams = {
+  searchParams: {
+    name: string;
+    companyType: string;
+    pageIndex: number;
+  };
+};
 export type CompanyRequest = {
   name: string;
   address: string;
   directorName: string;
   directorPhone: string;
   email: string;
-  companyType: 0;
+  companyType: number;
 };
 
 export type CompanyResponse = {
@@ -27,11 +34,11 @@ export type SearchCompanyBody = {
   PhoneNumber: string;
   Email: string;
   DirectorName: string;
-  CompanyType: string;
+  // CompanyType: string;
   PageIndex: number;
   PageSize: number;
 };
-export type SearchCompanyResponse = SearchResponse<CompanyResponse>;
+export type SearchCompanyResponse = SearchResponse<CompanyResponse[]>;
 
 export type CreateCompanyBody = {
   companyRequest: CompanyRequest;

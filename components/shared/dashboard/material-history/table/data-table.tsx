@@ -162,7 +162,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
     <div>
       <div className="py-4 grid grid-row-3 md:grid-cols-2 xl:grid-cols-3">
         <Input
-          placeholder="Filter name..."
+          placeholder="Tìm theo tên vật liệu..."
           className="max-w-sm shadow-sm"
           value={searchParams.searchTerm}
           onChange={(event) => {
@@ -293,7 +293,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
             </TableBody>
           </Table>
         </MaterialHistoryContext.Provider>
-        <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
           <Button
             variant="outline"
             size="sm"

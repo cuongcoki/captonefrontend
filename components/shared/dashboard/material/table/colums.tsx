@@ -28,13 +28,10 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <div>
           Tên vật liệu
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
+        </div>
       );
     },
     cell: async ({ row }) => {

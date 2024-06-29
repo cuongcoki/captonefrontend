@@ -102,6 +102,7 @@ export default function AddNewMeterialForm() {
       .then(({ data }) => {
         if (data.isSuccess) {
           toast.success(data.message);
+          form.reset();
           forceUpdate();
         }
       })

@@ -1,0 +1,15 @@
+import { z } from "zod";
+
+export const companyAddSchema = z.object({
+  name: z.string().min(1, "Tên công ty không được để trống"),
+  address: z.string().min(1, "Địa chỉ không được để trống"),
+  directorName: z.string().min(1, "Tên giám đốc không được để trống"),
+  directorPhone: z
+    .string()
+    .min(1, "Số điện thoại không được để trống")
+    .regex(/^\d{10,11}$/, "Số điện thoại không hợp lệ"),
+  email: z.string().email("Email không hợp lệ"),
+  companyType: z.string().min(1, "Loại công ty không được để trống"),
+});
+
+export type CompanyAddSchemaType = z.infer<typeof companyAddSchema>;
