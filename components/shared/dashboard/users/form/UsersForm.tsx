@@ -524,7 +524,7 @@ export const UsersForm = () => {
                                       <SelectContent>
                                         {
                                           company.map((item) => (
-                                            <SelectItem value={item.id}>
+                                            <SelectItem value={item.id} key={item.id}>
                                               {item.name}
                                             </SelectItem>
                                           ))

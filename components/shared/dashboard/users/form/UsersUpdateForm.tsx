@@ -561,7 +561,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                                                             <SelectContent>
                                                                                 {
                                                                                     company.map((item) => (
-                                                                                        <SelectItem value={item.id}>
+                                                                                        <SelectItem value={item.id} key={item.id}>
                                                                                             {item.name}
                                                                                         </SelectItem>
                                                                                     ))

@@ -75,7 +75,7 @@ export default function TableUserFeature({ searchOptions, roles }: Props) {
         <SelectContent>
           {
             roles.map((item:any) => (
-              <SelectItem value={item.id}>{item.decription}</SelectItem>
+              <SelectItem value={item.id} key={item.id}>{item.decription}</SelectItem>
             ))
           }
         </SelectContent>
