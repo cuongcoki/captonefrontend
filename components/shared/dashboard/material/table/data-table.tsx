@@ -120,7 +120,7 @@ export function DataTableForMaterial<TData, TValue>({
     <div>
       <div className="flex flex-col sm:flex-row justify-center items-center py-4">
         <Input
-          placeholder="Filter name..."
+          placeholder="Tìm theo tên vật liệu..."
           value={searchTerm}
           onChange={(event) => {
             setPageIndex(1);

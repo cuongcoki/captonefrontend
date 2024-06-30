@@ -69,29 +69,29 @@ const enumRole = [
   {
     roleName: "COUNTER",
     decription: "Quản lý số lượng",
-    id: "3"
+    id: "3",
   },
   {
     roleName: "DRIVER",
     decription: "Người vận chuyển",
-    id: "4"
+    id: "4",
   },
   {
     roleName: "USER",
     decription: "Nhân viên",
-    id: "5"
+    id: "5",
   },
   {
     roleName: "BRANCH_ADMIN",
     decription: "Quản lý cơ sở",
-    id: "2"
+    id: "2",
   },
   {
     roleName: "MAIN_ADMIN",
     decription: "Quản lý hệ thống",
-    id: "1"
-  }
-]
+    id: "1",
+  },
+];
 
 export const UsersForm = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -104,14 +104,13 @@ export const UsersForm = () => {
 
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [company, setCompany] = useState<Company[]>([]);
   const [imageRequests, setImageRequests] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<File | null>(null);
   const [nameImage, setNameImage] = useState<string | null>(null);
-
 
   // ** Hooks
   const router = useRouter();
@@ -168,8 +167,7 @@ export const UsersForm = () => {
       const newFile = new File([file], changedFileName, { type: file.type });
       setImageUrls(newFile);
       setNameImage(changedFileName);
-      console.log('imageUrls', imageUrls)
-
+      console.log("imageUrls", imageUrls);
     }
   };
 
@@ -181,13 +179,13 @@ export const UsersForm = () => {
   // ** Xử lý khi đăng ảnh
   const handlePostImage = async () => {
     if (!imageUrls) {
-      console.error('No image selected');
+      console.error("No image selected");
       return;
     }
 
     setLoading(true);
     const formData = new FormData();
-    formData.append('receivedFiles', imageUrls); // Đảm bảo rằng tên trường tương ứng với server và chỉ đăng một ảnh
+    formData.append("receivedFiles", imageUrls); // Đảm bảo rằng tên trường tương ứng với server và chỉ đăng một ảnh
 
     try {
       const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
@@ -200,7 +198,7 @@ export const UsersForm = () => {
       // const names = data.data;
       // setNameImage(fileName);
     } catch (error) {
-      console.error('Error uploading files:', error);
+      console.error("Error uploading files:", error);
       // Xử lý lỗi khi tải lên không thành công
     } finally {
       setLoading(false);
@@ -209,11 +207,15 @@ export const UsersForm = () => {
 
   useEffect(() => {
     const fetchCompanyData = async () => {
-      const { data } = await orderApi.getAllCompanis(currentPage, pageSize, searchTerm);
+      const { data } = await orderApi.getAllCompanis(
+        currentPage,
+        pageSize,
+        searchTerm
+      );
       setCompany(data.data.data);
-    }
+    };
     fetchCompanyData();
-  }, [])
+  }, []);
 
   const onSubmit = (data: z.infer<typeof UsersSchema>) => {
     const {
@@ -268,18 +270,20 @@ export const UsersForm = () => {
 
   const formatCurrency = (value: any) => {
     if (!value) return value;
-    const number = Number(value.replace(/[^0-9]/g, ''));
-    return new Intl.NumberFormat('vi-VN').format(number);
+    const number = Number(value.replace(/[^0-9]/g, ""));
+    return new Intl.NumberFormat("vi-VN").format(number);
   };
 
-  const [formattedValue, setFormattedValue] = useState('');
+  const [formattedValue, setFormattedValue] = useState("");
 
   const onChangeHandler = (e: any) => {
     const value = e.target.value;
-    const numericValue = value.replace(/[^0-9]/g, '');
+    const numericValue = value.replace(/[^0-9]/g, "");
     const formatted = formatCurrency(numericValue);
     setFormattedValue(formatted);
-    form.setValue('salaryByDay', Number(numericValue), { shouldValidate: true });
+    form.setValue("salaryByDay", Number(numericValue), {
+      shouldValidate: true,
+    });
   };
 
   return (
@@ -293,7 +297,7 @@ export const UsersForm = () => {
             <div className="bg-slate-100  flex flex-col ">
               <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary  ">
                 <h2 className="text-2xl text-white">Thêm nhân viên</h2>
-                <Button variant="outline" size="icon" onClick={handleOffDialog} >
+                <Button variant="outline" size="icon" onClick={handleOffDialog}>
                   <X className="w-4 h-4" />
                 </Button>
               </div>
@@ -311,15 +315,23 @@ export const UsersForm = () => {
                             {imageRequests === null ? (
                               <div className="w-full h-full flex justify-center items-center">
                                 <input
-                                  id='image'
-                                  type='file'
-                                  style={{ display: 'none' }}
-                                  accept='image/*'
-                                  onChange={e => handleUploadPhoto(e)}
+                                  id="image"
+                                  type="file"
+                                  style={{ display: "none" }}
+                                  accept="image/*"
+                                  onChange={(e) => handleUploadPhoto(e)}
                                 />
-                                <label htmlFor='image' className="flex flex-col items-center cursor-pointer">
-                                  <Upload size={70} className="text-white bg-primary-backgroudPrimary rounded-md p-5 mb-2" />
-                                  <span className="text-l text-gray-500 font-medium">Hãy tải ảnh lên</span>
+                                <label
+                                  htmlFor="image"
+                                  className="flex flex-col items-center cursor-pointer"
+                                >
+                                  <Upload
+                                    size={70}
+                                    className="text-white bg-primary-backgroudPrimary rounded-md p-5 mb-2"
+                                  />
+                                  <span className="text-l text-gray-500 font-medium">
+                                    Hãy tải ảnh lên
+                                  </span>
                                 </label>
                               </div>
                             ) : (
@@ -387,7 +399,10 @@ export const UsersForm = () => {
                                       <InputOTP maxLength={12} {...field}>
                                         <InputOTPGroup>
                                           {[...Array(12)].map((_, index) => (
-                                            <InputOTPSlot key={index} index={index} />
+                                            <InputOTPSlot
+                                              key={index}
+                                              index={index}
+                                            />
                                           ))}
                                         </InputOTPGroup>
                                       </InputOTP>
@@ -408,17 +423,24 @@ export const UsersForm = () => {
                                         Vai trò nào *
                                       </FormLabel>
                                       <Select
-                                        onValueChange={(value) => field.onChange(Number(value))}
+                                        onValueChange={(value) =>
+                                          field.onChange(Number(value))
+                                        }
                                         defaultValue={String(field.value)}
                                       >
                                         <FormControl>
                                           <SelectTrigger>
-                                            <SelectValue defaultValue={String(field.value)} />
+                                            <SelectValue
+                                              defaultValue={String(field.value)}
+                                            />
                                           </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
                                           {enumRole.map((item, index) => (
-                                            <SelectItem value={String(item.id)} key={index}>
+                                            <SelectItem
+                                              value={String(item.id)}
+                                              key={index}
+                                            >
                                               {item.decription}
                                             </SelectItem>
                                           ))}
@@ -436,7 +458,6 @@ export const UsersForm = () => {
 
                       <Card>
                         <CardContent>
-
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* address */}
                             <FormField
@@ -489,7 +510,12 @@ export const UsersForm = () => {
                                       Lương ngày *
                                     </FormLabel>
                                     <FormControl>
-                                      <Input type="text" {...field} value={formattedValue} onChange={onChangeHandler} />
+                                      <Input
+                                        type="text"
+                                        {...field}
+                                        value={formattedValue}
+                                        onChange={onChangeHandler}
+                                      />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
@@ -515,20 +541,19 @@ export const UsersForm = () => {
                                         <SelectTrigger>
                                           <SelectValue
                                             placeholder="Hãy chọn cơ sở"
-                                            defaultValue={
-                                              field.value
-                                            }
+                                            defaultValue={field.value}
                                           />
                                         </SelectTrigger>
                                       </FormControl>
                                       <SelectContent>
-                                        {
-                                          company.map((item) => (
-                                            <SelectItem value={item.id} key={item.id}>
-                                              {item.name}
-                                            </SelectItem>
-                                          ))
-                                        }
+                                        {company.map((item) => (
+                                          <SelectItem
+                                            value={item.id}
+                                            key={item.id}
+                                          >
+                                            {item.name}
+                                          </SelectItem>
+                                        ))}
                                       </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -549,7 +574,11 @@ export const UsersForm = () => {
                                     Ngày sinh
                                   </FormLabel>
                                   <FormControl>
-                                    <Input type="text" placeholder="DD/MM/YYYY" {...field} />
+                                    <Input
+                                      type="text"
+                                      placeholder="DD/MM/YYYY"
+                                      {...field}
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -595,13 +624,17 @@ export const UsersForm = () => {
                                       <FormControl>
                                         <RadioGroupItem value="Male" />
                                       </FormControl>
-                                      <FormLabel className="font-normal">Nam</FormLabel>
+                                      <FormLabel className="font-normal">
+                                        Nam
+                                      </FormLabel>
                                     </FormItem>
                                     <FormItem className="flex items-center space-x-2">
                                       <FormControl>
                                         <RadioGroupItem value="Female" />
                                       </FormControl>
-                                      <FormLabel className="font-normal">Nữ</FormLabel>
+                                      <FormLabel className="font-normal">
+                                        Nữ
+                                      </FormLabel>
                                     </FormItem>
                                   </RadioGroup>
                                 </FormControl>
@@ -611,10 +644,7 @@ export const UsersForm = () => {
                           />
                         </CardContent>
                       </Card>
-
                     </div>
-
-
 
                     <Separator className="h-1 my-4" />
                     <Button
@@ -634,5 +664,3 @@ export const UsersForm = () => {
     </Dialog.Root>
   );
 };
-
-
