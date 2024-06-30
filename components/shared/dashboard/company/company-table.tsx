@@ -33,7 +33,7 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
     setForceUpdate((prev) => prev + 1);
   };
   const handleChangeCompanyType = (value: string) => {
-    if (value === params.companyType) {
+    if (value === "-1") {
       setParams((prev) => {
         return { ...prev, companyType: "" };
       });
@@ -52,7 +52,7 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
         PhoneNumber: "",
         Email: "",
         DirectorName: "",
-        // CompanyType: searchParams.companyType,
+        CompanyType: params.companyType,
         PageIndex: params.pageIndex,
         PageSize: 10,
       })
@@ -103,6 +103,9 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
               </SelectItem>
               <SelectItem className="hover:bg-gray-100" value="2">
                 Công ty hợp tác sản xuất
+              </SelectItem>
+              <SelectItem className="hover:bg-gray-100" value="-1">
+                Bỏ chọn
               </SelectItem>
             </SelectContent>
           </Select>

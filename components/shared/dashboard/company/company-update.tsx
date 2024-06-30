@@ -47,12 +47,12 @@ export default function CompanyUpdate({
   const form = useForm<CompanyAddSchemaType>({
     resolver: zodResolver(companyAddSchema),
     defaultValues: {
-      name: tableData[index].name,
-      address: tableData[index].address,
-      directorName: tableData[index].directorName,
-      directorPhone: tableData[index].directorPhone,
-      email: tableData[index].email,
-      companyType: tableData[index].companyType.toString(),
+      name: tableData[index].name.trim(),
+      address: tableData[index].address.trim(),
+      directorName: tableData[index].directorName.trim(),
+      directorPhone: tableData[index].directorPhone.trim(),
+      email: tableData[index].email?.trim(),
+      companyType: tableData[index].companyType.toString().trim(),
     },
   });
   const onSubmit = (data: CompanyAddSchemaType) => {
@@ -96,7 +96,7 @@ export default function CompanyUpdate({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[30vw]">
         <DialogHeader>
-          <DialogTitle>Thêm mới công ty</DialogTitle>
+          <DialogTitle>Thông tin công ty</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -110,7 +110,7 @@ export default function CompanyUpdate({
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="name" className="text-left">
-                          Tên công ty
+                          Tên công ty*
                         </Label>
                         <Input
                           id="name"
@@ -133,7 +133,7 @@ export default function CompanyUpdate({
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="address" className="text-left">
-                          Địa chỉ
+                          Địa chỉ*
                         </Label>
                         <Input
                           id="address"
@@ -156,7 +156,7 @@ export default function CompanyUpdate({
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="directorName" className="text-left">
-                          Tên giám đốc
+                          Tên giám đốc*
                         </Label>
                         <Input
                           id="directorName"
@@ -179,7 +179,7 @@ export default function CompanyUpdate({
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="directorPhone" className="text-left">
-                          Số điện thoại
+                          Số điện thoại*
                         </Label>
                         <Input
                           id="directorPhone"
@@ -224,7 +224,7 @@ export default function CompanyUpdate({
                   <FormItem>
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label htmlFor="companyType" className="text-left">
-                        Loại công ty
+                        Loại công ty*
                       </Label>
                       <div className="col-span-3">
                         <Select

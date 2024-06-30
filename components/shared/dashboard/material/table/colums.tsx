@@ -57,13 +57,14 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
       );
     },
   },
-  {
-    accessorKey: "unit",
-    header: "Đơn vị",
-  },
+
   {
     accessorKey: "quantityPerUnit",
     header: "Số lượng mỗi đơn vị",
+  },
+  {
+    accessorKey: "unit",
+    header: "Đơn vị",
   },
   {
     accessorKey: "description",
@@ -71,7 +72,7 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
   },
   {
     accessorKey: "quantityInStock",
-    header: "Số lượng",
+    header: "Số lượng trong kho",
   },
   {
     id: "actions",

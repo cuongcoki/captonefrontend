@@ -34,7 +34,7 @@ export type SearchCompanyBody = {
   PhoneNumber: string;
   Email: string;
   DirectorName: string;
-  // CompanyType: string;
+  CompanyType: string;
   PageIndex: number;
   PageSize: number;
 };

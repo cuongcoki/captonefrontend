@@ -8,7 +8,7 @@ export const companyAddSchema = z.object({
     .string()
     .min(1, "Số điện thoại không được để trống")
     .regex(/^\d{10,11}$/, "Số điện thoại không hợp lệ"),
-  email: z.string().email("Email không hợp lệ"),
+  email: z.string().email("Email không hợp lệ").or(z.literal("")),
   companyType: z.string().min(1, "Loại công ty không được để trống"),
 });
 

@@ -7,7 +7,7 @@ import { DataTablePagination } from "./data-table-pagination";
 import { useEffect, useState, createContext } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Plus } from "lucide-react";
 import { UsersForm } from "../../form/UsersForm";
 
 import {
@@ -29,7 +29,7 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => { },
+  forceUpdate: () => {},
 });
 
 export default function RenderTableUsers({ searchParams }: Props) {
@@ -59,11 +59,10 @@ export default function RenderTableUsers({ searchParams }: Props) {
         setTotalPages(res.data.data.totalPages);
         console.log("Response:", res);
       } catch (error: any) {
-        console.error('Error fetching user data:',);
+        console.error("Error fetching user data:");
         if (error?.response.data.status === 400) {
           toast.error(error?.response.data.message);
         }
-
       } finally {
         setLoading(false);
       }
@@ -74,11 +73,9 @@ export default function RenderTableUsers({ searchParams }: Props) {
 
   // console.log("Data:", data);
 
-
   return (
     <div className="px-3 ">
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
-
         <div className="w-full md:w-auto mb-4 md:mb-0">
           <MyContext.Provider value={{ forceUpdate }}>
             <TableUserFeature searchOptions={searchParams} />
@@ -91,9 +88,10 @@ export default function RenderTableUsers({ searchParams }: Props) {
               <div className="flex items-center space-x-2">
                 <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger>
-                    <Button variant={"colorCompany"} className="text-xs w-full hidden md:block">
-                      Thêm nhân viên mới
-                    </Button>
+                    <div className="p-2 bg-[#004b24] flex items-center text-white rounded-md">
+                      <Plus />
+                      Thêm mới
+                    </div>
                   </DialogTrigger>
                   <DialogContent className="w-full min-w-[90%] md:min-w-[70%]">
                     <DialogTitle className="text-2xl text-primary-backgroudPrimary">
@@ -107,7 +105,6 @@ export default function RenderTableUsers({ searchParams }: Props) {
             </div>
           </div>
         </MyContext.Provider>
-
       </div>
       <MyContext.Provider value={{ forceUpdate }}>
         <>
@@ -123,9 +120,10 @@ export default function RenderTableUsers({ searchParams }: Props) {
       <div className="w-full py-3 md:hidden">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger>
-            <Button variant={"colorCompany"} className="text-xs ">
-              Thêm nhân viên mới
-            </Button>
+            <div className="p-2 bg-[#004b24] flex items-center text-white rounded-md">
+              <Plus />
+              Thêm mới
+            </div>
           </DialogTrigger>
           <DialogContent className="w-full min-w-[90%] md:min-w-[70%]">
             <DialogTitle className="text-2xl text-primary-backgroudPrimary">
