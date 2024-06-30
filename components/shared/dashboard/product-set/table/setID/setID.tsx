@@ -67,29 +67,29 @@ export default function SetIDPage() {
         const fetchDataProductId = async () => {
             setLoading(true);
             try {
-              const res = await setApi.getSetId(params.id);
-              const userData = res.data.data;
-              setSetId(userData);
-              setSetProduct(userData.setProducts);
-        
-              // Assuming userData.imageUrl contains the image file name or URL
-              const { data } = await filesApi.getFile(userData.imageUrl);
-              // Process data as needed, e.g., set state with image data
-            
-              setLinkImg(data.data)
+                const res = await setApi.getSetId(params.id);
+                const userData = res.data.data;
+                setSetId(userData);
+                setSetProduct(userData.setProducts);
+
+                // Assuming userData.imageUrl contains the image file name or URL
+                const { data } = await filesApi.getFile(userData.imageUrl);
+                // Process data as needed, e.g., set state with image data
+
+                setLinkImg(data.data)
             } catch (error) {
-              console.error('Error fetching user data:', error);
+                console.error('Error fetching user data:', error);
             } finally {
-              setLoading(false);
+                setLoading(false);
             }
-          };
-           
+        };
+
 
         fetchDataProductId()
 
     }, [params.id])
 
-console.log('linkImg',linkImg);
+    console.log('linkImg', linkImg);
     // console.log('id setIdsetIdsetId', setId)
     // console.log('setProduct', setProduct)
 
@@ -97,15 +97,18 @@ console.log('linkImg',linkImg);
     return (
         <div className="flex flex-col gap-6 justify-center">
             <header className="">
-                <div className="flex items-center gap-4">
-                    <Link href={'/dashboard/set'}>
+                <div className="flex items-center gap-4 justify-between">
+                    <Link href={'/dashboard/products/set'}>
                         <Button variant="outline" size="icon" className="h-7 w-7">
                             <ChevronLeft className="h-4 w-4" />
                             <span className="sr-only">Back</span>
                         </Button>
                     </Link>
-                    <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">Đặt sản phẩm</h1>
-                    <div className="hidden items-center gap-2 md:ml-auto md:flex">
+                    {/* className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0" */}
+                    <h1 className=" shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight ">
+                        Đặt sản phẩm
+                    </h1>
+                    <div className=" items-center gap-2 md:ml-auto md:flex">
                         <SetUpdateForm setId={setId.id} />
                     </div>
                 </div>
@@ -121,30 +124,18 @@ console.log('linkImg',linkImg);
                             <div className="grid gap-6">
                                 <div className="grid gap-3">
                                     <Label htmlFor="name">Mã Code</Label>
-                                    <Input
-                                        id="name"
-                                        type="text"
-                                        className="w-full"
-                                        defaultValue={setId?.code}
-                                    />
+                                    <div className="border p-2 rounded-md border-gray-100">{setId?.code}</div>
+
                                 </div>
                                 <div className="grid gap-3">
                                     <Label htmlFor="name">Tên</Label>
-                                    <Input
-                                        id="name"
-                                        type="text"
-                                        className="w-full"
-                                        defaultValue={setId?.name}
-                                    />
+                                    <div className="border p-2 rounded-md border-gray-100">{setId?.name}</div>
                                 </div>
                                 <div className="grid gap-3">
                                     <Label htmlFor="description">Mô tả</Label>
-                                    <Textarea
-                                        id="description"
-                                        className="min-h-32"
-                                        defaultValue={setId?.description}
-
-                                    />
+                                    <div className="border p-2 rounded-md border-gray-100">
+                                        {setId?.description}
+                                    </div>
                                 </div>
                             </div>
                         </CardContent>
@@ -160,13 +151,23 @@ console.log('linkImg',linkImg);
                         </CardHeader>
                         <CardContent>
                             <div className="grid gap-2">
-                                <Image
-                                    alt="Product image"
-                                    className="aspect-square w-full rounded-md object-contain"
-                                    height={900}
-                                    src={linkImg}
-                                    width={900}
-                                />
+                                {
+                                    !loading ?
+                                        (
+                                            <Image
+                                                alt="Product image"
+                                                className="aspect-square w-full rounded-md object-contain"
+                                                height={900}
+                                                src={linkImg}
+                                                width={900}
+                                            />
+                                        ) : (
+                                            <div className="text-center flex flex-col justify-center items-center w-full ">
+                                                <span className="loading loading-spinner loading-lg text-primary-backgroudPrimary "></span>
+                                            </div>
+                                        )
+                                }
+
                             </div>
                         </CardContent>
                     </Card>
@@ -174,9 +175,6 @@ console.log('linkImg',linkImg);
 
             </div>
 
-            <div className="flex items-center justify-center gap-2 md:hidden">
-                <Button size="sm">Chỉnh sửa</Button>
-            </div>
         </div>
     );
 }

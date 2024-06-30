@@ -33,12 +33,20 @@ export const RoleSchema = z.object({
 
 export const ProductSchema = z.object({
   name: z.string().min(1, { message: "Tên sản phẩm là bắt buộc." }),
-  code: z.string().min(1, { message: "Mã sản phẩm là bắt buộc." }),
+  code: z.string()
+    .min(1, { message: "Mã sản phẩm là bắt buộc." })
+    .refine((code) => {
+      const firstTwoChars = code.slice(0, 2);
+      const restChars = code.slice(2);
+      const isLetterFirstTwo = /^[a-zA-Z]+$/.test(firstTwoChars);
+      const isDigitsRest = /^\d+$/.test(restChars);
+      return isLetterFirstTwo && isDigitsRest;
+    }, { message: "Hai ký tự đầu tiên phải là chữ cái và phần còn lại là số." }),
   price: z.coerce
     .number({ message: "Giá phải là số" })
     .min(1, { message: "Giá là bắt buộc." }),
   size: z.string().min(1, { message: "Kích thước là bắt buộc." }),
-  description: z.string().min(1, { message: "Mô tả là bắt buộc." }),
+  description: z.string()
 });
 
 export const UsersSchema = z.object({
@@ -70,6 +78,7 @@ export const UsersSchema = z.object({
   ),
   password: z
     .string()
+    .min(6, { message: "Mật khẩu phải dài ít nhất 6 ký tự" })
     .refine(
       (password) => {
         return /[A-Z]/.test(password);
@@ -87,10 +96,10 @@ export const UsersSchema = z.object({
   companyId: z.string().min(1, { message: "Vui lòng chọn công ty." }),
   id: z.string().refine(
     (id) => {
-      const idPattern = /^\d{12}$/;
+      const idPattern = /^(?:\d{9}|\d{12})$/;
       return idPattern.test(id);
     },
-    { message: "Id phải đúng 12 chữ số" }
+    { message: "phải đúng 9 chữ số là CMND và 12 chữ số là CCCD" }
   ),
   salaryByDay: z.coerce
     .number({ message: "Lương phải là số" })
@@ -128,10 +137,10 @@ export const UsersUpdateSchema = z.object({
   facility: z.string().min(1, { message: "Công ty là bắt buộc." }),
   id: z.string().refine(
     (id) => {
-      const idPattern = /^\d{12}$/;
+      const idPattern = /^(?:\d{9}|\d{12})$/;
       return idPattern.test(id);
     },
-    { message: "Id phải đúng 12 chữ số" }
+    { message: "phải đúng 9 chữ số là CMND và 12 chữ số là CCCD" }
   ),
   salaryByDay: z.coerce
     .number({ message: "Lương phải là số" })
@@ -187,5 +196,29 @@ export const ChangePasswordSchema = z
     message: "Mật khẩu phải khớp",
     path: ["confirmPassword"],
   });
+
+
+
+export const UpdateUserForm = z.object({
+  id: z.string().nonempty({ message: "ID không được để trống" }),
+  firstName: z.string().nonempty({ message: "Tên không được để trống" }),
+  lastName: z.string().nonempty({ message: "Họ không được để trống" }),
+  phone: z
+    .string()
+    .nonempty({ message: "Số điện thoại không được để trống" })
+    .regex(/^\d+$/, { message: "Số điện thoại không hợp lệ" }),
+  address: z.string().nonempty({ message: "Địa chỉ không được để trống" }),
+  gender: z.enum(["Male", "Female"], { message: "Giới tính không hợp lệ" }),
+  dob: z
+    .string()
+    .nonempty({ message: "Ngày sinh không được để trống" })
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, { message: "Ngày sinh không hợp lệ, định dạng đúng: DD/MM/YYYY" }),
+  roleId: z.number().int({ message: "Vai trò không hợp lệ" }),
+  companyId: z.string().nonempty({ message: "Cơ sở không được để trống" }),
+  salaryByDay: z
+    .number()
+
+
+});
 
 export type ChangePasswordFormType = z.infer<typeof ChangePasswordSchema>;

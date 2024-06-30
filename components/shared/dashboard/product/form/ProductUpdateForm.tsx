@@ -10,7 +10,7 @@ import ImageDisplay from './ImageDisplay';
 import { ProductUpdateSchema } from '@/schema/product';
 import toast, { Toaster } from 'react-hot-toast';
 import { productApi } from '@/apis/product.api';
-import { z } from 'zod';
+import { string, z } from 'zod';
 import { MyContext } from "../table/products/RenderTable";
 
 import {
@@ -21,6 +21,8 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { filesApi } from '@/apis/files.api';
+import { Card } from '@/components/ui/card';
+import { CardContent } from '../../home/DashbroadComponents/Cards/Card';
 
 interface ProductData {
     code: string;
@@ -40,13 +42,13 @@ interface ProductData {
 
 interface ProductID {
     productId?: ProductData;
-    setOpen1: (open: boolean) => void;
+
 }
 
-export const ProductUpdateForm: React.FC<ProductID> = ({ productId, setOpen1 }) => {
+export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     const [loading, setLoading] = useState(false);
     const { forceUpdate } = useContext(MyContext);
-    console.log('productId', productId)
+    // console.log('productId', productId)
     const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(undefined);
     const [imageRequests, setImageRequests] = useState<any[]>([]);
 
@@ -90,11 +92,11 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, setOpen1 }) 
         isBluePrint: image.isBluePrint,
         isMainImage: image.isMainImage,
     })) || [];
-    console.log('initialImageRequests', initialImageRequests)
+    // console.log('initialImageRequests', initialImageRequests)
 
     // State to manage image requests
 
-    console.log('imageRequests', imageRequests)
+    // console.log('imageRequests', imageRequests)
 
     // useForm hook for managing form state and validation
     const form = useForm({
@@ -198,13 +200,16 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, setOpen1 }) 
             ...newImageRequests.map((item) => item.changedFileName)
         ]);
     };
-    const [removeImageIds, setRemoveImageIds] = useState<string[]>([]);
+    const [removeImageIds, setRemoveImageIds] = useState<string[] | null>(null);
 
 
     // Handle deleting an image
     const handleDeleteImage = (index: number, imageID: string) => {
         if (imageID !== undefined) {
-            setRemoveImageIds([...removeImageIds, imageID]);
+            setRemoveImageIds((prevRemoveImageIds) => {
+                const newRemoveImageIds = prevRemoveImageIds ? [...prevRemoveImageIds, imageID] : [imageID];
+                return newRemoveImageIds.length > 0 ? newRemoveImageIds : null;
+            });
         }
 
         setImageRequests((prevImageRequests) => {
@@ -260,6 +265,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, setOpen1 }) 
         if (isSubmitting) return; // Ngăn chặn việc submit nhiều lần
         setIsSubmitting(true);
         setLoading(true);
+        var ImaNull = null
+
         try {
             await handlePostImage();
 
@@ -276,7 +283,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, setOpen1 }) 
                     isBluePrint: image.isBluePrint,
                     isMainImage: image.isMainImage,
                 })),
-                removeImageIds: removeImageIds === null ? removeImageIds : null,
+                removeImageIds: removeImageIds ? removeImageIds : ImaNull,
             };
             console.log('============requestBody', requestBody);
 
@@ -285,11 +292,10 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, setOpen1 }) 
                 toast.success(response.data.message); // Assuming your API returns a message field in the response
                 console.log('Update Successful:', response);
                 setTimeout(() => {
-                    setOpen1(false);
                     forceUpdate();
                     // window.location.href = '/dashboard/product';
                 }, 2000);
-            } catch (error:any) {
+            } catch (error: any) {
                 if (error.response && error.response.data && error.response.data.message) {
                     // Xử lý lỗi từ server
                     toast.error(`Update error: ${error.response.data.message}`);
@@ -318,31 +324,138 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, setOpen1 }) 
     return (
         <Form {...form}>
             <Toaster />
-            <div className="flex flex-col md:flex-row md:justify-between gap-4">
-                {/* Image upload/display section */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
 
+                <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+                    <Card>
+                        <CardContent >
+                            <form onSubmit={form.handleSubmit(onSubmit)}>
+                                <div className="w-full flex flex-col gap-4">
+                                    {/* Code */}
+                                    <FormField
+                                        control={form.control}
+                                        name="code"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="flex items-center text-primary-backgroudPrimary">Mã CODE</FormLabel>
+                                                <Input type="text" {...field} />
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
 
-                <div className="md:w-[60%] flex items-center justify-between relative">
-                    <div>
+                                    {/* Price */}
+                                    <FormField
+                                        control={form.control}
+                                        name="price"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="flex items-center text-primary-backgroudPrimary">Giá sản phẩm</FormLabel>
+                                                <Input type="number" {...field} />
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    {/* Size */}
+                                    <FormField
+                                        control={form.control}
+                                        name="size"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="flex items-center text-primary-backgroudPrimary">Kích cỡ</FormLabel>
+                                                <Input type="text" {...field} />
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    {/* Description */}
+                                    <FormField
+                                        control={form.control}
+                                        name="description"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="flex items-center text-primary-backgroudPrimary">Mô tả</FormLabel>
+                                                <Textarea {...field} />
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    {/* Name */}
+                                    <FormField
+                                        control={form.control}
+                                        name="name"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="flex items-center text-primary-backgroudPrimary">Tên sản phẩm</FormLabel>
+                                                <Input type="text" {...field} />
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    {/* IsProse */}
+                                    <FormField
+                                        control={form.control}
+                                        name="isInProcessing"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-primary-backgroudPrimary">
+                                                    Trạng thái *
+                                                </FormLabel>
+                                                <Select
+                                                    onValueChange={(value) => field.onChange(value === 'true')}
+                                                    value={field.value !== undefined ? String(field.value) : undefined}
+                                                >
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Trạng thái" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="true">Đang xử lý</SelectItem>
+                                                        <SelectItem value="false">Không xử lý</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    {/* Submit button */}
+                                    <Button type="submit" className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90" disabled={isSubmitting}>
+                                        {isSubmitting ? 'Loading...' : 'GỬI'}
+                                    </Button>
+                                </div>
+                            </form>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+                    <Card className=" relative border-none shadow-none">
+                        {/* nếu không có ảnh nào thì hiện input này */}
                         {imageRequests.length < 1 && (
-                            <div style={{ width: '100%', height: '100%' }}>
+                            <CardContent style={{ width: '100%', height: '100%' }}>
                                 <input
-                                    id="image"
-                                    type="file"
+                                    id='image'
+                                    type='file'
                                     style={{ display: 'none' }}
-                                    accept="image/*"
-                                    onChange={(e) => handleUploadPhotos(e)}
+                                    accept='image/*'
+                                    onChange={e => handleUploadPhotos(e)}
                                     multiple
                                 />
                                 <label htmlFor='image' className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                                     <Upload size={100} className="text-white flex items-center justify-center bg-primary-backgroudPrimary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto" />
                                     <span className="text-l text-gray-500 font-medium">Hãy tải ảnh sản phẩm lên</span>
                                 </label>
-                            </div>
+                            </CardContent>
                         )}
 
+                        {/* nếu có trên 1 ảnh thì hiện input này */}
                         {imageRequests.length > 0 && (
-                            <div className="relative w-full h-full">
+                            <CardContent className="relative w-full h-full">
+                                {/* phần hiển thị ảnh xem trước */}
                                 <ImageDisplay
                                     images={imageRequests}
                                     onDelete={handleDeleteImage}
@@ -350,6 +463,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, setOpen1 }) 
                                     onToggleMainImage={handleToggleMainImage}
                                 />
 
+                                {/* Phần add thêm image */}
                                 <input
                                     id='image'
                                     type='file'
@@ -361,113 +475,11 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, setOpen1 }) 
                                 <label htmlFor='image' className="absolute bottom-0">
                                     <Upload size={35} className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5" />
                                 </label>
-                            </div>
+                            </CardContent>
                         )}
-                    </div>
+                    </Card>
                 </div>
 
-
-
-                {/* Form input section */}
-                <form onSubmit={form.handleSubmit(onSubmit)} className="md:w-[40%]">
-                    <div className="w-full flex flex-col gap-4">
-                        {/* Code */}
-                        <FormField
-                            control={form.control}
-                            name="code"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Mã CODE</FormLabel>
-                                    <Input type="text" {...field} />
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Price */}
-                        <FormField
-                            control={form.control}
-                            name="price"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Giá sản phẩm</FormLabel>
-                                    <Input type="number" {...field} />
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Size */}
-                        <FormField
-                            control={form.control}
-                            name="size"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Kích cỡ</FormLabel>
-                                    <Input type="text" {...field} />
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Description */}
-                        <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Mô tả</FormLabel>
-                                    <Textarea {...field} />
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Name */}
-                        <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Tên sản phẩm</FormLabel>
-                                    <Input type="text" {...field} />
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* IsProse */}
-                        <FormField
-                            control={form.control}
-                            name="isInProcessing"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="text-primary-backgroudPrimary">
-                                        Trạng thái *
-                                    </FormLabel>
-                                    <Select
-                                        onValueChange={(value) => field.onChange(value === 'true')}
-                                        value={field.value !== undefined ? String(field.value) : undefined}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Trạng thái" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="true">Đang xử lý</SelectItem>
-                                            <SelectItem value="false">Không xử lý</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Submit button */}
-                        <Button type="submit" className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90" disabled={isSubmitting}>
-                            {isSubmitting ? 'Loading...' : 'GỬI'}
-                        </Button>
-                    </div>
-                </form>
             </div>
         </Form>
     );

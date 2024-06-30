@@ -6,7 +6,7 @@ export default function SetPage() {
 
     return (
         <Card className="w-full h-full">
-            <CardTitle className="p-3 text-2xl text-primary-backgroudPrimary font-medium">ĐẶT SẢN PHẨM</CardTitle>
+            <CardTitle className="p-3 text-2xl text-primary-backgroudPrimary font-medium">BỘ SẢN PHẨM</CardTitle>
             <RenderTableSet />
         </Card>
     );

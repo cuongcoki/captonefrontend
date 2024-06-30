@@ -21,6 +21,7 @@ import { UserSearchParams } from "@/types/userTypes";
 import TableUserFeature from "@/components/shared/dashboard/users/table/users/user-table-feature";
 import toast from "react-hot-toast";
 import LoadingPage from "@/components/shared/loading/loading-page";
+import { roleApi } from "@/apis/roles.api";
 
 type Props = {
   searchParams: UserSearchParams;
@@ -37,15 +38,38 @@ export default function RenderTableUsers({ searchParams }: Props) {
   const [data, setData] = useState<Employee[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(5);
+  const [pageSize, setPageSize] = useState<number>(8);
   const [open, setOpen] = useState<boolean>(false);
 
   const [force, setForce] = useState<number>(1);
   const forceUpdate = () => setForce((prev) => prev + 1);
 
+  const [roles, setRoles] = useState<
+    Array<{
+      roleName: string;
+      description: string;
+      id: string;
+    }>
+  >([]);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+
+      const fetchRoleData = () => {
+        roleApi
+          .getAllRoles()
+          .then(({ data }) => {
+            setRoles(data.data);
+          })
+          .catch((error) => {
+            console.error("Error fetching roles data:", error);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      };
+      fetchRoleData();
       try {
         const res = await userApi.allUsers(
           searchParams.roleId ?? 1,
@@ -69,16 +93,16 @@ export default function RenderTableUsers({ searchParams }: Props) {
     };
 
     fetchData();
-  }, [searchParams, currentPage, pageSize, force, data]);
+  }, [searchParams, currentPage, pageSize, force, data, roles]);
 
-  // console.log("Data:", data);
+  console.log("Data:", data);
 
   return (
     <div className="px-3 ">
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
           <MyContext.Provider value={{ forceUpdate }}>
-            <TableUserFeature searchOptions={searchParams} />
+            <TableUserFeature searchOptions={searchParams} roles={roles} />
           </MyContext.Provider>
         </div>
 
@@ -86,21 +110,7 @@ export default function RenderTableUsers({ searchParams }: Props) {
           <div className="w-full md:w-auto">
             <div className="flex items-center justify-end p-3">
               <div className="flex items-center space-x-2">
-                <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogTrigger>
-                    <div className="p-2 bg-[#004b24] flex items-center text-white rounded-md">
-                      <Plus />
-                      Thêm mới
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent className="w-full min-w-[90%] md:min-w-[70%]">
-                    <DialogTitle className="text-2xl text-primary-backgroudPrimary">
-                      Thêm nhân viên mới
-                    </DialogTitle>
-                    <Separator className="h-1" />
-                    <UsersForm setOpen={setOpen} />
-                  </DialogContent>
-                </Dialog>
+                <UsersForm />
               </div>
             </div>
           </div>
@@ -118,21 +128,7 @@ export default function RenderTableUsers({ searchParams }: Props) {
       </MyContext.Provider>
 
       <div className="w-full py-3 md:hidden">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger>
-            <div className="p-2 bg-[#004b24] flex items-center text-white rounded-md">
-              <Plus />
-              Thêm mới
-            </div>
-          </DialogTrigger>
-          <DialogContent className="w-full min-w-[90%] md:min-w-[70%]">
-            <DialogTitle className="text-2xl text-primary-backgroudPrimary">
-              Thêm nhân viên mới
-            </DialogTitle>
-            <Separator className="h-1" />
-            <UsersForm setOpen={setOpen} />
-          </DialogContent>
-        </Dialog>
+        <UsersForm />
       </div>
     </div>
   );
