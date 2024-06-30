@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
+import { ModeToggle } from "@/components/shared/common/mode-toggle";
 
 type Props = {};
 export default function SideNavbar({}: Props) {
@@ -112,6 +113,11 @@ export default function SideNavbar({}: Props) {
           />
         </div>
       ) : null}
+      <div className="absolute bottom-0 w-full">
+        <div className="m-1 mb-3">
+          <ModeToggle />
+        </div>
+      </div>
     </div>
   );
 }

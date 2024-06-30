@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LucideIcon } from "lucide-react";
+import { ChevronDown, LucideIcon, Plus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -9,10 +9,24 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import { LogoIcon } from "@/constants/images";
 import Image from "next/image";
+import { ModeToggle } from "@/components/shared/common/mode-toggle";
+import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { authApi } from "@/apis/auth.api";
+import toast from "react-hot-toast";
 interface NavProps {
   isCollapsed: boolean;
   links: {
@@ -25,6 +39,31 @@ interface NavProps {
 
 export function Nav({ links, isCollapsed }: NavProps) {
   const pathname = usePathname();
+  const [loading, setLoading] = useState<boolean>(false);
+  // ** hooks
+  const user = useAuth();
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+    setLoading(true);
+    const id: any = user.user?.id;
+
+    authApi
+      .logout(id)
+      .then(({ data }) => {
+        console.log("dataLogout", data);
+        user.logout();
+        router.push("/sign-in");
+        toast.success(data.message);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   return (
     <TooltipProvider>
       {/* logo */}
@@ -69,9 +108,9 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         variant:
                           link.href === pathname ||
                           pathname.includes(`${link.href}/history`) ||
-                          pathname.includes(`${link.href}/manage`)  ||
+                          pathname.includes(`${link.href}/manage`) ||
                           pathname.includes(`${link.href}/set`) ||
-                          pathname.includes(`${link.href}/product`) 
+                          pathname.includes(`${link.href}/product`)
                             ? "colorCompany"
                             : "ghost",
                         size: "icon",
@@ -104,7 +143,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                           pathname.includes(`${link.href}/history`) ||
                           pathname.includes(`${link.href}/manage`) ||
                           pathname.includes(`${link.href}/set`) ||
-                          pathname.includes(`${link.href}/product`) 
+                          pathname.includes(`${link.href}/product`)
                           ? "colorCompany"
                           : "ghost"
                         : pathname === pathname
@@ -112,7 +151,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                           pathname.includes(`${link.href}/history`) ||
                           pathname.includes(`${link.href}/manage`) ||
                           pathname.includes(`${link.href}/set`) ||
-                          pathname.includes(`${link.href}/product`) 
+                          pathname.includes(`${link.href}/product`)
                           ? "colorCompany"
                           : "ghost"
                         : null,
