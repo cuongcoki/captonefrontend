@@ -16,11 +16,16 @@ const SlotName: { [key: number]: string } = {
 
 export default function EmployeeAttendanceDetail({ Date }: Props) {
   const [data, setData] = useState<AttendanceSlotDetail[]>([]);
-
+  function formatDate(dateStr: string) {
+    const [day, month, year] = dateStr.split("/");
+    const formattedDay = day.padStart(2, "0");
+    const formattedMonth = month.padStart(2, "0");
+    return `${formattedDay}/${formattedMonth}/${year}`;
+  }
   useEffect(() => {
     attendanceApi
       .getEmployeeAttendanceDetail({
-        Date: Date,
+        Date: formatDate(Date),
       })
       .then(({ data }) => {
         console.log("Attendance Detail", data.data.attendanceSlotReports);
@@ -61,20 +66,29 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
                 item.employeeProductResponses.map((product, index) => (
                   <tr key={index}>
                     {index === 0 ? (
-                      <td rowSpan={item.employeeProductResponses.length}>
+                      <td
+                        className="dark:bg-[#1c1917]"
+                        rowSpan={item.employeeProductResponses.length}
+                      >
                         {SlotName[item.slotId]}
                       </td>
                     ) : null}
-                    <td>{product.productName}</td>
-                    <td>{product.phaseName}</td>
-                    <td>{product.quantity}</td>
+                    <td className="dark:bg-[#1c1917]">{product.productName}</td>
+                    <td className="dark:bg-[#1c1917]">{product.phaseName}</td>
+                    <td className="dark:bg-[#1c1917]">{product.quantity}</td>
                     {index === 0 ? (
-                      <td rowSpan={item.employeeProductResponses.length}>
+                      <td
+                        className="dark:bg-[#1c1917]"
+                        rowSpan={item.employeeProductResponses.length}
+                      >
                         {item.hourOverTime}h
                       </td>
                     ) : null}
                     {index === 0 ? (
-                      <td rowSpan={item.employeeProductResponses.length}>
+                      <td
+                        className="dark:bg-[#1c1917]"
+                        rowSpan={item.employeeProductResponses.length}
+                      >
                         {item.isAttendance ? "Có" : "Không"}
                       </td>
                     ) : null}
@@ -82,11 +96,13 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
                 ))
               ) : (
                 <tr>
-                  <td>{SlotName[item.slotId]}</td>
-                  <td colSpan={3} className="bg-gray-300"></td>
+                  <td className="dark:bg-[#1c1917]">{SlotName[item.slotId]}</td>
+                  <td colSpan={3} className="bg-gray-300 dark:bg-black "></td>
 
-                  <td>{item.hourOverTime}h</td>
-                  <td>{item.isAttendance ? "Có" : "Không"}</td>
+                  <td className="dark:bg-[#1c1917]">{item.hourOverTime}h</td>
+                  <td className="dark:bg-[#1c1917]">
+                    {item.isAttendance ? "Có" : "Không"}
+                  </td>
                 </tr>
               )}
             </React.Fragment>

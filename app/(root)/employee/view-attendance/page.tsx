@@ -77,9 +77,8 @@ export default function Page({ searchParams }: Props) {
             return {
               date: convertDateToISO(item.date) || "",
               attedanceDateReport: {
-                isPresentSlot1: item.attedanceDateReport.isPresentSlot1,
-                isPresentSlot2: item.attedanceDateReport.isPresentSlot2,
-                isPresentSlot3: item.attedanceDateReport.isPresentSlot3,
+                isHalfWork: item.attedanceDateReport.isHalfWork,
+                isOneWork: item.attedanceDateReport.isOneWork,
                 isSalaryByProduct: item.attedanceDateReport.isSalaryByProduct,
                 isOverTime: item.attedanceDateReport.isOverTime,
               },
@@ -125,9 +124,8 @@ export default function Page({ searchParams }: Props) {
         calendarGrid.push({
           date: prevDate.toISOString().split("T")[0],
           attedanceDateReport: {
-            isPresentSlot1: false,
-            isPresentSlot2: false,
-            isPresentSlot3: false,
+            isHalfWork: false,
+            isOneWork: false,
             isSalaryByProduct: false,
             isOverTime: false,
           },
@@ -144,9 +142,8 @@ export default function Page({ searchParams }: Props) {
           calendarGrid.push({
             date: dateString,
             attedanceDateReport: {
-              isPresentSlot1: false,
-              isPresentSlot2: false,
-              isPresentSlot3: false,
+              isHalfWork: false,
+              isOneWork: false,
               isSalaryByProduct: false,
               isOverTime: false,
             },
@@ -161,9 +158,8 @@ export default function Page({ searchParams }: Props) {
         calendarGrid.push({
           date: nextDate.toISOString().split("T")[0],
           attedanceDateReport: {
-            isPresentSlot1: false,
-            isPresentSlot2: false,
-            isPresentSlot3: false,
+            isHalfWork: false,
+            isOneWork: false,
             isSalaryByProduct: false,
             isOverTime: false,
           },
@@ -176,9 +172,8 @@ export default function Page({ searchParams }: Props) {
         calendarGrid.push({
           date: nextDate.toISOString().split("T")[0],
           attedanceDateReport: {
-            isPresentSlot1: false,
-            isPresentSlot2: false,
-            isPresentSlot3: false,
+            isHalfWork: false,
+            isOneWork: false,
             isSalaryByProduct: false,
             isOverTime: false,
           },
