@@ -23,7 +23,7 @@ export default function UpdateMaterial({
     <>
       <Dialog modal={true}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className=" max-w-[340px] md:max-w-[700px]">
+        <DialogContent className=" max-w-[340px] md:max-w-[700px] dark:bg-[#1c1917]">
           <DialogHeader>
             <DialogTitle>Cập nhật nguyên liệu</DialogTitle>
           </DialogHeader>

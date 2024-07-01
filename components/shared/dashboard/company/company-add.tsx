@@ -75,11 +75,15 @@ export function CompanyAdd() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="default">Thêm mới</Button>
+        <Button variant="default" className="bg-[#22c55e]">
+          Thêm mới
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[30vw]">
+      <DialogContent className="sm:max-w-[40vw] dark:bg-[#1c1917]">
         <DialogHeader>
-          <DialogTitle>Thêm mới công ty</DialogTitle>
+          <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3">
+            Thêm mới công ty
+          </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -93,7 +97,7 @@ export function CompanyAdd() {
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="name" className="text-left">
-                          Tên công ty
+                          Tên công ty*
                         </Label>
                         <Input
                           id="name"
@@ -116,7 +120,7 @@ export function CompanyAdd() {
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="address" className="text-left">
-                          Địa chỉ
+                          Địa chỉ*
                         </Label>
                         <Input
                           id="address"
@@ -139,7 +143,7 @@ export function CompanyAdd() {
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="directorName" className="text-left">
-                          Tên giám đốc
+                          Tên giám đốc*
                         </Label>
                         <Input
                           id="directorName"
@@ -162,7 +166,7 @@ export function CompanyAdd() {
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="directorPhone" className="text-left">
-                          Số điện thoại
+                          Số điện thoại*
                         </Label>
                         <Input
                           id="directorPhone"
@@ -207,7 +211,7 @@ export function CompanyAdd() {
                   <FormItem>
                     <div className="grid grid-cols-4 items-center gap-4">
                       <Label htmlFor="companyType" className="text-left">
-                        Loại công ty
+                        Loại công ty*
                       </Label>
                       <div className="col-span-3">
                         <Select
@@ -220,9 +224,6 @@ export function CompanyAdd() {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem className="hover:bg-gray-100" value="0">
-                              Nhà xưởng
-                            </SelectItem>
                             <SelectItem className="hover:bg-gray-100" value="1">
                               Công ty mua đặt hàng
                             </SelectItem>

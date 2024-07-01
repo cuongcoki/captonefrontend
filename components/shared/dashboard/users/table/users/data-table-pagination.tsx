@@ -39,11 +39,12 @@ export function DataTablePagination({
   };
 
   return (
-    <div className="flex items-center justify-center space-x-4 my-4">
+    <div className="flex items-center justify-center space-x-4 my-4 ">
       <Button
         variant="outline"
         onClick={handlePreviousPage}
         disabled={currentPage === 1}
+        className="dark:bg-[#24d369]"
       >
         <ChevronLeftIcon className="h-4 w-4" />
       </Button>
@@ -54,6 +55,7 @@ export function DataTablePagination({
         variant="outline"
         onClick={handleNextPage}
         disabled={currentPage === totalPages}
+        className="dark:bg-[#24d369]"
       >
         <ChevronRightIcon className="h-4 w-4" />
       </Button>

@@ -288,8 +288,8 @@ export const UsersForm = () => {
 
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>
-      <Dialog.Trigger className="rounded p-2 hover:bg-gray-200">
-        <Plus onClick={handleOnDialog} />
+      <Dialog.Trigger className="rounded p-2 hover:bg-[#2bff7e] bg-[#24d369] ">
+        <Plus onClick={handleOnDialog} className="" />
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">

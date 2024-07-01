@@ -126,44 +126,44 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
                     <tr>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
                       >
                         Tên công ty
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
                       >
                         Địa chỉ
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
                       >
                         Email
                       </th>
                       <th
                         scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"
+                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
                       >
                         Loại công ty
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-gray-200 ">
                     {tableData.map((company, index) => (
                       <CompanyUpdate index={index} key={company.id}>
-                        <tr className="hover:bg-gray-100 hover:cursor-pointer">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                        <tr className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer ">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
                             {company.name}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
                             {company.address}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
                             {company.email}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
                             {company.companyTypeDescription}
                           </td>
                         </tr>

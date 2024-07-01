@@ -38,7 +38,7 @@ export default function RenderTableUsers({ searchParams }: Props) {
   const [data, setData] = useState<Employee[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(8);
+  const [pageSize, setPageSize] = useState<number>(11);
   const [open, setOpen] = useState<boolean>(false);
 
   const [force, setForce] = useState<number>(1);

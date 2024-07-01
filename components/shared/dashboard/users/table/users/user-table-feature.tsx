@@ -12,11 +12,9 @@ import { UserSearchParams } from "@/types/userTypes";
 import { ChangeEvent, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-
-
 type Props = {
   searchOptions: UserSearchParams;
-  roles: any
+  roles: any;
 };
 
 export default function TableUserFeature({ searchOptions, roles }: Props) {
@@ -63,21 +61,21 @@ export default function TableUserFeature({ searchOptions, roles }: Props) {
   return (
     <div className="flex items-center gap-2">
       <Input
-        placeholder="CMND/CCCD..."
+        placeholder="Tìm kiếm nhân viên..."
         value={searchTearm}
         onChange={searchTearmChange}
         className="max-w-sm shadow-sm"
       />
-      <Select value={roleId} onValueChange={(value) => roleIdChange(value)} >
+      <Select value={roleId} onValueChange={(value) => roleIdChange(value)}>
         <SelectTrigger className="w-[280px]">
           <SelectValue placeholder="Vai trò" />
         </SelectTrigger>
         <SelectContent>
-          {
-            roles.map((item:any) => (
-              <SelectItem value={item.id} key={item.id}>{item.decription}</SelectItem>
-            ))
-          }
+          {roles.map((item: any) => (
+            <SelectItem value={item.id} key={item.id}>
+              {item.decription}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
       <Select value={isActive} onValueChange={(value) => isActiveChange(value)}>

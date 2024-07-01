@@ -1,6 +1,6 @@
 "use client";
 import React, { use, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import "./count-product.css";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +19,7 @@ import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendan
 import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
 import { GetAllProductResponse, Product } from "@/types/attendance.type";
 import { attendanceApi } from "@/apis/attendance.api";
+import { filesApi } from "@/apis/files.api";
 export default function CountProduct({
   index,
   children,
@@ -102,7 +103,17 @@ export default function CountProduct({
       });
   }, []);
 
-  const AddNewProductForUser = (product: Product) => {
+  const AddNewProductForUser = async (product: Product) => {
+    const getImage = async (name: string) => {
+      try {
+        const res = await filesApi.getFile(name);
+        console.log("Get Image", res.data.data);
+        return res.data.data;
+      } catch (error: any) {
+        console.log("Error get image: ", error.response.data);
+      }
+    };
+    const imageP = await getImage(product.imageResponses[0]?.imageUrl || "");
     setUserData((prev) => {
       return {
         ...prev,
@@ -111,7 +122,7 @@ export default function CountProduct({
           {
             productID: product.id,
             productName: product.name,
-            image: product.imageResponses[0]?.imageUrl || "",
+            image: imageP || "",
             phaseID: dataPhase[0].value as string,
             phaseName: dataPhase[0].label as string,
             quantity: "0",
@@ -186,10 +197,21 @@ export default function CountProduct({
         </div> */}
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[725px]">
+      <DialogContent className="sm:max-w-[825px] dark:bg-[#1c1917]">
         <DialogHeader>
-          <DialogTitle>Cập nhật sản phẩm tạo ra</DialogTitle>
-          <DialogDescription>{tableData[index].userName}</DialogDescription>
+          <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3">
+            Cập nhật sản phẩm tạo ra
+          </DialogTitle>
+          <DialogDescription className="mb-1 space-y-1">
+            <div className="flex space-x-1">
+              <div className="font-bold">Nhân viên: </div>
+              <div>{tableData[index].userName}</div>
+            </div>
+            <div className="flex space-x-1">
+              <div className="font-bold">ID: </div>
+              <div>{tableData[index].userID}</div>
+            </div>
+          </DialogDescription>
         </DialogHeader>
         <div className="mr-auto ">
           <div style={{ position: "relative", width: "400px" }}>
@@ -202,6 +224,7 @@ export default function CountProduct({
             />
             {searchData && (
               <ul
+                className="hide-scrollbar"
                 style={{
                   position: "absolute",
                   top: "100%",
@@ -221,9 +244,9 @@ export default function CountProduct({
                   <li
                     key={item.id}
                     style={{ padding: "8px", borderBottom: "1px solid #ddd" }}
-                    className="hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                      AddNewProductForUser(item);
+                    className="hover:bg-gray-100 cursor-pointer dark:bg-black dark:hover:bg-[#4c4c4c]"
+                    onClick={async () => {
+                      await AddNewProductForUser(item);
                       setSearchInput("");
                     }}
                   >
@@ -233,31 +256,20 @@ export default function CountProduct({
               </ul>
             )}
             {searchInput !== "" && !searchData && (
-              <div
-                style={{
-                  position: "absolute",
-                  top: "100%",
-                  left: 0,
-                  right: 0,
-                  backgroundColor: "white",
-                  border: "1px solid #ccc",
-                  zIndex: 1000,
-                  padding: "8px",
-                }}
-              >
+              <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 z-1000 p-2 dark:bg-black">
                 No data found
               </div>
             )}
           </div>
         </div>
-        <table>
+        <table className="count-product-table">
           <thead>
             <tr>
-              <th>Hình ảnh</th>
-              <th>Tên sản phẩm</th>
-              <th>Giai đoạn</th>
-              <th>Số lượng</th>
-              <th>Xóa</th>
+              <th className="dark:bg-[#1c1917]">Hình ảnh</th>
+              <th className="dark:bg-[#1c1917]">Tên sản phẩm</th>
+              <th className="dark:bg-[#1c1917]">Giai đoạn</th>
+              <th className="dark:bg-[#1c1917]">Số lượng</th>
+              <th className="dark:bg-[#1c1917]">Xóa</th>
             </tr>
           </thead>
           <tbody>
@@ -269,6 +281,7 @@ export default function CountProduct({
                       width={90}
                       height={120}
                       src={
+                        product.image ||
                         "https://media-cdn-v2.laodong.vn/Storage/NewsPortal/2023/4/8/1177370/Thepxaydung.jpg"
                       }
                       alt={product.productName}

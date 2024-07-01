@@ -5,15 +5,17 @@ import { usePathname } from "next/navigation";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
-  const selectStyle = "bg-[#83a8f1] text-white";
+  const selectStyle = "bg-[#22c55e] text-white";
   return (
-    <div className="overflow-auto">
+    <div className="w-full h-screen">
       <Card className="w-[30%] mb-3 rounded-full">
         <div className="grid md:grid-cols-2 bg-white rounded-full p-1 ">
           <Link href={"/dashboard/material/history"}>
             <div
               className={`flex justify-center items-center h-10 rounded-full ${
-                path === "/dashboard/material/history" ? selectStyle : ""
+                path === "/dashboard/material/history"
+                  ? selectStyle
+                  : "text-black"
               }`}
             >
               <p>Lịch sử nhập</p>
@@ -23,7 +25,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Link href={"/dashboard/material/manager"}>
             <div
               className={`flex justify-center items-center h-10 rounded-full ${
-                path === "/dashboard/material/manager" ? selectStyle : ""
+                path === "/dashboard/material/manager"
+                  ? selectStyle
+                  : "text-black"
               }`}
             >
               <p>Nguyên vật liệu</p>
