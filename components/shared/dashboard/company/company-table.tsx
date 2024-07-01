@@ -72,9 +72,9 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
   }, [params, pathname, router, forceUpdate, tableData, setTableData]);
   return (
     <div className="p-2">
-      <div className="mb-5 mt-2 grid grid-cols-12">
+      <div className="mb-5 mt-2 grid grid-cols-12 space-y-1 grid-rows-2 xl:space-y-0 xl:grid-rows-1">
         <Input
-          className="col-span-6"
+          className="col-span-11 xl:col-span-6 xl:row-start-1"
           placeholder="Tìm kiếm công ty"
           value={params.name}
           onChange={(event) => {
@@ -86,7 +86,7 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
             });
           }}
         />
-        <div className="col-span-2 ml-2">
+        <div className="col-span-6 row-start-2 xl:row-start-1 xl:row-span-2 xl:col-start-7 xl:col-span-2 md:ml-2">
           <Select
             value={params.companyType}
             onValueChange={handleChangeCompanyType}
@@ -110,7 +110,7 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
             </SelectContent>
           </Select>
         </div>
-        <div className="col-start-12">
+        <div className="row-start-2 col-start-9 md:col-start-11 xl:row-start-1 xl:col-start-12">
           <CompanyContext.Provider value={{ ForceRender }}>
             <CompanyAdd />
           </CompanyContext.Provider>

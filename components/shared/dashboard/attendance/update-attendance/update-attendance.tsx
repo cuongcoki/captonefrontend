@@ -347,8 +347,8 @@ export default function UpdateAttendance({
     console.log("tableData", tableData);
   }, [tableData]);
   return (
-    <Card>
-      <div className="flex justify-center text-[2rem] text-[#22c55e]">
+    <Card className="">
+      <div className="flex justify-center text-[2rem] text-[#22c55e] mt-3">
         QUẢN LÝ ĐIỂM DANH
       </div>
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap">

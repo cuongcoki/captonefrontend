@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="w-full h-screen">
       <Card className="w-[30%] mb-3 rounded-full">
-        <div className="grid md:grid-cols-2 bg-white rounded-full p-1 ">
+        <div className="grid grid-cols-2 bg-white rounded-full p-1 min-w-max">
           <Link href={"/dashboard/material/history"}>
             <div
               className={`flex justify-center items-center h-10 rounded-full ${
