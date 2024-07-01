@@ -23,13 +23,10 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
     accessorKey: "material.name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <div>
           Tên vật liệu
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
+        </div>
       );
     },
     cell: async ({ row }) => {
@@ -60,14 +57,10 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
     accessorKey: "price",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center justify-start p-0"
-        >
-          Giá mua
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex items-center justify-start p-0">
+          Giá mua / 1 vật liệu
+          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
+        </div>
       );
     },
     cell: ({ row }) => {
@@ -79,14 +72,10 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
     accessorKey: "importDate",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="flex items-center justify-start p-0"
-        >
+        <div className="flex items-center justify-start p-0">
           Ngày mua
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
+        </div>
       );
     },
     cell: ({ row }) => {

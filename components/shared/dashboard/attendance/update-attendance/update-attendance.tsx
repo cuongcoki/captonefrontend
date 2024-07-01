@@ -29,6 +29,8 @@ import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-f
 import { Combobox } from "@/components/shared/common/combobox/combobox";
 import { usePathname, useRouter } from "next/navigation";
 import CountProduct from "@/components/shared/dashboard/attendance/update-attendance/count-product";
+import { filesApi } from "@/apis/files.api";
+import { companyApi } from "@/apis/company.api";
 
 const comboboxData: ComboboxDataType[] = [
   {
@@ -44,16 +46,16 @@ const comboboxData: ComboboxDataType[] = [
     value: "3",
   },
 ];
-const wareHouseData: ComboboxDataType[] = [
-  {
-    label: "Cơ sở chính",
-    value: "b6897f71-491b-43d4-9234-36bef2290c2b",
-  },
-  {
-    label: "Cơ sở phụ",
-    value: "f6a24556-9ae6-4aed-95f9-34289595db21",
-  },
-];
+// const wareHouseData: ComboboxDataType[] = [
+//   {
+//     label: "Cơ sở chính",
+//     value: "b6897f71-491b-43d4-9234-36bef2290c2b",
+//   },
+//   {
+//     label: "Cơ sở phụ",
+//     value: "f6a24556-9ae6-4aed-95f9-34289595db21",
+//   },
+// ];
 
 export default function UpdateAttendance({
   dateProp,
@@ -88,6 +90,20 @@ export default function UpdateAttendance({
   const [isCreated, setIsCreated] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const [selectWareHouseData, setSelectWareHouseData] = useState<
+    ComboboxDataType[]
+  >([]);
+  useEffect(() => {
+    companyApi.getCompanyByType(0).then(({ data }) => {
+      console.log("Company Data: ", data);
+      setSelectWareHouseData(
+        data.data.map((item) => ({ label: item.name, value: item.id }))
+      );
+      if (warehouseProp === "") {
+        setWarehouse(data.data[0].id);
+      }
+    });
+  }, [warehouseProp]);
 
   // GET USERS DATA
   useEffect(() => {
@@ -106,6 +122,10 @@ export default function UpdateAttendance({
   }, [users, setUser, warehouse]);
   // GET ATTENDANCE DATA
   useEffect(() => {
+    const getImage = async (name: string) => {
+      const res = await filesApi.getFile(name);
+      return res.data.data;
+    };
     const setUser = new Set<string>();
     attendanceApi
       .getAttendance({
@@ -116,12 +136,26 @@ export default function UpdateAttendance({
         SearchTerm: "",
         CompanyId: warehouse,
       })
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         // console.log("data", data.data.data);
         setIsCreated(true);
-        const attendanceData = data.data.data.map(
-          (item): AttendanceDetailType => {
+        const attendanceData = await Promise.all(
+          data.data.data.map(async (item): Promise<AttendanceDetailType> => {
             setUser.add(item.userId);
+            const products = await Promise.all(
+              item.employeeProductResponses.map(
+                async (product): Promise<AttendanceDetailProductType> => {
+                  return {
+                    productID: product.productId,
+                    productName: product.productName,
+                    image: await getImage(product.imageUrl),
+                    phaseID: product.phaseId,
+                    phaseName: product.phaseName,
+                    quantity: product.quantity.toString(),
+                  };
+                }
+              )
+            );
             return {
               userID: item.userId,
               userName: item.fullName,
@@ -130,20 +164,9 @@ export default function UpdateAttendance({
               isAttendance: item.isAttendance,
               isSalaryByProduct: item.isSalaryByProduct,
               isManufacture: item.isManufacture,
-              products: item.employeeProductResponses.map(
-                (product): AttendanceDetailProductType => {
-                  return {
-                    productID: product.productId,
-                    productName: product.productName,
-                    image: product.imageUrl,
-                    phaseID: product.phaseId,
-                    phaseName: product.phaseName,
-                    quantity: product.quantity.toString(),
-                  };
-                }
-              ),
+              products: products,
             };
-          }
+          })
         );
         console.log("attendanceData", attendanceData);
         // users.forEach((u) => {
@@ -320,7 +343,7 @@ export default function UpdateAttendance({
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap">
         <Combobox
           title="Vui lòng chọn cơ sở"
-          data={wareHouseData}
+          data={selectWareHouseData}
           value={warehouse}
           setValue={(value: string) => {
             setWarehouse(value);

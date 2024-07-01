@@ -12,9 +12,11 @@ import {
   InspectionPanel,
   CalendarSearch,
   PackagePlus,
+  Building,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
+import { ModeToggle } from "@/components/shared/common/mode-toggle";
 
 type Props = {};
 export default function SideNavbar({}: Props) {
@@ -71,7 +73,12 @@ export default function SideNavbar({}: Props) {
                 icon: PackageSearch,
                 variant: "ghost",
               },
-            
+              {
+                title: "Đặt sản phẩm",
+                href: "/dashboard/set",
+                icon: PackagePlus,
+                variant: "ghost",
+              },
               {
                 title: "Vật liệu",
                 href: "/dashboard/material",
@@ -91,6 +98,12 @@ export default function SideNavbar({}: Props) {
                 variant: "ghost",
               },
               {
+                title: "Công ty",
+                href: "/dashboard/company",
+                icon: Building,
+                variant: "ghost",
+              },
+              {
                 title: "Cài đặt",
                 href: "/dashboard/settings",
                 icon: Settings,
@@ -100,6 +113,11 @@ export default function SideNavbar({}: Props) {
           />
         </div>
       ) : null}
+      <div className="absolute bottom-0 w-full">
+        <div className="m-1 mb-3">
+          <ModeToggle />
+        </div>
+      </div>
     </div>
   );
 }

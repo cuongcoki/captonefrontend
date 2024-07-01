@@ -28,13 +28,10 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <div>
           Tên vật liệu
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
+        </div>
       );
     },
     cell: async ({ row }) => {
@@ -60,13 +57,14 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
       );
     },
   },
-  {
-    accessorKey: "unit",
-    header: "Đơn vị",
-  },
+
   {
     accessorKey: "quantityPerUnit",
     header: "Số lượng mỗi đơn vị",
+  },
+  {
+    accessorKey: "unit",
+    header: "Đơn vị",
   },
   {
     accessorKey: "description",
@@ -74,7 +72,7 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
   },
   {
     accessorKey: "quantityInStock",
-    header: "Số lượng",
+    header: "Số lượng trong kho",
   },
   {
     id: "actions",
