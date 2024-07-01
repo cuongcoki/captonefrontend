@@ -51,7 +51,7 @@ export default function CompanyUpdate({
       address: tableData[index].address.trim(),
       directorName: tableData[index].directorName.trim(),
       directorPhone: tableData[index].directorPhone.trim(),
-      email: tableData[index].email?.trim(),
+      email: tableData[index].email || "",
       companyType: tableData[index].companyType.toString().trim(),
     },
   });
@@ -63,7 +63,7 @@ export default function CompanyUpdate({
         address: data.address,
         directorName: data.directorName,
         directorPhone: data.directorPhone,
-        email: data.email,
+        email: data.email || "",
         companyType: parseInt(data.companyType),
       },
     };
@@ -94,9 +94,11 @@ export default function CompanyUpdate({
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[30vw]">
+      <DialogContent className="sm:max-w-[40vw] dark:bg-[#1c1917]">
         <DialogHeader>
-          <DialogTitle>Thông tin công ty</DialogTitle>
+          <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3 ">
+            Thông tin công ty
+          </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -237,9 +239,6 @@ export default function CompanyUpdate({
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem className="hover:bg-gray-100" value="0">
-                              Nhà xưởng
-                            </SelectItem>
                             <SelectItem className="hover:bg-gray-100" value="1">
                               Công ty mua đặt hàng
                             </SelectItem>
@@ -258,7 +257,7 @@ export default function CompanyUpdate({
             </div>
             <DialogFooter>
               <Button className="mt-3" type="submit">
-                Tạo mới
+                Lưu thay đổi
               </Button>
             </DialogFooter>
           </form>

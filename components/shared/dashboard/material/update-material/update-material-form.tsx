@@ -32,12 +32,14 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
   const [imageLink, setImageLink] = useState<string>("");
 
   const fillImage = (fileURL: string) => {
-    const dropArea = document.querySelector(".label_image") as HTMLElement;
+    const iamgeLabel = document.querySelector(".label_image") as HTMLElement;
+    const dropArea = document.querySelector(".drag-area") as HTMLElement;
     let imgTag = `<img src="${fileURL}" class="absolute top-0 left-0 w-full h-full object-cover">`;
-    if (dropArea) {
-      dropArea.innerHTML += imgTag;
-      dropArea.hidden = false;
-      // dropArea.classList.add("");
+    if (iamgeLabel) {
+      iamgeLabel.innerHTML += imgTag;
+      iamgeLabel.hidden = false;
+      dropArea.classList.add("active");
+      // iamgeLabel.classList.add("");
     }
   };
 

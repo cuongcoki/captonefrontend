@@ -192,6 +192,7 @@ export function DataTableForMaterial<TData, TValue>({
             size="sm"
             onClick={() => setPageIndex((prev) => Number(prev) - 1)}
             disabled={Number(pageIndex) === 1}
+            className=""
           >
             Previous
           </Button>

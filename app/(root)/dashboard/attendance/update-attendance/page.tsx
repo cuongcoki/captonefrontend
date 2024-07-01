@@ -14,15 +14,16 @@ export default async function page({ searchParams }: Props) {
   searchParams.date = searchParams.date || toDay;
   const slot = day.getHours() < 12 ? "1" : day.getHours() < 18 ? "2" : "3";
   searchParams.slot = searchParams.slot || slot;
+  searchParams.warehouse = searchParams.warehouse || "";
   console.log("searchParams", searchParams);
 
   return (
-    <>
+    <div className="h-screen">
       <UpdateAttendance
         dateProp={searchParams.date}
         slotProp={searchParams.slot}
         warehouseProp={searchParams.warehouse}
       />
-    </>
+    </div>
   );
 }

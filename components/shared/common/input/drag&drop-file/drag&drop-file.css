@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
 
 .drag-area {
-  border: 2px dashed #3e77e8;
+  border: 2px dashed #22c55e;
   height: 250px;
   width: 300px;
   border-radius: 5px;
@@ -11,21 +11,21 @@
   flex-direction: column;
 }
 .drag-area.active {
-  border: 2px solid #3e77e8;
+  border: 2px solid #22c55e;
 }
 .drag-area .icon {
   font-size: 100px;
-  color: #3e77e8;
+  color: #22c55e;
 }
 .drag-area header {
   font-size: 20px;
   font-weight: 500;
-  color: #3e77e8;
+  color: #22c55e;
 }
 .drag-area span {
   font-size: 15px;
   font-weight: 500;
-  color: #3e77e8;
+  color: #22c55e;
   margin: 10px 0 15px 0;
 }
 .drag-area label {
@@ -34,7 +34,7 @@
   font-weight: 500;
   border: none;
   outline: none;
-  background: #3e77e8;
+  background: #22c55e;
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
@@ -45,5 +45,5 @@
   width: 100%;
   object-fit: cover;
   border-radius: 5px;
-  border: 1px solid #3e77e8;
+  border: 1px solid #22c55e;
 }
