@@ -67,6 +67,12 @@ export default function UpdateAttendance({
   warehouseProp: string;
 }): JSX.Element {
   const colorSlaryByProduct = "bg-[#f1eeee]";
+  function formatDate(dateStr: String) {
+    const [day, month, year] = dateStr.split("/");
+    const formattedDay = day.padStart(2, "0");
+    const formattedMonth = month.padStart(2, "0");
+    return `${formattedDay}/${formattedMonth}/${year}`;
+  }
   const {
     tableData,
     setTableData,
@@ -83,7 +89,7 @@ export default function UpdateAttendance({
   const ForceRender = () => {
     setForce(force + 1);
   };
-  const [date, setDate] = useState<string>(dateProp);
+  const [date, setDate] = useState<string>(formatDate(dateProp));
   const [slot, setSlot] = useState<string>(slotProp);
   const [warehouse, setWarehouse] = useState<string>(warehouseProp);
   const [users, setUsers] = useState<User[]>(user);
@@ -104,10 +110,7 @@ export default function UpdateAttendance({
       }
     });
   }, [warehouseProp]);
-
-  useEffect(() => {
-    console.log("Ware house: ", warehouse);
-  }, [warehouse]);
+  // Conver 7/1/2024 to 07/01/2024
 
   // GET USERS DATA
   useEffect(() => {
@@ -138,7 +141,7 @@ export default function UpdateAttendance({
     const setUser = new Set<string>();
     attendanceApi
       .getAttendance({
-        Date: format(date, "dd/MM/yyyy"),
+        Date: date,
         SlotId: slot,
         PageIndex: "1",
         PageSize: "1000",
@@ -251,7 +254,7 @@ export default function UpdateAttendance({
       });
     });
     const updateEmployeeProductData: UpdateEmployeeProductBody = {
-      date: format(date, "dd/MM/yyyy"),
+      date: date,
       slotId: Number(slot),
       companyId: warehouse,
       createQuantityProducts: employeeProductData,
@@ -271,7 +274,7 @@ export default function UpdateAttendance({
     if (isCreate) {
       DataBody = {
         slotId: Number(slot),
-        date: format(date, "dd/MM/yyyy"),
+        date: date,
         companyId: warehouse,
         createAttendances: tableData.map((item): AttendanceForUpdate => {
           return {
@@ -287,7 +290,7 @@ export default function UpdateAttendance({
     } else {
       DataBody = {
         slotId: Number(slot),
-        date: format(date, "dd/MM/yyyy"),
+        date: date,
         companyId: warehouse,
         updateAttendances: tableData.map((item): AttendanceForUpdate => {
           return {
@@ -389,10 +392,10 @@ export default function UpdateAttendance({
                 Ảnh
               </th>
               <th className="dark:bg-[#1c1917]" rowSpan={2}>
-                Tên
+                Tên nhân viên
               </th>
               <th className="dark:bg-[#1c1917]" rowSpan={2}>
-                CCCD
+                CCCD/CMND
               </th>
               <th className="dark:bg-[#1c1917]" rowSpan={2}>
                 <div className="flex flex-col items-center">
