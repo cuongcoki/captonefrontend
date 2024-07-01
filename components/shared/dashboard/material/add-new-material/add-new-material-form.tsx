@@ -107,6 +107,7 @@ export default function AddNewMeterialForm() {
         }
       })
       .catch((err) => {
+        toast.error("Thêm vật liệu thất bại");
         console.log("Error in Add Material: ", err);
       });
   };

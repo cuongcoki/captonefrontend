@@ -25,6 +25,9 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
       .then(({ data }) => {
         console.log("Attendance Detail", data.data.attendanceSlotReports);
         setData(data.data.attendanceSlotReports);
+      })
+      .catch((error) => {
+        console.log("Error", error);
       });
   }, [Date]);
   return (
@@ -32,15 +35,23 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
       <table>
         <thead>
           <tr>
-            <th rowSpan={2}>Slot</th>
-            <th colSpan={3}>Sản phẩm </th>
-            <th rowSpan={2}>Tăng ca</th>
-            <th rowSpan={2}>Điểm danh</th>
+            <th className="dark:bg-[#1c1917]" rowSpan={2}>
+              Slot
+            </th>
+            <th className="dark:bg-[#1c1917]" colSpan={3}>
+              Sản phẩm{" "}
+            </th>
+            <th className="dark:bg-[#1c1917]" rowSpan={2}>
+              Tăng ca
+            </th>
+            <th className="dark:bg-[#1c1917]" rowSpan={2}>
+              Điểm danh
+            </th>
           </tr>
           <tr>
-            <th>Tên</th>
-            <th>Giai đoạn</th>
-            <th>Số lượng</th>
+            <th className="dark:bg-[#1c1917]">Tên</th>
+            <th className="dark:bg-[#1c1917]">Giai đoạn</th>
+            <th className="dark:bg-[#1c1917]">Số lượng</th>
           </tr>
         </thead>
         <tbody>
