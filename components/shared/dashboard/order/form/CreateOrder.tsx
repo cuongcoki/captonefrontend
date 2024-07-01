@@ -61,13 +61,28 @@ type Company = {
 };
 
 // Define Status Enum
-enum OrderStatus {
-    PENDING = "chưa giải quyết",
-    PROCESSING = "xử lý",
-    COMPLETED = "hoàn thành",
-    CANCELED = "đã hủy bỏ",
-}
-
+const OrderStatus = [
+    {
+        id: 1,
+        des: "chưa giải quyết",
+        name: "PENDING"
+    },
+    {
+        id: 2,
+        des: "xử lý",
+        name: "PROCESSING"
+    },
+    {
+        id: 3,
+        des: "hoàn thành",
+        name: "COMPLETED"
+    },
+    {
+        id: 4,
+        des: "đã hủy bỏ",
+        name: "CANCELED"
+    }
+];
 
 
 export default function CreateOrder() {
@@ -84,7 +99,7 @@ export default function CreateOrder() {
         resolver: zodResolver(OrderSchema),
         defaultValues: {
             companyId: "",
-            status: "",
+            status: 0,
             startOrder: "",
             endOrder: "",
         },
@@ -109,6 +124,7 @@ export default function CreateOrder() {
     // console.log(company);
 
     const onSubmit = async (formData: z.infer<typeof OrderSchema>) => {
+        console.log('formData',formData)
         setLoading(true);
         try {
             const response = await orderApi.createOrder(formData); 
@@ -307,7 +323,7 @@ export default function CreateOrder() {
                                     </form>
                                 </Form>
 
-                                {/* <Form {...form}>
+                                <Form {...form}>
                                     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6" >
                                         <div className="">
                                             <Card>
@@ -355,7 +371,7 @@ export default function CreateOrder() {
                                                                         </FormLabel>
                                                                         <Select
                                                                             onValueChange={field.onChange}
-                                                                            defaultValue={field.value}
+                                                                            defaultValue={String(field.value)}
                                                                         >
                                                                             <FormControl>
                                                                                 <SelectTrigger>
@@ -481,7 +497,7 @@ export default function CreateOrder() {
                                         </Card>
 
                                     </form>
-                                </Form> */}
+                                </Form>
 
                             </div>
                         </div>

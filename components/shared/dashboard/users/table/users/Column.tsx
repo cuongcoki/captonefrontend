@@ -77,33 +77,10 @@ export const columns: ColumnDef<Employee>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => <div className="text-start ml-20">{row.original.firstName} {row.original.lastName}</div>,
   },
 
-  {
-    accessorKey: "lastName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Họ nhân viên
-        </Button>
-      )
-    },
-  },
 
-  {
-    accessorKey: "dob",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Ngày/tháng/năm sinh
-        </Button>
-      )
-    },
-  },
 
   {
     accessorKey: "gender",
@@ -130,18 +107,7 @@ export const columns: ColumnDef<Employee>[] = [
 
   },
 
-  {
-    accessorKey: "address",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Địa chỉ, nơi chốn
-        </Button>
-      )
-    },
-  },
+
 
   {
     accessorKey: "phone",
@@ -201,6 +167,7 @@ export const columns: ColumnDef<Employee>[] = [
       const formatCurrency = (amount:any) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
       };
+      
       return (
           <span><i className="text-primary-backgroudPrimary">{formatCurrency(row.original.salaryByDay)}</i></span>
       )

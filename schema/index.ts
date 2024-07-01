@@ -50,8 +50,8 @@ export const ProductSchema = z.object({
 });
 
 export const UsersSchema = z.object({
-  firstName: z.string().min(1, { message: "Yêu cầu nhập Tên nhân viên." }),
-  lastName: z.string().min(1, { message: "Yêu cầu nhập Họ của nhân viên." }),
+  firstName: z.string().min(1, { message: "Yêu cầu nhập Tên nhân viên" }),
+  lastName: z.string().min(1, { message: "Yêu cầu nhập Họ của nhân viên" }),
   dob: z.string().refine(
     (dob) => {
       const dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
@@ -68,7 +68,7 @@ export const UsersSchema = z.object({
   ),
   address: z
     .string()
-    .min(1, { message: "Yêu cầu nhập địa chỉ của nhân viên." }),
+    .min(1, { message: "Yêu cầu nhập địa chỉ của nhân viên" }),
   phone: z.string().refine(
     (phone) => {
       const phonePattern = /^\d{10}$/;
@@ -91,24 +91,24 @@ export const UsersSchema = z.object({
       },
       { message: "Mật khẩu phải chứa ít nhất một ký tự đặc biệt" }
     ),
-  roleId: z.number().min(1, { message: "roleId là bắt buộc." }),
+  roleId: z.number().min(1, { message: "roleId là bắt buộc" }),
   isActive: z.boolean(),
-  companyId: z.string().min(1, { message: "Vui lòng chọn công ty." }),
+  companyId: z.string().min(1, { message: "Vui lòng chọn công ty" }),
   id: z.string().refine(
     (id) => {
       const idPattern = /^(?:\d{9}|\d{12})$/;
       return idPattern.test(id);
     },
-    { message: "phải đúng 9 chữ số là CMND và 12 chữ số là CCCD" }
+    { message: "Phải đúng 9 chữ số là CMND và 12 chữ số là CCCD" }
   ),
   salaryByDay: z.coerce
     .number({ message: "Lương phải là số" })
-    .min(1, { message: "Vui lòng nhập lương theo ngày của nhân viên." }),
+    .min(1, { message: "Vui lòng nhập lương theo ngày của nhân viên" }),
 });
 
 export const UsersUpdateSchema = z.object({
-  firstName: z.string().min(1, { message: "Tên là bắt buộc." }),
-  lastName: z.string().min(1, { message: "Họ là bắt buộc." }),
+  firstName: z.string().min(1, { message: "Tên là bắt buộc" }),
+  lastName: z.string().min(1, { message: "Họ là bắt buộc" }),
   dob: z.string().refine(
     (dob) => {
       const dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
@@ -123,7 +123,7 @@ export const UsersUpdateSchema = z.object({
     },
     { message: "Giới tính phải là 'Nam' hoặc 'Nữ'" }
   ),
-  address: z.string().min(1, { message: "Địa chỉ là bắt buộc." }),
+  address: z.string().min(1, { message: "Địa chỉ là bắt buộc" }),
   phone: z.string().refine(
     (phone) => {
       const phonePattern = /^\d{10}$/;
@@ -132,9 +132,9 @@ export const UsersUpdateSchema = z.object({
     { message: "Số điện thoại phải đúng 10 chữ số" }
   ),
 
-  roleId: z.number().min(1, { message: "roleId là bắt buộc." }),
+  roleId: z.number().min(1, { message: "roleId là bắt buộc" }),
   isActive: z.boolean(),
-  facility: z.string().min(1, { message: "Công ty là bắt buộc." }),
+  facility: z.string().min(1, { message: "Công ty là bắt buộc" }),
   id: z.string().refine(
     (id) => {
       const idPattern = /^(?:\d{9}|\d{12})$/;

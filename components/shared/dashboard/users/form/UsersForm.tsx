@@ -259,6 +259,7 @@ export const UsersForm = () => {
       .catch((err) => {
         console.log(err.response);
         toast.error(err.response.data.message);
+        
       })
       .finally(() => {
         setLoading(false);
@@ -334,7 +335,7 @@ export const UsersForm = () => {
                         </Card>
 
                         <Card className="md:col-span-5 col-span-1">
-                          <CardContent className="relative">
+                          <CardContent className="relative mt-5">
                             <div className="grid grid-cols-1 gap-2">
                               {/* firstName */}
                               <FormField
@@ -344,7 +345,7 @@ export const UsersForm = () => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="text-primary-backgroudPrimary">
-                                        Tên nhân viên*
+                                        Tên nhân viên *
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />
@@ -363,7 +364,7 @@ export const UsersForm = () => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="text-primary-backgroudPrimary">
-                                        Họ Nhân Viên*
+                                        Họ Nhân Viên *
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />
@@ -381,7 +382,7 @@ export const UsersForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="text-primary-backgroudPrimary">
-                                      Số định danh cá nhân/CMND
+                                      CCCD/CMND *
                                     </FormLabel>
                                     <FormControl>
                                       <InputOTP maxLength={12} {...field}>
@@ -435,7 +436,7 @@ export const UsersForm = () => {
                       </div>
 
                       <Card>
-                        <CardContent>
+                        <CardContent className="mt-5">
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* address */}
@@ -446,7 +447,7 @@ export const UsersForm = () => {
                                 return (
                                   <FormItem>
                                     <FormLabel className="text-primary-backgroudPrimary">
-                                      Địa chỉ cư trú
+                                      Địa chỉ cư trú *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -465,7 +466,7 @@ export const UsersForm = () => {
                                 return (
                                   <FormItem>
                                     <FormLabel className="text-primary-backgroudPrimary">
-                                      Số điện thoại
+                                      Số điện thoại *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -546,7 +547,7 @@ export const UsersForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="text-primary-backgroudPrimary">
-                                    Ngày sinh
+                                    Ngày sinh *
                                   </FormLabel>
                                   <FormControl>
                                     <Input type="text" placeholder="DD/MM/YYYY" {...field} />
@@ -583,7 +584,7 @@ export const UsersForm = () => {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel className="text-primary-backgroudPrimary">
-                                  Giới tính
+                                  Giới tính *
                                 </FormLabel>
                                 <FormControl>
                                   <RadioGroup

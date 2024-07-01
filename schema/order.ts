@@ -8,7 +8,7 @@ const dateFormat = (date: any) => {
 
 export const OrderSchema = z.object({
   companyId: z.string().uuid("ID công ty không hợp lệ"), // Kiểm tra chuỗi UUID hợp lệ với thông báo lỗi
-  status: z.string().min(1, "Trạng thái không được để trống"), // Kiểm tra chuỗi không rỗng với thông báo lỗi
+  status: z.number().min(1, "Trạng thái không được để trống"), // Kiểm tra chuỗi không rỗng với thông báo lỗi
   startOrder: z.string().refine(dateFormat, {
     message: "Ngày phải theo định dạng DD/MM/YYYY"
   }), // Kiểm tra chuỗi với định dạng DD/MM/YYYY

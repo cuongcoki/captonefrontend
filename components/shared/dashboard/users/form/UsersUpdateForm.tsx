@@ -325,7 +325,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                     <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
                         <div className="bg-slate-100  flex flex-col ">
                             <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary  ">
-                                <h2 className="text-2xl text-white">Chỉnh sửa nhân viên</h2>
+                                <h2 className="text-2xl text-white">Chỉnh sửa thông tin nhân viên</h2>
                                 <Button variant="outline" size="icon" onClick={handleOffDialog} >
                                     <X className="w-4 h-4" />
                                 </Button>
@@ -377,7 +377,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                                                     return (
                                                                         <FormItem>
                                                                             <FormLabel className="text-primary-backgroudPrimary">
-                                                                                Tên nhân viên*
+                                                                                Tên nhân viên
                                                                             </FormLabel>
                                                                             <FormControl>
                                                                                 <Input type="text" {...field} />
@@ -395,7 +395,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                                                     return (
                                                                         <FormItem>
                                                                             <FormLabel className="text-primary-backgroudPrimary">
-                                                                                Họ Nhân Viên*
+                                                                                Họ Nhân Viên
                                                                             </FormLabel>
                                                                             <FormControl>
                                                                                 <Input type="text" {...field} />
@@ -435,7 +435,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                                                     return (
                                                                         <FormItem>
                                                                             <FormLabel className="text-primary-backgroudPrimary">
-                                                                                Vai trò nào *
+                                                                                Vai trò nào
                                                                             </FormLabel>
                                                                             <Select
                                                                                 onValueChange={(value) => field.onChange(Number(value))}
@@ -523,7 +523,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                                                 return (
                                                                     <FormItem>
                                                                         <FormLabel className="text-primary-backgroudPrimary">
-                                                                            Lương ngày *
+                                                                            Lương ngày
                                                                         </FormLabel>
                                                                         <FormControl>
                                                                             <Input type="text" {...field} value={formattedValue} onChange={onChangeHandler} />
@@ -542,7 +542,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                                                 return (
                                                                     <FormItem>
                                                                         <FormLabel className="text-primary-backgroudPrimary">
-                                                                            Cơ sở nào *
+                                                                            Cơ sở nào
                                                                         </FormLabel>
                                                                         <Select
                                                                             onValueChange={field.onChange}
@@ -641,7 +641,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                             className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
                                             disabled={loading}
                                         >
-                                            {loading ? "Loading..." : "Thêm Nhân Viên"}
+                                            {loading ? "Loading..." : "Cặp nhật thông tin"}
                                         </Button>
                                     </form>
                                 </Form>

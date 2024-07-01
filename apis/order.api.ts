@@ -15,7 +15,7 @@ export type CompanyRequest = {
 
   export type OrderType = {
     companyId:string,
-    status:string,
+    status:number,
     startOrder:string,
     endOrder:string,
   };
