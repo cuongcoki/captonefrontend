@@ -30,7 +30,19 @@ type userType = {
   salaryByDay: number;
   isActive: boolean;
   companyId: string;
+  avatar: any;
+  salaryByDayRequest:SalaryByDayRequest
+  salaryOverTimeRequest:salaryOverTimeRequest
 };
+type SalaryByDayRequest = {
+  salary: number;
+  startDate: string;
+};
+type salaryOverTimeRequest = {
+  salary: number;
+  startDate: string;
+};
+
 type userUpdateType = {
   id: string;
   firstName: string;

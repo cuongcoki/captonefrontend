@@ -14,7 +14,7 @@ export const Gender = [
 export const isActive = [
   {
     value: true,
-    label: "Đi làm",
+    label: "Đang làm",
   },
   {
     value: false,

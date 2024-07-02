@@ -31,12 +31,12 @@ import { Separator } from "@/components/ui/separator";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { Plus, Upload, X } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // ** import React
 import { useRouter } from "next/navigation";
 import { MyContext } from "../table/users/RenderTable";
-import { useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,6 +53,11 @@ import ImageDisplayAvatar from "./ImageDisplay";
 interface UsersFormProps {
   setOpen: (open: boolean) => void;
 }
+
+type SalaryRequest = {
+  salary: number;
+  startDate: string;
+};
 
 type Company = {
   id: string;
@@ -217,6 +222,29 @@ export const UsersForm = () => {
     fetchCompanyData();
   }, []);
 
+  const [salaryByDayRequest, setSalaryByDayRequest] = useState<SalaryRequest>({ salary: 0, startDate: '' });
+  const [salaryOverTimeRequest, setSalaryOverTimeRequest] = useState<SalaryRequest>({ salary: 0, startDate: '' });
+  console.log('salaryByDayRequest=====', salaryByDayRequest)
+  console.log('salaryOverTimeRequest=====', salaryOverTimeRequest)
+  const handleChange = (requestType: string, name: string, value: any) => {
+    if (requestType === 'salaryByDayRequest') {
+      setSalaryByDayRequest((prev) => ({
+        ...prev,
+        [name]: name === 'salary' ? parseFloat(value) : value,
+      }));
+    } else if (requestType === 'salaryOverTimeRequest') {
+      setSalaryOverTimeRequest((prev) => ({
+        ...prev,
+        [name]: name === 'salary' ? parseFloat(value) : value,
+      }));
+    }
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>, requestType: string) => {
+    const { name, value } = e.target;
+    handleChange(requestType, name, value);
+  };
+
   const onSubmit = (data: z.infer<typeof UsersSchema>) => {
     const {
       firstName,
@@ -231,7 +259,9 @@ export const UsersForm = () => {
       companyId,
       id,
       salaryByDay,
+
     } = data;
+    const avatar = nameImage
     setLoading(true);
     console.log("dataCreateUser", data);
     userApi
@@ -248,6 +278,9 @@ export const UsersForm = () => {
         companyId,
         id,
         salaryByDay,
+        avatar,
+        salaryByDayRequest,
+        salaryOverTimeRequest,
       })
       .then(({ data }) => {
         if (data.isSuccess) {
@@ -261,6 +294,7 @@ export const UsersForm = () => {
       .catch((err) => {
         console.log(err.response);
         toast.error(err.response.data.message);
+
       })
       .finally(() => {
         setLoading(false);
@@ -346,7 +380,7 @@ export const UsersForm = () => {
                         </Card>
 
                         <Card className="md:col-span-5 col-span-1">
-                          <CardContent className="relative">
+                          <CardContent className="relative mt-5">
                             <div className="grid grid-cols-1 gap-2">
                               {/* firstName */}
                               <FormField
@@ -356,7 +390,7 @@ export const UsersForm = () => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="text-primary">
-                                        Tên nhân viên*
+                                        Tên nhân viên *
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />
@@ -375,7 +409,7 @@ export const UsersForm = () => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="text-primary">
-                                        Họ Nhân Viên*
+                                        Họ Nhân Viên *
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />
@@ -393,7 +427,7 @@ export const UsersForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="text-primary">
-                                      Số định danh cá nhân/CMND
+                                      CCCD/CMND *
                                     </FormLabel>
                                     <FormControl>
                                       <InputOTP maxLength={12} {...field}>
@@ -457,7 +491,8 @@ export const UsersForm = () => {
                       </div>
 
                       <Card>
-                        <CardContent>
+                        <CardContent className="mt-5">
+
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* address */}
                             <FormField
@@ -467,7 +502,7 @@ export const UsersForm = () => {
                                 return (
                                   <FormItem>
                                     <FormLabel className="text-primary">
-                                      Địa chỉ cư trú
+                                      Địa chỉ cư trú *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -486,7 +521,7 @@ export const UsersForm = () => {
                                 return (
                                   <FormItem>
                                     <FormLabel className="text-primary">
-                                      Số điện thoại
+                                      Số điện thoại *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -571,7 +606,7 @@ export const UsersForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="text-primary">
-                                    Ngày sinh
+                                    Ngày sinh *
                                   </FormLabel>
                                   <FormControl>
                                     <Input
@@ -612,7 +647,7 @@ export const UsersForm = () => {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel className="text-primary">
-                                  Giới tính
+                                  Giới tính *
                                 </FormLabel>
                                 <FormControl>
                                   <RadioGroup
@@ -644,6 +679,69 @@ export const UsersForm = () => {
                           />
                         </CardContent>
                       </Card>
+
+                      {/* tính lương  */}
+                      <Card>
+                        <CardContent className="mt-5">
+                          {/* salaryByDayRequest */}
+                    
+                          <h1 className="font-medium text-xl">Lương nhân viên*</h1>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <FormLabel className="text-primary-backgroudPrimary">Lương ngày *</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  name="salary"
+                                  value={salaryByDayRequest.salary}
+                                  onChange={(e) => handleInputChange(e, 'salaryByDayRequest')}
+                                />
+                              </FormControl>
+                            </div>
+                            <div>
+                              <FormLabel className="text-primary-backgroudPrimary">Ngày bắt đầu *</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  name="startDate"
+                                  value={salaryByDayRequest.startDate}
+                                  onChange={(e) => handleInputChange(e, 'salaryByDayRequest')}
+                                />
+                              </FormControl>
+                            </div>
+
+                          </div>
+
+                          {/* salaryOverTimeRequest */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <FormLabel className="text-primary-backgroudPrimary">lương thêm giờ *</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  name="salary"
+                                  value={salaryOverTimeRequest.salary}
+                                  onChange={(e) => handleInputChange(e, 'salaryOverTimeRequest')}
+                                />
+                              </FormControl>
+                            </div>
+                            
+                            <div>
+                              <FormLabel className="text-primary-backgroudPrimary">Ngày bắt đầu *</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  name="startDate"
+                                  value={salaryOverTimeRequest.startDate}
+                                  onChange={(e) => handleInputChange(e, 'salaryOverTimeRequest')}
+                                />
+                              </FormControl>
+                            </div>
+
+                          </div>
+                        </CardContent>
+                      </Card>
+
                     </div>
 
                     <Separator className="h-1 my-4" />

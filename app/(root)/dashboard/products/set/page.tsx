@@ -2,8 +2,6 @@ import SetPage from "@/components/shared/dashboard/product-set/Set";
 
 export default function Page() {
     return (
-        <div >
-            <SetPage />
-        </div>
+        <SetPage />
     );
 }

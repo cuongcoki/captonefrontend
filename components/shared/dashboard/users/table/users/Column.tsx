@@ -77,33 +77,10 @@ export const columns: ColumnDef<Employee>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => <div className="">{row.original.firstName} {row.original.lastName}</div>,
   },
 
-  {
-    accessorKey: "lastName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Họ nhân viên
-        </Button>
-      )
-    },
-  },
 
-  {
-    accessorKey: "dob",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Ngày/tháng/năm sinh
-        </Button>
-      )
-    },
-  },
 
   {
     accessorKey: "gender",
@@ -130,18 +107,7 @@ export const columns: ColumnDef<Employee>[] = [
 
   },
 
-  {
-    accessorKey: "address",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Địa chỉ, nơi chốn
-        </Button>
-      )
-    },
-  },
+
 
   {
     accessorKey: "phone",
@@ -185,27 +151,34 @@ export const columns: ColumnDef<Employee>[] = [
 
 
 
-  {
-    accessorKey: "salaryByDay",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Lương ngày
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
+  // {
+  //   accessorKey: "salaryByDay",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //       >
+  //         Lương ngày
+  //       </Button>
+  //     )
+  //   },
+  //   cell: ({ row }) => {
    
-      const formatCurrency = (amount:any) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-      };
-      return (
-          <span><i className="text-primary-backgroudPrimary">{formatCurrency(row.original.salaryByDay)}</i></span>
-      )
-    },
-  },
+  //     // const formatCurrency = (amount:any) => {
+  //     //   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  //     // };
+  //     const formatCurrency = (amount: any) => {
+  //       // Định dạng số theo tiêu chuẩn 'vi-VN'
+  //       const formattedAmount = new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0 }).format(amount);
+        
+  //       // Thay đổi dấu chấm thành dấu phẩy
+  //       return formattedAmount.replace(/\./g, ',');
+  //     }
+  //     return (
+  //         <span>{formatCurrency(row.original.salaryByDay)}</span>
+  //     )
+  //   },
+  // },
 
   // {
   //   accessorKey: "companyId",
@@ -241,7 +214,7 @@ export const columns: ColumnDef<Employee>[] = [
       }
 
       return (
-          <span>{isactive.label}</span>
+          <span className="p-2 rounded-full bg-slate-100">{isactive.label}</span>
       )
     },
   },

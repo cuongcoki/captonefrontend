@@ -35,7 +35,7 @@ export const columns: ColumnDef<Product>[] = [
       const firstImage = row.original.imageResponses[0];
       return firstImage ? (
         <Link href={`/dashboard/products/product/${row.original.id}`} className="flex justify-center items-center">
-          <div className="w-[50px] h-[50px] rounded-lg ">
+          <div className="w-[50px] h-[50px] rounded-lg shadow-md">
             <Image
               src={`${firstImage.imageUrl}`}
               width={100}
@@ -46,8 +46,8 @@ export const columns: ColumnDef<Product>[] = [
           </div>
         </Link>
       ) : (
-        <Link href={`/dashboard/product/${row.original.id}`}>
-          <div className="w-[50px] h-[50px] text-white rounded-lg ">
+        <Link href={`/dashboard/products/product/${row.original.id}`}>
+          <div className="w-[50px] h-[50px] text-white rounded-lg shadow-md ">
           </div>
         </Link>
       );
@@ -75,17 +75,36 @@ export const columns: ColumnDef<Product>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => {
+      let displayText = row.original.name;
+
+      if (displayText.length > 20) {
+        displayText = displayText.slice(0, 20) + '...';
+      }
+      return (
+        <span className="inline-block   px-3 py-1 rounded-md">
+         {displayText}
+        </span>
+      );
+    },
   },
 
   {
     accessorKey: "code",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost">
+        <Button variant="ghost">
           Mã CODE
         </Button>
       )
+    },
+    cell: ({ row }) => {
+      const shortenedCode = row.original.code.slice(0, 10);
+      return (
+        <span className="inline-block   px-3 py-1 rounded-md">
+          {shortenedCode}
+        </span>
+      );
     },
   },
 
@@ -98,6 +117,7 @@ export const columns: ColumnDef<Product>[] = [
         </Button>
       )
     },
+    
   },
 
   {
@@ -109,6 +129,18 @@ export const columns: ColumnDef<Product>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => {
+      let displayText = row.original.size;
+
+      if (displayText.length > 15) {
+        displayText = displayText.slice(0, 15) + '...';
+      }
+      return (
+        <span className="inline-block  px-3 py-1 rounded-md">
+          {displayText}
+        </span>
+      );
+    },
   },
 
   {
@@ -119,6 +151,14 @@ export const columns: ColumnDef<Product>[] = [
           Mô tả sản phẩm
         </Button>
       )
+    },
+    cell: ({ row }) => {
+      const shortenedDescription = `${row.original.description.slice(0, 30)}...`;
+      return (
+        <span className="inline-block  px-3 py-1 rounded-md">
+          {shortenedDescription}
+        </span>
+      );
     },
   },
 
@@ -140,7 +180,7 @@ export const columns: ColumnDef<Product>[] = [
       }
 
       return (
-          <span className={`${isInProcessing.value === true ? 'bg-slate-100' : ''} border px-2 py-1 rounded-full`}>{isInProcessing.label}</span>
+        <span className={`${isInProcessing.value === true ? 'bg-slate-100' : ''} border px-2 py-1 rounded-full`}>{isInProcessing.label}</span>
       );
     },
   },

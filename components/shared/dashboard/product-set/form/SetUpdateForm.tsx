@@ -54,6 +54,7 @@ import { filesApi } from "@/apis/files.api";
 import toast from "react-hot-toast";
 import { productApi } from "@/apis/product.api";
 import ImageDisplayDialog from "./imageDisplayDialog";
+import { NoImage } from "@/constants/images";
 
 interface ImageResponse {
     id: string;
@@ -488,11 +489,11 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
     return (
         <Dialog.Root open={open} onOpenChange={handleOnDialog}>
             <Dialog.Trigger className="rounded p-2 hover:bg-gray-200">
-                <PencilLine onClick={handleOnDialog} />
+                <PencilLine onClick={handleOnDialog} className="h-5 w-5"/>
             </Dialog.Trigger>
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-                    <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[900px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
+                    <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2  max-w-[900px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
                         <div className="bg-slate-100  flex flex-col ">
                             <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary  rounded-t-md">
                                 <h2 className="text-2xl text-white">Chỉnh sửa bộ sản phẩm</h2>
@@ -760,7 +761,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId }) => {
                                                                                     width={900}
                                                                                     height={900}
                                                                                     src={
-                                                                                        product?.imageUrl
+                                                                                        product?.imageUrl === "Image_not_found" ? NoImage : product?.imageUrl
+
                                                                                     }
                                                                                 />
 
