@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation'
 export default function Layout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname()
     return (
-        <div className="h-screen w-full flex flex-col gap-6 ">
-            <div className="bg-white ">
+        <div className=" w-full flex flex-col gap-6 ">
+            <div className="bg-white rounded-md shadow-md">
                 <div className="p-3 space-x-3 flex">
                     <div>
                         <Link href="/dashboard/products/product" >

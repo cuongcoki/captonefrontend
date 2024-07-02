@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Nav } from "./nav";
+import { NavMobile } from "./navMobile";
 import {
   ShoppingCart,
   LayoutDashboard,
@@ -19,7 +19,7 @@ import { useWindowWidth } from "@react-hook/window-size";
 import { ModeToggle } from "@/components/shared/common/mode-toggle";
 
 type Props = {};
-export default function SideNavbar({}: Props) {
+export default function BottomNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   const onlyWidth = useWindowWidth();
@@ -46,7 +46,7 @@ export default function SideNavbar({}: Props) {
             </Button>
           )}
 
-          <Nav
+          <NavMobile
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
               {
@@ -97,21 +97,16 @@ export default function SideNavbar({}: Props) {
                 icon: Building,
                 variant: "ghost",
               },
-              {
-                title: "Cài đặt",
-                href: "/dashboard/settings",
-                icon: Settings,
-                variant: "ghost",
-              },
+           
             ]}
           />
         </div>
       ) : null}
-      <div className="absolute bottom-0 w-full">
+      {/* <div className="absolute bottom-0 w-full">
         <div className="m-1 mb-3">
           <ModeToggle />
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

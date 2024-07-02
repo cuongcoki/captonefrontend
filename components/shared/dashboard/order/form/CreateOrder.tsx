@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
@@ -31,6 +31,32 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+} from "@/components/ui/tabs"
+
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 // ** import REACT
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -40,6 +66,7 @@ import { format, parse } from "date-fns";
 
 // ** import ICON
 import { CalendarIcon, Plus, Truck, X } from "lucide-react";
+import { ChevronDown, Minus, PackagePlus, Pencil, Search } from "lucide-react";
 
 // ** import TYPE & SCHEMA
 import { OrderSchema, CompanyRequestSchema } from "@/schema/order";
@@ -47,6 +74,16 @@ import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
 import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
+import { companyApi } from "@/apis/company.api";
+import { CreateOrderDetails } from "./CreateOrderDetail";
+import { productApi } from "@/apis/product.api";
+import { filesApi } from "@/apis/files.api";
+import useDebounce from "./useDebounce";
+import { setApi } from "@/apis/set.api";
+import ImageDisplayDialog from "../../product-set/form/imageDisplayDialog";
+import Image from "next/image";
+import { Label } from "@/components/ui/label";
+import { NoImage } from "@/constants/images";
 
 // Define Company Type
 type Company = {
@@ -55,9 +92,10 @@ type Company = {
     address: string;
     directorName: string;
     directorPhone: string;
-    email: string;
+    email: string | null;
     companyType: number;
     companyTypeDescription: string;
+    companyEnum: string; // Nếu có nhiều loại công ty khác nhau, bạn có thể thêm vào đây
 };
 
 // Define Status Enum
@@ -87,12 +125,34 @@ const OrderStatus = [
 
 export default function CreateOrder() {
     const [open, setOpen] = useState<boolean>(false);
+    const [openDetils, setOpenDetils] = useState<boolean>(false);
+    const [openNote, setOpenNote] = useState<boolean>(false);
+
+    const handleOffDialogNote = () => {
+        setOpenNote(false);
+    };
+    const handleOnDialogNot = () => {
+        setOpenNote(true);
+    };
+
+    const handleOffDialogDetails = () => {
+        setOpenDetils(false);
+    };
+    const handleOnDialogDetails = () => {
+        setOpenDetils(true);
+    };
+
     const handleOffDialog = () => {
         setOpen(false);
     };
     const handleOnDialog = () => {
         setOpen(true);
     };
+
+    const handleContinue = () => {
+        setOpen(false);
+        setOpenDetils(true)
+    }
 
     // useForm hook for managing form state and validation
     const form = useForm({
@@ -102,40 +162,30 @@ export default function CreateOrder() {
             status: 0,
             startOrder: "",
             endOrder: "",
+            vat: 0,
         },
     });
 
     const [loading, setLoading] = useState<boolean>(false);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [searchTermAll, setSearchTermAll] = useState<string>('');
     const [totalPages, setTotalPages] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(10);
     const [company, setCompany] = useState<Company[]>([]);
-
-
+    const [nextStep, setNextStep] = useState<boolean>(false);
+    const [idOrder, setIdOrder] = useState<string>();
+    console.log('setCompany', company)
 
     useEffect(() => {
         const fetchDataCompany = async () => {
-            const { data } = await orderApi.getAllCompanis(currentPage, pageSize, searchTerm);
-            setCompany(data.data.data);
+            const { data } = await companyApi.getCompanyByType(1);
+            setCompany(data.data);
         }
         fetchDataCompany();
-    }, [currentPage, pageSize, searchTerm]);
+    }, [currentPage, pageSize, searchTermAll]);
     // console.log(company);
 
-    const onSubmit = async (formData: z.infer<typeof OrderSchema>) => {
-        console.log('formData',formData)
-        setLoading(true);
-        try {
-            const response = await orderApi.createOrder(formData); 
-            setOpen(false);
-            toast.success("Tạo đơn hàng thành công");
-        } catch (error) {
-            toast.error("Tạo đơn hàng không thành công");
-        } finally {
-            setLoading(false); 
-        }
-    };
+
 
     // ********************************************* Xữ Lý Thêm Công Ty ********************************************* //
 
@@ -163,347 +213,779 @@ export default function CreateOrder() {
     };
 
 
+
+
+
+
+
+
+    //  ========================================================= các hàm để tìm kiếm sp và thêm  ========================================================= 
+
+
+
+
+
+
+
+
+
+
+    const [checkProducts, setCheckProducts] = useState<boolean>(false);
+    const handleCheckProduct = () => {
+        setCheckProducts(false);
+    };
+    const handleCheckOrder = () => {
+        setCheckProducts(true);
+    };
+
+
+
+    // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
+    const [searchTerm, setSearchTerm] = useState<string>('');
+    const [searchResults, setSearchResults] = useState<any[]>([]);
+    console.log('searchResults', searchResults)
+
+    const [searchTermSet, setSearchTermSet] = useState<string>('');
+    const [searchResultsSet, setSearchResultsSet] = useState<any[]>([]);
+    console.log('searchResultsSet==============', searchResultsSet)
+
+    const debouncedSearchTermSet = useDebounce(searchTermSet, 500);
+    const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+    const handleSearchSet = () => {
+        setApi.searchSets(searchTermSet)
+            .then(({ data }) => {
+                const dataSearch = data.data;
+                return Promise.all(
+                    dataSearch.map((image: any) => {
+                        return filesApi.getFile(image.imageUrl)
+                            .then(({ data }) => {
+                                return {
+                                    ...image,
+                                    imageUrl: data.data // Assuming data.data is the updated image URL
+                                };
+                            })
+                            .catch(error => {
+                                console.error('Error getting file:', error);
+                                return {
+                                    ...image,
+                                    imageUrl: 'NoImage' // Example fallback if there's an error
+                                };
+                            });
+                    })
+                );
+            })
+            .then(updatedImages => {
+                setSearchResultsSet(updatedImages);
+            })
+            .catch(error => {
+                toast.error('Không tìm thấy bộ sản phẩm');
+            })
+            .finally(() => {
+            });
+    };
+
+
+    const handleSearch = () => {
+        productApi.searchProduct(searchTerm)
+            .then(({ data }) => {
+                console.log('data searchhhkkkkh', data)
+
+                setSearchResults(data.data);
+            })
+            .catch(error => {
+                toast.error('Không tìm thấy sản phẩm');
+            })
+            .finally(() => {
+            });
+
+    };
+
+
+    useEffect(() => {
+        if (debouncedSearchTermSet) {
+            handleSearchSet();
+        }
+    }, [debouncedSearchTermSet]);
+
+    useEffect(() => {
+        if (debouncedSearchTerm) {
+            handleSearch();
+        }
+    }, [debouncedSearchTerm]);
+
+
+
+    //  ========================================================= các hàm để thêm sản phẩm  và số lượng vào bộ sản phẩm  ========================================================= 
+
+    const [getDetailsPro, setGetDetailsPro] = useState<any[]>([]);
+    const [productsRequest, setProductsRequest] = useState<
+        {
+            productIdOrSetId: string;
+            quantity: number;
+            unitPrice: number;
+            note: string;
+            isProductId: boolean;
+        }[]
+    >([]);
+    // console.log('getDetailsProgetDetailsPro=========', getDetailsPro)
+    const [getDetailsProUpdate, setGetDetailsProUpdate] = useState<any[]>([]);
+
+
+    console.log("productsRequest", productsRequest);
+
+
+    // ** hàm thêm vào danh sách sản phẩm
+    const handleAddProducts = (product: any) => {
+        console.warn("product", product.id);
+        setSearchTerm("");
+        setSearchTermSet("");
+        // Kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
+        const existingDetailProUpdate = getDetailsProUpdate.some(
+            (item) => item.productId === product.id
+        );
+
+        if (existingDetailProUpdate) {
+            return toast.error("Sản phẩm đã tồn tại");
+        }
+
+        // Kiểm tra xem sản phẩm đã có trong danh sách getDetailsPro chưa
+        const existingDetailProduct = getDetailsPro.find(
+            (item) => item.id === product.id
+        );
+
+        if (!existingDetailProduct) {
+            // Nếu chưa có, thêm sản phẩm vào danh sách getDetailsPro
+            const updatedDetailsPro = [...getDetailsPro, product];
+            setGetDetailsPro(updatedDetailsPro);
+        }
+
+        // Kiểm tra xem sản phẩm đã có trong danh sách productsRequest chưa
+        const existingProduct = productsRequest.find(
+            (item) => item.productIdOrSetId === product.id
+        );
+
+        if (existingProduct) {
+            // Nếu đã có, tăng số lượng lên 1
+            const updatedProductsRequest = productsRequest.map((item) =>
+                item.productIdOrSetId === product.id
+                    ? { ...item, quantity: item.quantity + 1 }
+                    : item
+            );
+            setProductsRequest(updatedProductsRequest);
+        } else {
+            // Nếu chưa có, thêm sản phẩm vào danh sách với số lượng là 1 và các thuộc tính khác
+            setProductsRequest([
+                ...productsRequest,
+                { productIdOrSetId: product.id, quantity: 1, unitPrice: 0, note: "", isProductId: checkProducts ? false : true },
+            ]);
+        }
+    };
+
+    const handleMinusProducts = (productId: string) => {
+        const updatedDetailsPro = getDetailsPro.filter(
+            (product) => product.id !== productId
+        );
+        setGetDetailsPro(updatedDetailsPro);
+
+        // Lọc sản phẩm cần xóa khỏi productsRequest
+        const updatedProductsRequest = productsRequest.filter(
+            (product) => product.productIdOrSetId !== productId
+        );
+        setProductsRequest(updatedProductsRequest);
+
+
+        toast.success("Đã xóa sản phẩm khỏi danh sách");
+    };
+
+
+
+    const handleChange = (productId: string, name: string, value: any) => {
+        setProductsRequest((prev) => {
+            return prev.map((item) => {
+                if (item.productIdOrSetId === productId) {
+                    return { ...item, [name]: value };
+                }
+                return item;
+            });
+        });
+    };
+
+
+
+    const onSubmit = async (formData: z.infer<typeof OrderSchema>) => {
+        console.log('formData', formData)
+
+        const requestBody = {
+            companyId: formData.companyId,
+            status: formData.status,
+            startOrder: formData.startOrder,
+            endOrder: formData.endOrder,
+            vat: formData.vat,
+            orderDetailRequests: productsRequest
+        };
+        console.log('requestBody00000000', requestBody);
+        setLoading(true);
+        try {
+            const response = await orderApi.createOrder(requestBody);
+            setIdOrder(response.data.data)
+            console.log('response', response)
+            toast.success("Tạo đơn hàng thành công");
+            if (response.data.isSuccess) {
+                setNextStep(true)
+            }
+
+        } catch (error) {
+            toast.error("Tạo đơn hàng không thành công");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const { pending } = useFormStatus();
 
     return (
-        <Dialog.Root open={open} onOpenChange={handleOnDialog}>
-            <Dialog.Trigger className="rounded p-2 hover:bg-gray-200">
-                <Plus /> Tạo đơn hàng mới
-            </Dialog.Trigger>
-            <Dialog.Portal>
-                <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-                    <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2 max-w-[800px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-                        <div className="bg-slate-100 flex flex-col overflow-y-auto">
-                            <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary rounded-t-md">
-                                <h2 className="text-2xl text-white">Thêm đơn hàng mới</h2>
-                                <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                                    <X className="w-4 h-4" />
-                                </Button>
-                            </div>
-                            <div className="grid gap-4 p-4">
+        <>
+            <Dialog.Root open={open} onOpenChange={handleOnDialog}>
+                <Dialog.Trigger className="rounded p-2 hover:bg-gray-200">
+                    <Plus />
+                </Dialog.Trigger>
+                <Dialog.Portal>
+                    <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
+                        <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1200px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+                            <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4">
+                                <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary rounded-t-md">
+                                    <h2 className="text-2xl text-white">Thêm đơn hàng mới</h2>
+                                    <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                                        <X className="w-4 h-4" />
+                                    </Button>
+                                </div>
+                                <div className="grid  p-4 overflow-y-auto h-[650px] gap-4">
 
-                                <Form {...formCompany}>
-                                    <form onSubmit={formCompany.handleSubmit(onSubmitCompany)} className="flex flex-col gap-6" >
-                                        <div className="">
-                                            <Card>
-                                                <CardHeader>
-                                                    <CardTitle className="text-lg" onClick={handleToggelCompanyForm}>
-                                                        {!openCompanyForm ? 'Thêm công ty' : 'Chi tiết công ty'}
-                                                    </CardTitle>
-                                                </CardHeader>
-                                                {
-                                                    openCompanyForm && (<CardContent>
-                                                        <div className="flex-col flex gap-3">
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 justify-between items-center gap-6 ">
-                                                                <FormField
-                                                                    control={formCompany.control}
-                                                                    name="name"
-                                                                    render={({ field }) => (
-                                                                        <FormItem className="w-full">
-                                                                            <FormLabel className="text-primary-backgroudPrimary">
-                                                                                Tên *
-                                                                            </FormLabel>
-                                                                            <div className="relative">
-                                                                                <Input
-                                                                                    placeholder="Tên công ty"
-                                                                                    {...field}
-                                                                                    className="relative z-10"
-                                                                                />
+                                    <Tabs defaultValue="account" className="">
+                                        <TabsList className="grid w-full grid-cols-2">
+                                            <TabsTrigger value="account">Đơn hàng</TabsTrigger>
+                                            <TabsTrigger value="password">Sản phẩm</TabsTrigger>
+                                        </TabsList>
+                                        <TabsContent value="account" >
+                                            <Form {...form}>
+                                                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6" >
+                                                    <div className="">
+                                                        <Card>
+                                                            <CardHeader>
+                                                                <CardTitle className="text-lg">
+                                                                    Chi tiết đơn hàng
+                                                                </CardTitle>
+                                                            </CardHeader>
 
-                                                                            </div>
-                                                                            <FormMessage />
-                                                                        </FormItem>
-                                                                    )}
-                                                                />
+                                                            <CardContent className="flex  gap-6">
 
-                                                                <FormField
-                                                                    control={formCompany.control}
-                                                                    name="address"
-                                                                    render={({ field }) => (
-                                                                        <FormItem className="w-full">
-                                                                            <FormLabel className="text-primary-backgroudPrimary">
-                                                                                Địa chỉ *
-                                                                            </FormLabel>
-                                                                            <Input
-                                                                                placeholder="Địa chỉ"
-                                                                                {...field}
-                                                                            />
-                                                                            <FormMessage />
-                                                                        </FormItem>
-                                                                    )}
-                                                                />
-
-
-                                                            </div>
-
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 justify-between items-center gap-6 ">
-                                                                <FormField
-                                                                    control={formCompany.control}
-                                                                    name="directorName"
-                                                                    render={({ field }) => (
-                                                                        <FormItem className="w-full">
-                                                                            <FormLabel className="text-primary-backgroudPrimary">
-                                                                                Tên giám đốc *
-                                                                            </FormLabel>
-                                                                            <Input
-                                                                                placeholder="Tên giám đốc"
-                                                                                {...field}
-                                                                            />
-                                                                            <FormMessage />
-                                                                        </FormItem>
-                                                                    )}
-                                                                />
-                                                                <FormField
-                                                                    control={formCompany.control}
-                                                                    name="directorPhone"
-                                                                    render={({ field }) => (
-                                                                        <FormItem className="w-full">
-                                                                            <FormLabel className="text-primary-backgroudPrimary">
-                                                                                Số điện thoại giám đốc *
-                                                                            </FormLabel>
-                                                                            <Input
-                                                                                placeholder="Số điện thoại giám đốc"
-                                                                                {...field}
-                                                                            />
-                                                                            <FormMessage />
-                                                                        </FormItem>
-                                                                    )}
-                                                                />
-                                                            </div>
-
-                                                            <div className="grid grid-cols-1 md:grid-cols-2 justify-between items-center gap-6 ">
-                                                                <FormField
-                                                                    control={formCompany.control}
-                                                                    name="email"
-                                                                    render={({ field }) => (
-                                                                        <FormItem className="w-full">
-                                                                            <FormLabel className="text-primary-backgroudPrimary">
-                                                                                Email *
-                                                                            </FormLabel>
-                                                                            <Input
-                                                                                type="email"
-                                                                                placeholder="Email"
-                                                                                {...field}
-                                                                            />
-                                                                            <FormMessage />
-                                                                        </FormItem>
-                                                                    )}
-                                                                />
-                                                                {/* <FormField
-                                                                control={formCompany.control}
-                                                                name="companyType"
-                                                                render={({ field }) => (
-                                                                    <FormItem className="w-full">
-                                                                        <FormLabel className="text-primary-backgroudPrimary">
-                                                                            Loại công ty *
-                                                                        </FormLabel>
-
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            /> */}
-                                                            </div>
-
-                                                            <Card>
-                                                                <Button
-                                                                    type="submit"
-                                                                    className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
-                                                                    disabled={pending}
-                                                                >
-                                                                    {pending ? "Loading..." : "GỬI"}
-                                                                </Button>
-                                                            </Card>
-                                                        </div>
-                                                    </CardContent>)
-                                                }
-
-                                            </Card>
-                                        </div>
-
-                                    </form>
-                                </Form>
-
-                                <Form {...form}>
-                                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6" >
-                                        <div className="">
-                                            <Card>
-                                                <CardHeader>
-                                                    <CardTitle className="text-lg">
-                                                        Chi tiết đặt hàng
-                                                    </CardTitle>
-                                                </CardHeader>
-
-                                                <CardContent className="flex  gap-6">
-
-                                                    <div className="flex flex-col gap-6 w-full">
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="companyId"
-                                                            render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel className="text-primary-backgroudPrimary">Cơ sở nào *</FormLabel>
-                                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                                        <FormControl>
-                                                                            <SelectTrigger>
-                                                                                <SelectValue placeholder="Hãy chọn cơ sở" defaultValue={field.value} />
-                                                                            </SelectTrigger>
-                                                                        </FormControl>
-                                                                        <SelectContent>
-                                                                            {company.map((item) => (
-                                                                                <SelectItem key={item.id} value={item.id}>
-                                                                                    {item.name}
-                                                                                </SelectItem>
-                                                                            ))}
-                                                                        </SelectContent>
-                                                                    </Select>
-                                                                    <FormMessage />
-                                                                </FormItem>
-                                                            )}
-                                                        />
-                                                        <div className="  flex w-full gap-6">
-                                                            <FormField
-                                                                control={form.control}
-                                                                name="status"
-                                                                render={({ field }) => (
-                                                                    <FormItem className="w-full">
-                                                                        <FormLabel className="text-primary-backgroudPrimary">
-                                                                            Trạng thái *
-                                                                        </FormLabel>
-                                                                        <Select
-                                                                            onValueChange={field.onChange}
-                                                                            defaultValue={String(field.value)}
-                                                                        >
-                                                                            <FormControl>
-                                                                                <SelectTrigger>
-                                                                                    <SelectValue
-                                                                                        placeholder="Chọn trạng thái"
-                                                                                        defaultValue={field.value}
-                                                                                    />
-                                                                                </SelectTrigger>
-                                                                            </FormControl>
-                                                                            <SelectContent>
-                                                                                {Object.values(OrderStatus).map((status) => (
-                                                                                    <SelectItem key={status} value={status}>
-                                                                                        {status}
-                                                                                    </SelectItem>
-                                                                                ))}
-                                                                            </SelectContent>
-                                                                        </Select>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                        </div>
-
-                                                        <div className="flex gap-6 items-center">
-                                                            <FormField
-                                                                control={form.control}
-                                                                name="startOrder"
-                                                                render={({ field }) => (
-                                                                    <FormItem className="flex flex-col">
-                                                                        <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày đặt hàng *</FormLabel>
-                                                                        <Popover modal={true}>
-                                                                            <PopoverTrigger asChild>
-                                                                                <FormControl>
-                                                                                    <Button
-                                                                                        variant={"outline"}
-                                                                                        className={cn(
-                                                                                            "w-[240px] pl-3 text-left font-normal",
-                                                                                            !field.value && "text-muted-foreground"
-                                                                                        )}
+                                                                <div className="flex flex-col gap-6 w-full">
+                                                                    <FormField
+                                                                        control={form.control}
+                                                                        name="companyId"
+                                                                        render={({ field }) => (
+                                                                            <FormItem>
+                                                                                <FormLabel className="text-primary-backgroudPrimary">Cơ sở nào *</FormLabel>
+                                                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                                                    <FormControl>
+                                                                                        <SelectTrigger>
+                                                                                            <SelectValue placeholder="Hãy chọn cơ sở" defaultValue={field.value} />
+                                                                                        </SelectTrigger>
+                                                                                    </FormControl>
+                                                                                    <SelectContent>
+                                                                                        {company.map((item) => (
+                                                                                            <SelectItem key={item.id} value={item.id}>
+                                                                                                {item.name}
+                                                                                            </SelectItem>
+                                                                                        ))}
+                                                                                    </SelectContent>
+                                                                                </Select>
+                                                                                <FormMessage />
+                                                                            </FormItem>
+                                                                        )}
+                                                                    />
+                                                                    <div className="  flex w-full gap-6">
+                                                                        <FormField
+                                                                            control={form.control}
+                                                                            name="status"
+                                                                            render={({ field }) => (
+                                                                                <FormItem className="w-full">
+                                                                                    <FormLabel className="text-primary-backgroudPrimary">
+                                                                                        Trạng thái *
+                                                                                    </FormLabel>
+                                                                                    <Select
+                                                                                        onValueChange={(value) =>
+                                                                                            field.onChange(Number(value))
+                                                                                        }
+                                                                                        defaultValue={String(field.value)}
                                                                                     >
-                                                                                        {field.value ? (
-                                                                                            format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
-                                                                                        ) : (
-                                                                                            <span>Chọn ngày</span>
-                                                                                        )}
-                                                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                                                    </Button>
-                                                                                </FormControl>
-                                                                            </PopoverTrigger>
-                                                                            <PopoverContent className="w-auto p-0" align="start">
-                                                                                <Calendar
-                                                                                    mode="single"
-                                                                                    selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
-                                                                                    onSelect={(date) => field.onChange(format(date, "dd/MM/yyyy"))}
-                                                                                    // disabled={(date) =>
-                                                                                    //     date > new Date() || date < new Date("1900-01-01")
-                                                                                    // }
-                                                                                    initialFocus
-                                                                                />
-                                                                            </PopoverContent>
-                                                                        </Popover>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                            <Truck />
-                                                            <FormField
-                                                                control={form.control}
-                                                                name="endOrder"
-                                                                render={({ field }) => (
-                                                                    <FormItem className="flex flex-col">
-                                                                        <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày Giao hàng *</FormLabel>
-                                                                        <Popover modal={true}>
-                                                                            <PopoverTrigger asChild>
-                                                                                <FormControl>
-                                                                                    <Button
-                                                                                        variant={"outline"}
-                                                                                        className={cn(
-                                                                                            "w-[240px] pl-3 text-left font-normal",
-                                                                                            !field.value && "text-muted-foreground"
-                                                                                        )}
-                                                                                    >
-                                                                                        {field.value ? (
-                                                                                            format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
-                                                                                        ) : (
-                                                                                            <span>Chọn ngày</span>
-                                                                                        )}
-                                                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                                                    </Button>
-                                                                                </FormControl>
-                                                                            </PopoverTrigger>
-                                                                            <PopoverContent className="w-auto p-0" align="start">
-                                                                                <Calendar
-                                                                                    mode="single"
-                                                                                    selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
-                                                                                    onSelect={(date) => field.onChange(format(date, "dd/MM/yyyy"))}
-                                                                                    // disabled={(date) =>
-                                                                                    //     date > new Date() || date < new Date("1900-01-01")
-                                                                                    // }
-                                                                                    initialFocus
-                                                                                />
-                                                                            </PopoverContent>
-                                                                        </Popover>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                        </div>
+                                                                                        <FormControl>
+                                                                                            <SelectTrigger>
+                                                                                                <SelectValue
+                                                                                                    placeholder="Chọn trạng thái"
+                                                                                                    defaultValue={String(field.value)}
+                                                                                                />
+                                                                                            </SelectTrigger>
+                                                                                        </FormControl>
+                                                                                        <SelectContent>
+                                                                                            {Object.values(OrderStatus).map((status) => (
+                                                                                                <SelectItem key={status.id} value={String(status.id)}>
+                                                                                                    {status.des}
+                                                                                                </SelectItem>
+                                                                                            ))}
+                                                                                        </SelectContent>
+                                                                                    </Select>
+                                                                                    <FormMessage />
+                                                                                </FormItem>
+                                                                            )}
+                                                                        />
+                                                                    </div>
+
+                                                                    <div className="flex gap-6 items-center">
+                                                                        <FormField
+                                                                            control={form.control}
+                                                                            name="startOrder"
+                                                                            render={({ field }) => (
+                                                                                <FormItem className="flex flex-col">
+                                                                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày đặt hàng *</FormLabel>
+                                                                                    <Popover modal={true}>
+                                                                                        <PopoverTrigger asChild>
+                                                                                            <FormControl>
+                                                                                                <Button
+                                                                                                    variant={"outline"}
+                                                                                                    className={cn(
+                                                                                                        "w-[240px] pl-3 text-left font-normal",
+                                                                                                        !field.value && "text-muted-foreground"
+                                                                                                    )}
+                                                                                                >
+                                                                                                    {field.value ? (
+                                                                                                        format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
+                                                                                                    ) : (
+                                                                                                        <span>Chọn ngày</span>
+                                                                                                    )}
+                                                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                                                </Button>
+                                                                                            </FormControl>
+                                                                                        </PopoverTrigger>
+                                                                                        <PopoverContent className="w-auto p-0" align="start">
+                                                                                            <Calendar
+                                                                                                mode="single"
+                                                                                                selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
+                                                                                                onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
+                                                                                                // disabled={(date) =>
+                                                                                                //     date > new Date() || date < new Date("1900-01-01")
+                                                                                                // }
+                                                                                                initialFocus
+                                                                                            />
+                                                                                        </PopoverContent>
+                                                                                    </Popover>
+                                                                                    <FormMessage />
+                                                                                </FormItem>
+                                                                            )}
+                                                                        />
+                                                                        <Truck />
+                                                                        <FormField
+                                                                            control={form.control}
+                                                                            name="endOrder"
+                                                                            render={({ field }) => (
+                                                                                <FormItem className="flex flex-col">
+                                                                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày Giao hàng *</FormLabel>
+                                                                                    <Popover modal={true}>
+                                                                                        <PopoverTrigger asChild>
+                                                                                            <FormControl>
+                                                                                                <Button
+                                                                                                    variant={"outline"}
+                                                                                                    className={cn(
+                                                                                                        "w-[240px] pl-3 text-left font-normal",
+                                                                                                        !field.value && "text-muted-foreground"
+                                                                                                    )}
+                                                                                                >
+                                                                                                    {field.value ? (
+                                                                                                        format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
+                                                                                                    ) : (
+                                                                                                        <span>Chọn ngày</span>
+                                                                                                    )}
+                                                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                                                </Button>
+                                                                                            </FormControl>
+                                                                                        </PopoverTrigger>
+                                                                                        <PopoverContent className="w-auto p-0" align="start">
+                                                                                            <Calendar
+                                                                                                mode="single"
+                                                                                                selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
+                                                                                                onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
+                                                                                                // disabled={(date) =>
+                                                                                                //     date > new Date() || date < new Date("1900-01-01")
+                                                                                                // }
+                                                                                                initialFocus
+                                                                                            />
+                                                                                        </PopoverContent>
+                                                                                    </Popover>
+                                                                                    <FormMessage />
+                                                                                </FormItem>
+                                                                            )}
+                                                                        />
+                                                                    </div>
+
+                                                                    <div>
+                                                                        <FormField
+                                                                            control={form.control}
+                                                                            name="vat"
+                                                                            render={({ field }) => (
+                                                                                <FormItem>
+                                                                                    <FormLabel>VAT</FormLabel>
+                                                                                    <FormControl>
+                                                                                        <Input
+                                                                                            type="number"
+                                                                                            placeholder="vat..."
+                                                                                            {...field}
+                                                                                            onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                                                                            min="0"
+                                                                                            max="100000000"
+                                                                                            step="0.01"
+                                                                                        />
+                                                                                    </FormControl>
+                                                                                    <FormMessage />
+                                                                                </FormItem>
+                                                                            )}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                            </CardContent>
+                                                        </Card>
                                                     </div>
+                                                    <Card>
+                                                        <Button
+                                                            type="submit"
+                                                            className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
+                                                            disabled={pending}
+                                                        >
+                                                            {pending ? "Loading..." : "GỬI"}
+                                                        </Button>
+                                                    </Card>
+                                                </form>
+                                            </Form>
+                                        </TabsContent>
+                                        <TabsContent value="password">
+                                            <div className="grid gap-4  lg:grid-cols-5 lg:gap-8">
+                                                <div className="grid auto-rows-max items-start gap-4 lg:col-span-5 lg:gap-8">
+                                                    <Card>
+                                                        <CardHeader>
+                                                            <CardTitle className="text-lg">
+                                                                Thêm sản phẩm cho đơn hàng
+                                                            </CardTitle>
+                                                        </CardHeader>
+                                                        <CardContent>
+                                                            <div className="flex items-center my-4">
+                                                                <div className="flex items-center border w-full rounded-lg px-2 " >
+                                                                    <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
+                                                                    <DropdownMenu>
+                                                                        <DropdownMenuTrigger asChild>
+                                                                            <ChevronDown className="mr-2 h-4 w-4  text-primary-backgroudPrimary" />
+                                                                        </DropdownMenuTrigger>
+                                                                        <DropdownMenuContent align="start" >
+                                                                            <DropdownMenuItem onClick={handleCheckProduct}>Sản phẩm</DropdownMenuItem>
+                                                                            <DropdownMenuItem onClick={handleCheckOrder}>Bộ sản phẩm</DropdownMenuItem>
+                                                                        </DropdownMenuContent>
+                                                                    </DropdownMenu>
 
-                                                </CardContent>
-                                            </Card>
-                                        </div>
+                                                                    {
+                                                                        !checkProducts ? (
+                                                                            <Input
+                                                                                placeholder="tìm kiếm tên sản phẩm ..."
+                                                                                value={searchTerm}
+                                                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                                                                className="border-none w-full"
+                                                                            />
+                                                                        ) : (
+                                                                            <Input
+                                                                                placeholder="tìm kiếm bộ sản phẩm ..."
+                                                                                value={searchTermSet}
+                                                                                onChange={(e) => setSearchTermSet(e.target.value)}
+                                                                                className="border-none w-full"
+                                                                            />
+                                                                        )
+                                                                    }
 
-                                        <Card>
-                                            <Button
-                                                type="submit"
-                                                className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
-                                                disabled={pending}
-                                            >
-                                                {pending ? "Loading..." : "GỬI"}
-                                            </Button>
-                                        </Card>
+                                                                </div>
+                                                            </div>
+                                                            {
+                                                                !checkProducts ? (
+                                                                    <>
+                                                                        {searchResults !== null ? (
+                                                                            <Card className="my-4">
+                                                                                <CardHeader className="font-semibold text-xl">
+                                                                                    <span>Thông tin sản phẩm</span>
+                                                                                </CardHeader>
+                                                                                <CardContent className="overflow-y-auto">
+                                                                                    <Table>
+                                                                                        <TableHeader>
+                                                                                            <TableRow>
+                                                                                                <TableHead className="w-[100px]">
+                                                                                                    Ảnh
+                                                                                                </TableHead>
+                                                                                                <TableHead>Tên</TableHead>
+                                                                                                <TableHead>Mã Code</TableHead>
+                                                                                                <TableHead className="text-right">
+                                                                                                </TableHead>
+                                                                                            </TableRow>
+                                                                                        </TableHeader>
 
-                                    </form>
-                                </Form>
+                                                                                        <TableBody>
+                                                                                            {searchResults !== null ? (
+                                                                                                searchResults.map((product) => (
+                                                                                                    <TableRow key={product.id}>
+                                                                                                        <TableCell className="font-medium">
+                                                                                                            <ImageDisplayDialog
+                                                                                                                images={product?.imageUrl}
+                                                                                                            />
+                                                                                                        </TableCell>
+                                                                                                        <TableCell>
+                                                                                                            {product?.name}
+                                                                                                        </TableCell>
+                                                                                                        <TableCell>
+                                                                                                            {product?.code}
+                                                                                                        </TableCell>
+                                                                                                        <TableCell>
+                                                                                                            <Button
+                                                                                                                variant="outline"
+                                                                                                                size="icon"
+                                                                                                                onClick={() =>
+                                                                                                                    handleAddProducts(product)
+                                                                                                                }
+                                                                                                            >
+                                                                                                                <PackagePlus className="h-4 w-4" />
+                                                                                                            </Button>
+                                                                                                        </TableCell>
+                                                                                                    </TableRow>
+                                                                                                ))
+                                                                                            ) : (
+                                                                                                <TableRow className="text-center flex justify-center items-center w-full">
+                                                                                                    không thấy sản phẩm nào
+                                                                                                </TableRow>
+                                                                                            )}
+                                                                                        </TableBody>
+                                                                                    </Table>
+                                                                                </CardContent>
+                                                                            </Card>
+                                                                        ) : (
+                                                                            ""
+                                                                        )}
+                                                                    </>
+                                                                ) : (
+                                                                    <>s
+                                                                        {searchResultsSet !== null ? (
+                                                                            <Card className="my-4">
+                                                                                <CardHeader className="font-semibold text-xl">
+                                                                                    <span>Thông tin Bộ sản phẩm</span>
+                                                                                </CardHeader>
+                                                                                <CardContent className=" md:w-full overflow-auto">
+                                                                                    <Table>
+                                                                                        <TableHeader>
+                                                                                            <TableRow>
+                                                                                                <TableHead className="w-[100px]">
+                                                                                                    Ảnh
+                                                                                                </TableHead>
+                                                                                                <TableHead>Tên</TableHead>
+                                                                                                <TableHead>Mã Code</TableHead>
+                                                                                                <TableHead className="text-right">
+                                                                                                </TableHead>
+                                                                                            </TableRow>
+                                                                                        </TableHeader>
 
+                                                                                        <TableBody>
+                                                                                            {searchResultsSet !== null ? (
+                                                                                                searchResultsSet.map((product) => (
+                                                                                                    <TableRow key={product.id}>
+                                                                                                        <TableCell className="font-medium">
+                                                                                                            <ImageDisplayDialog
+                                                                                                                images={product?.imageUrl}
+                                                                                                            />
+                                                                                                        </TableCell>
+                                                                                                        <TableCell>
+                                                                                                            {product?.name}
+                                                                                                        </TableCell>
+                                                                                                        <TableCell>
+                                                                                                            {product?.code}
+                                                                                                        </TableCell>
+                                                                                                        <TableCell>
+                                                                                                            <Button
+                                                                                                                variant="outline"
+                                                                                                                size="icon"
+                                                                                                                onClick={() =>
+                                                                                                                    handleAddProducts(product)
+                                                                                                                }
+                                                                                                            >
+                                                                                                                <PackagePlus className="h-4 w-4" />
+                                                                                                            </Button>
+                                                                                                        </TableCell>
+                                                                                                    </TableRow>
+                                                                                                ))
+                                                                                            ) : (
+                                                                                                <TableRow className="text-center flex justify-center items-center w-full">
+                                                                                                    không thấy sản phẩm nào
+                                                                                                </TableRow>
+                                                                                            )}
+                                                                                        </TableBody>
+                                                                                    </Table>
+                                                                                </CardContent>
+                                                                            </Card>
+                                                                        ) : (
+                                                                            ""
+                                                                        )}
+                                                                    </>
+                                                                )
+                                                            }
+                                                            <div className="md:col-span-1 md:mt-0">
+                                                                <Card className="mt-4">
+                                                                    <CardHeader className="font-semibold text-xl">
+                                                                        <span>Thông tin sản phẩm đã thêm</span>
+                                                                    </CardHeader>
+                                                                    <CardContent className=" overflow-auto md:w-full">
+                                                                        <Table className="overflow-x-auto">
+                                                                            <TableHeader>
+                                                                                <TableRow>
+                                                                                    <TableHead className="w-[100px]">Sản phẩm</TableHead>
+                                                                                    <TableHead>Tên sản phẩm</TableHead>
+                                                                                    <TableHead>Số lượng</TableHead>
+                                                                                    <TableHead>Đơn vị giá</TableHead>
+                                                                                    <TableHead>Ghi chú</TableHead>
+                                                                                    <TableHead ></TableHead>
+                                                                                </TableRow>
+                                                                            </TableHeader>
+
+                                                                            <TableBody>
+                                                                                {getDetailsPro.map((product, index) => (
+                                                                                    <TableRow>
+                                                                                        <TableCell className="font-medium w-[20%]">
+                                                                                            <div className="flex  gap-4">
+                                                                                                <Image
+                                                                                                    alt="ảnh mẫu"
+                                                                                                    className="w-[50px] h-[50px] rounded-lg object-contain"
+                                                                                                    width={900}
+                                                                                                    height={900}
+                                                                                                    src={
+                                                                                                        product?.imageUrl === "Image_not_found" ? NoImage : product?.imageUrl
+                                                                                                    }
+                                                                                                />
+
+
+                                                                                                <div className="font-medium dark:text-white">
+
+                                                                                                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                                                                                                        <b>Code: </b>
+                                                                                                        {product.code}
+                                                                                                    </div>
+
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </TableCell>
+                                                                                        <TableCell>
+                                                                                            {product.name}
+                                                                                        </TableCell>
+
+                                                                                        <TableCell className="font-medium">
+                                                                                            <input
+                                                                                                type="number"
+                                                                                                name="quantity"
+                                                                                                value={
+                                                                                                    productsRequest.find(
+                                                                                                        (item) => item.productIdOrSetId === product.id
+                                                                                                    )?.quantity || 0
+                                                                                                }
+                                                                                                onChange={(e) =>
+                                                                                                    handleChange(
+                                                                                                        product.id,
+                                                                                                        "quantity",
+                                                                                                        parseInt(e.target.value)
+                                                                                                    )
+                                                                                                }
+                                                                                                className="w-16 text-center outline-none"
+                                                                                            />
+                                                                                        </TableCell>
+
+                                                                                        <TableCell className="font-medium">
+                                                                                            <input
+                                                                                                type="number"
+                                                                                                name="unitPrice"
+                                                                                                value={
+                                                                                                    productsRequest.find(
+                                                                                                        (item) => item.productIdOrSetId === product.id
+                                                                                                    )?.unitPrice || 0
+                                                                                                }
+                                                                                                onChange={(e) =>
+                                                                                                    handleChange(
+                                                                                                        product.id,
+                                                                                                        "unitPrice",
+                                                                                                        parseInt(e.target.value)
+                                                                                                    )
+                                                                                                }
+                                                                                                className="w-16 text-center outline-none"
+                                                                                            />
+                                                                                        </TableCell>
+
+                                                                                        <TableCell className="relative">
+                                                                                            <div className="overflow-auto bg-green-200 p-4 w-[200px] h-24 text-justify break-words whitespace-pre-wrap">
+                                                                                                <Textarea
+                                                                                                    id="note"
+                                                                                                    name="note"
+                                                                                                    value={
+                                                                                                        productsRequest.find(
+                                                                                                            (item) => item.productIdOrSetId === product.id
+                                                                                                        )?.note || ""
+                                                                                                    }
+                                                                                                    onChange={(e) =>
+                                                                                                        handleChange(
+                                                                                                            product.id,
+                                                                                                            "note",
+                                                                                                            e.target.value
+                                                                                                        )
+                                                                                                    }
+                                                                                                    className="col-span-3 bg-green-200"
+                                                                                                />
+                                                                                            </div>
+
+                                                                                          
+                                                                                        </TableCell>
+
+
+
+
+                                                                                        <TableCell className="font-medium">
+                                                                                            <Button
+                                                                                                variant="outline"
+                                                                                                size="icon"
+                                                                                                onClick={() =>
+                                                                                                    handleMinusProducts(product.id)
+                                                                                                }
+                                                                                            >
+                                                                                                <Minus className="h-4 w-4" />
+                                                                                            </Button>
+                                                                                        </TableCell>
+                                                                                    </TableRow>
+
+                                                                                ))}
+                                                                            </TableBody>
+                                                                        </Table>
+                                                                    </CardContent>
+                                                                </Card>
+                                                            </div>
+                                                        </CardContent>
+                                                    </Card>
+                                                </div>
+                                            </div>
+                                        </TabsContent>
+                                    </Tabs>
+
+
+                                </div>
                             </div>
-                        </div>
-                    </Dialog.Content>
-                </Dialog.Overlay>
-            </Dialog.Portal>
-        </Dialog.Root>
+                        </Dialog.Content>
+                    </Dialog.Overlay>
+                </Dialog.Portal>
+            </Dialog.Root>
+        </>
     );
 }

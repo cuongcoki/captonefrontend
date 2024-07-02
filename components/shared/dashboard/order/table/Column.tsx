@@ -34,7 +34,7 @@ export const columns: ColumnDef<Order>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" >
-          Tên 
+          Tên Công ty
         </Button>
       )
     },
@@ -94,7 +94,7 @@ export const columns: ColumnDef<Order>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" >
-          Ngày đặt hàng
+          Ngày bất đầu đơn hàng
         </Button>
       )
     },
@@ -106,7 +106,7 @@ export const columns: ColumnDef<Order>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" >
-          Ngày nhận hàng
+          Ngày kết thúc đơn hàng
         </Button>
       )
     },

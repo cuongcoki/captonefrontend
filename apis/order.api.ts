@@ -18,6 +18,8 @@ export type CompanyRequest = {
     status:number,
     startOrder:string,
     endOrder:string,
+    vat:number
+    
   };
 
   interface OrderSearchParams {
@@ -32,7 +34,7 @@ export type CompanyRequest = {
 
 export const orderApi = {
     searchOrder: ( PageIndex?:number ,PageSize?:number ,Status?:any,StartOrder?:any,EndOrder?:any, CompanyName?: string) =>
-        axiosClient.get(`${endPointConstant.BASE_URL}/orders?&PageIndex=${PageIndex}&PageSize=${PageSize}&Status=${Status}&CompanyName=${CompanyName}`),
+        axiosClient.get(`${endPointConstant.BASE_URL}/orders?&PageIndex=${PageIndex}&PageSize=${PageSize}`),
 
     getOrderId: (id: string) =>
         axiosClient.get(`${endPointConstant.BASE_URL}/orders/${id}`),

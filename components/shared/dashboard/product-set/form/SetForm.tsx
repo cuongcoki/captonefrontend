@@ -34,7 +34,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SetSchema } from "@/schema/set";
 
 import { Textarea } from "@/components/ui/textarea"
@@ -52,6 +52,8 @@ import { filesApi } from "@/apis/files.api";
 import { setApi } from "@/apis/set.api";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import { NoImage } from "@/constants/images";
+import { MyContext } from "../table/sets/RenderTable";
 
 
 export const SetForm = () => {
@@ -62,6 +64,7 @@ export const SetForm = () => {
     const handleOnDialog = () => {
         setOpen(true);
     };
+    const { forceUpdate } = useContext(MyContext);
     const [loading, setLoading] = useState(false);
     const [imageRequests, setImageRequests] = useState<string | null>(null);
     const [imageUrls, setImageUrls] = useState<File | null>(null);
@@ -176,7 +179,7 @@ export const SetForm = () => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
     // console.log('searchTerm', searchTerm)
-    // console.log('searchResults', searchResults)
+    console.log('searchResults', searchResults)
 
     const handleSearch = () => {
         setLoading(true)
@@ -342,6 +345,7 @@ export const SetForm = () => {
                 if (response.data.isSuccess) {
                     toast.success(response.data.message);
                     setTimeout(() => {
+                        forceUpdate();
                         setOpen(false);
                         // window.location.href = '/dashboard/product';
                     }, 2000);
@@ -575,7 +579,8 @@ export const SetForm = () => {
                                                                                     width={900}
                                                                                     height={900}
                                                                                     src={
-                                                                                        product?.imageUrl
+                                                                                        product?.imageUrl === "Image_not_found" ? NoImage : product?.imageUrl
+
                                                                                     }
                                                                                 />
 

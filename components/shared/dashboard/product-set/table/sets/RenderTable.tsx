@@ -1,6 +1,6 @@
 import { Product, columns } from "./Column"
 import { DataTableSet } from "./DataTable"
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { DataTablePagination } from "./data-table-pagination";
 import { Input } from "@/components/ui/input";
 
@@ -8,6 +8,12 @@ import { setApi } from "@/apis/set.api";
 import { SetForm } from "../../form/SetForm";
 import { filesApi } from "@/apis/files.api";
 
+type ContexType = {
+  forceUpdate: () => void;
+};
+export const MyContext = createContext<ContexType>({
+  forceUpdate: () => { },
+});
 
 export default function RenderTableProduct() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -17,6 +23,8 @@ export default function RenderTableProduct() {
   const [pageSize, setPageSize] = useState<number>(5);
   const [isInProcessing, setIsInProcessing] = useState<boolean>(true);
   const [data, setData] = useState<Product[]>([]);
+  const [force, setForce] = useState<number>(1);
+  const forceUpdate = () => setForce((prev) => prev + 1);
 
   useEffect(() => {
     const fetchDataProduct = async () => {
@@ -56,32 +64,37 @@ export default function RenderTableProduct() {
 
 
     fetchDataProduct()
-  }, [currentPage, pageSize, searchTerm, isInProcessing]);
+  }, [currentPage, pageSize, searchTerm, isInProcessing, force]);
 
   console.log('data', data)
 
   return (
     <div className="px-3 ">
-      <div className="flex items-center justify-between  mb-4">
-        <Input
-          placeholder="	Mã CODE..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-[30%]"
-        />
+      <MyContext.Provider value={{ forceUpdate }}>
 
-        <div>
-          <div className="flex items-center justify-end p-3">
-            <div className="flex items-center space-x-2">
-              <SetForm />
+        <div className="flex items-center justify-between  mb-4">
+          <Input
+            placeholder="	Mã CODE..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-[30%]"
+          />
+
+          <div>
+            <div className="flex items-center justify-end p-3">
+              <div className="flex items-center space-x-2">
+                <SetForm />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <>
-        <DataTableSet columns={columns} data={data} />
-        <DataTablePagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
-      </>
+      </MyContext.Provider>
+      <MyContext.Provider value={{ forceUpdate }}>
+        <>
+          <DataTableSet columns={columns} data={data} />
+          <DataTablePagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
+        </>
+      </MyContext.Provider>
     </div>
   );
 }

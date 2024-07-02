@@ -78,6 +78,13 @@ export default function ProductIDPage() {
     const [force, setForce] = useState<number>(1);
 
     const forceUpdate = () => setForce((prev) => prev + 1);
+    const formatCurrency = (amount: any) => {
+        // Định dạng số theo tiêu chuẩn 'vi-VN'
+        const formattedAmount = new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0 }).format(amount);
+
+        // Thay đổi dấu chấm thành dấu phẩy
+        return formattedAmount.replace(/\./g, ',');
+    };
 
 
 
@@ -104,46 +111,33 @@ export default function ProductIDPage() {
     }, [params.id, force])
 
 
-    // console.log('iddd product', productId)
+    const limitLength = (text: any, maxLength: any) => {
+        if (text.length > maxLength) {
+            return `${text.slice(0, maxLength)}...`;
+        }
+        return text;
+    };
+
+    const formatValue = (value: any, maxLength: any) => {
+        if (!value) return '';
+        return limitLength(value, maxLength);
+    };
 
 
 
     return (
-        <div className="flex flex-col gap-6 justify-center">
+        <div className="flex flex-col gap-6 justify-center ">
             <header className="">
                 <div className="flex items-center gap-4 justify-between">
-                    <Link href={'/dashboard/products/product'}>
+                    {/* <Link href={'/dashboard/products/product'}>
                         <Button variant="outline" size="icon" className="h-7 w-7">
                             <ChevronLeft className="h-4 w-4" />
                             <span className="sr-only">Back</span>
                         </Button>
                     </Link>
-                    <h1 className=" shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight ">
-                        Sản phẩm
-                    </h1>
+                    */}
                     <div className=" items-center gap-2 md:ml-auto md:flex">
-                        <Dialog.Root open={open} onOpenChange={handleOnDialog}>
-                            <Dialog.Trigger className="rounded p-2 hover:bg-gray-200">
-                                <PencilLine onClick={handleOnDialog} />
-                            </Dialog.Trigger>
-                            <Dialog.Portal>
-                                <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-                                    <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[900px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
-                                        <div className="bg-slate-100  flex flex-col ">
-                                            <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary  rounded-t-md">
-                                                <h2 className="text-2xl text-white">Chỉnh sửa bộ sản phẩm</h2>
-                                                <Button variant="outline" size="icon">
-                                                    <X className="w-4 h-4" onClick={handleOffDialog} />
-                                                </Button>
-                                            </div>
-                                            <div className="grid gap-4 p-4 overflow-y-auto h-[650px]">
-                                                <ProductUpdateForm productId={productId}  />
-                                            </div>
-                                        </div>
-                                    </Dialog.Content>
-                                </Dialog.Overlay>
-                            </Dialog.Portal>
-                        </Dialog.Root>
+
                     </div>
                 </div>
             </header >
@@ -163,46 +157,71 @@ export default function ProductIDPage() {
                                     <ImageDisplayID images={productId.imageResponses} />
                                 </Card>
                             </CardContent>
-
                         </Card>
 
                         <Card >
-                            <CardHeader>
-                                <CardTitle>Chi tiết sản phẩm</CardTitle>
-                                <CardDescription>
-                                    đây là sản phẩm chi tiết, bạn có thể thay đổi giá trị
-                                </CardDescription>
+                            <CardHeader >
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <CardTitle>Chi tiết sản phẩm</CardTitle>
+                                        <CardDescription>
+                                            đây là sản phẩm chi tiết, bạn có thể thay đổi giá trị
+                                        </CardDescription>
+                                    </div>
+                                    <Dialog.Root open={open} onOpenChange={handleOnDialog}>
+                                        <Dialog.Trigger className="rounded p-2 hover:bg-gray-200">
+                                            <PencilLine onClick={handleOnDialog} />
+                                        </Dialog.Trigger>
+                                        <Dialog.Portal>
+                                            <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
+                                                <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[900px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
+                                                    <div className="bg-slate-100  flex flex-col ">
+                                                        <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary  rounded-t-md">
+                                                            <h2 className="text-2xl text-white">Chỉnh sửa thông tin sản phẩm</h2>
+                                                            <Button variant="outline" size="icon">
+                                                                <X className="w-4 h-4" onClick={handleOffDialog} />
+                                                            </Button>
+                                                        </div>
+                                                        <div className="grid gap-4 p-4 overflow-y-auto h-[650px]">
+                                                            <ProductUpdateForm productId={productId} />
+                                                        </div>
+                                                    </div>
+                                                </Dialog.Content>
+                                            </Dialog.Overlay>
+                                        </Dialog.Portal>
+                                    </Dialog.Root>
+                                </div>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid gap-6">
                                     <div className="grid gap-3">
                                         <Label htmlFor="name">Tên</Label>
                                         <div className="border p-2 rounded-md border-gray-100">
-                                            {productId?.name}
+                                            {formatValue(productId?.name, 30)}
                                         </div>
                                     </div>
                                     <div className="grid gap-3">
                                         <Label htmlFor="description">Mô tả</Label>
                                         <div className="border p-2 rounded-md border-gray-100">
-                                            {productId?.description}
+                                            {formatValue(productId?.description, 50)}
                                         </div>
                                     </div>
                                     <div className="grid gap-3">
                                         <Label htmlFor="name">Mã CODE</Label>
                                         <div className="border p-2 rounded-md border-gray-100">
-                                            {productId?.code}
+                                            {formatValue(productId?.code, 10)}
                                         </div>
                                     </div>
                                     <div className="grid gap-3">
-                                        <Label htmlFor="name">Giá</Label>
+                                        <Label htmlFor="name">Giá sản phẩm</Label>
                                         <div className="border p-2 rounded-md border-gray-100">
-                                            {productId?.price} VNĐ
+                                            {formatCurrency(productId?.price)}
                                         </div>
                                     </div>
                                     <div className="grid gap-3">
                                         <Label htmlFor="name">Kích thước</Label>
                                         <div className="border p-2 rounded-md border-gray-100">
-                                            {productId?.size}
+                                           {formatValue(productId?.size,15)}
                                         </div>
                                     </div>
                                     <div className="grid gap-3">
