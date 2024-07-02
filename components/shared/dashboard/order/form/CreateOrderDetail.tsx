@@ -492,7 +492,7 @@ export const CreateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
 
                                         <TableBody>
                                             {getDetailsPro.map((product, index) => (
-                                                <TableRow>
+                                                <TableRow key={index}>
                                                     <TableCell className="font-medium w-[20%]">
                                                         <div className="flex  gap-4">
                                                             <Image
@@ -559,7 +559,7 @@ export const CreateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                                             className="w-16 text-center outline-none"
                                                         />
                                                     </TableCell>
-                                                    z
+                                                    
                                                     <TableCell className="relative">
                                                         <div className="overflow-auto bg-green-200 p-4 w-[200px] h-24 text-justify break-words whitespace-pre-wrap">
                                                             {productsRequest.find(
