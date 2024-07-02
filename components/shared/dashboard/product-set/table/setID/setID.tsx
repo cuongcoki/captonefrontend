@@ -96,7 +96,7 @@ export default function SetIDPage() {
 
     return (
         <div className="flex flex-col gap-6 justify-center">
-            <header className="">
+            {/* <header className="">
                 <div className="flex items-center gap-4 justify-between">
                     <Link href={'/dashboard/products/set'}>
                         <Button variant="outline" size="icon" className="h-7 w-7">
@@ -104,7 +104,6 @@ export default function SetIDPage() {
                             <span className="sr-only">Back</span>
                         </Button>
                     </Link>
-                    {/* className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0" */}
                     <h1 className=" shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight ">
                         Đặt sản phẩm
                     </h1>
@@ -112,13 +111,16 @@ export default function SetIDPage() {
                         <SetUpdateForm setId={setId.id} />
                     </div>
                 </div>
-            </header>
+            </header> */}
             <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
 
                 <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
                     <Card x-chunk="dashboard-07-chunk-0">
                         <CardHeader>
-                            <CardTitle>Đặt sản phẩm chi tiết</CardTitle>
+                            <div className="flex justify-between items-start">
+                                <CardTitle>Bộ sản phẩm chi tiết</CardTitle>
+                                <SetUpdateForm setId={setId.id} />
+                            </div>
                         </CardHeader>
                         <CardContent>
                             <div className="grid gap-6">

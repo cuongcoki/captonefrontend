@@ -93,7 +93,7 @@ export default function FormSignIn() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex items-center text-secondary-backgroudPrimary">
-                CCCD/CMND
+               TÀI KHOẢN
               </FormLabel>
               <FormControl>
                 <Input type="text" {...field} />

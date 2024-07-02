@@ -29,6 +29,8 @@ import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-f
 import { Combobox } from "@/components/shared/common/combobox/combobox";
 import { usePathname, useRouter } from "next/navigation";
 import CountProduct from "@/components/shared/dashboard/attendance/update-attendance/count-product";
+import { filesApi } from "@/apis/files.api";
+import { companyApi } from "@/apis/company.api";
 
 const comboboxData: ComboboxDataType[] = [
   {
@@ -44,16 +46,16 @@ const comboboxData: ComboboxDataType[] = [
     value: "3",
   },
 ];
-const wareHouseData: ComboboxDataType[] = [
-  {
-    label: "Cơ sở chính",
-    value: "b6897f71-491b-43d4-9234-36bef2290c2b",
-  },
-  {
-    label: "Cơ sở phụ",
-    value: "f6a24556-9ae6-4aed-95f9-34289595db21",
-  },
-];
+// const wareHouseData: ComboboxDataType[] = [
+//   {
+//     label: "Cơ sở chính",
+//     value: "b6897f71-491b-43d4-9234-36bef2290c2b",
+//   },
+//   {
+//     label: "Cơ sở phụ",
+//     value: "f6a24556-9ae6-4aed-95f9-34289595db21",
+//   },
+// ];
 
 export default function UpdateAttendance({
   dateProp,
@@ -65,6 +67,12 @@ export default function UpdateAttendance({
   warehouseProp: string;
 }): JSX.Element {
   const colorSlaryByProduct = "bg-[#f1eeee]";
+  function formatDate(dateStr: String) {
+    const [day, month, year] = dateStr.split("/");
+    const formattedDay = day.padStart(2, "0");
+    const formattedMonth = month.padStart(2, "0");
+    return `${formattedDay}/${formattedMonth}/${year}`;
+  }
   const {
     tableData,
     setTableData,
@@ -81,13 +89,28 @@ export default function UpdateAttendance({
   const ForceRender = () => {
     setForce(force + 1);
   };
-  const [date, setDate] = useState<string>(dateProp);
+  const [date, setDate] = useState<string>(formatDate(dateProp));
   const [slot, setSlot] = useState<string>(slotProp);
   const [warehouse, setWarehouse] = useState<string>(warehouseProp);
   const [users, setUsers] = useState<User[]>(user);
   const [isCreated, setIsCreated] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const [selectWareHouseData, setSelectWareHouseData] = useState<
+    ComboboxDataType[]
+  >([]);
+  useEffect(() => {
+    companyApi.getCompanyByType(0).then(({ data }) => {
+      console.log("Company Data: ", data);
+      setSelectWareHouseData(
+        data.data.map((item) => ({ label: item.name, value: item.id }))
+      );
+      if (warehouseProp === "") {
+        setWarehouse(data.data[0].id);
+      }
+    });
+  }, [warehouseProp]);
+  // Conver 7/1/2024 to 07/01/2024
 
   // GET USERS DATA
   useEffect(() => {
@@ -106,6 +129,15 @@ export default function UpdateAttendance({
   }, [users, setUser, warehouse]);
   // GET ATTENDANCE DATA
   useEffect(() => {
+    const getImage = async (name: string) => {
+      try {
+        const res = await filesApi.getFile(name);
+        console.log("Get Image", res.data.data);
+        return res.data.data;
+      } catch (error: any) {
+        console.log("Error get image: ", error.response.data);
+      }
+    };
     const setUser = new Set<string>();
     attendanceApi
       .getAttendance({
@@ -116,12 +148,26 @@ export default function UpdateAttendance({
         SearchTerm: "",
         CompanyId: warehouse,
       })
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         // console.log("data", data.data.data);
         setIsCreated(true);
-        const attendanceData = data.data.data.map(
-          (item): AttendanceDetailType => {
+        const attendanceData = await Promise.all(
+          data.data.data.map(async (item): Promise<AttendanceDetailType> => {
             setUser.add(item.userId);
+            const products = await Promise.all(
+              item.employeeProductResponses.map(
+                async (product): Promise<AttendanceDetailProductType> => {
+                  return {
+                    productID: product.productId,
+                    productName: product.productName,
+                    image: await getImage(product.imageUrl),
+                    phaseID: product.phaseId,
+                    phaseName: product.phaseName,
+                    quantity: product.quantity.toString(),
+                  };
+                }
+              )
+            );
             return {
               userID: item.userId,
               userName: item.fullName,
@@ -130,20 +176,9 @@ export default function UpdateAttendance({
               isAttendance: item.isAttendance,
               isSalaryByProduct: item.isSalaryByProduct,
               isManufacture: item.isManufacture,
-              products: item.employeeProductResponses.map(
-                (product): AttendanceDetailProductType => {
-                  return {
-                    productID: product.productId,
-                    productName: product.productName,
-                    image: product.imageUrl,
-                    phaseID: product.phaseId,
-                    phaseName: product.phaseName,
-                    quantity: product.quantity.toString(),
-                  };
-                }
-              ),
+              products: products,
             };
-          }
+          })
         );
         console.log("attendanceData", attendanceData);
         // users.forEach((u) => {
@@ -315,12 +350,14 @@ export default function UpdateAttendance({
     console.log("tableData", tableData);
   }, [tableData]);
   return (
-    <Card>
-      <div className="flex justify-center text-[2rem]">QUẢN LÝ ĐIỂM DANH</div>
+    <Card className="">
+      <div className="flex justify-center text-[2rem] text-[#22c55e] mt-3">
+        QUẢN LÝ ĐIỂM DANH
+      </div>
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap">
         <Combobox
           title="Vui lòng chọn cơ sở"
-          data={wareHouseData}
+          data={selectWareHouseData}
           value={warehouse}
           setValue={(value: string) => {
             setWarehouse(value);
@@ -351,10 +388,16 @@ export default function UpdateAttendance({
         <table className="update-attendance-table w-full border-collapse overflow-x-hidden overflow-auto">
           <thead>
             <tr>
-              <th rowSpan={2}>Ảnh</th>
-              <th rowSpan={2}>Tên</th>
-              <th rowSpan={2}>CCCD</th>
-              <th className="" rowSpan={2}>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+                Ảnh
+              </th>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+                Tên nhân viên
+              </th>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+                CCCD/CMND
+              </th>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
                 <div className="flex flex-col items-center">
                   <div>Lương theo SP</div>
                   <div className="flex text-sm font-light">
@@ -378,9 +421,13 @@ export default function UpdateAttendance({
                   </div>
                 </div>
               </th>
-              <th colSpan={3}>Sản phẩm</th>
-              <th rowSpan={2}>Tăng ca</th>
-              <th rowSpan={2}>
+              <th className="dark:bg-[#1c1917]" colSpan={3}>
+                Sản phẩm
+              </th>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+                Tăng ca
+              </th>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
                 <div className="flex flex-col items-center">
                   <div>Điểm danh</div>
                   <div className="flex text-sm font-light">
@@ -406,9 +453,9 @@ export default function UpdateAttendance({
               </th>
             </tr>
             <tr>
-              <th>Tên</th>
-              <th>Giai đoạn</th>
-              <th>Số lượng</th>
+              <th className="dark:bg-[#1c1917]">Tên</th>
+              <th className="dark:bg-[#1c1917]">Giai đoạn</th>
+              <th className="dark:bg-[#1c1917]">Số lượng</th>
             </tr>
           </thead>
           <tbody>
@@ -430,11 +477,22 @@ export default function UpdateAttendance({
                             /> */}
                             </div>
                           </td>
-                          <td rowSpan={item.products.length}>
+                          <td
+                            className="dark:bg-[#1c1917]"
+                            rowSpan={item.products.length}
+                          >
                             {item.userName}
                           </td>
-                          <td rowSpan={item.products.length}>{item.userID}</td>
-                          <td rowSpan={item.products.length}>
+                          <td
+                            className="dark:bg-[#1c1917]"
+                            rowSpan={item.products.length}
+                          >
+                            {item.userID}
+                          </td>
+                          <td
+                            className="dark:bg-[#1c1917]"
+                            rowSpan={item.products.length}
+                          >
                             <input
                               className="size-[30px]"
                               type="checkbox"
@@ -453,8 +511,8 @@ export default function UpdateAttendance({
                         <td
                           className={
                             item.isSalaryByProduct === true
-                              ? ""
-                              : colorSlaryByProduct
+                              ? "dark:bg-[#1c1917]"
+                              : colorSlaryByProduct + " dark:bg-black"
                           }
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
@@ -467,8 +525,8 @@ export default function UpdateAttendance({
                         <td
                           className={
                             item.isSalaryByProduct === true
-                              ? ""
-                              : colorSlaryByProduct
+                              ? "dark:bg-[#1c1917]"
+                              : colorSlaryByProduct + " dark:bg-black"
                           }
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
@@ -481,8 +539,8 @@ export default function UpdateAttendance({
                         <td
                           className={
                             item.isSalaryByProduct === true
-                              ? ""
-                              : colorSlaryByProduct
+                              ? "dark:bg-[#1c1917]"
+                              : colorSlaryByProduct + " dark:bg-black"
                           }
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
@@ -560,8 +618,8 @@ export default function UpdateAttendance({
                           data-issalarybyproduct={item.isSalaryByProduct}
                           className={`${
                             item.isSalaryByProduct === true
-                              ? ""
-                              : "bg-[#f1eeee]"
+                              ? "dark:bg-[#1c1917] "
+                              : "bg-[#f1eeee] dark:bg-black "
                           }`}
                         >
                           Nhấn vào
@@ -574,8 +632,8 @@ export default function UpdateAttendance({
                           data-issalarybyproduct={item.isSalaryByProduct}
                           className={`${
                             item.isSalaryByProduct === true
-                              ? ""
-                              : "bg-[#f1eeee]"
+                              ? "dark:bg-[#1c1917] "
+                              : "bg-[#f1eeee] dark:bg-black"
                           }`}
                         >
                           Để tạo
@@ -588,8 +646,8 @@ export default function UpdateAttendance({
                           data-issalarybyproduct={item.isSalaryByProduct}
                           className={`${
                             item.isSalaryByProduct === true
-                              ? ""
-                              : "bg-[#f1eeee]"
+                              ? "dark:bg-[#1c1917] "
+                              : "bg-[#f1eeee] dark:bg-black"
                           }`}
                         >
                           Sản phẩm

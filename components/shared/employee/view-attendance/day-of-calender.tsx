@@ -21,23 +21,19 @@ type Props = {
 export default function DayOfCalender({ dayData, month, year }: Props) {
   const day = new Date(dayData.date);
   const isDayOfMonth = day.getMonth() + 1 === month;
-
-  const oneEffort =
-    dayData.attedanceDateReport.isPresentSlot1 &&
-    dayData.attedanceDateReport.isPresentSlot2;
-  const halfEffort =
-    !oneEffort &&
-    (dayData.attedanceDateReport.isPresentSlot1 ||
-      dayData.attedanceDateReport.isPresentSlot2);
+  const halfEffort = dayData.attedanceDateReport.isHalfWork;
+  const oneEffort = dayData.attedanceDateReport.isOneWork;
+  const isSalaryByProduct = dayData.attedanceDateReport.isSalaryByProduct;
+  const isOverTime = dayData.attedanceDateReport.isOverTime;
   const noEffort =
-    !oneEffort && !halfEffort && !dayData.attedanceDateReport.isPresentSlot3;
+    !halfEffort && !oneEffort && !isSalaryByProduct && !isOverTime;
   return (
     <>
       {isDayOfMonth ? (
         <Dialog>
           <DialogTrigger asChild>
             <div
-              className={`border border-[#eeeeee] hover:bg-gray-300 h-[65px] xl:h-[80px]`}
+              className={`border border-[#eeeeee] hover:bg-gray-300 dark:hover:bg-[#615750] h-[65px] xl:h-[80px]`}
             >
               <div className="ml-1">{day.getDate()}</div>
               <div className="w-full ">
@@ -51,11 +47,10 @@ export default function DayOfCalender({ dayData, month, year }: Props) {
                   {halfEffort && (
                     <DotStatus variant="yellow" className="ml-auto mr-1" />
                   )}
-                  {dayData.attedanceDateReport.isSalaryByProduct &&
-                    !noEffort && (
-                      <DotStatus variant="blue" className="ml-auto mr-1" />
-                    )}
-                  {dayData.attedanceDateReport.isPresentSlot3 && (
+                  {isSalaryByProduct && !noEffort && (
+                    <DotStatus variant="blue" className="ml-auto mr-1" />
+                  )}
+                  {isOverTime && (
                     <DotStatus variant="orange" className="ml-auto mr-1" />
                   )}
                 </div>
@@ -87,7 +82,7 @@ export default function DayOfCalender({ dayData, month, year }: Props) {
         </Dialog>
       ) : (
         <div
-          className={`border border-[#eeeeee] hover:bg-gray-300 h-[65px] xl:h-[80px] relative bg-[#fafafa] text-[#c8c8c8]`}
+          className={`border border-[#eeeeee] hover:bg-gray-300 h-[65px] xl:h-[80px] relative bg-[#fafafa] text-[#c8c8c8] dark:bg-[#2b2825] dark:hover:bg-[#615750]`}
         >
           <div className="ml-1">{day.getDate()}</div>
         </div>

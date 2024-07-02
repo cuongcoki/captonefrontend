@@ -69,10 +69,10 @@ export default function UpdateMaterialHistoryForm({ id }: { id: string }) {
       // console.log("DATA FETCH FROM API:", res.data.data);
       const formData: materialHistoryFormType = {
         materialID: String(res.data.data.materialId),
-        quantity: String(res.data.data.quantity),
-        price: String(res.data.data.price),
+        quantity: String(res.data.data.quantity).trim(),
+        price: String(res.data.data.price).trim(),
         importAt: res.data.data.importDate,
-        description: res.data.data.description,
+        description: res.data.data.description.trim(),
       };
       setImportDate(res.data.data.importDate);
       form.reset(formData);
@@ -144,7 +144,25 @@ export default function UpdateMaterialHistoryForm({ id }: { id: string }) {
               {/* <FormLabel>Đơn vị</FormLabel> */}
               <FormControl>
                 {/* <Input placeholder="Nhập đơn vị ở đây" {...field} /> */}
-                <InputAnimation nameFor="Số lượng" {...field} />
+                <InputAnimation
+                  nameFor="Số lượng"
+                  {...field}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    const inputValue = event.target.value;
+                    // Remove any characters that are not digits or a decimal point
+                    let filteredInput = inputValue.replace(/[^\d.]/g, "");
+
+                    // Split by decimal point and ensure only one decimal point is present
+                    const parts = filteredInput.split(".");
+                    if (parts.length > 2) {
+                      // More than one decimal point
+                      // Join the first part with the rest of the string, excluding additional decimal points
+                      filteredInput = `${parts[0]}.${parts.slice(1).join("")}`;
+                    }
+
+                    field.onChange(filteredInput);
+                  }}
+                />
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -162,9 +180,18 @@ export default function UpdateMaterialHistoryForm({ id }: { id: string }) {
                   {...field}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     const inputValue = event.target.value;
-                    const numericInput = inputValue.replace(/\D/g, "");
+                    // Remove any characters that are not digits or a decimal point
+                    let filteredInput = inputValue.replace(/[^\d.]/g, "");
 
-                    field.onChange(numericInput);
+                    // Split by decimal point and ensure only one decimal point is present
+                    const parts = filteredInput.split(".");
+                    if (parts.length > 2) {
+                      // More than one decimal point
+                      // Join the first part with the rest of the string, excluding additional decimal points
+                      filteredInput = `${parts[0]}.${parts.slice(1).join("")}`;
+                    }
+
+                    field.onChange(filteredInput);
                   }}
                 />
               </FormControl>

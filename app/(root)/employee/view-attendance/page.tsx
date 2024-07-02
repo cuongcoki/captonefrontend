@@ -77,9 +77,8 @@ export default function Page({ searchParams }: Props) {
             return {
               date: convertDateToISO(item.date) || "",
               attedanceDateReport: {
-                isPresentSlot1: item.attedanceDateReport.isPresentSlot1,
-                isPresentSlot2: item.attedanceDateReport.isPresentSlot2,
-                isPresentSlot3: item.attedanceDateReport.isPresentSlot3,
+                isHalfWork: item.attedanceDateReport.isHalfWork,
+                isOneWork: item.attedanceDateReport.isOneWork,
                 isSalaryByProduct: item.attedanceDateReport.isSalaryByProduct,
                 isOverTime: item.attedanceDateReport.isOverTime,
               },
@@ -125,9 +124,8 @@ export default function Page({ searchParams }: Props) {
         calendarGrid.push({
           date: prevDate.toISOString().split("T")[0],
           attedanceDateReport: {
-            isPresentSlot1: false,
-            isPresentSlot2: false,
-            isPresentSlot3: false,
+            isHalfWork: false,
+            isOneWork: false,
             isSalaryByProduct: false,
             isOverTime: false,
           },
@@ -144,9 +142,8 @@ export default function Page({ searchParams }: Props) {
           calendarGrid.push({
             date: dateString,
             attedanceDateReport: {
-              isPresentSlot1: false,
-              isPresentSlot2: false,
-              isPresentSlot3: false,
+              isHalfWork: false,
+              isOneWork: false,
               isSalaryByProduct: false,
               isOverTime: false,
             },
@@ -161,9 +158,8 @@ export default function Page({ searchParams }: Props) {
         calendarGrid.push({
           date: nextDate.toISOString().split("T")[0],
           attedanceDateReport: {
-            isPresentSlot1: false,
-            isPresentSlot2: false,
-            isPresentSlot3: false,
+            isHalfWork: false,
+            isOneWork: false,
             isSalaryByProduct: false,
             isOverTime: false,
           },
@@ -176,9 +172,8 @@ export default function Page({ searchParams }: Props) {
         calendarGrid.push({
           date: nextDate.toISOString().split("T")[0],
           attedanceDateReport: {
-            isPresentSlot1: false,
-            isPresentSlot2: false,
-            isPresentSlot3: false,
+            isHalfWork: false,
+            isOneWork: false,
             isSalaryByProduct: false,
             isOverTime: false,
           },
@@ -215,71 +210,73 @@ export default function Page({ searchParams }: Props) {
   };
 
   return (
-    <Card className="p-5">
-      <div className="bg-[#62d46d] h-10 text-center grid grid-cols-3 rounded-ss-md rounded-se-md p-2">
-        <div
-          className="mb-auto hover:cursor-pointer"
-          onClick={handleDecreaseMonth}
-        >
-          <ChevronLeft />
+    <div className="h-screen">
+      <Card className="p-5">
+        <div className="bg-[#62d46d] h-10 text-center grid grid-cols-3 rounded-ss-md rounded-se-md p-2">
+          <div
+            className="mb-auto hover:cursor-pointer"
+            onClick={handleDecreaseMonth}
+          >
+            <ChevronLeft />
+          </div>
+          <div className="my-auto mx-auto flex">
+            <div className="hidden sm:block">Tháng&nbsp;</div>
+            <div>{month}</div>
+            <div>&nbsp;-&nbsp;</div>
+            <div className="hidden sm:block">Năm&nbsp;</div>
+            <div>{year}</div>
+          </div>
+          <div
+            className="ml-auto mb-auto hover:cursor-pointer"
+            onClick={handleIncreaseMonth}
+          >
+            <ChevronRight />
+          </div>
         </div>
-        <div className="my-auto mx-auto flex">
-          <div className="hidden sm:block">Tháng&nbsp;</div>
-          <div>{month}</div>
-          <div>&nbsp;-&nbsp;</div>
-          <div className="hidden sm:block">Năm&nbsp;</div>
-          <div>{year}</div>
+        <div className="grid grid-cols-7 border border-[#eeeeee]">
+          <div className="flex items-center justify-center mb-3">CN</div>
+          <div className="flex items-center justify-center mb-3">Th2</div>
+          <div className="flex items-center justify-center mb-3">Th3</div>
+          <div className="flex items-center justify-center mb-3">Th4</div>
+          <div className="flex items-center justify-center mb-3">Th5</div>
+          <div className="flex items-center justify-center mb-3">Th6</div>
+          <div className="flex items-center justify-center mb-3">Th7</div>
         </div>
-        <div
-          className="ml-auto mb-auto hover:cursor-pointer"
-          onClick={handleIncreaseMonth}
-        >
-          <ChevronRight />
+        <div className="calender grid grid-rows-6 grid-cols-7">
+          {calenderData.map((dayData) => {
+            return (
+              <DayOfCalender
+                key={dayData.date}
+                dayData={dayData}
+                month={month}
+                year={year}
+              />
+            );
+          })}
         </div>
-      </div>
-      <div className="grid grid-cols-7 border border-[#eeeeee]">
-        <div className="flex items-center justify-center mb-3">CN</div>
-        <div className="flex items-center justify-center mb-3">Th2</div>
-        <div className="flex items-center justify-center mb-3">Th3</div>
-        <div className="flex items-center justify-center mb-3">Th4</div>
-        <div className="flex items-center justify-center mb-3">Th5</div>
-        <div className="flex items-center justify-center mb-3">Th6</div>
-        <div className="flex items-center justify-center mb-3">Th7</div>
-      </div>
-      <div className="calender grid grid-rows-6 grid-cols-7">
-        {calenderData.map((dayData) => {
-          return (
-            <DayOfCalender
-              key={dayData.date}
-              dayData={dayData}
-              month={month}
-              year={year}
-            />
-          );
-        })}
-      </div>
-      <div className="flex flex-wrap mt-3">
-        <div className="flex flex-auto">
-          <DotStatus className="my-auto" variant="yellow" />
-          &nbsp; 0.5 công
+        <div className="flex flex-wrap mt-3">
+          <div className="flex flex-auto">
+            <DotStatus className="my-auto" variant="yellow" />
+            &nbsp; 0.5 công
+          </div>
+          <div className="flex flex-auto">
+            <DotStatus className="my-auto" variant="green" />
+            &nbsp; 1 công
+          </div>
+          <div className="flex flex-auto">
+            <DotStatus className="my-auto" variant="blue" />
+            &nbsp; Lương theo sản phẩm
+          </div>
+          <div className="flex flex-auto">
+            <DotStatus className="my-auto" variant="orange" />
+            &nbsp; Tăng ca
+          </div>
+          <div className="flex flex-auto">
+            <DotStatus className="my-auto" variant="gray" />
+            &nbsp; Không làm
+          </div>
         </div>
-        <div className="flex flex-auto">
-          <DotStatus className="my-auto" variant="green" />
-          &nbsp; 1 công
-        </div>
-        <div className="flex flex-auto">
-          <DotStatus className="my-auto" variant="blue" />
-          &nbsp; Lương theo sản phẩm
-        </div>
-        <div className="flex flex-auto">
-          <DotStatus className="my-auto" variant="orange" />
-          &nbsp; Tăng ca
-        </div>
-        <div className="flex flex-auto">
-          <DotStatus className="my-auto" variant="gray" />
-          &nbsp; Không làm
-        </div>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 }

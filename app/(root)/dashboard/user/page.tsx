@@ -7,8 +7,6 @@ type Props = {
 
 export default function Page({ searchParams }: Props) {
   return (
-    <div className="h-screen">
       <UsersPage searchParams={searchParams} />
-    </div>
   );
 }

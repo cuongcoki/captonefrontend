@@ -19,6 +19,7 @@ export function DataTablePagination({
         variant="outline"
         onClick={() => setCurrentPage(currentPage - 1)}
         disabled={currentPage === 1}
+        className="dark:bg-[#24d369]"
       >
         <ChevronLeftIcon className="h-4 w-4" />
       </Button>
@@ -29,6 +30,7 @@ export function DataTablePagination({
         variant="outline"
         onClick={() => setCurrentPage(currentPage + 1)}
         disabled={currentPage === totalPages}
+        className="dark:bg-[#24d369]"
       >
         <ChevronRightIcon className="h-4 w-4" />
       </Button>

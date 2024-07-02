@@ -28,6 +28,7 @@ import { materialApi } from "@/apis/material.api";
 import { usePathname, useRouter } from "next/navigation";
 import "./material.css";
 import { filesApi } from "@/apis/files.api";
+import { Item } from "@radix-ui/react-dropdown-menu";
 
 type ContexType = {
   forceUpdate: () => void;
@@ -90,9 +91,14 @@ export function DataTableForMaterial<TData, TValue>({
           pageIndex: pageIndex,
           pageSize: 10,
         });
-        console.log("DATA Call API", data);
 
+        data.data.data.data.forEach((item) => {
+          if (item.image === "") {
+            item.image = " ";
+          }
+        });
         const tableData = data.data.data.data;
+        console.log("Table Data", tableData);
         // const imagePromises = tableData.map(async (item) => {
 
         //   const res = await filesApi.getFile(item.image as string);
@@ -120,7 +126,7 @@ export function DataTableForMaterial<TData, TValue>({
     <div>
       <div className="flex flex-col sm:flex-row justify-center items-center py-4">
         <Input
-          placeholder="Filter name..."
+          placeholder="Tìm theo tên vật liệu..."
           value={searchTerm}
           onChange={(event) => {
             setPageIndex(1);
@@ -192,6 +198,7 @@ export function DataTableForMaterial<TData, TValue>({
             size="sm"
             onClick={() => setPageIndex((prev) => Number(prev) - 1)}
             disabled={Number(pageIndex) === 1}
+            className=""
           >
             Previous
           </Button>

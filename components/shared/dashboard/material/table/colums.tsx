@@ -28,18 +28,22 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
+        <div>
           Tên vật liệu
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
+        </div>
       );
     },
     cell: async ({ row }) => {
-      const res = await filesApi.getFile(row.original.image as string);
-      const href = res.data.data;
+      var href;
+      try {
+        const res = await filesApi.getFile(
+          (row.original.image?.trim() || "%20") as string
+        );
+        href = res?.data.data;
+      } catch (error) {
+        console.log("error in get image", error);
+      }
       return (
         <div className="flex items-center space-x-2">
           <Image
@@ -60,13 +64,14 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
       );
     },
   },
-  {
-    accessorKey: "unit",
-    header: "Đơn vị",
-  },
+
   {
     accessorKey: "quantityPerUnit",
     header: "Số lượng mỗi đơn vị",
+  },
+  {
+    accessorKey: "unit",
+    header: "Đơn vị",
   },
   {
     accessorKey: "description",
@@ -74,7 +79,7 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
   },
   {
     accessorKey: "quantityInStock",
-    header: "Số lượng",
+    header: "Số lượng trong kho",
   },
   {
     id: "actions",

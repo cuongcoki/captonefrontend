@@ -89,7 +89,7 @@ export default function AddNewMeterialForm() {
   };
   const onSubmit = async (data: AddMaterialType) => {
     const file = (await handleUploadPhoto(materialImage)) as File;
-    data.image = file.name;
+    data.image = file?.name || " ";
     // console.log("Material Image", materialImage);
     console.log("Submit DATA", data);
     try {
@@ -102,10 +102,12 @@ export default function AddNewMeterialForm() {
       .then(({ data }) => {
         if (data.isSuccess) {
           toast.success(data.message);
+          form.reset();
           forceUpdate();
         }
       })
       .catch((err) => {
+        toast.error("Thêm vật liệu thất bại");
         console.log("Error in Add Material: ", err);
       });
   };
@@ -154,9 +156,20 @@ export default function AddNewMeterialForm() {
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
                         const inputValue = event.target.value;
-                        const numericInput = inputValue.replace(/\D/g, "");
+                        // Remove any characters that are not digits or a decimal point
+                        let filteredInput = inputValue.replace(/[^\d.]/g, "");
 
-                        field.onChange(numericInput);
+                        // Split by decimal point and ensure only one decimal point is present
+                        const parts = filteredInput.split(".");
+                        if (parts.length > 2) {
+                          // More than one decimal point
+                          // Join the first part with the rest of the string, excluding additional decimal points
+                          filteredInput = `${parts[0]}.${parts
+                            .slice(1)
+                            .join("")}`;
+                        }
+
+                        field.onChange(filteredInput);
                       }}
                     />
                   </FormControl>
@@ -191,9 +204,20 @@ export default function AddNewMeterialForm() {
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
                         const inputValue = event.target.value;
-                        const numericInput = inputValue.replace(/\D/g, "");
+                        // Remove any characters that are not digits or a decimal point
+                        let filteredInput = inputValue.replace(/[^\d.]/g, "");
 
-                        field.onChange(numericInput);
+                        // Split by decimal point and ensure only one decimal point is present
+                        const parts = filteredInput.split(".");
+                        if (parts.length > 2) {
+                          // More than one decimal point
+                          // Join the first part with the rest of the string, excluding additional decimal points
+                          filteredInput = `${parts[0]}.${parts
+                            .slice(1)
+                            .join("")}`;
+                        }
+
+                        field.onChange(filteredInput);
                       }}
                     />
                   </FormControl>

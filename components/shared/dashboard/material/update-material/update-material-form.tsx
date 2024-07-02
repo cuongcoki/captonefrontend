@@ -32,12 +32,14 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
   const [imageLink, setImageLink] = useState<string>("");
 
   const fillImage = (fileURL: string) => {
-    const dropArea = document.querySelector(".label_image") as HTMLElement;
+    const iamgeLabel = document.querySelector(".label_image") as HTMLElement;
+    const dropArea = document.querySelector(".drag-area") as HTMLElement;
     let imgTag = `<img src="${fileURL}" class="absolute top-0 left-0 w-full h-full object-cover">`;
-    if (dropArea) {
-      dropArea.innerHTML += imgTag;
-      dropArea.hidden = false;
-      // dropArea.classList.add("");
+    if (iamgeLabel) {
+      iamgeLabel.innerHTML += imgTag;
+      iamgeLabel.hidden = false;
+      dropArea.classList.add("active");
+      // iamgeLabel.classList.add("");
     }
   };
 
@@ -113,10 +115,15 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
         if (data.data.isSuccess) {
           console.log("DATA GET MATERIAL", data.data.data);
           // fillImage(linkImage);
-          data.data.data.quantityPerUnit =
-            data.data.data.quantityPerUnit.toString();
-          data.data.data.quantityInStock =
-            data.data.data.quantityInStock.toString();
+          data.data.data.quantityPerUnit = data.data.data.quantityPerUnit
+            .toString()
+            .trim();
+          data.data.data.quantityInStock = data.data.data.quantityInStock
+            .toString()
+            .trim();
+          data.data.data.description = data.data.data.description.trim();
+          data.data.data.unit = data.data.data.unit.trim();
+          data.data.data.name = data.data.data.name.trim();
           form.reset(data.data.data);
           filesApi.getFile(data.data.data.image as string).then((res) => {
             // setImageLink(res.data.data);
@@ -203,9 +210,20 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
                         const inputValue = event.target.value;
-                        const numericInput = inputValue.replace(/\D/g, "");
+                        // Remove any characters that are not digits or a decimal point
+                        let filteredInput = inputValue.replace(/[^\d.]/g, "");
 
-                        field.onChange(numericInput.toString());
+                        // Split by decimal point and ensure only one decimal point is present
+                        const parts = filteredInput.split(".");
+                        if (parts.length > 2) {
+                          // More than one decimal point
+                          // Join the first part with the rest of the string, excluding additional decimal points
+                          filteredInput = `${parts[0]}.${parts
+                            .slice(1)
+                            .join("")}`;
+                        }
+
+                        field.onChange(filteredInput);
                       }}
                     />
                   </FormControl>
@@ -242,9 +260,20 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
                         const inputValue = event.target.value;
-                        const numericInput = inputValue.replace(/\D/g, "");
+                        // Remove any characters that are not digits or a decimal point
+                        let filteredInput = inputValue.replace(/[^\d.]/g, "");
 
-                        field.onChange(numericInput);
+                        // Split by decimal point and ensure only one decimal point is present
+                        const parts = filteredInput.split(".");
+                        if (parts.length > 2) {
+                          // More than one decimal point
+                          // Join the first part with the rest of the string, excluding additional decimal points
+                          filteredInput = `${parts[0]}.${parts
+                            .slice(1)
+                            .join("")}`;
+                        }
+
+                        field.onChange(filteredInput);
                       }}
                     />
                   </FormControl>
