@@ -33,7 +33,7 @@ export default function DayOfCalender({ dayData, month, year }: Props) {
         <Dialog>
           <DialogTrigger asChild>
             <div
-              className={`border border-[#eeeeee] hover:bg-gray-300 dark:hover:bg-[#615750] h-[65px] xl:h-[80px]`}
+              className={`border border-[#eeeeee] hover:bg-gray-300 dark:hover:bg-[#615750] dark:bg-[#2b2825] h-[65px] xl:h-[80px]`}
             >
               <div className="ml-1">{day.getDate()}</div>
               <div className="w-full ">
@@ -82,7 +82,7 @@ export default function DayOfCalender({ dayData, month, year }: Props) {
         </Dialog>
       ) : (
         <div
-          className={`border border-[#eeeeee] hover:bg-gray-300 h-[65px] xl:h-[80px] relative bg-[#fafafa] text-[#c8c8c8] dark:bg-[#2b2825] dark:hover:bg-[#615750]`}
+          className={`border border-[#eeeeee] hover:bg-gray-300 h-[65px] xl:h-[80px] relative bg-[#fafafa] text-[#c8c8c8] dark:bg-[#1a1a1a] dark:hover:bg-[#615750]`}
         >
           <div className="ml-1">{day.getDate()}</div>
         </div>

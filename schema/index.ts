@@ -17,9 +17,11 @@ export const RegisterSchema = z.object({
 
 export const SignInSchema = z.object({
   id: z.string().min(1, {
-    message: "Hãy nhập số CCCD/CMND",
+    message: "Vui lòng nhập tài khoản của bạn",
   }),
-  password: z.string(),
+  password: z.string().min(1, {
+    message: "Vui lòng nhập mật khẩu của bạn",
+  }),
 });
 
 export const RoleSchema = z.object({
@@ -33,25 +35,29 @@ export const RoleSchema = z.object({
 
 export const ProductSchema = z.object({
   name: z.string().min(1, { message: "Tên sản phẩm là bắt buộc." }),
-  code: z.string()
+  code: z
+    .string()
     .min(1, { message: "Mã sản phẩm là bắt buộc." })
-    .refine((code) => {
-      const firstTwoChars = code.slice(0, 2);
-      const restChars = code.slice(2);
-      const isLetterFirstTwo = /^[a-zA-Z]+$/.test(firstTwoChars);
-      const isDigitsRest = /^\d+$/.test(restChars);
-      return isLetterFirstTwo && isDigitsRest;
-    }, { message: "Hai ký tự đầu tiên phải là chữ cái và phần còn lại là số." }),
+    .refine(
+      (code) => {
+        const firstTwoChars = code.slice(0, 2);
+        const restChars = code.slice(2);
+        const isLetterFirstTwo = /^[a-zA-Z]+$/.test(firstTwoChars);
+        const isDigitsRest = /^\d+$/.test(restChars);
+        return isLetterFirstTwo && isDigitsRest;
+      },
+      { message: "Hai ký tự đầu tiên phải là chữ cái và phần còn lại là số." }
+    ),
   price: z.coerce
     .number({ message: "Giá phải là số" })
     .min(1, { message: "Giá là bắt buộc." }),
   size: z.string().min(1, { message: "Kích thước là bắt buộc." }),
-  description: z.string()
+  description: z.string(),
 });
 
 export const UsersSchema = z.object({
-  firstName: z.string().min(1, { message: "Yêu cầu nhập Tên nhân viên" }),
-  lastName: z.string().min(1, { message: "Yêu cầu nhập Họ của nhân viên" }),
+  firstName: z.string().min(1, { message: "Yêu cầu nhập tên nhân viên" }),
+  lastName: z.string().min(1, { message: "Yêu cầu nhập họ của nhân viên" }),
   dob: z.string().refine(
     (dob) => {
       const dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
@@ -66,9 +72,7 @@ export const UsersSchema = z.object({
     },
     { message: "Giới tính phải là 'Nam' hoặc 'Nữ'" }
   ),
-  address: z
-    .string()
-    .min(1, { message: "Yêu cầu nhập địa chỉ của nhân viên" }),
+  address: z.string().min(1, { message: "Yêu cầu nhập địa chỉ của nhân viên" }),
   phone: z.string().refine(
     (phone) => {
       const phonePattern = /^\d{10}$/;
@@ -197,8 +201,6 @@ export const ChangePasswordSchema = z
     path: ["confirmPassword"],
   });
 
-
-
 export const UpdateUserForm = z.object({
   id: z.string().nonempty({ message: "ID không được để trống" }),
   firstName: z.string().nonempty({ message: "Tên không được để trống" }),
@@ -212,13 +214,12 @@ export const UpdateUserForm = z.object({
   dob: z
     .string()
     .nonempty({ message: "Ngày sinh không được để trống" })
-    .regex(/^\d{2}\/\d{2}\/\d{4}$/, { message: "Ngày sinh không hợp lệ, định dạng đúng: DD/MM/YYYY" }),
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, {
+      message: "Ngày sinh không hợp lệ, định dạng đúng: DD/MM/YYYY",
+    }),
   roleId: z.number().int({ message: "Vai trò không hợp lệ" }),
   companyId: z.string().nonempty({ message: "Cơ sở không được để trống" }),
-  salaryByDay: z
-    .number()
-
-
+  salaryByDay: z.number(),
 });
 
 export type ChangePasswordFormType = z.infer<typeof ChangePasswordSchema>;

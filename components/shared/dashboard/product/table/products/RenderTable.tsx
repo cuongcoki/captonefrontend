@@ -1,5 +1,5 @@
-import { Product, columns } from "./Column"
-import { DataTable } from "./DataTable"
+import { Product, columns } from "./Column";
+import { DataTable } from "./DataTable";
 import { useEffect, useState, createContext } from "react";
 import { DataTablePagination } from "./data-table-pagination";
 import { productApi } from "@/apis/product.api";
@@ -13,7 +13,7 @@ import {
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 import {
   Select,
@@ -31,12 +31,12 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => { },
+  forceUpdate: () => {},
 });
 export default function RenderTableProduct() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [open, setOpen] = useState<boolean>(false);
@@ -53,7 +53,7 @@ export default function RenderTableProduct() {
   type Props = {
     searchParams: ProductSearchParams;
   };
-  console.log('data', data)
+  console.log("data", data);
   useEffect(() => {
     const fetchDataProduct = async () => {
       setLoading(true);
@@ -67,33 +67,37 @@ export default function RenderTableProduct() {
         const newData = response.data.data.data;
 
         // Update imageUrl with links fetched from filesApi
-        const updatedData = await Promise.all(newData.map(async (item: any) => {
-          const updatedImageResponses = await Promise.all(item.imageResponses.map(async (image: any) => {
-            try {
-              const { data } = await filesApi.getFile(image.imageUrl);
-              return {
-                ...image,
-                imageUrl: data.data
-              };
-            } catch (error) {
-              console.error('Error getting file:', error);
-              return {
-                ...image,
-                imageUrl: '' // Handle error case if needed
-              };
-            }
-          }));
-          return {
-            ...item,
-            imageResponses: updatedImageResponses
-          };
-        }));
+        const updatedData = await Promise.all(
+          newData.map(async (item: any) => {
+            const updatedImageResponses = await Promise.all(
+              item.imageResponses.map(async (image: any) => {
+                try {
+                  const { data } = await filesApi.getFile(image.imageUrl);
+                  return {
+                    ...image,
+                    imageUrl: data.data,
+                  };
+                } catch (error) {
+                  console.error("Error getting file:", error);
+                  return {
+                    ...image,
+                    imageUrl: "", // Handle error case if needed
+                  };
+                }
+              })
+            );
+            return {
+              ...item,
+              imageResponses: updatedImageResponses,
+            };
+          })
+        );
 
         setData(updatedData);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
-        console.error('Error fetching product data:', error);
+        console.error("Error fetching product data:", error);
       } finally {
         setLoading(false);
       }
@@ -128,7 +132,7 @@ export default function RenderTableProduct() {
           <MyContext.Provider value={{ forceUpdate }}>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
               <Input
-                placeholder="Mã CODE..."
+                placeholder="Tìm kiếm sản phẩm..."
                 value={searchTerm}
                 onChange={handleSearchTermChange}
                 className="w-full sm:w-auto"
@@ -136,7 +140,6 @@ export default function RenderTableProduct() {
               <Select
                 value={isInProcessingString}
                 onValueChange={(value) => handleIsInProcessingChange(value)}
-
               >
                 <SelectTrigger className="w-full sm:w-[180px]">
                   <SelectValue placeholder="Trạng thái" />
@@ -170,6 +173,5 @@ export default function RenderTableProduct() {
         </div>
       </MyContext.Provider>
     </div>
-
   );
 }

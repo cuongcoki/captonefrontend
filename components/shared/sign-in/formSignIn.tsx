@@ -46,6 +46,7 @@ export default function FormSignIn() {
     authApi
       .login({ id, password })
       .then(({ data }) => {
+        console.log("DATA", data);
         if (data.isSuccess) {
           const { user, accessToken, refreshToken } = data.data;
           auth.login(user, rememberMe, accessToken, refreshToken);
@@ -70,13 +71,21 @@ export default function FormSignIn() {
       })
       .catch((err) => {
         // Handle catch error
-        console.error(err.response.data.message);
-        toast.error(err.response.data.message);
+        console.log("ERROR", err);
+        toast.error(
+          "Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin đăng nhập!"
+        );
+        // console.error(err.response.data.message);
+        // toast.error(err.response.data.message);
       })
       .finally(() => {
         setLoading(false);
       });
-    console.log(data);
+    // window.addEventListener("beforeunload", function (e) {
+    //   e.returnValue = false; // Chrome requires returnValue to be set.
+    //   return false; // Standard-compliant browsers.
+    // });
+    // console.log(data);
   };
 
   return (
@@ -93,7 +102,7 @@ export default function FormSignIn() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex items-center text-secondary-backgroudPrimary">
-               TÀI KHOẢN
+                TÀI KHOẢN
               </FormLabel>
               <FormControl>
                 <Input type="text" {...field} />
