@@ -187,9 +187,8 @@ export type UpdateEmployeeProductBody = {
 export type AttendanceDateData = {
   date: string;
   attedanceDateReport: {
-    isPresentSlot1: boolean;
-    isPresentSlot2: boolean;
-    isPresentSlot3: boolean;
+    isHalfWork: boolean;
+    isOneWork: boolean;
     isSalaryByProduct: boolean;
     isOverTime: boolean;
   };

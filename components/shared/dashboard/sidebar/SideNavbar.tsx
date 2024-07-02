@@ -33,7 +33,7 @@ export default function SideNavbar({}: Props) {
     setIsClient(true);
   }, []);
   return (
-    <div className="relative min-w-[80px] border-r  px-3 ">
+    <div className="relative min-w-[80px] border-r  px-3 dark:bg-[#1c1917]">
       {isClient ? (
         <div>
           {!mobileWidth && (
@@ -95,12 +95,6 @@ export default function SideNavbar({}: Props) {
                 title: "Công ty",
                 href: "/dashboard/company",
                 icon: Building,
-                variant: "ghost",
-              },
-              {
-                title: "Cài đặt",
-                href: "/dashboard/settings",
-                icon: Settings,
                 variant: "ghost",
               },
             ]}

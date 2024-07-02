@@ -1,83 +1,85 @@
-'use client'
+"use client";
 
 // ** import react
 import Link from "next/link";
 import Image from "next/image";
 
-import { useParams } from 'next/navigation'
+import { useParams } from "next/navigation";
 import { createContext, useEffect, useState } from "react";
 
-
 // ** import UI
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-
-
-
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { Textarea } from "@/components/ui/textarea";
 import * as Dialog from "@radix-ui/react-dialog";
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-// ** import api 
+// ** import api
 import { productApi } from "@/apis/product.api";
 
 // ** import icon
 import { ChevronLeft, PencilLine, PlusCircle, Upload, X } from "lucide-react";
 
-// ** component 
+// ** component
 import ImageDisplayID from "./ImageDisplayID";
 import { ProductUpdateForm } from "../../form/ProductUpdateForm";
 import { ProductForm } from "../../form/ProductForm";
 
-
 interface ProductData {
-    code: string;
-    description: string;
+  code: string;
+  description: string;
+  id: string;
+  imageResponses: {
     id: string;
-    imageResponses: {
-        id: string;
-        imageUrl: string;
-        isBluePrint: boolean;
-        isMainImage: boolean;
-    }[];
-    isInProcessing: boolean;
-    name: string;
-    price: number;
-    size: string;
+    imageUrl: string;
+    isBluePrint: boolean;
+    isMainImage: boolean;
+  }[];
+  isInProcessing: boolean;
+  name: string;
+  price: number;
+  size: string;
 }
 type ContexType = {
-    forceUpdate: () => void;
+  forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-    forceUpdate: () => { },
+  forceUpdate: () => {},
 });
 export default function ProductIDPage() {
-    const [open, setOpen] = useState<boolean>(false);
-    const handleOffDialog = () => {
-        setOpen(false);
-    };
-    const handleOnDialog = () => {
-        setOpen(true);
-    };
-    //state
-    const [loading, setLoading] = useState<boolean>(false);
-    const params = useParams<{ id: string }>()
-    const [productId, setProductId] = useState<any>([])
-    const [open1, setOpen1] = useState<boolean>(false);
-    const [force, setForce] = useState<number>(1);
+  const [open, setOpen] = useState<boolean>(false);
+  const handleOffDialog = () => {
+    setOpen(false);
+  };
+  const handleOnDialog = () => {
+    setOpen(true);
+  };
+  //state
+  const [loading, setLoading] = useState<boolean>(false);
+  const params = useParams<{ id: string }>();
+  const [productId, setProductId] = useState<any>([]);
+  const [open1, setOpen1] = useState<boolean>(false);
+  const [force, setForce] = useState<number>(1);
 
-    const forceUpdate = () => setForce((prev) => prev + 1);
+  const forceUpdate = () => setForce((prev) => prev + 1);
     const formatCurrency = (amount: any) => {
         // Định dạng số theo tiêu chuẩn 'vi-VN'
         const formattedAmount = new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0 }).format(amount);
@@ -86,30 +88,26 @@ export default function ProductIDPage() {
         return formattedAmount.replace(/\./g, ',');
     };
 
+  useEffect(() => {
+    const fetchDataProductId = () => {
+      setLoading(true);
+      productApi
+        .getProductId(params.id)
+        .then((res) => {
+          const userData = res.data.data;
+          setProductId(userData);
+          // setUserId(res.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };
 
-
-    useEffect(() => {
-
-        const fetchDataProductId = () => {
-            setLoading(true);
-            productApi.getProductId(params.id)
-                .then(res => {
-                    const userData = res.data.data;
-                    setProductId(userData);
-                    // setUserId(res.data.data);
-                })
-                .catch(error => {
-                    console.error('Error fetching user data:', error);
-                })
-                .finally(() => {
-                    setLoading(false);
-                })
-        }
-
-        fetchDataProductId()
-
-    }, [params.id, force])
-
+    fetchDataProductId();
+  }, [params.id, force]);
 
     const limitLength = (text: any, maxLength: any) => {
         if (text.length > maxLength) {

@@ -67,6 +67,12 @@ export default function UpdateAttendance({
   warehouseProp: string;
 }): JSX.Element {
   const colorSlaryByProduct = "bg-[#f1eeee]";
+  function formatDate(dateStr: String) {
+    const [day, month, year] = dateStr.split("/");
+    const formattedDay = day.padStart(2, "0");
+    const formattedMonth = month.padStart(2, "0");
+    return `${formattedDay}/${formattedMonth}/${year}`;
+  }
   const {
     tableData,
     setTableData,
@@ -83,7 +89,7 @@ export default function UpdateAttendance({
   const ForceRender = () => {
     setForce(force + 1);
   };
-  const [date, setDate] = useState<string>(dateProp);
+  const [date, setDate] = useState<string>(formatDate(dateProp));
   const [slot, setSlot] = useState<string>(slotProp);
   const [warehouse, setWarehouse] = useState<string>(warehouseProp);
   const [users, setUsers] = useState<User[]>(user);
@@ -104,6 +110,7 @@ export default function UpdateAttendance({
       }
     });
   }, [warehouseProp]);
+  // Conver 7/1/2024 to 07/01/2024
 
   // GET USERS DATA
   useEffect(() => {
@@ -123,8 +130,13 @@ export default function UpdateAttendance({
   // GET ATTENDANCE DATA
   useEffect(() => {
     const getImage = async (name: string) => {
-      const res = await filesApi.getFile(name);
-      return res.data.data;
+      try {
+        const res = await filesApi.getFile(name);
+        console.log("Get Image", res.data.data);
+        return res.data.data;
+      } catch (error: any) {
+        console.log("Error get image: ", error.response.data);
+      }
     };
     const setUser = new Set<string>();
     attendanceApi
@@ -338,8 +350,10 @@ export default function UpdateAttendance({
     console.log("tableData", tableData);
   }, [tableData]);
   return (
-    <Card>
-      <div className="flex justify-center text-[2rem]">QUẢN LÝ ĐIỂM DANH</div>
+    <Card className="">
+      <div className="flex justify-center text-[2rem] text-[#22c55e] mt-3">
+        QUẢN LÝ ĐIỂM DANH
+      </div>
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap">
         <Combobox
           title="Vui lòng chọn cơ sở"
@@ -374,10 +388,16 @@ export default function UpdateAttendance({
         <table className="update-attendance-table w-full border-collapse overflow-x-hidden overflow-auto">
           <thead>
             <tr>
-              <th rowSpan={2}>Ảnh</th>
-              <th rowSpan={2}>Tên</th>
-              <th rowSpan={2}>CCCD</th>
-              <th className="" rowSpan={2}>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+                Ảnh
+              </th>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+                Tên nhân viên
+              </th>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+                CCCD/CMND
+              </th>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
                 <div className="flex flex-col items-center">
                   <div>Lương theo SP</div>
                   <div className="flex text-sm font-light">
@@ -401,9 +421,13 @@ export default function UpdateAttendance({
                   </div>
                 </div>
               </th>
-              <th colSpan={3}>Sản phẩm</th>
-              <th rowSpan={2}>Tăng ca</th>
-              <th rowSpan={2}>
+              <th className="dark:bg-[#1c1917]" colSpan={3}>
+                Sản phẩm
+              </th>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+                Tăng ca
+              </th>
+              <th className="dark:bg-[#1c1917]" rowSpan={2}>
                 <div className="flex flex-col items-center">
                   <div>Điểm danh</div>
                   <div className="flex text-sm font-light">
@@ -429,9 +453,9 @@ export default function UpdateAttendance({
               </th>
             </tr>
             <tr>
-              <th>Tên</th>
-              <th>Giai đoạn</th>
-              <th>Số lượng</th>
+              <th className="dark:bg-[#1c1917]">Tên</th>
+              <th className="dark:bg-[#1c1917]">Giai đoạn</th>
+              <th className="dark:bg-[#1c1917]">Số lượng</th>
             </tr>
           </thead>
           <tbody>
@@ -453,11 +477,22 @@ export default function UpdateAttendance({
                             /> */}
                             </div>
                           </td>
-                          <td rowSpan={item.products.length}>
+                          <td
+                            className="dark:bg-[#1c1917]"
+                            rowSpan={item.products.length}
+                          >
                             {item.userName}
                           </td>
-                          <td rowSpan={item.products.length}>{item.userID}</td>
-                          <td rowSpan={item.products.length}>
+                          <td
+                            className="dark:bg-[#1c1917]"
+                            rowSpan={item.products.length}
+                          >
+                            {item.userID}
+                          </td>
+                          <td
+                            className="dark:bg-[#1c1917]"
+                            rowSpan={item.products.length}
+                          >
                             <input
                               className="size-[30px]"
                               type="checkbox"
@@ -476,8 +511,8 @@ export default function UpdateAttendance({
                         <td
                           className={
                             item.isSalaryByProduct === true
-                              ? ""
-                              : colorSlaryByProduct
+                              ? "dark:bg-[#1c1917]"
+                              : colorSlaryByProduct + " dark:bg-black"
                           }
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
@@ -490,8 +525,8 @@ export default function UpdateAttendance({
                         <td
                           className={
                             item.isSalaryByProduct === true
-                              ? ""
-                              : colorSlaryByProduct
+                              ? "dark:bg-[#1c1917]"
+                              : colorSlaryByProduct + " dark:bg-black"
                           }
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
@@ -504,8 +539,8 @@ export default function UpdateAttendance({
                         <td
                           className={
                             item.isSalaryByProduct === true
-                              ? ""
-                              : colorSlaryByProduct
+                              ? "dark:bg-[#1c1917]"
+                              : colorSlaryByProduct + " dark:bg-black"
                           }
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
@@ -583,8 +618,8 @@ export default function UpdateAttendance({
                           data-issalarybyproduct={item.isSalaryByProduct}
                           className={`${
                             item.isSalaryByProduct === true
-                              ? ""
-                              : "bg-[#f1eeee]"
+                              ? "dark:bg-[#1c1917] "
+                              : "bg-[#f1eeee] dark:bg-black "
                           }`}
                         >
                           Nhấn vào
@@ -597,8 +632,8 @@ export default function UpdateAttendance({
                           data-issalarybyproduct={item.isSalaryByProduct}
                           className={`${
                             item.isSalaryByProduct === true
-                              ? ""
-                              : "bg-[#f1eeee]"
+                              ? "dark:bg-[#1c1917] "
+                              : "bg-[#f1eeee] dark:bg-black"
                           }`}
                         >
                           Để tạo
@@ -611,8 +646,8 @@ export default function UpdateAttendance({
                           data-issalarybyproduct={item.isSalaryByProduct}
                           className={`${
                             item.isSalaryByProduct === true
-                              ? ""
-                              : "bg-[#f1eeee]"
+                              ? "dark:bg-[#1c1917] "
+                              : "bg-[#f1eeee] dark:bg-black"
                           }`}
                         >
                           Sản phẩm

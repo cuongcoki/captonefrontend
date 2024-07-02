@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import RenderTableProduct from "./table/products/RenderTable";
 import { CardTitle, Card } from "@/components/ui/card";
 

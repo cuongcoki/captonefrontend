@@ -76,7 +76,7 @@ export default function Header() {
       });
   };
   return (
-    <div className=" bg-white border-t-4 border-primary-backgroudPrimary rounded-t-lg dark:bg-[#040b17] h-12 flex items-center justify-center p-8  ">
+    <div className=" bg-slate-100 dark:bg-[#1c1917] h-12 flex items-center justify-between p-8 border-b border-slate-300 shadow-md">
       <Toaster />
       <div className="flex items-center">
         <MyDrawer />

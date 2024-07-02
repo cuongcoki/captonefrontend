@@ -18,15 +18,17 @@ export default function AddNewMeterial() {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="bg-[#004b24] flex items-center m-2 ml-auto">
+          <Button className="bg-primary flex items-center m-2 ml-auto">
             <Plus /> Thêm mới
           </Button>
         </DialogTrigger>
-        <DialogContent className=" max-w-[340px] md:max-w-[700px]">
+        <DialogContent className=" max-w-[340px] md:max-w-[700px] dark:bg-[#1c1917]">
           <DialogDescription></DialogDescription>
           <DialogTitle></DialogTitle>
           <DialogHeader>
-            <DialogTitle>Thêm mới nguyên liệu</DialogTitle>
+            <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3">
+              Thêm mới nguyên liệu
+            </DialogTitle>
           </DialogHeader>
           <AddNewMeterialForm />
         </DialogContent>
