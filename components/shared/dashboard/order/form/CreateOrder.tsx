@@ -858,7 +858,7 @@ export default function CreateOrder() {
 
                                                                             <TableBody>
                                                                                 {getDetailsPro.map((product, index) => (
-                                                                                    <TableRow>
+                                                                                    <TableRow key={index}>
                                                                                         <TableCell className="font-medium w-[20%]">
                                                                                             <div className="flex  gap-4">
                                                                                                 <Image
