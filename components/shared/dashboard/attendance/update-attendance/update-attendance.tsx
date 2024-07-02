@@ -66,7 +66,7 @@ export default function UpdateAttendance({
   slotProp: string;
   warehouseProp: string;
 }): JSX.Element {
-  const colorSlaryByProduct = "bg-[#f1eeee]";
+  const colorSlaryByProduct = "bg-[#16a34a7c]";
   function formatDate(dateStr: String) {
     const [day, month, year] = dateStr.split("/");
     const formattedDay = day.padStart(2, "0");
@@ -350,11 +350,11 @@ export default function UpdateAttendance({
     console.log("tableData", tableData);
   }, [tableData]);
   return (
-    <Card className="">
-      <div className="flex justify-center text-[2rem] text-[#22c55e] mt-3">
+    <Card className="p-3">
+      <div className="text-3xl text-[#22c55e] w-full text-center mb-3 font-semibold mt-3">
         QUẢN LÝ ĐIỂM DANH
       </div>
-      <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap">
+      <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap ">
         <Combobox
           title="Vui lòng chọn cơ sở"
           data={selectWareHouseData}
@@ -385,20 +385,20 @@ export default function UpdateAttendance({
         />
       </div>
       <div className="w-full overflow-auto">
-        <table className="update-attendance-table w-full border-collapse overflow-x-hidden overflow-auto">
+        <table className="update-attendance-table w-full border-collapse overflow-x-hidden overflow-auto rounded-md">
           <thead>
             <tr>
-              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+              <th className="dark:bg-[#1c1917] dark:text-primary" rowSpan={2}>
                 Ảnh
               </th>
-              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+              <th className="dark:bg-[#1c1917] dark:text-primary" rowSpan={2}>
                 Tên nhân viên
               </th>
-              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+              <th className="dark:bg-[#1c1917] dark:text-primary" rowSpan={2}>
                 CCCD/CMND
               </th>
-              <th className="dark:bg-[#1c1917]" rowSpan={2}>
-                <div className="flex flex-col items-center">
+              <th className="dark:bg-[#1c1917] dark:text-primary" rowSpan={2}>
+                <div className="flex flex-col items-center dark:text-primary">
                   <div>Lương theo SP</div>
                   <div className="flex text-sm font-light">
                     <div
@@ -421,13 +421,13 @@ export default function UpdateAttendance({
                   </div>
                 </div>
               </th>
-              <th className="dark:bg-[#1c1917]" colSpan={3}>
+              <th className="dark:bg-[#1c1917] dark:text-primary" colSpan={3}>
                 Sản phẩm
               </th>
-              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+              <th className="dark:bg-[#1c1917] dark:text-primary" rowSpan={2}>
                 Tăng ca
               </th>
-              <th className="dark:bg-[#1c1917]" rowSpan={2}>
+              <th className="dark:bg-[#1c1917] dark:text-primary" rowSpan={2}>
                 <div className="flex flex-col items-center">
                   <div>Điểm danh</div>
                   <div className="flex text-sm font-light">
@@ -453,9 +453,9 @@ export default function UpdateAttendance({
               </th>
             </tr>
             <tr>
-              <th className="dark:bg-[#1c1917]">Tên</th>
-              <th className="dark:bg-[#1c1917]">Giai đoạn</th>
-              <th className="dark:bg-[#1c1917]">Số lượng</th>
+              <th className="dark:bg-[#1c1917] dark:text-primary">Tên</th>
+              <th className="dark:bg-[#1c1917] dark:text-primary">Giai đoạn</th>
+              <th className="dark:bg-[#1c1917] dark:text-primary">Số lượng</th>
             </tr>
           </thead>
           <tbody>
@@ -619,7 +619,7 @@ export default function UpdateAttendance({
                           className={`${
                             item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
-                              : "bg-[#f1eeee] dark:bg-black "
+                              : "bg-[#16a34a7c] dark:bg-black "
                           }`}
                         >
                           Nhấn vào
@@ -633,7 +633,7 @@ export default function UpdateAttendance({
                           className={`${
                             item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
-                              : "bg-[#f1eeee] dark:bg-black"
+                              : "bg-[#16a34a7c] dark:bg-black"
                           }`}
                         >
                           Để tạo
@@ -647,7 +647,7 @@ export default function UpdateAttendance({
                           className={`${
                             item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
-                              : "bg-[#f1eeee] dark:bg-black"
+                              : "bg-[#16a34a7c] dark:bg-black"
                           }`}
                         >
                           Sản phẩm
