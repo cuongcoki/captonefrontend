@@ -89,7 +89,7 @@ export default function AddNewMeterialForm() {
   };
   const onSubmit = async (data: AddMaterialType) => {
     const file = (await handleUploadPhoto(materialImage)) as File;
-    data.image = file.name;
+    data.image = file?.name || " ";
     // console.log("Material Image", materialImage);
     console.log("Submit DATA", data);
     try {

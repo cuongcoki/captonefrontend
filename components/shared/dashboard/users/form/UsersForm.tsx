@@ -293,15 +293,15 @@ export const UsersForm = () => {
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-          <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
+          <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow ">
             <div className="bg-slate-100  flex flex-col ">
               <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary  ">
                 <h2 className="text-2xl text-white">Thêm nhân viên</h2>
                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4 dark:text-white" />
                 </Button>
               </div>
-              <div className="grid gap-4 p-4 overflow-y-auto h-[650px]">
+              <div className="grid gap-4 p-4 overflow-y-auto h-[650px] dark:bg-black">
                 <Form {...form}>
                   {/* <Toaster /> */}
                   <form
@@ -327,7 +327,7 @@ export const UsersForm = () => {
                                 >
                                   <Upload
                                     size={70}
-                                    className="text-white bg-primary-backgroudPrimary rounded-md p-5 mb-2"
+                                    className="text-white bg-primary rounded-md p-5 mb-2"
                                   />
                                   <span className="text-l text-gray-500 font-medium">
                                     Hãy tải ảnh lên
@@ -355,7 +355,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary-backgroudPrimary">
+                                      <FormLabel className="text-primary">
                                         Tên nhân viên*
                                       </FormLabel>
                                       <FormControl>
@@ -374,7 +374,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary-backgroudPrimary">
+                                      <FormLabel className="text-primary">
                                         Họ Nhân Viên*
                                       </FormLabel>
                                       <FormControl>
@@ -392,7 +392,7 @@ export const UsersForm = () => {
                                 name="id"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel className="text-primary-backgroudPrimary">
+                                    <FormLabel className="text-primary">
                                       Số định danh cá nhân/CMND
                                     </FormLabel>
                                     <FormControl>
@@ -419,7 +419,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary-backgroudPrimary">
+                                      <FormLabel className="text-primary">
                                         Vai trò nào *
                                       </FormLabel>
                                       <Select
@@ -466,7 +466,7 @@ export const UsersForm = () => {
                               render={({ field }) => {
                                 return (
                                   <FormItem>
-                                    <FormLabel className="text-primary-backgroudPrimary">
+                                    <FormLabel className="text-primary">
                                       Địa chỉ cư trú
                                     </FormLabel>
                                     <FormControl>
@@ -485,7 +485,7 @@ export const UsersForm = () => {
                               render={({ field }) => {
                                 return (
                                   <FormItem>
-                                    <FormLabel className="text-primary-backgroudPrimary">
+                                    <FormLabel className="text-primary">
                                       Số điện thoại
                                     </FormLabel>
                                     <FormControl>
@@ -506,7 +506,7 @@ export const UsersForm = () => {
                               render={({ field }) => {
                                 return (
                                   <FormItem>
-                                    <FormLabel className="text-primary-backgroudPrimary">
+                                    <FormLabel className="text-primary">
                                       Lương ngày *
                                     </FormLabel>
                                     <FormControl>
@@ -530,7 +530,7 @@ export const UsersForm = () => {
                               render={({ field }) => {
                                 return (
                                   <FormItem>
-                                    <FormLabel className="text-primary-backgroudPrimary">
+                                    <FormLabel className="text-primary">
                                       Cơ sở nào *
                                     </FormLabel>
                                     <Select
@@ -570,7 +570,7 @@ export const UsersForm = () => {
                               name="dob"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="text-primary-backgroudPrimary">
+                                  <FormLabel className="text-primary">
                                     Ngày sinh
                                   </FormLabel>
                                   <FormControl>
@@ -592,7 +592,7 @@ export const UsersForm = () => {
                               render={({ field }) => {
                                 return (
                                   <FormItem>
-                                    <FormLabel className="text-primary-backgroudPrimary">
+                                    <FormLabel className="text-primary">
                                       Mật khẩu *
                                     </FormLabel>
                                     <FormControl>
@@ -611,7 +611,7 @@ export const UsersForm = () => {
                             name="gender"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="text-primary-backgroudPrimary">
+                                <FormLabel className="text-primary">
                                   Giới tính
                                 </FormLabel>
                                 <FormControl>
@@ -649,7 +649,7 @@ export const UsersForm = () => {
                     <Separator className="h-1 my-4" />
                     <Button
                       type="submit"
-                      className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
+                      className="w-full bg-primary hover:bg-primary/90"
                       disabled={loading}
                     >
                       {loading ? "Loading..." : "Thêm Nhân Viên"}

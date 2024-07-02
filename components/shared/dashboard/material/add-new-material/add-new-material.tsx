@@ -18,7 +18,7 @@ export default function AddNewMeterial() {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="bg-[#22c55e] flex items-center m-2 ml-auto">
+          <Button className="bg-primary flex items-center m-2 ml-auto">
             <Plus /> Thêm mới
           </Button>
         </DialogTrigger>
