@@ -1,35 +1,37 @@
 "use client";
-import { Separator } from "@/components/ui/separator";
+import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+  const path = usePathname();
+  const selectStyle = "bg-[#22c55e] text-white";
   return (
-    <div className="h-screen w-full flex flex-col gap-6 ">
-      <div className="bg-white dark:bg-card">
-        <div className="p-3 space-x-3 flex">
-          <div>
-            <Link href="/dashboard/products/product">Sản phẩm</Link>
-            <Separator
-              className={
-                pathname.includes("/dashboard/products/product")
-                  ? "bg-primary-backgroudPrimary text-white h-1 "
-                  : "hidden"
-              }
-            />
-          </div>
-          <div>
-            <Link href="/dashboard/products/set">Bộ sản phẩm</Link>
-            <Separator
-              className={
-                pathname.includes("/dashboard/products/set")
-                  ? "bg-primary-backgroudPrimary text-white h-1 "
-                  : "hidden"
-              }
-            />
-          </div>
+    <div className="w-full h-screen">
+      <Card className="w-[30%] mb-3 rounded-full">
+        <div className="grid grid-cols-2 bg-white rounded-full p-1 min-w-max">
+          <Link href={"/dashboard/products/product"}>
+            <div
+              className={`flex justify-center items-center h-10 rounded-full ${
+                path === "/dashboard/products/product"
+                  ? selectStyle
+                  : "text-black"
+              }`}
+            >
+              <p>Sản phẩm </p>
+            </div>
+          </Link>
+
+          <Link href={"/dashboard/products/set"}>
+            <div
+              className={`flex justify-center items-center h-10 rounded-full ${
+                path === "/dashboard/products/set" ? selectStyle : "text-black"
+              }`}
+            >
+              <p>Bộ sản phẩm</p>
+            </div>
+          </Link>
         </div>
-      </div>
+      </Card>
       {children}
     </div>
   );

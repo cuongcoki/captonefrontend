@@ -13,7 +13,7 @@ export type Product = {
   code: string;
   description: string;
   imageUrl: string;
- 
+
 }
 
 export const columns: ColumnDef<Product>[] = [
@@ -28,7 +28,7 @@ export const columns: ColumnDef<Product>[] = [
       const firstImage = row.original.imageUrl;
       return firstImage ? (
         <Link href={`/dashboard/products/set/${row.original.id}`} className="flex justify-center items-center">
-          <div className="w-[50px] h-[50px] rounded-lg ">
+          <div className="w-[50px] h-[50px] rounded-lg shadow-md">
             <Image
               src={`${firstImage}`}
               width={100}
@@ -39,7 +39,10 @@ export const columns: ColumnDef<Product>[] = [
           </div>
         </Link>
       ) : (
-        'no image'
+        <Link href={`/dashboard/products/set/${row.original.id}`}>
+          <div className="w-[50px] h-[50px] text-white rounded-lg shadow-md ">
+          </div>
+        </Link>
       );
     },
   },
@@ -67,7 +70,7 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
 
- 
+
   {
     accessorKey: "description",
     header: ({ column }) => {
@@ -83,7 +86,7 @@ export const columns: ColumnDef<Product>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: ({ row }) => <DataTableRowActions<Product> row={row} />,
   },
 
 ]

@@ -18,7 +18,7 @@ export default async function page({ searchParams }: Props) {
   console.log("searchParams", searchParams);
 
   return (
-    <div className="h-screen">
+    <div className="h-[94.8vh]">
       <UpdateAttendance
         dateProp={searchParams.date}
         slotProp={searchParams.slot}

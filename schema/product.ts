@@ -16,7 +16,7 @@ export const ProductSchema = z.object({
   price: z.coerce
     .number({ message: "Giá phải là số" })
     .min(1, { message: "Giá là bắt buộc." }),
-  size: z.string().min(1, { message: "Kích thước là bắt buộc." }),
+  size: z.string().min(1, { message: "Kích thước là bắt buộc." }).max(900000000,{message: "Giá quá cao 900,000,000." }),
   description: z.string()
 });
 
@@ -33,7 +33,7 @@ export const ProductUpdateSchema = z.object({
       const isDigitsRest = /^\d+$/.test(restChars);
       return isLetterFirstTwo && isDigitsRest;
     }, { message: "Hai ký tự đầu tiên phải là chữ cái và phần còn lại là số." }),
-    price: z.coerce.number({ message: "Giá phải là số" }).min(1, { message: "Giá là bắt buộc." }),
+    price: z.coerce.number({ message: "Giá phải là số" }).min(1, { message: "Giá là bắt buộc." }).max(900000000,{message: "Giá quá cao 900,000,000." }),
     size: z.string().min(1, { message: "Kích thước là bắt buộc." }),
     description: z.string(),
     name: z.string().min(1, { message: "Tên sản phẩm là bắt buộc." }),

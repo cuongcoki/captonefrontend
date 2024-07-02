@@ -124,6 +124,9 @@ export function DataTableForMaterial<TData, TValue>({
 
   return (
     <div>
+      <div className="text-3xl text-[#22c55e] w-full text-center mb-3 font-semibold">
+        DANH SÁCH VẬT LIỆU
+      </div>
       <div className="flex flex-col sm:flex-row justify-center items-center py-4">
         <Input
           placeholder="Tìm theo tên vật liệu..."

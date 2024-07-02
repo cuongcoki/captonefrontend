@@ -31,12 +31,12 @@ import { Separator } from "@/components/ui/separator";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { Plus, Upload, X } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // ** import React
 import { useRouter } from "next/navigation";
 import { MyContext } from "../table/users/RenderTable";
-import { useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,6 +53,11 @@ import ImageDisplayAvatar from "./ImageDisplay";
 interface UsersFormProps {
   setOpen: (open: boolean) => void;
 }
+
+type SalaryRequest = {
+  salary: number;
+  startDate: string;
+};
 
 type Company = {
   id: string;
@@ -217,6 +222,36 @@ export const UsersForm = () => {
     fetchCompanyData();
   }, []);
 
+  const [salaryByDayRequest, setSalaryByDayRequest] = useState<SalaryRequest>({
+    salary: 0,
+    startDate: "",
+  });
+  const [salaryOverTimeRequest, setSalaryOverTimeRequest] =
+    useState<SalaryRequest>({ salary: 0, startDate: "" });
+  console.log("salaryByDayRequest=====", salaryByDayRequest);
+  console.log("salaryOverTimeRequest=====", salaryOverTimeRequest);
+  const handleChange = (requestType: string, name: string, value: any) => {
+    if (requestType === "salaryByDayRequest") {
+      setSalaryByDayRequest((prev) => ({
+        ...prev,
+        [name]: name === "salary" ? parseFloat(value) : value,
+      }));
+    } else if (requestType === "salaryOverTimeRequest") {
+      setSalaryOverTimeRequest((prev) => ({
+        ...prev,
+        [name]: name === "salary" ? parseFloat(value) : value,
+      }));
+    }
+  };
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement>,
+    requestType: string
+  ) => {
+    const { name, value } = e.target;
+    handleChange(requestType, name, value);
+  };
+
   const onSubmit = (data: z.infer<typeof UsersSchema>) => {
     const {
       firstName,
@@ -232,6 +267,7 @@ export const UsersForm = () => {
       id,
       salaryByDay,
     } = data;
+    const avatar = nameImage;
     setLoading(true);
     console.log("dataCreateUser", data);
     userApi
@@ -248,6 +284,9 @@ export const UsersForm = () => {
         companyId,
         id,
         salaryByDay,
+        avatar,
+        salaryByDayRequest,
+        salaryOverTimeRequest,
       })
       .then(({ data }) => {
         if (data.isSuccess) {
@@ -294,9 +333,9 @@ export const UsersForm = () => {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
           <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow ">
-            <div className="bg-slate-100  flex flex-col ">
-              <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary  ">
-                <h2 className="text-2xl text-white">Thêm nhân viên</h2>
+            <div className="bg-slate-100  flex flex-col rounded-md">
+              <div className="p-4 flex items-center justify-between bg-primary rounded-md">
+                <h2 className="text-2xl text-white ">Thêm nhân viên</h2>
                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
                   <X className="w-4 h-4 dark:text-white" />
                 </Button>
@@ -346,7 +385,7 @@ export const UsersForm = () => {
                         </Card>
 
                         <Card className="md:col-span-5 col-span-1">
-                          <CardContent className="relative">
+                          <CardContent className="relative mt-5">
                             <div className="grid grid-cols-1 gap-2">
                               {/* firstName */}
                               <FormField
@@ -356,7 +395,7 @@ export const UsersForm = () => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="text-primary">
-                                        Tên nhân viên*
+                                        Tên nhân viên *
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />
@@ -375,7 +414,7 @@ export const UsersForm = () => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="text-primary">
-                                        Họ Nhân Viên*
+                                        Họ Nhân Viên *
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />
@@ -393,7 +432,7 @@ export const UsersForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="text-primary">
-                                      Số định danh cá nhân/CMND
+                                      CCCD/CMND *
                                     </FormLabel>
                                     <FormControl>
                                       <InputOTP maxLength={12} {...field}>
@@ -412,44 +451,42 @@ export const UsersForm = () => {
                                 )}
                               />
 
-                              {/* roleId */}
+                              {/* gender */}
                               <FormField
                                 control={form.control}
-                                name="roleId"
-                                render={({ field }) => {
-                                  return (
-                                    <FormItem>
-                                      <FormLabel className="text-primary">
-                                        Vai trò nào *
-                                      </FormLabel>
-                                      <Select
-                                        onValueChange={(value) =>
-                                          field.onChange(Number(value))
-                                        }
-                                        defaultValue={String(field.value)}
+                                name="gender"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="text-primary">
+                                      Giới tính *
+                                    </FormLabel>
+                                    <FormControl>
+                                      <RadioGroup
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                        className="flex items-center space-x-4"
                                       >
-                                        <FormControl>
-                                          <SelectTrigger>
-                                            <SelectValue
-                                              defaultValue={String(field.value)}
-                                            />
-                                          </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                          {enumRole.map((item, index) => (
-                                            <SelectItem
-                                              value={String(item.id)}
-                                              key={index}
-                                            >
-                                              {item.decription}
-                                            </SelectItem>
-                                          ))}
-                                        </SelectContent>
-                                      </Select>
-                                      <FormMessage />
-                                    </FormItem>
-                                  );
-                                }}
+                                        <FormItem className="flex items-center space-x-2">
+                                          <FormControl>
+                                            <RadioGroupItem value="Male" />
+                                          </FormControl>
+                                          <FormLabel className="font-normal">
+                                            Nam
+                                          </FormLabel>
+                                        </FormItem>
+                                        <FormItem className="flex items-center space-x-2">
+                                          <FormControl>
+                                            <RadioGroupItem value="Female" />
+                                          </FormControl>
+                                          <FormLabel className="font-normal">
+                                            Nữ
+                                          </FormLabel>
+                                        </FormItem>
+                                      </RadioGroup>
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
                               />
                             </div>
                           </CardContent>
@@ -457,7 +494,7 @@ export const UsersForm = () => {
                       </div>
 
                       <Card>
-                        <CardContent>
+                        <CardContent className="mt-5">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {/* address */}
                             <FormField
@@ -467,7 +504,7 @@ export const UsersForm = () => {
                                 return (
                                   <FormItem>
                                     <FormLabel className="text-primary">
-                                      Địa chỉ cư trú
+                                      Địa chỉ cư trú *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -486,76 +523,11 @@ export const UsersForm = () => {
                                 return (
                                   <FormItem>
                                     <FormLabel className="text-primary">
-                                      Số điện thoại
+                                      Số điện thoại *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
                                     </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                );
-                              }}
-                            />
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* salaryByDay */}
-                            <FormField
-                              control={form.control}
-                              name="salaryByDay"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem>
-                                    <FormLabel className="text-primary">
-                                      Lương ngày *
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        type="text"
-                                        {...field}
-                                        value={formattedValue}
-                                        onChange={onChangeHandler}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                );
-                              }}
-                            />
-
-                            {/* companyId */}
-                            <FormField
-                              control={form.control}
-                              name="companyId"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem>
-                                    <FormLabel className="text-primary">
-                                      Cơ sở nào *
-                                    </FormLabel>
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      defaultValue={field.value}
-                                    >
-                                      <FormControl>
-                                        <SelectTrigger>
-                                          <SelectValue
-                                            placeholder="Hãy chọn cơ sở"
-                                            defaultValue={field.value}
-                                          />
-                                        </SelectTrigger>
-                                      </FormControl>
-                                      <SelectContent>
-                                        {company.map((item) => (
-                                          <SelectItem
-                                            value={item.id}
-                                            key={item.id}
-                                          >
-                                            {item.name}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
                                     <FormMessage />
                                   </FormItem>
                                 );
@@ -571,7 +543,7 @@ export const UsersForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="text-primary">
-                                    Ngày sinh
+                                    Ngày sinh *
                                   </FormLabel>
                                   <FormControl>
                                     <Input
@@ -604,49 +576,176 @@ export const UsersForm = () => {
                               }}
                             />
                           </div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {/* salaryByDay */}
 
-                          {/* gender */}
-                          <FormField
-                            control={form.control}
-                            name="gender"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-primary">
-                                  Giới tính
-                                </FormLabel>
-                                <FormControl>
-                                  <RadioGroup
-                                    onValueChange={field.onChange}
-                                    defaultValue={field.value}
-                                    className="flex items-center space-x-4"
-                                  >
-                                    <FormItem className="flex items-center space-x-2">
+                            {/* companyId */}
+                            <FormField
+                              control={form.control}
+                              name="companyId"
+                              render={({ field }) => {
+                                return (
+                                  <FormItem>
+                                    <FormLabel className="text-primary">
+                                      Cơ sở *
+                                    </FormLabel>
+                                    <Select
+                                      onValueChange={field.onChange}
+                                      defaultValue={field.value}
+                                    >
                                       <FormControl>
-                                        <RadioGroupItem value="Male" />
+                                        <SelectTrigger>
+                                          <SelectValue
+                                            placeholder="Hãy chọn cơ sở"
+                                            defaultValue={field.value}
+                                          />
+                                        </SelectTrigger>
                                       </FormControl>
-                                      <FormLabel className="font-normal">
-                                        Nam
-                                      </FormLabel>
-                                    </FormItem>
-                                    <FormItem className="flex items-center space-x-2">
+                                      <SelectContent>
+                                        {company.map((item) => (
+                                          <SelectItem
+                                            value={item.id}
+                                            key={item.id}
+                                          >
+                                            {item.name}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                  </FormItem>
+                                );
+                              }}
+                            />
+                            {/* roleId */}
+                            <FormField
+                              control={form.control}
+                              name="roleId"
+                              render={({ field }) => {
+                                return (
+                                  <FormItem>
+                                    <FormLabel className="text-primary">
+                                      Vai trò *
+                                    </FormLabel>
+                                    <Select
+                                      onValueChange={(value) =>
+                                        field.onChange(Number(value))
+                                      }
+                                      defaultValue={String(field.value)}
+                                    >
                                       <FormControl>
-                                        <RadioGroupItem value="Female" />
+                                        <SelectTrigger>
+                                          <SelectValue
+                                            defaultValue={String(field.value)}
+                                          />
+                                        </SelectTrigger>
                                       </FormControl>
-                                      <FormLabel className="font-normal">
-                                        Nữ
-                                      </FormLabel>
-                                    </FormItem>
-                                  </RadioGroup>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                                      <SelectContent>
+                                        {enumRole.map((item, index) => (
+                                          <SelectItem
+                                            value={String(item.id)}
+                                            key={index}
+                                          >
+                                            {item.decription}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                  </FormItem>
+                                );
+                              }}
+                            />
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      {/* tính lương  */}
+                      <Card>
+                        <CardContent className="mt-5">
+                          {/* salaryByDayRequest */}
+
+                          {/* <h1 className="font-medium text-xl text-primary">
+                            Lương nhân viên*
+                          </h1> */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 gap-y-5">
+                            <div>
+                              <FormLabel className="text-primary">
+                                Lương ngày *
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  name="salary"
+                                  value={salaryByDayRequest.salary}
+                                  onChange={(e) =>
+                                    handleInputChange(e, "salaryByDayRequest")
+                                  }
+                                />
+                              </FormControl>
+                            </div>
+                            <div>
+                              <FormLabel className="text-primary">
+                                Ngày bắt đầu *
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  name="startDate"
+                                  value={salaryByDayRequest.startDate}
+                                  onChange={(e) =>
+                                    handleInputChange(e, "salaryByDayRequest")
+                                  }
+                                />
+                              </FormControl>
+                            </div>
+                          </div>
+
+                          {/* salaryOverTimeRequest */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <FormLabel className="text-primary">
+                                Lương tăng ca *
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="number"
+                                  name="salary"
+                                  value={salaryOverTimeRequest.salary}
+                                  onChange={(e) =>
+                                    handleInputChange(
+                                      e,
+                                      "salaryOverTimeRequest"
+                                    )
+                                  }
+                                />
+                              </FormControl>
+                            </div>
+
+                            <div>
+                              <FormLabel className="text-primary">
+                                Ngày bắt đầu *
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  name="startDate"
+                                  value={salaryOverTimeRequest.startDate}
+                                  onChange={(e) =>
+                                    handleInputChange(
+                                      e,
+                                      "salaryOverTimeRequest"
+                                    )
+                                  }
+                                />
+                              </FormControl>
+                            </div>
+                          </div>
                         </CardContent>
                       </Card>
                     </div>
 
-                    <Separator className="h-1 my-4" />
+                    <Separator className="h-1 my-1" />
                     <Button
                       type="submit"
                       className="w-full bg-primary hover:bg-primary/90"

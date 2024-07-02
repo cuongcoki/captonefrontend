@@ -7,66 +7,60 @@ export const Gender = [
     value: "Female",
     label: "Nữ",
   },
-
-]
-
+];
 
 export const isActive = [
   {
     value: true,
-    label: "Đi làm",
+    label: "Đang làm",
   },
   {
     value: false,
     label: "Nghỉ việc",
   },
-
-]
+];
 const enumRole = [
   {
-      id: 1,
-      RoleName: "MAIN_ADMIN"
+    id: 1,
+    RoleName: "MAIN_ADMIN",
   },
   {
-      id: 2,
-      RoleName: "BRANCH_ADMIN"
+    id: 2,
+    RoleName: "BRANCH_ADMIN",
   },
   {
-      id: 3,
-      RoleName: "COUNTER"
+    id: 3,
+    RoleName: "COUNTER",
   },
   {
-      id: 4,
-      RoleName: "DRIVER"
+    id: 4,
+    RoleName: "DRIVER",
   },
   {
-      id: 5,
-      RoleName: "USER"
-  }
-]
+    id: 5,
+    RoleName: "USER",
+  },
+];
 
 export const Role = [
   {
     value: 1,
-    label: 'CHỦ',
+    label: "Quản lý hệ thống",
   },
   {
     value: 2,
-    label: "QUẢN TRỊ CHI NHÁNH",
+    label: "Quản lý cơ sở",
   },
   {
     value: 3,
-    label: "NGƯỜI ĐẾM SẢN PHẨM",
+    label: "Quản lý số lượng",
   },
   {
     value: 4,
-    label: "NGƯỜI VẬN CHUYỂN",
+    label: "Nhân viên vận chuyển",
   },
   {
     value: 5,
-    label: "NHÂN VIÊN",
+    label: "Nhân viên",
   },
-
-]
-
-
+];

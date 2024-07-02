@@ -1,25 +1,24 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
+import { ColumnDef } from "@tanstack/react-table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 
-import { Gender, Role,isActive } from "./data/data"
-import { DataTableRowActions } from "./data-table-row-actions"
-import Link from "next/link"
-
+import { Gender, Role, isActive } from "./data/data";
+import { DataTableRowActions } from "./data-table-row-actions";
+import Link from "next/link";
 
 export type Roles = {
-  id: string
-  title: string
-  description: string
-}
+  id: string;
+  title: string;
+  description: string;
+};
 
 export type Employee = {
   id: string;
   firstName: string;
   lastName: string;
-  dob: string
+  dob: string;
   gender: string;
   address: string;
   phone: string;
@@ -27,9 +26,7 @@ export type Employee = {
   isActive: boolean;
   companyId: string;
   salaryByDay: number;
-}
-
-
+};
 
 export const columns: ColumnDef<Employee>[] = [
   // {
@@ -56,156 +53,94 @@ export const columns: ColumnDef<Employee>[] = [
   // },
   {
     accessorKey: "id",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-      >
-        CMND/CCCD
-      </Button>
+    header: ({ column }) => <Button variant="ghost">CMND/CCCD</Button>,
+    cell: ({ row }) => (
+      <Link href={`/profile/${row.getValue("id")}`}>
+        <div>{row.getValue("id")}</div>
+      </Link>
     ),
-    cell: ({ row }) => <Link href={`/profile/${row.getValue("id")}`}><div >{row.getValue("id")}</div></Link>,
   },
 
   {
     accessorKey: "firstName",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Tên nhân viên
-        </Button>
-      )
+      return <Button variant="ghost">Tên nhân viên</Button>;
     },
-  },
-
-  {
-    accessorKey: "lastName",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Họ nhân viên
-        </Button>
-      )
-    },
-  },
-
-  {
-    accessorKey: "dob",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Ngày/tháng/năm sinh
-        </Button>
-      )
-    },
+    cell: ({ row }) => (
+      <div className="">
+        {row.original.firstName} {row.original.lastName}
+      </div>
+    ),
   },
 
   {
     accessorKey: "gender",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-      >
-        Giới tính
-      </Button>
-    ),
+    header: ({ column }) => <Button variant="ghost">Giới tính</Button>,
     cell: ({ row }) => {
       const gender = Gender.find(
         (gender) => gender.value === row.getValue("gender")
-      )
+      );
 
       if (!gender) {
-        return null
+        return null;
       }
 
-      return (
-          <span>{gender.label}</span>
-      )
-    },
-
-  },
-
-  {
-    accessorKey: "address",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Địa chỉ, nơi chốn
-        </Button>
-      )
+      return <span>{gender.label}</span>;
     },
   },
 
   {
     accessorKey: "phone",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Số điện thoại
-        </Button>
-      )
+      return <Button variant="ghost">Số điện thoại</Button>;
     },
   },
 
   {
     accessorKey: "roleId",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-      >
-        Vai trò
-      </Button>
-    ),
+    header: ({ column }) => <Button variant="ghost">Vai trò</Button>,
     cell: ({ row }) => {
-      const role = Role.find(
-        (role) => role.value === row.getValue("roleId")
-      )
+      const role = Role.find((role) => role.value === row.getValue("roleId"));
 
       if (!role) {
-        return null
+        return null;
       }
 
-      return (
-          <span>{role.label}</span>
-      )
+      return <span>{role.label}</span>;
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
+      return value.includes(row.getValue(id));
     },
   },
 
+  // {
+  //   accessorKey: "salaryByDay",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button
+  //         variant="ghost"
+  //       >
+  //         Lương ngày
+  //       </Button>
+  //     )
+  //   },
+  //   cell: ({ row }) => {
 
+  //     // const formatCurrency = (amount:any) => {
+  //     //   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  //     // };
+  //     const formatCurrency = (amount: any) => {
+  //       // Định dạng số theo tiêu chuẩn 'vi-VN'
+  //       const formattedAmount = new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0 }).format(amount);
 
-  {
-    accessorKey: "salaryByDay",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Lương ngày
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-   
-      const formatCurrency = (amount:any) => {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-      };
-      return (
-          <span><i className="text-primary-backgroudPrimary">{formatCurrency(row.original.salaryByDay)}</i></span>
-      )
-    },
-  },
+  //       // Thay đổi dấu chấm thành dấu phẩy
+  //       return formattedAmount.replace(/\./g, ',');
+  //     }
+  //     return (
+  //         <span>{formatCurrency(row.original.salaryByDay)}</span>
+  //     )
+  //   },
+  // },
 
   // {
   //   accessorKey: "companyId",
@@ -214,7 +149,7 @@ export const columns: ColumnDef<Employee>[] = [
   //       <Button
   //         variant="ghost"
   //       >
-  //        companyId 
+  //        companyId
   //       </Button>
   //     )
   //   },
@@ -223,26 +158,26 @@ export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "isActive",
     header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-        >
-          Hoạt động
-        </Button>
-      )
+      return <Button variant="ghost">Hoạt động</Button>;
     },
     cell: ({ row }) => {
-      const isactive = isActive.find(
+      const active = isActive.find(
         (isactive) => isactive.value === row.getValue("isActive")
-      )
+      );
 
-      if (!isactive) {
-        return null
+      if (!active) {
+        return null;
       }
 
       return (
-          <span>{isactive.label}</span>
-      )
+        <span
+          className={`p-2 rounded-full text-white ${
+            active.value ? "bg-primary " : "bg-destructive"
+          }`}
+        >
+          {active.label}
+        </span>
+      );
     },
   },
 
@@ -250,5 +185,4 @@ export const columns: ColumnDef<Employee>[] = [
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },
-
-]
+];

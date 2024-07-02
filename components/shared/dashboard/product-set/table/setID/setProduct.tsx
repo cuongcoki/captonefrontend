@@ -60,7 +60,7 @@ export default function SetProduct({ setProduct }: SetProductProps) {
     const [open, setOpen] = useState<boolean>(false);
     const [selectedProduct, setSelectedProduct] = useState<SetProduct | null>(null);
 
-    const handleOpenDialog =  async (pro: SetProduct) => {
+    const handleOpenDialog = async (pro: SetProduct) => {
         try {
             const updatedImages = await Promise.all(
                 pro.product.imageResponses.map(async (image: ImageResponse) => {
@@ -100,7 +100,7 @@ export default function SetProduct({ setProduct }: SetProductProps) {
     return (
         <Card x-chunk="dashboard-07-chunk-1">
             <CardHeader>
-                <CardTitle>Chi tiết bộ sản phẩm</CardTitle>
+                <CardTitle>Chi tiết sản phẩm</CardTitle>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -132,27 +132,26 @@ export default function SetProduct({ setProduct }: SetProductProps) {
             </CardContent>
             <div>
                 <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogContent className="w-full min-w-[90%] md:min-w-[70%]">
+                    <DialogContent className="max-w-[1100px]  ">
                         <DialogTitle className="visible">
                             {/* Chi tiết bộ sản phẩm */}
                         </DialogTitle>
 
                         <div className=" w-full min-w-[90%] md:min-w-[70%] bg-white p-2 rounded-lg ">
-                            <div className="p-4 flex flex-col justify-between gap-4  md:w-full">
-                                <Card>
+                                <Card className="p-4 flex flex-col justify-between gap-4  w-full">
                                     <CardHeader className="font-semibold text-xl ">
                                         <div className="flex justify-between items-center">
                                             <span>Thông tin sản phẩm</span> <span>Số lượng đặt: {selectedProduct?.quantity}</span>
 
                                         </div>
                                     </CardHeader>
-                                    <CardContent className=" grid-flow-col justify-center gap-6 md:flex ">
-                                        <div className="w-1/2 md:w-full ">
+                                    <CardContent className="flex flex-col gap-6 md:flex-row">
+                                        <Card className=" w-full md:w-1/2">
                                             {selectedProduct && (
                                                 <ImageDisplay images={selectedProduct.product.imageResponses} />
                                             )}
-                                        </div>
-                                        <div className="w-full md:mt-0 mt-6">
+                                        </Card>
+                                        <div className="w-full md:w-1/2">
                                             <Card>
                                                 <CardHeader className="font-semibold text-xl ">
                                                     <span>Thông tin sản phẩm chi tiết</span>
@@ -188,9 +187,6 @@ export default function SetProduct({ setProduct }: SetProductProps) {
                                         </div>
                                     </CardContent>
                                 </Card>
-
-
-                            </div>
                         </div>
 
                     </DialogContent>

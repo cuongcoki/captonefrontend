@@ -28,7 +28,7 @@ export default function RenderTableOrder() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [data, setData] = useState<Order[]>([]);
-  
+  console.log('data',data)
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [status, setStatus] = useState<string | null>(null);
