@@ -55,6 +55,7 @@ import toast from "react-hot-toast";
 import { productApi } from "@/apis/product.api";
 import ImageDisplayDialog from "./imageDisplayDialog";
 import { NoImage } from "@/constants/images";
+import { ProductSetStore } from "@/components/shared/dashboard/product-set/product-set-store";
 
 interface ImageResponse {
   id: string;
@@ -102,7 +103,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   const [imageRequests, setImageRequests] = useState<string>("");
   const [imageUrls, setImageUrls] = useState<File | null>(null);
   const [linkImg, setLinkImg] = useState<string>("");
-
+  const { ForceRender } = ProductSetStore();
   console.log("nameImage", nameImage);
   // ** các hàm để sử lý đăng ảnh
 
@@ -462,26 +463,25 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       update: updateProducts,
       removeProductIds: removeProductIds,
     };
-
-    try {
-      console.log("requestBody", requestBody);
-      const response = await setApi.updateSet(requestBody, setProductId.id);
-      console.log("Update Successful:", response);
-
-      // Display success message and redirect after 2 seconds
-      toast.success(response.data.message);
-      setTimeout(() => {
-        // window.location.href = "/dashboard/set";
+    setApi
+      .updateSet(requestBody, setProductId.id)
+      .then((res) => {
+        console.log("Update Successful:", res);
+        toast.success(res.data.message);
+        ForceRender();
         setOpen(false);
-      }, 2000);
-    } catch (error) {
-      console.error("Error updating set:", error);
-      toast.error("Failed to update set. Please try again.");
-    }
+      })
+      .catch((e) => {
+        toast.error("Cập nhật thất bại");
+      });
   };
 
-  useEffect(() => {}, [onSubmit]);
-
+  const limitLength = (text: any, maxLength: any) => {
+    if (text.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`;
+    }
+    return text;
+  };
   console.log("getDetailsProUpdate", getDetailsProUpdate);
   const { pending } = useFormStatus();
   return (
@@ -520,7 +520,20 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center text-primary">
-                                    Mã CODE
+                                    Mã Bộ Sản Phẩm
+                                  </FormLabel>
+                                  <Input type="text" {...field} />
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <FormField
+                              control={form.control}
+                              name="name"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center text-primary">
+                                    Tên Bộ Sản Phẩm
                                   </FormLabel>
                                   <Input type="text" {...field} />
                                   <FormMessage />
@@ -533,22 +546,9 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center text-primary">
-                                    Mô tả
+                                    Mô Tả
                                   </FormLabel>
                                   <Textarea {...field} />
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <FormField
-                              control={form.control}
-                              name="name"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
-                                    Tên sản phẩm
-                                  </FormLabel>
-                                  <Input type="text" {...field} />
                                   <FormMessage />
                                 </FormItem>
                               )}
@@ -564,7 +564,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         >
                           <CardHeader>
                             <CardTitle className="text-lg">
-                              Ảnh đặt sản phẩm
+                              Ảnh Bộ Sản Phẩm
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
@@ -600,12 +600,81 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         </Card>
                       </div>
                     </div>
+                    <div>
+                      <Card>
+                        <CardHeader className="font-semibold text-2xl">
+                          <span>Thông tin sản phẩm trong bộ</span>
+                        </CardHeader>
+                        <CardContent className="overflow-auto">
+                          {getDetailsProUpdate.map((product, index) => (
+                            <div
+                              className="grid grid-cols-10 items-center py-4"
+                              key={index}
+                            >
+                              <div className="col-span-7 flex gap-4">
+                                {product.product.imageResponses.length > 0 && (
+                                  <Image
+                                    src={
+                                      product.product.imageResponses[0].imageUrl
+                                    } // Lấy ảnh đầu tiên từ mảng imageResponses
+                                    alt="Ảnh mẫu"
+                                    className="w-[100px] h-[100px] object-cover"
+                                    width={900}
+                                    height={900}
+                                  />
+                                )}
+                                <div className="font-medium dark:text-white">
+                                  <div>
+                                    <b>Tên: </b>
+                                    {limitLength(product?.product.name, 50)}
+                                  </div>
+                                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    <b>Code: </b>
+                                    {limitLength(product?.product.code, 50)}
+                                  </div>
+                                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                                    <i>
+                                      {limitLength(
+                                        product?.product.description,
+                                        50
+                                      )}
+                                    </i>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <input
+                                className="col-span-2 w-16 text-center outline-none"
+                                type="number"
+                                defaultValue={product.quantity || 0}
+                                onChange={(e) =>
+                                  handleChangeUpdate(
+                                    product.productId,
+                                    parseInt(e.target.value)
+                                  )
+                                }
+                              />
+
+                              <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() =>
+                                  handleDeleteProducts(product.productId)
+                                }
+                              >
+                                <Minus className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </CardContent>
+                      </Card>
+                    </div>
                     <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
                       <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
                         <Card>
                           <CardHeader>
-                            <CardTitle className="text-lg">
-                              Chi tiết sản phẩm trong bộ
+                            <CardTitle className="text-2xl">
+                              Thêm sản phẩm vào bộ
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
@@ -678,74 +747,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                             )}
 
                             <div className="md:col-span-1  md:mt-0">
-                              <Card>
-                                <CardHeader className="font-semibold text-xl">
-                                  <span>Thông tin sản phẩm hiện tại</span>
-                                </CardHeader>
-                                <CardContent className="overflow-auto">
-                                  {getDetailsProUpdate.map((product, index) => (
-                                    <div
-                                      className="flex justify-between items-center py-4"
-                                      key={index}
-                                    >
-                                      <div className="flex  gap-4">
-                                        {product.product.imageResponses.length >
-                                          0 && (
-                                          <Image
-                                            src={
-                                              product.product.imageResponses[0]
-                                                .imageUrl
-                                            } // Lấy ảnh đầu tiên từ mảng imageResponses
-                                            alt="Ảnh mẫu"
-                                            className="w-[100px] h-[100px] object-cover"
-                                            width={900}
-                                            height={900}
-                                          />
-                                        )}
-                                        <div className="font-medium dark:text-white">
-                                          <div>
-                                            <b>Tên: </b>
-                                            {product?.product.name}
-                                          </div>
-                                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            <b>Code: </b>
-                                            {product?.product.code}
-                                          </div>
-                                          <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            <i>
-                                              {product?.product.description}
-                                            </i>
-                                          </div>
-                                        </div>
-                                      </div>
-
-                                      <input
-                                        type="number"
-                                        defaultValue={product.quantity || 0}
-                                        onChange={(e) =>
-                                          handleChangeUpdate(
-                                            product.productId,
-                                            parseInt(e.target.value)
-                                          )
-                                        }
-                                        className="w-16 text-center outline-none"
-                                      />
-
-                                      <Button
-                                        variant="outline"
-                                        size="icon"
-                                        onClick={() =>
-                                          handleDeleteProducts(
-                                            product.productId
-                                          )
-                                        }
-                                      >
-                                        <Minus className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                  ))}
-                                </CardContent>
-                              </Card>
                               <Card className="mt-4">
                                 <CardHeader className="font-semibold text-xl">
                                   <span>Thông tin sản phẩm đã thêm</span>
@@ -753,10 +754,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                 <CardContent className="overflow-auto">
                                   {getDetailsPro.map((product, index) => (
                                     <div
-                                      className="flex justify-between items-center py-4"
+                                      className="grid grid-cols-10 items-center py-4"
                                       key={index}
                                     >
-                                      <div className="flex  gap-4">
+                                      <div className="col-span-7 flex gap-4">
                                         <Image
                                           alt="ảnh mẫu"
                                           className="w-[100px] h-[100px] object-cover"
@@ -773,18 +774,24 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                         <div className="font-medium dark:text-white">
                                           <div>
                                             <b>Tên: </b>
-                                            {product.name}
+                                            {limitLength(product.name, 50)}
                                           </div>
                                           <div className="text-sm text-gray-500 dark:text-gray-400">
                                             <b>Code: </b>
-                                            {product.code}
+                                            {limitLength(product.code, 50)}
                                           </div>
                                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            <i>{product.description}</i>
+                                            <i>
+                                              {limitLength(
+                                                product.description,
+                                                50
+                                              )}
+                                            </i>
                                           </div>
                                         </div>
                                       </div>
                                       <input
+                                        className="col-span-2 w-16 text-center outline-none"
                                         type="number"
                                         value={
                                           productsRequest.find(
@@ -798,7 +805,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                             parseInt(e.target.value)
                                           )
                                         }
-                                        className="w-16 text-center outline-none"
                                       />
                                       <Button
                                         variant="outline"

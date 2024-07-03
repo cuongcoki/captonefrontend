@@ -49,8 +49,8 @@ export const ProductSchema = z.object({
       { message: "Hai ký tự đầu tiên phải là chữ cái và phần còn lại là số." }
     ),
   price: z.coerce
-    .number({ message: "Giá phải là số" })
-    .min(1, { message: "Giá là bắt buộc." }),
+    .number({ message: "Giá thành phải là số" })
+    .min(1, { message: "Giá thành là bắt buộc." }),
   size: z.string().min(1, { message: "Kích thước là bắt buộc." }),
   description: z.string(),
 });

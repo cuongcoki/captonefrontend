@@ -29,6 +29,7 @@ export const useMaterialStore = create<MaterialStore>((set) => ({
       materialApi
         .searchMaterial({
           SearchTerm: searchTerm,
+          IsInProcessing: true,
           pageIndex: pageIndex,
           pageSize: 10,
         })

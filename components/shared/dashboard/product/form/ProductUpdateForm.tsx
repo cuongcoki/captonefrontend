@@ -28,7 +28,7 @@ import {
 import { filesApi } from "@/apis/files.api";
 import { Card } from "@/components/ui/card";
 import { CardContent } from "../../home/DashbroadComponents/Cards/Card";
-import { MyContext } from "@/components/shared/dashboard/product/table/productID/ProductID";
+import { ProductStore } from "@/components/shared/dashboard/product/product-store";
 
 interface ProductData {
   code: string;
@@ -52,7 +52,7 @@ interface ProductID {
 
 export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const [loading, setLoading] = useState(false);
-  const { forceUpdate } = useContext(MyContext);
+  const { ForceRender } = ProductStore();
   // console.log('productId', productId)
   const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(
     undefined
@@ -275,9 +275,19 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   // Handle form submission
   const onSubmit = async (formData: z.infer<typeof ProductUpdateSchema>) => {
     if (isSubmitting) return; // Ngăn chặn việc submit nhiều lần
-    setIsSubmitting(true);
-    setLoading(true);
     var ImaNull = null;
+    // let isHaveMainImage = false;
+    // imageAddRequests.forEach((image) => {
+    //   if (image.isMainImage === true) {
+    //     isHaveMainImage = true;
+    //   }
+    // });
+    // if (isHaveMainImage === false) {
+    //   toast.error("Vui lòng chọn ảnh chính cho sản phẩm");
+    //   return;
+    // }
+    setLoading(true);
+    setIsSubmitting(true);
 
     try {
       await handlePostImage();
@@ -303,7 +313,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
         .updateProduct(requestBody, formData.id)
         .then(({ data }) => {
           toast.success(data.message);
-          forceUpdate();
+          ForceRender();
         })
         .catch((error) => {
           console.error("Error updating product:", error);
@@ -388,7 +398,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center text-primary">
-                          Thành Tiền *
+                          Giá Thành *
                         </FormLabel>
                         <Input type="number" {...field} />
                         <FormMessage />
@@ -475,7 +485,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
           <Card className=" relative border-none shadow-none">
             {/* nếu không có ảnh nào thì hiện input này */}
             {imageRequests.length < 1 && (
-              <CardContent style={{ width: "100%", height: "100%" }}>
+              <CardContent className="h-[60vh]">
                 <input
                   id="image"
                   type="file"

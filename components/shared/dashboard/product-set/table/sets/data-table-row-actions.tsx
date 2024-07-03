@@ -25,7 +25,7 @@ export function DataTableRowActions<TData extends { id: string }>({
   row,
 }: DataTableRowActionsProps<TData>) {
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"

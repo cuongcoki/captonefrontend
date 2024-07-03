@@ -14,7 +14,12 @@ export type Product = {
   description: string;
   imageUrl: string;
 };
-
+const limitLength = (text: any, maxLength: any) => {
+  if (text.length > maxLength) {
+    return `${text.slice(0, maxLength)}...`;
+  }
+  return text;
+};
 export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "imageResponses",
@@ -49,6 +54,9 @@ export const columns: ColumnDef<Product>[] = [
     header: ({ column }) => {
       return <Button variant="ghost">Tên Sản Phẩm</Button>;
     },
+    cell: ({ row }) => {
+      return <div>{limitLength(row.original.name, 50)}</div>;
+    },
   },
 
   {
@@ -56,12 +64,18 @@ export const columns: ColumnDef<Product>[] = [
     header: ({ column }) => {
       return <Button variant="ghost">Mã Sản Phẩm</Button>;
     },
+    cell: ({ row }) => {
+      return <div>{limitLength(row.original.code, 20)}</div>;
+    },
   },
 
   {
     accessorKey: "description",
     header: ({ column }) => {
       return <Button variant="ghost">Mô Tả</Button>;
+    },
+    cell: ({ row }) => {
+      return <div>{limitLength(row.original.description, 50)}</div>;
     },
   },
 

@@ -26,10 +26,10 @@ import toast, { Toaster } from "react-hot-toast";
 import { productApi } from "@/apis/product.api";
 import { filesApi } from "@/apis/files.api";
 
-import { MyContext } from "../table/products/RenderTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import { ProductStore } from "@/components/shared/dashboard/product/product-store";
 
 const initialImageRequests = [
   {
@@ -61,7 +61,7 @@ export const ProductForm = () => {
       imageRequests: initialImageRequests,
     },
   });
-  const { forceUpdate } = useContext(MyContext);
+  const { ForceRender } = ProductStore();
 
   const [imageRequests, setImageRequests] = useState<
     {
@@ -235,7 +235,7 @@ export const ProductForm = () => {
           toast.success(response.data.message);
           setTimeout(() => {
             setOpen(false);
-            forceUpdate();
+            ForceRender();
             // window.location.href = '/dashboard/product';
           }, 2000);
         } else {
@@ -400,7 +400,7 @@ export const ProductForm = () => {
                             render={({ field }) => (
                               <FormItem>
                                 <FormLabel className="flex items-center text-primary">
-                                  Thành Tiền
+                                  Giá Thành
                                 </FormLabel>
                                 <FormControl>
                                   <Input type="number" {...field} />

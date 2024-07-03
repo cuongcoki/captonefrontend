@@ -42,7 +42,7 @@ export function DataTableRowActions<TData extends { id: string }>({
     fetchDataProductId();
   }, [row.original.id]);
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"

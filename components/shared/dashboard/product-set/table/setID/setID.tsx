@@ -18,6 +18,7 @@ import SetProduct from "./setProduct";
 import { SetUpdateForm } from "../../form/SetUpdateForm";
 import { filesApi } from "@/apis/files.api";
 import { PencilLine } from "lucide-react";
+import { ProductSetStore } from "@/components/shared/dashboard/product-set/product-set-store";
 
 export default function SetIDPage() {
   //state
@@ -27,7 +28,7 @@ export default function SetIDPage() {
   const [setProduct, setSetProduct] = useState<any>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [linkImg, setLinkImg] = useState<string>("");
-
+  const { force } = ProductSetStore();
   useEffect(() => {
     const fetchDataProductId = async () => {
       setLoading(true);
@@ -50,7 +51,7 @@ export default function SetIDPage() {
     };
 
     fetchDataProductId();
-  }, [params.id]);
+  }, [params.id, force]);
 
   console.log("linkImg", linkImg);
   // console.log('id setIdsetIdsetId', setId)
@@ -79,7 +80,9 @@ export default function SetIDPage() {
           <Card x-chunk="dashboard-07-chunk-0">
             <CardHeader>
               <div className="flex justify-between items-start">
-                <CardTitle>Bộ sản phẩm chi tiết</CardTitle>
+                <CardTitle className="text-primary">
+                  Bộ sản phẩm chi tiết
+                </CardTitle>
                 <SetUpdateForm setId={setId.id}>
                   <PencilLine className="size-6 rounded  hover:bg-gray-200" />
                 </SetUpdateForm>
@@ -88,19 +91,19 @@ export default function SetIDPage() {
             <CardContent>
               <div className="grid gap-6">
                 <div className="grid gap-3">
-                  <Label htmlFor="name">Mã Code</Label>
+                  <Label htmlFor="name">Mã Bộ Sản Phẩm</Label>
                   <div className="border p-2 rounded-md border-gray-100">
                     {setId?.code}
                   </div>
                 </div>
                 <div className="grid gap-3">
-                  <Label htmlFor="name">Tên</Label>
+                  <Label htmlFor="name">Tên Bộ Sản Phẩm</Label>
                   <div className="border p-2 rounded-md border-gray-100">
                     {setId?.name}
                   </div>
                 </div>
                 <div className="grid gap-3">
-                  <Label htmlFor="description">Mô tả</Label>
+                  <Label htmlFor="description">Mô Tả</Label>
                   <div className="border p-2 rounded-md border-gray-100">
                     {setId?.description}
                   </div>
@@ -115,7 +118,7 @@ export default function SetIDPage() {
         <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
           <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
             <CardHeader>
-              <CardTitle>Ảnh đặt sản phẩm</CardTitle>
+              <CardTitle className="text-primary">Ảnh Bộ Sản Phẩm</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-2">
@@ -129,7 +132,7 @@ export default function SetIDPage() {
                   />
                 ) : (
                   <div className="text-center flex flex-col justify-center items-center w-full ">
-                    <span className="loading loading-spinner loading-lg text-primary-backgroudPrimary "></span>
+                    <span className="loading loading-spinner loading-lg text-primary "></span>
                   </div>
                 )}
               </div>

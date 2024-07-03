@@ -99,7 +99,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "price",
     header: ({ column }) => {
-      return <Button variant="ghost">Thành Tiền</Button>;
+      return <Button variant="ghost">Giá Thành</Button>;
     },
     cell: ({ row }) => {
       const formattedPrice = Number(row.original.price).toLocaleString("vi-VN");

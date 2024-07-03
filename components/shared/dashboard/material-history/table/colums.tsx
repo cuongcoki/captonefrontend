@@ -24,7 +24,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
     header: ({ column }) => {
       return (
         <div>
-          Tên vật liệu
+          Tên Vật Liệu
           {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
         </div>
       );
@@ -33,7 +33,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
       const res = await filesApi.getFile(row.original.image as string);
       const href = res.data.data;
       return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 max-w-[200px]">
           <Image
             className="w-10 h-10 mr-2"
             width={100}
@@ -51,14 +51,14 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
   },
   {
     accessorKey: "quantity",
-    header: "Số lượng",
+    header: "Số Lượng",
   },
   {
     accessorKey: "price",
     header: ({ column }) => {
       return (
         <div className="flex items-center justify-start p-0">
-          Giá mua / 1 vật liệu
+          Giá Mua 1 Vật Liệu
           {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
         </div>
       );
@@ -73,7 +73,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
     header: ({ column }) => {
       return (
         <div className="flex items-center justify-start p-0">
-          Ngày mua
+          Ngày Mua
           {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
         </div>
       );
@@ -95,22 +95,31 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
   // },
   {
     accessorKey: "description",
-    header: "Ghi chú",
+    header: "Ghi Chú",
+    cell: ({ row }) => {
+      return <div className="max-w-[30vh]">{row.original.description}</div>;
+    },
   },
   {
     id: "actions",
-    header: "Hành động",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-start p-0">
+          Hành Động
+          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const payment = row.original;
-
       return (
-        <>
+        <div className="flex items-center justify-start p-0">
           <UpdateMaterialHistory id={payment.id}>
             <div id={payment.id}>
               <Edit className="hover:cursor-pointer" />
             </div>
           </UpdateMaterialHistory>
-        </>
+        </div>
       );
     },
   },

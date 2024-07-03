@@ -23,6 +23,7 @@ import { PencilLine } from "lucide-react";
 // ** component
 import ImageDisplayID from "./ImageDisplayID";
 import ProductUpdate from "@/components/shared/dashboard/product/table/productID/product-update";
+import { ProductStore } from "@/components/shared/dashboard/product/product-store";
 
 export interface ProductData {
   code: string;
@@ -39,12 +40,7 @@ export interface ProductData {
   price: number;
   size: string;
 }
-type ContexType = {
-  forceUpdate: () => void;
-};
-export const MyContext = createContext<ContexType>({
-  forceUpdate: () => {},
-});
+
 export default function ProductIDPage() {
   const [open, setOpen] = useState<boolean>(false);
   const handleOffDialog = () => {
@@ -58,9 +54,8 @@ export default function ProductIDPage() {
   const params = useParams<{ id: string }>();
   const [productId, setProductId] = useState<any>([]);
   const [open1, setOpen1] = useState<boolean>(false);
-  const [force, setForce] = useState<number>(1);
+  const { force } = ProductStore();
 
-  const forceUpdate = () => setForce((prev) => prev + 1);
   const formatCurrency = (amount: any) => {
     // Định dạng số theo tiêu chuẩn 'vi-VN'
     const formattedAmount = new Intl.NumberFormat("vi-VN", {
@@ -120,104 +115,102 @@ export default function ProductIDPage() {
         </div>
       </header>
 
-      <MyContext.Provider value={{ forceUpdate }}>
-        <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
-          <div className="p-4 grid md:grid-cols-2 grid-cols-1  gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Hình ảnh sản phẩm</CardTitle>
-                <CardDescription>
-                  đây là hình ảnh sản phẩm, bạn có thể thay đổi giá trị
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex gap-4 justify-center">
-                <Card className="max-w-[500px] md:w-full">
-                  <ImageDisplayID images={productId.imageResponses} />
-                </Card>
-              </CardContent>
-            </Card>
+      <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
+        <div className="p-4 grid md:grid-cols-2 grid-cols-1  gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Hình ảnh sản phẩm</CardTitle>
+              <CardDescription>
+                đây là hình ảnh sản phẩm, bạn có thể thay đổi giá trị
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex gap-4 justify-center">
+              <Card className="max-w-[500px] md:w-full">
+                <ImageDisplayID images={productId.imageResponses} />
+              </Card>
+            </CardContent>
+          </Card>
 
-            <Card>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle>Chi tiết sản phẩm</CardTitle>
-                    <CardDescription>
-                      đây là sản phẩm chi tiết, bạn có thể thay đổi giá trị
-                    </CardDescription>
-                  </div>
-                  <ProductUpdate product={productId}>
-                    <PencilLine className="rounded hover:bg-gray-200" />
-                  </ProductUpdate>
+          <Card>
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div>
+                  <CardTitle>Chi tiết sản phẩm</CardTitle>
+                  <CardDescription>
+                    đây là sản phẩm chi tiết, bạn có thể thay đổi giá trị
+                  </CardDescription>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-6">
+                <ProductUpdate product={productId}>
+                  <PencilLine className="rounded hover:bg-gray-200" />
+                </ProductUpdate>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-6">
+                <Label className="" htmlFor="name">
+                  <div>Mã Sản Phẩm</div>
+                </Label>
+                <div className="grid grid-cols-10 ">
+                  <div className="col-span-6 border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
+                    {productId?.code}
+                  </div>
+
+                  <div className="grid gap-3 col-span-4 mx-auto">
+                    <Label
+                      className="flex gap-x-3 items-center"
+                      htmlFor="status"
+                    >
+                      <div className="">Trạng Thái</div>
+                      <div className="">
+                        <span
+                          className={`w-[40%] px-2 py-2 rounded-full ${
+                            productId?.isInProcessing
+                              ? "bg-primary"
+                              : "bg-yellow-200 text-black"
+                          }`}
+                        >
+                          {productId?.isInProcessing
+                            ? "Đang xử lý"
+                            : "Chưa xử lý"}
+                        </span>
+                      </div>
+                    </Label>
+                  </div>
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="name">Tên Sản Phẩm</Label>
+                  <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
+                    {productId?.name}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 space-x-4">
                   <Label className="" htmlFor="name">
-                    <div>Mã Sản Phẩm</div>
+                    Giá Thành
                   </Label>
-                  <div className="grid grid-cols-10 ">
-                    <div className="col-span-6 border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                      {productId?.code}
-                    </div>
+                  <Label className="" htmlFor="name">
+                    Kích Thước
+                  </Label>
+                </div>
+                <div className="grid grid-cols-2 gap-x-4">
+                  <div className=" border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
+                    {`${Number(productId?.price).toLocaleString("vi-VN")} `}
+                  </div>
 
-                    <div className="grid gap-3 col-span-4 mx-auto">
-                      <Label
-                        className="flex gap-x-3 items-center"
-                        htmlFor="status"
-                      >
-                        <div className="">Trạng Thái</div>
-                        <div className="">
-                          <span
-                            className={`w-[40%] px-2 py-2 rounded-full ${
-                              productId?.isInProcessing
-                                ? "bg-primary"
-                                : "bg-yellow-200 text-black"
-                            }`}
-                          >
-                            {productId?.isInProcessing
-                              ? "Đang xử lý"
-                              : "Chưa xử lý"}
-                          </span>
-                        </div>
-                      </Label>
-                    </div>
-                  </div>
-                  <div className="grid gap-3">
-                    <Label htmlFor="name">Tên Sản Phẩm</Label>
-                    <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                      {productId?.name}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 space-x-4">
-                    <Label className="" htmlFor="name">
-                      Thành Tiền
-                    </Label>
-                    <Label className="" htmlFor="name">
-                      Kích Thước
-                    </Label>
-                  </div>
-                  <div className="grid grid-cols-2 gap-x-4">
-                    <div className=" border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                      {`${Number(productId?.price).toLocaleString("vi-VN")} `}
-                    </div>
-
-                    <div className=" border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                      {productId?.size}
-                    </div>
-                  </div>
-                  <div className="grid gap-3">
-                    <Label htmlFor="description">Mô Tả</Label>
-                    <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                      {productId?.description}
-                    </div>
+                  <div className=" border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
+                    {productId?.size}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="description">Mô Tả</Label>
+                  <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
+                    {productId?.description}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </MyContext.Provider>
+      </div>
     </div>
   );
 }
