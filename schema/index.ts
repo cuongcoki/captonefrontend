@@ -55,6 +55,17 @@ export const ProductSchema = z.object({
   description: z.string(),
 });
 
+const salaryRequestSchema = z.object({
+  salary: z.coerce.number({ message: "Lương phải là số" }).min(1, { message: "Vui lòng nhập lương" }),
+  startDate: z.string().refine(
+    (date) => {
+      const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
+      return datePattern.test(date);
+    },
+    { message: "Ngày bắt đầu phải có định dạng dd/MM/yyyy" }
+  )
+});
+
 export const UsersSchema = z.object({
   firstName: z.string().min(1, { message: "Yêu cầu nhập tên nhân viên" }),
   lastName: z.string().min(1, { message: "Yêu cầu nhập họ của nhân viên" }),
@@ -105,9 +116,11 @@ export const UsersSchema = z.object({
     },
     { message: "Phải đúng 9 chữ số là CMND và 12 chữ số là CCCD" }
   ),
-  salaryByDay: z.coerce
-    .number({ message: "Lương phải là số" })
-    .min(1, { message: "Vui lòng nhập lương theo ngày của nhân viên" }),
+  salaryByDayRequest: salaryRequestSchema,
+  salaryOverTimeRequest: salaryRequestSchema,
+  // salaryByDay: z.coerce
+  //   .number({ message: "Lương phải là số" })
+  //   .min(1, { message: "Vui lòng nhập lương theo ngày của nhân viên" }),
 });
 
 export const UsersUpdateSchema = z.object({
@@ -219,7 +232,8 @@ export const UpdateUserForm = z.object({
     }),
   roleId: z.number().int({ message: "Vai trò không hợp lệ" }),
   companyId: z.string().nonempty({ message: "Cơ sở không được để trống" }),
-  salaryByDay: z.number(),
+  salaryByDayRequest: salaryRequestSchema,
+  salaryOverTimeRequest: salaryRequestSchema,
 });
 
 export type ChangePasswordFormType = z.infer<typeof ChangePasswordSchema>;

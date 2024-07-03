@@ -52,3 +52,16 @@ export const OrderDetailRequestSchema = z.object({
   note: z.string().optional(), 
   isProductId: z.boolean(),
 });
+
+export const UpdateOrderSchema =  z.object({
+  companyId: z.string(),
+  startOrder: z.string().refine(dateFormat, {
+    message: "Ngày phải theo định dạng DD/MM/YYYY"
+  }), // Kiểm tra chuỗi với định dạng DD/MM/YYYY
+  endOrder: z.string().refine(dateFormat, {
+    message: "Ngày phải theo định dạng DD/MM/YYYY"
+  }), // Kiểm tra chuỗi với định dạng DD/MM/YYYY
+  vat: z.coerce
+    .number({ message: "Vat phải là số" })
+    .min(0, { message: "Vat phải lớn hơn 0" })
+});
