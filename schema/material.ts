@@ -134,7 +134,7 @@ export const materialHistoryFormSchema = z.object({
       return !isNaN(parsedValue) && parsedValue > 0;
     },
     {
-      message: "Giá phải lớn hơn không",
+      message: "Giá phải lớn hơn 0",
     }
   ),
   importAt: importAtSchema,

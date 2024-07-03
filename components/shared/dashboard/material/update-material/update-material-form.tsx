@@ -125,10 +125,16 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
           data.data.data.unit = data.data.data.unit.trim();
           data.data.data.name = data.data.data.name.trim();
           form.reset(data.data.data);
-          filesApi.getFile(data.data.data.image as string).then((res) => {
-            // setImageLink(res.data.data);
-            fillImage(res.data.data);
-          });
+
+          filesApi
+            .getFile(data.data.data.image as string)
+            .then((res) => {
+              // setImageLink(res.data.data);
+              fillImage(res.data.data);
+            })
+            .catch((error) => {
+              console.log("Error in get image", error);
+            });
         }
       })
       .catch((error) => {

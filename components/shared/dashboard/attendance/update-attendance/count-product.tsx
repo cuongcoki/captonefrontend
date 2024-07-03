@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { Combobox } from "@/components/shared/common/combobox/combobox";
+
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import { X } from "lucide-react";
 import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
@@ -62,6 +62,7 @@ export default function CountProduct({
       attendanceApi
         .getALlProduct({
           SearchTerm: searchInput,
+          IsInProcessing: true,
           pageIndex: 1,
           pageSize: 10,
         })
