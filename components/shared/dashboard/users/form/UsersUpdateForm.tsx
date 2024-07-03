@@ -27,6 +27,15 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+  } from "@/components/ui/popover";
+  
+  import { Calendar } from "@/components/ui/calendar";
+  import { format, parse } from "date-fns";
+
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -46,7 +55,8 @@ import { error } from "console";
 import { orderApi } from "@/apis/order.api";
 import { filesApi } from "@/apis/files.api";
 import ImageDisplayAvatar from "./ImageDisplay";
-import { Plus, Upload, X } from "lucide-react";
+import { CalendarIcon, Plus, Upload, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // ** type
 interface UserData {
@@ -58,7 +68,6 @@ interface UserData {
     gender: string;
     phone: string;
     companyId: string;
-    salaryByDay: number;
     roleId: number
 }
 
@@ -104,6 +113,25 @@ type Company = {
     companyType: number;
     companyTypeDescription: string;
 };
+interface salaryByRequest{
+    salary:any,
+    startDate:any
+}
+
+type User ={
+    id: any;
+    firstName: any;
+    lastName: any;
+    phone:any;
+    avatar: any;
+    address: any;
+    gender: any;
+    dob: any;
+    salaryByDayRequest :salaryByRequest;
+    salaryOverTimeRequest: salaryByRequest;
+    companyId:any;
+    roleId:any
+}
 
 export const UpdateUser: React.FC<UserID> = ({ userId }) => {
     const [open, setOpen] = useState<boolean>(false);
@@ -114,7 +142,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
         setOpen(true);
     };
     const [loading, setLoading] = useState<boolean>(false);
-    const [user, setUser] = useState<any>([])
+    const [user, setUser] = useState<User>()
     const [roles, setRoles] = useState<Array<{
         roleName: string,
         description: string,
@@ -245,7 +273,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                     };
 
                     form.reset(formattedUserData);
-                    setFormattedValue(formatCurrency(userData.salaryByDay.toString()));
+                    // setFormattedValue(formatCurrency(userData.salaryByDay.toString()));
                 })
                 .catch(error => {
                     console.error('Error fetching user data:', error);
@@ -267,16 +295,23 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
     const form = useForm({
         resolver: zodResolver(UpdateUserForm),
         defaultValues: {
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            phone: user.phone,
-            address: user.address,
-            gender: user.gender,
-            dob: formatDate(user.dob),
-            roleId: user.roleId,
-            companyId: user.companyId,
-            salaryByDay: user.salaryByDay,
+            id: user?.id,
+            firstName: user?.firstName,
+            lastName: user?.lastName,
+            phone: user?.phone,
+            address: user?.address,
+            gender: user?.gender,
+            dob: formatDate(user?.dob),
+            roleId: user?.roleId,
+            companyId: user?.companyId,
+            salaryByDayRequest: {
+                salary: 0,
+                startDate: ''
+              },
+              salaryOverTimeRequest: {
+                salary: 0,
+                startDate: ''
+              }
         },
     });
     const onSubmit = async (data: z.infer<typeof UpdateUserForm>) => {
@@ -296,21 +331,21 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
         }
     };
 
-    const formatCurrency = (value: any) => {
-        if (!value) return value;
-        const number = Number(value.replace(/[^0-9]/g, ''));
-        return new Intl.NumberFormat('vi-VN').format(number);
-    };
+    // const formatCurrency = (value: any) => {
+    //     if (!value) return value;
+    //     const number = Number(value.replace(/[^0-9]/g, ''));
+    //     return new Intl.NumberFormat('vi-VN').format(number);
+    // };
 
-    const [formattedValue, setFormattedValue] = useState('');
+    // const [formattedValue, setFormattedValue] = useState('');
 
-    const onChangeHandler = (e: any) => {
-        const value = e.target.value;
-        const numericValue = value.replace(/[^0-9]/g, '');
-        const formatted = formatCurrency(numericValue);
-        setFormattedValue(formatted);
-        form.setValue('salaryByDay', Number(numericValue), { shouldValidate: true });
-    };
+    // const onChangeHandler = (e: any) => {
+    //     const value = e.target.value;
+    //     const numericValue = value.replace(/[^0-9]/g, '');
+    //     const formatted = formatCurrency(numericValue);
+    //     setFormattedValue(formatted);
+    //     form.setValue('salaryByDay', Number(numericValue), { shouldValidate: true });
+    // };
 
     return (
 
@@ -515,25 +550,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                                     </div>
 
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                        {/* salaryByDay */}
-                                                        <FormField
-                                                            control={form.control}
-                                                            name="salaryByDay"
-                                                            render={({ field }) => {
-                                                                return (
-                                                                    <FormItem>
-                                                                        <FormLabel className="text-primary-backgroudPrimary">
-                                                                            Lương ngày
-                                                                        </FormLabel>
-                                                                        <FormControl>
-                                                                            <Input type="text" {...field} value={formattedValue} onChange={onChangeHandler} />
-                                                                        </FormControl>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                );
-                                                            }}
-                                                        />
-
 
                                                         <FormField
                                                             control={form.control}
@@ -633,7 +649,141 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
 
                                                 </CardContent>
                                             </Card>
+
+                                            {/* tính lương  */}
+                                            <Card>
+                                                <CardContent className="mt-5 flex flex-col gap-2">
+                                                    {/* salaryByDayRequest */}
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <FormField
+                                                            control={form.control}
+                                                            name="salaryByDayRequest.salary"
+                                                            render={({ field }) => {
+                                                                return (
+                                                                    <FormItem>
+                                                                        <FormLabel className="flex items-center text-primary">
+                                                                            Lương ngày
+                                                                        </FormLabel>
+                                                                        <FormControl>
+                                                                            <Input type="text" {...field} />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                );
+                                                            }}
+                                                        />
+                                                        <FormField
+                                                            control={form.control}
+                                                            name="salaryByDayRequest.startDate"
+                                                            render={({ field }) => (
+                                                                <FormItem className="flex flex-col text-primary">
+                                                                    <FormLabel >Ngày đặt hàng *</FormLabel>
+                                                                    <Popover modal={true}>
+                                                                        <PopoverTrigger asChild>
+                                                                            <FormControl>
+                                                                                <Button
+                                                                                    variant={"outline"}
+                                                                                    className={cn(
+                                                                                        "w-[240px] pl-3 text-left font-normal",
+                                                                                        !field.value && "text-muted-foreground"
+                                                                                    )}
+                                                                                >
+                                                                                    {field.value ? (
+                                                                                        format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
+                                                                                    ) : (
+                                                                                        <span>Chọn ngày</span>
+                                                                                    )}
+                                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                                </Button>
+                                                                            </FormControl>
+                                                                        </PopoverTrigger>
+                                                                        <PopoverContent className="w-auto p-0" align="start">
+                                                                            <Calendar
+                                                                                mode="single"
+                                                                                selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
+                                                                                onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
+                                                                                disabled={(date) =>
+                                                                                    date < new Date("2024-01-01")
+                                                                                }
+                                                                                initialFocus
+                                                                            />
+                                                                        </PopoverContent>
+                                                                    </Popover>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
+
+                                                    </div>
+
+                                                    {/* salaryOverTimeRequest */}
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <FormField
+                                                            control={form.control}
+                                                            name="salaryOverTimeRequest.salary"
+                                                            render={({ field }) => {
+                                                                return (
+                                                                    <FormItem>
+                                                                        <FormLabel className="flex items-center  text-primary">
+                                                                            Lương làm thêm giờ
+                                                                        </FormLabel>
+                                                                        <FormControl>
+                                                                            <Input type="text" {...field} />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                );
+                                                            }}
+                                                        />
+
+                                                        <FormField
+                                                            control={form.control}
+                                                            name="salaryOverTimeRequest.startDate"
+                                                            render={({ field }) => (
+                                                                <FormItem className="flex flex-col">
+                                                                    <FormLabel className="flex items-center  text-primary">Ngày đặt hàng *</FormLabel>
+                                                                    <Popover modal={true}>
+                                                                        <PopoverTrigger asChild>
+                                                                            <FormControl>
+                                                                                <Button
+                                                                                    variant={"outline"}
+                                                                                    className={cn(
+                                                                                        "w-[240px] pl-3 text-left font-normal",
+                                                                                        !field.value && "text-muted-foreground"
+                                                                                    )}
+                                                                                >
+                                                                                    {field.value ? (
+                                                                                        format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
+                                                                                    ) : (
+                                                                                        <span>Chọn ngày</span>
+                                                                                    )}
+                                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                                </Button>
+                                                                            </FormControl>
+                                                                        </PopoverTrigger>
+                                                                        <PopoverContent className="w-auto p-0" align="start">
+                                                                            <Calendar
+                                                                                mode="single"
+                                                                                selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
+                                                                                onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
+                                                                                disabled={(date) =>
+                                                                                    date < new Date("2024-01-01")
+                                                                                }
+                                                                                initialFocus
+                                                                            />
+                                                                        </PopoverContent>
+                                                                    </Popover>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
+
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
                                         </div>
+
+
 
                                         <Separator className="h-1 my-4" />
                                         <Button

@@ -27,7 +27,6 @@ type userType = {
   roleId: number;
   dob: string;
   gender: string;
-  salaryByDay: number;
   isActive: boolean;
   companyId: string;
   avatar: any;
@@ -52,7 +51,6 @@ type userUpdateType = {
   roleId: number;
   dob: string;
   gender: string;
-  salaryByDay: number;
   companyId: string;
 };
 
