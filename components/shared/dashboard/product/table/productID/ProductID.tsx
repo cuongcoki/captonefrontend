@@ -119,7 +119,7 @@ export default function ProductIDPage() {
         <div className="p-4 grid md:grid-cols-2 grid-cols-1  gap-4">
           <Card>
             <CardHeader>
-              <CardTitle>Hình ảnh sản phẩm</CardTitle>
+              <CardTitle className="text-primary">Hình ảnh sản phẩm</CardTitle>
               <CardDescription>
                 đây là hình ảnh sản phẩm, bạn có thể thay đổi giá trị
               </CardDescription>
@@ -135,7 +135,9 @@ export default function ProductIDPage() {
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle>Chi tiết sản phẩm</CardTitle>
+                  <CardTitle className="text-primary">
+                    Chi tiết sản phẩm
+                  </CardTitle>
                   <CardDescription>
                     đây là sản phẩm chi tiết, bạn có thể thay đổi giá trị
                   </CardDescription>

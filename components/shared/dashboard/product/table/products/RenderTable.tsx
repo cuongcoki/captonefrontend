@@ -91,6 +91,7 @@ export default function RenderTableProduct() {
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
         console.error("Error fetching product data:", error);
+        setData([]);
       } finally {
         setLoading(false);
       }
