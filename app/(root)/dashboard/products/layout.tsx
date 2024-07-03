@@ -6,13 +6,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const selectStyle = "bg-[#22c55e] text-white";
   return (
-    <div className="w-full h-screen">
-      <Card className="w-[30%] mb-3 rounded-full">
+    <div className="w-full h-max">
+      <Card className="w-[30%] mb-5 rounded-full">
         <div className="grid grid-cols-2 bg-white rounded-full p-1 min-w-max">
           <Link href={"/dashboard/products/product"}>
             <div
               className={`flex justify-center items-center h-10 rounded-full ${
-                path === "/dashboard/products/product"
+                path.includes("/dashboard/products/product")
                   ? selectStyle
                   : "text-black"
               }`}
@@ -24,7 +24,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Link href={"/dashboard/products/set"}>
             <div
               className={`flex justify-center items-center h-10 rounded-full ${
-                path === "/dashboard/products/set" ? selectStyle : "text-black"
+                path.includes("/dashboard/products/set")
+                  ? selectStyle
+                  : "text-black"
               }`}
             >
               <p>Bộ sản phẩm</p>

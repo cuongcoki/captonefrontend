@@ -65,7 +65,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
     },
     cell: ({ row }) => {
       const formattedPrice = Number(row.original.price).toLocaleString("vi-VN");
-      return `${formattedPrice} VND`;
+      return `${formattedPrice}`;
     },
   },
   {
