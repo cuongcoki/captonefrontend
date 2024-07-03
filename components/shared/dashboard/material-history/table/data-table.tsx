@@ -96,6 +96,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
     materialApi
       .searchMaterial({
         SearchTerm: "",
+        IsInProcessing: true,
         pageIndex: 1,
         pageSize: 1000,
       })

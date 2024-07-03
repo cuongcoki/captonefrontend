@@ -26,10 +26,10 @@ import toast, { Toaster } from "react-hot-toast";
 import { productApi } from "@/apis/product.api";
 import { filesApi } from "@/apis/files.api";
 
-import { MyContext } from "../table/products/RenderTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import * as Dialog from "@radix-ui/react-dialog";
+import { ProductStore } from "@/components/shared/dashboard/product/product-store";
 
 const initialImageRequests = [
   {
@@ -61,7 +61,7 @@ export const ProductForm = () => {
       imageRequests: initialImageRequests,
     },
   });
-  const { forceUpdate } = useContext(MyContext);
+  const { ForceRender } = ProductStore();
 
   const [imageRequests, setImageRequests] = useState<
     {
@@ -235,7 +235,7 @@ export const ProductForm = () => {
           toast.success(response.data.message);
           setTimeout(() => {
             setOpen(false);
-            forceUpdate();
+            ForceRender();
             // window.location.href = '/dashboard/product';
           }, 2000);
         } else {
@@ -278,13 +278,13 @@ export const ProductForm = () => {
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
           <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
             <div className="bg-slate-100  flex flex-col ">
-              <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary  rounded-t-md">
+              <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
                 <h2 className="text-2xl text-white">Thêm sản phẩm</h2>
                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4 dark:text-white" />
                 </Button>
               </div>
-              <div className="grid gap-4 p-4 overflow-y-auto h-[650px]">
+              <div className="grid gap-4 p-4 overflow-y-auto h-[650px] dark:bg-card">
                 <Form {...form}>
                   <Toaster />
 
@@ -292,7 +292,7 @@ export const ProductForm = () => {
 
                   <Card>
                     <CardHeader className="flex items-center justify-between">
-                      <CardTitle className="text-primary-backgroudPrimary">
+                      <CardTitle className="text-primary">
                         Thông tin sản phẩm
                       </CardTitle>
                     </CardHeader>
@@ -316,7 +316,7 @@ export const ProductForm = () => {
                               >
                                 <Upload
                                   size={100}
-                                  className="text-white flex items-center justify-center bg-primary-backgroudPrimary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto"
+                                  className="text-white flex items-center justify-center bg-primary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto"
                                 />
                                 <span className="text-l text-gray-500 font-medium">
                                   Hãy tải ảnh sản phẩm lên
@@ -351,7 +351,7 @@ export const ProductForm = () => {
                               >
                                 <Upload
                                   size={35}
-                                  className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5"
+                                  className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
                                 />
                               </label>
                             </div>
@@ -367,8 +367,24 @@ export const ProductForm = () => {
                             name="code"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                                  Mã CODE
+                                <FormLabel className="flex items-center text-primary">
+                                  Mã Sản Phẩm
+                                </FormLabel>
+                                <FormControl>
+                                  <Input type="text" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          {/* name */}
+                          <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel className="flex items-center text-primary">
+                                  Tên Sản Phẩm
                                 </FormLabel>
                                 <FormControl>
                                   <Input type="text" {...field} />
@@ -383,8 +399,8 @@ export const ProductForm = () => {
                             name="price"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                                  Giá sản phẩm
+                                <FormLabel className="flex items-center text-primary">
+                                  Giá Thành
                                 </FormLabel>
                                 <FormControl>
                                   <Input type="number" {...field} />
@@ -399,8 +415,8 @@ export const ProductForm = () => {
                             name="size"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                                  Kích cỡ
+                                <FormLabel className="flex items-center text-primary">
+                                  Kích Thước
                                 </FormLabel>
                                 <FormControl>
                                   <Input type="text" {...field} />
@@ -415,8 +431,8 @@ export const ProductForm = () => {
                             name="description"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                                  Mô tả
+                                <FormLabel className="flex items-center text-primary">
+                                  Mô Tả
                                 </FormLabel>
                                 <FormControl>
                                   <Textarea {...field} />
@@ -425,26 +441,11 @@ export const ProductForm = () => {
                               </FormItem>
                             )}
                           />
-                          {/* name */}
-                          <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                                  Tên sản phẩm
-                                </FormLabel>
-                                <FormControl>
-                                  <Input type="text" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+
                           <Separator className="h-1" />
                           <Button
                             type="submit"
-                            className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
+                            className="w-full bg-primary hover:bg-primary/90"
                             disabled={pending}
                           >
                             {loading ? "Loading..." : "GỬI"}

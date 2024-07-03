@@ -65,6 +65,8 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState<boolean>(false);
   const params = useParams<{ id: string }>();
   const [userId, setUserId] = useState<any>([]);
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
   // ** hooks
   const user = useAuth();
 
@@ -88,7 +90,7 @@ export default function ProfilePage() {
     fetchDataUserId();
   }, [params]);
 
-  console.log("datauserId", userId);
+  // console.log("datauserId", userId);
 
   // ** compare tại khoản của tôi và tài khoản khác
   const getMe: boolean = user.user?.id === userId.id;
@@ -104,6 +106,57 @@ export default function ProfilePage() {
 
     return `${day}/${month}/${year}`;
   }
+  function validatePassword(password: string) {
+    // Kiểm tra độ dài tối thiểu
+    if (password.length < 6) {
+      return false;
+    }
+
+    // Kiểm tra có ít nhất một ký tự viết hoa
+    const hasUpperCase = /[A-Z]/.test(password);
+    if (!hasUpperCase) {
+      return false;
+    }
+
+    // Kiểm tra có ít nhất một ký tự đặc biệt
+    const hasSpecialChar = /[^a-zA-Z0-9]/.test(password);
+    if (!hasSpecialChar) {
+      return false;
+    }
+
+    // Nếu thỏa mãn tất cả các điều kiện
+    return true;
+  }
+  const handleChangePassword = () => {
+    console.log("userId", userId.id);
+    console.log("currentPassword", currentPassword);
+    console.log("newPassword", newPassword);
+    if (currentPassword === "" || newPassword === "") {
+      toast.error("Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+    if (!validatePassword(newPassword)) {
+      toast.error(
+        "Mật khẩu mới phải có ít nhất 6 ký tự, bao gồm chữ hoa và ký tự đặc biệt"
+      );
+      return;
+    }
+    const data = {
+      userId: userId.id,
+      oldPassword: currentPassword,
+      newPassword: newPassword,
+    };
+    userApi
+      .changePassword(data)
+      .then((res) => {
+        console.log("res", res);
+        toast.success("Đổi mật khẩu thành công");
+      })
+      .catch((error) => {
+        console.error("Error changing password:", error);
+        toast.error("Đổi mật khẩu thất bại");
+      });
+  };
   return (
     <div className="flex flex-col gap-6 justify-center">
       <header className=" flex justify-between">
@@ -292,65 +345,45 @@ export default function ProfilePage() {
       <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
         <div className="p-4 flex flex-col justify-between gap-4">
           <Card>
-            <CardHeader className="font-semibold text-xl">
-              Thông tin tài khoản & mật khẩu
+            <CardHeader>
+              <CardTitle>Mật khẩu</CardTitle>
+              <CardDescription>
+                Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng xuất.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="">
-              <Tabs defaultValue="account">
-                <TabsList className="grid w-[300px] grid-cols-2">
-                  <TabsTrigger value="account">Tài khoản</TabsTrigger>
-                  <TabsTrigger value="password">Mật khẩu</TabsTrigger>
-                </TabsList>
-                <TabsContent value="account">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Tài khoản</CardTitle>
-                      <CardDescription>
-                        Thực hiện thay đổi cho tài khoản của bạn tại đây. Nhấp
-                        vào lưu khi bạn hoàn tất.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="space-y-1">
-                        <Label htmlFor="name">CCCD/CMND</Label>
-                        <Input id="name" defaultValue="Pedro Duarte" />
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button className="bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90">
-                        Xác nhận thay đổi
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                </TabsContent>
-                <TabsContent value="password">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Mật khẩu</CardTitle>
-                      <CardDescription>
-                        Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ
-                        đăng xuất.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="space-y-1">
-                        <Label htmlFor="current">Mật khẩu hiện tại</Label>
-                        <Input id="current" type="password" />
-                      </div>
-                      <div className="space-y-1">
-                        <Label htmlFor="new">Mật khẩu mới</Label>
-                        <Input id="new" type="password" />
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button className="bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90">
-                        Xác nhận thay đổi
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                </TabsContent>
-              </Tabs>
+            <CardContent className="space-y-2">
+              <div className="space-y-1">
+                <Label htmlFor="current">Mật khẩu hiện tại</Label>
+                <Input
+                  value={currentPassword}
+                  onChange={(e) => {
+                    setCurrentPassword(e.target.value);
+                  }}
+                  id="current"
+                  type="password"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="new">Mật khẩu mới</Label>
+                <Input
+                  id="new"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => {
+                    setNewPassword(e.target.value);
+                  }}
+                />
+                <div id="error" className="text-destructive"></div>
+              </div>
             </CardContent>
+            <CardFooter>
+              <Button
+                className="bg-primary hover:bg-primary/90"
+                onClick={handleChangePassword}
+              >
+                Xác nhận thay đổi
+              </Button>
+            </CardFooter>
           </Card>
         </div>
       </div>

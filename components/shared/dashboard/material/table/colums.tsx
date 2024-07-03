@@ -18,7 +18,12 @@ import Image from "next/image";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-
+const limitLength = (text: any, maxLength: any) => {
+  if (text.length > maxLength) {
+    return `${text.slice(0, maxLength)}...`;
+  }
+  return text;
+};
 export const columnsForMaterial: ColumnDef<materialType>[] = [
   // {
   //   accessorKey: "id",
@@ -45,7 +50,7 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
         console.log("error in get image", error);
       }
       return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 max-w-[200px]">
           <Image
             className="w-10 h-10 mr-2"
             width={100}
@@ -76,6 +81,13 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
   {
     accessorKey: "description",
     header: "Miêu tả",
+    cell: ({ row }) => {
+      return (
+        <div className="max-w-[30vh]">
+          {limitLength(row.original.description, 200)}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "quantityInStock",

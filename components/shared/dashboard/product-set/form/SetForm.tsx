@@ -70,7 +70,7 @@ export const SetForm = () => {
   const handleOnDialog = () => {
     setOpen(true);
   };
-    const { forceUpdate } = useContext(MyContext);
+  const { forceUpdate } = useContext(MyContext);
   const [loading, setLoading] = useState(false);
   const [imageRequests, setImageRequests] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<File | null>(null);
@@ -184,24 +184,24 @@ export const SetForm = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   // console.log('searchTerm', searchTerm)
-  console.log('searchResults', searchResults)
-
-  const handleSearch = () => {
-    setLoading(true);
-    productApi
-      .searchProduct(searchTerm)
-      .then(({ data }) => {
-        setSearchResults(data.data);
-      })
-      .catch((error) => {
-        toast.error("không tìm thấy");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+  console.log("searchResults", searchResults);
 
   useEffect(() => {
+    const handleSearch = () => {
+      setLoading(true);
+      productApi
+        .searchProduct(searchTerm)
+        .then(({ data }) => {
+          setSearchResults(data.data);
+        })
+        .catch((error) => {
+          toast.error("không tìm thấy");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };
+
     handleSearch();
   }, [searchTerm]);
 
@@ -343,7 +343,7 @@ export const SetForm = () => {
         if (response.data.isSuccess) {
           toast.success(response.data.message);
           setTimeout(() => {
-                        forceUpdate();
+            forceUpdate();
             setOpen(false);
             // window.location.href = '/dashboard/product';
           }, 2000);
@@ -360,6 +360,12 @@ export const SetForm = () => {
     } finally {
       setLoading(false);
     }
+  };
+  const limitLength = (text: any, maxLength: any) => {
+    if (text.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`;
+    }
+    return text;
   };
 
   const { pending } = useFormStatus();
@@ -398,7 +404,7 @@ export const SetForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center text-primary ">
-                                    Mã CODE
+                                    Mã Sản Phẩm
                                   </FormLabel>
                                   <FormControl>
                                     <Input type="text" {...field} />
@@ -408,22 +414,6 @@ export const SetForm = () => {
                               )}
                             />
 
-                            {/* description */}
-                            <FormField
-                              control={form.control}
-                              name="description"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
-                                    Mô tả
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Textarea {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
                             {/* name */}
                             <FormField
                               control={form.control}
@@ -431,10 +421,26 @@ export const SetForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center text-primary">
-                                    Tên Bộ sản phẩm
+                                    Tên Bộ Sản Phẩm
                                   </FormLabel>
                                   <FormControl>
                                     <Input type="text" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            {/* description */}
+                            <FormField
+                              control={form.control}
+                              name="description"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center text-primary">
+                                    Mô Tả
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Textarea {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -512,8 +518,8 @@ export const SetForm = () => {
                                         <TableHead className="w-[100px]">
                                           Ảnh
                                         </TableHead>
-                                        <TableHead>Tên</TableHead>
-                                        <TableHead>Mã Code</TableHead>
+                                        <TableHead>Tên Sản Phẩm</TableHead>
+                                        <TableHead>Mã Sản Phẩm</TableHead>
                                         <TableHead className="text-right">
                                           Thêm
                                         </TableHead>
@@ -560,46 +566,52 @@ export const SetForm = () => {
                               ""
                             )}
 
-                                                        <div className="md:col-span-1  md:mt-0">
-
-                                                            <Card className="mt-4">
-                                                                <CardHeader className="font-semibold text-xl">
-                                                                    <span>Thông tin sản phẩm đã thêm</span>
-                                                                </CardHeader>
-                                                                <CardContent className="overflow-auto">
-                                                                    {getDetailsPro.map((product, index) => (
-                                                                        <div
-                                                                            className="flex justify-between items-center py-4"
-                                                                            key={index}
-                                                                        >
-                                                                            <div className="flex  gap-4">
-                                                                                <Image
-                                                                                    alt="ảnh mẫu"
-                                                                                    className="w-[100px] h-[100px] object-cover"
-                                                                                    width={900}
-                                                                                    height={900}
-                                                                                    src={
-                                                                                        product?.imageUrl === "Image_not_found" ? NoImage : product?.imageUrl
-
-                                                                                    }
-                                                                                />
-
+                            <div className="md:col-span-1  md:mt-0">
+                              <Card className="mt-4">
+                                <CardHeader className="font-semibold text-xl">
+                                  <span>Thông tin sản phẩm đã thêm</span>
+                                </CardHeader>
+                                <CardContent className="overflow-auto">
+                                  {getDetailsPro.map((product, index) => (
+                                    <div
+                                      className="grid grid-cols-10 items-center py-4"
+                                      key={index}
+                                    >
+                                      <div className="col-span-7 flex gap-4">
+                                        <Image
+                                          alt="ảnh mẫu"
+                                          className="w-[100px] h-[100px] object-cover"
+                                          width={900}
+                                          height={900}
+                                          src={
+                                            product?.imageUrl ===
+                                            "Image_not_found"
+                                              ? NoImage
+                                              : product?.imageUrl
+                                          }
+                                        />
 
                                         <div className="font-medium dark:text-white">
                                           <div>
                                             <b>Tên: </b>
-                                            {product.name}
+                                            {limitLength(product.name, 50)}
                                           </div>
                                           <div className="text-sm text-gray-500 dark:text-gray-400">
                                             <b>Code: </b>
-                                            {product.code}
+                                            {limitLength(product.code, 50)}
                                           </div>
                                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            <i>{product.description}</i>
+                                            <i>
+                                              {limitLength(
+                                                product.description,
+                                                50
+                                              )}
+                                            </i>
                                           </div>
                                         </div>
                                       </div>
                                       <input
+                                        className="col-span-2 w-16 text-center outline-none"
                                         type="number"
                                         value={
                                           productsRequest.find(
@@ -613,9 +625,9 @@ export const SetForm = () => {
                                             parseInt(e.target.value)
                                           )
                                         }
-                                        className="w-16 text-center outline-none"
                                       />
                                       <Button
+                                        className="col-span-1"
                                         variant="outline"
                                         size="icon"
                                         onClick={() =>
@@ -633,15 +645,13 @@ export const SetForm = () => {
                         </Card>
                       </div>
                     </div>
-                    <Card>
-                      <Button
-                        type="submit"
-                        className="w-full bg-primary hover:bg-primary/90"
-                        disabled={pending}
-                      >
-                        {loading ? "Loading..." : "GỬI"}
-                      </Button>
-                    </Card>
+                    <Button
+                      type="submit"
+                      className="w-full bg-primary hover:bg-primary/90 my-3"
+                      disabled={pending}
+                    >
+                      {loading ? "Loading..." : "GỬI"}
+                    </Button>
                   </form>
                 </Form>
               </div>
