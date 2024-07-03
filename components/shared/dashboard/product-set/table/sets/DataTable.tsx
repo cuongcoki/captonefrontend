@@ -38,10 +38,7 @@ export function DataTableSet<TData, TValue>({
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow
-              key={headerGroup.id}
-              className="dark:border-2 dark:border-white"
-            >
+            <TableRow key={headerGroup.id} className="">
               {headerGroup.headers.map((header) => (
                 <TableHead
                   key={header.id}
@@ -59,7 +56,7 @@ export function DataTableSet<TData, TValue>({
           ))}
         </TableHeader>
 
-        <TableBody className="dark:border-2 dark:border-white">
+        <TableBody className="">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow

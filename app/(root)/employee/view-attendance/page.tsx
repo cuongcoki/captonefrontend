@@ -210,7 +210,7 @@ export default function Page({ searchParams }: Props) {
   };
 
   return (
-    <div className="h-screen">
+    <div className="h-[94.8vh]">
       <Card className="p-5">
         <div className="bg-[#62d46d] h-10 text-center grid grid-cols-3 rounded-ss-md rounded-se-md p-2">
           <div

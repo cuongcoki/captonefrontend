@@ -29,25 +29,25 @@ type Props = {
 export default function UserEditButton({ user }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const { forceUpdate } = useContext(MyContext);
-  const data: UserUpdateFormType = {
-    ...user,
-    companyId: user?.companyId?.toString(),
-  };
-  const form = useForm({
-    resolver: zodResolver(UserUpdateSchema),
-    defaultValues: {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      dob: formatDate(data.dob),
-      gender: data.gender,
-      address: data.address,
-      phone: data.phone,
-      roleId: data.roleId,
-      companyId: data.companyId,
-      id: data.id,
-      salaryByDay: data.salaryByDay,
-    },
-  });
+  // const data: UserUpdateFormType = {
+  //   ...user,
+  //   companyId: user?.companyId?.toString(),
+  // };
+  // const form = useForm({
+  //   resolver: zodResolver(UserUpdateSchema),
+  //   defaultValues: {
+  //     firstName: data.firstName,
+  //     lastName: data.lastName,
+  //     dob: formatDate(data.dob),
+  //     gender: data.gender,
+  //     address: data.address,
+  //     phone: data.phone,
+  //     roleId: data.roleId,
+  //     companyId: data.companyId,
+  //     id: data.id,
+  //     salaryByDay: data.salaryByDay,
+  //   },
+  // });
 
   const onSubmit = (updateUser: UserUpdateFormType) => {
     userApi
@@ -81,7 +81,7 @@ export default function UserEditButton({ user }: Props) {
         </DialogHeader>
         <div className="grid gap-4 py-2">
           {/* <Toaster /> */}
-          <Form {...form}>
+          {/* <Form {...form}>
             <form
               className="w-full flex flex-col gap-4"
               onSubmit={form.handleSubmit(onSubmit)}
@@ -140,7 +140,7 @@ export default function UserEditButton({ user }: Props) {
                 </Button>
               </DialogFooter>
             </form>
-          </Form>
+          </Form> */}
         </div>
       </DialogContent>
     </Dialog>
