@@ -85,7 +85,8 @@ export default function RenderTableUsers({ searchParams }: Props) {
       } catch (error: any) {
         console.error("Error fetching user data:");
         if (error?.response.data.status === 400) {
-          toast.error(error?.response.data.message);
+          // toast.error(error?.response.data.message);
+          setData([]);
         }
       } finally {
         setLoading(false);

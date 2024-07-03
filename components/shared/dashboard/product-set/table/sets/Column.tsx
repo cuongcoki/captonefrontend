@@ -52,7 +52,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
-      return <Button variant="ghost">Tên Sản Phẩm</Button>;
+      return <Button variant="ghost">Tên Bộ Sản Phẩm</Button>;
     },
     cell: ({ row }) => {
       return <div>{limitLength(row.original.name, 50)}</div>;
@@ -62,7 +62,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "code",
     header: ({ column }) => {
-      return <Button variant="ghost">Mã Sản Phẩm</Button>;
+      return <Button variant="ghost">Mã Bộ Sản Phẩm</Button>;
     },
     cell: ({ row }) => {
       return <div>{limitLength(row.original.code, 20)}</div>;

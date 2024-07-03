@@ -84,7 +84,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "code",
     header: ({ column }) => {
-      return <Button variant="ghost">Mã Sẩn Phẩm</Button>;
+      return <Button variant="ghost">Mã Sản Phẩm</Button>;
     },
     cell: ({ row }) => {
       const shortenedCode = row.original.code.slice(0, 10);
