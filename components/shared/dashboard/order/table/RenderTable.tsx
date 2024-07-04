@@ -17,29 +17,77 @@ import {
 import { ProductSearchParams } from "@/types/product.type";
 import CreateOrder from "../form/CreateOrder";
 import { orderApi } from "@/apis/order.api";
-
+import DatePicker from "@/components/shared/common/datapicker/date-picker";
+import toast from "react-hot-toast";
+import { format } from "date-fns";
+import { companyApi } from "@/apis/company.api";
 type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
   forceUpdate: () => { },
 });
+
+const enumStatus = [
+  {
+    statusName: "UNRESOLVED",
+    description: "chưa giải quyết",
+    id: 1,
+    value: "1"
+  },
+  {
+    statusName: "PROCESSING",
+    description: "xử lý",
+    id: 2,
+    value: "2"
+  },
+  {
+    statusName: "COMPLETED",
+    description: "hoàn thành",
+    id: 3,
+    value: "3"
+  },
+  {
+    statusName: "CANCELLED",
+    description: "đã hủy bỏ",
+    id: 4,
+    value: "4"
+  },
+  {
+    statusName: "CANCELLED",
+    description: "bỏ chọn",
+    id: 5,
+    value: " "
+  },
+];
+
+type Company = {
+  id: string;
+  name: string;
+  address: string;
+  directorName: string;
+  directorPhone: string;
+  email: string;
+  companyType: any;
+  companyTypeDescription: string;
+};
 export default function RenderTableOrder() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [data, setData] = useState<Order[]>([]);
-  console.log('data',data)
+  console.log('data', data)
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [status, setStatus] = useState<string | null>(null);
-  const [startOrder, setStartOrder] = useState<Date  | null>(null);
-  const [endOrder, setEndOrder] = useState<Date  | null>(null); 
+  const [startOrder, setStartOrder] = useState<Date | null>(null);
+  const [endOrder, setEndOrder] = useState<Date | null>(null);
   const [companyName, setCompanyName] = useState<string>('');
-  
+  const [company, setCompany] = useState<Company[]>([]);
+
   const router = useRouter();
   const pathname = usePathname();
   const [force, setForce] = useState<number>(1);
- 
+
   const forceUpdate = () => setForce((prev) => prev + 1);
   type Props = {
     searchParams: ProductSearchParams;
@@ -52,10 +100,10 @@ export default function RenderTableOrder() {
         const response = await orderApi.searchOrder(
           currentPage,
           pageSize,
-          // status,
-          // startOrder,
-          // endOrder,
-          // companyName
+          status,
+          startOrder ? formatDate(startOrder) : null,
+          endOrder ? formatDate(endOrder) : null,
+          companyName
         );
         setData(response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
@@ -67,12 +115,18 @@ export default function RenderTableOrder() {
       }
     };
 
+    const fetchDataCompany = () => {
+      companyApi.getCompanyByType(1)
+        .then(({ data }) => {
+          setCompany(data.data);
+        })
+    }
+
+    fetchDataCompany()
     fetchDataOrder();
-  }, [currentPage, pageSize, companyName,startOrder,endOrder,status, force]);
+  }, [currentPage, pageSize, companyName, startOrder, endOrder, status, force]);
 
 
-
-  
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
@@ -86,28 +140,81 @@ export default function RenderTableOrder() {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
+  const handleStartDateChange = (date: Date | null) => {
+    if (date && endOrder && date > endOrder) {
+      toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+      return;
+    }
+    setStartOrder(date);
+    setCurrentPage(1);
+  };
+
+  const handleEndDateChange = (date: Date | null) => {
+    if (startOrder && date && startOrder > date) {
+      toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+      return;
+    }
+    setEndOrder(date);
+    setCurrentPage(1);
+  };
+
+  const formatDate = (date: Date | null) => {
+    if (!date) return "";
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+  console.log('startOrder', formatDate(startOrder)),
+    console.log('endOrder', formatDate(endOrder))
+
   return (
     <div className="px-3">
       <div className="flex flex-col md:flex-row justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
           <MyContext.Provider value={{ forceUpdate }}>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-              
-               <Select
-                value={status || ""}
-                onValueChange={(value) => handleStatusChange(value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Trạng thái" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="chưa giải quyết">chưa giải quyết</SelectItem>
-                  <SelectItem value="xử lý">xử lý</SelectItem>
-                  <SelectItem value="hoàn thành">hoàn thành</SelectItem>
-                  <SelectItem value="đã hủy bỏ">đã hủy bỏ</SelectItem>
-                </SelectContent>
-              </Select>
-              
+            <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                <Input
+                  placeholder="Tìm kiếm đơn hàng..."
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                />
+
+                <Select
+                  value={status || ""}
+                  onValueChange={(value) => handleStatusChange(value)}
+                >
+                  <SelectTrigger >
+                    <SelectValue placeholder="Trạng thái" />
+                  </SelectTrigger>
+                  <SelectContent >
+                    {
+                      enumStatus.map((item, index) => (
+                        <SelectItem value={item.value} key={index}>{item.description}</SelectItem>
+                      ))
+                    }
+                  </SelectContent>
+                </Select>
+
+              </div>
+              <div className="grid grid-cols-2 gap-x-4 ">
+                <DatePicker
+                  selected={startOrder}
+                  name="from"
+                  title={startOrder ? formatDate(startOrder) : "Từ ngày"}
+                  className="w-full"
+                  onDayClick={handleStartDateChange}
+                />
+
+                <DatePicker
+                  selected={endOrder}
+                  name="to"
+                  title={endOrder ? formatDate(endOrder) : "Đến ngày"}
+                  className="w-full"
+                  onDayClick={handleEndDateChange}
+                />
+              </div>
             </div>
           </MyContext.Provider>
         </div>
