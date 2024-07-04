@@ -30,8 +30,15 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
       );
     },
     cell: async ({ row }) => {
-      const res = await filesApi.getFile(row.original.image as string);
-      const href = res.data.data;
+      var href;
+      try {
+        const res = await filesApi.getFile(
+          (row.original.image?.trim() || "%20") as string
+        );
+        href = res?.data.data;
+      } catch (error) {
+        console.log("error in get image", error);
+      }
       return (
         <div className="flex items-center space-x-2 max-w-[200px]">
           <Image
