@@ -61,6 +61,7 @@ import { orderApi } from "@/apis/order.api";
 import { UsersSchema } from "@/schema";
 import ImageDisplayAvatar from "./ImageDisplay";
 import { cn } from "@/lib/utils";
+import { companyApi } from "@/apis/company.api";
 
 interface UsersFormProps {
   setOpen: (open: boolean) => void;
@@ -78,7 +79,7 @@ type Company = {
   directorName: string;
   directorPhone: string;
   email: string;
-  companyType: number;
+  companyType: any;
   companyTypeDescription: string;
 };
 
@@ -231,39 +232,24 @@ export const UsersForm = () => {
   };
 
   useEffect(() => {
-    const fetchCompanyData = async () => {
-      const { data } = await orderApi.getAllCompanis(
-        currentPage,
-        pageSize,
-        searchTerm
-      );
-      setCompany(data.data.data);
-    };
-    fetchCompanyData();
+    const fetchDataCompany = () => {
+      companyApi.getCompanyByType(0)
+        .then(({ data }) => {
+          setCompany(data.data);
+        })
+    }
+
+    fetchDataCompany()
   }, []);
+  console.log('compalylll', company)
 
 
   const onSubmit = (data: z.infer<typeof UsersSchema>) => {
-    const {
-      firstName,
-      lastName,
-      dob,
-      gender,
-      address,
-      phone,
-      password,
-      roleId,
-      isActive,
-      companyId,
-      id,
-      salaryByDayRequest,
-      salaryOverTimeRequest
-    } = data;
-    const avatar = nameImage;
-    setLoading(true);
-    console.log("dataCreateUser", data);
-    userApi
-      .createUser({
+    // Đảm bảo handlePostImage đã hoàn thành và lấy được nameImage
+    handlePostImage().then(() => {
+      const avatar = nameImage;
+
+      const {
         firstName,
         lastName,
         dob,
@@ -275,47 +261,76 @@ export const UsersForm = () => {
         isActive,
         companyId,
         id,
-        avatar,
         salaryByDayRequest,
-        salaryOverTimeRequest,
-      })
-      .then(({ data }) => {
-        if (data.isSuccess) {
-          toast.success(data.message);
-          setTimeout(() => {
-            setOpen(false);
-            forceUpdate();
-          }, 2000);
-        }
-      })
-      .catch((err) => {
-        console.log(err.response);
-        toast.error(err.response.data.message);
-      })
-      .finally(() => {
-        setLoading(false);
-        console.log(data);
-      });
+        salaryOverTimeRequest
+      } = data;
+
+      setLoading(true);
+      // console.log("dataCreateUser", data);
+
+      userApi
+        .createUser({
+          firstName,
+          lastName,
+          dob,
+          gender,
+          address,
+          phone,
+          password,
+          roleId,
+          isActive,
+          companyId,
+          id,
+          avatar,
+          salaryByDayRequest,
+          salaryOverTimeRequest,
+        })
+        .then(({ data }) => {
+          if (data.isSuccess) {
+            toast.success(data.message);
+            setTimeout(() => {
+              setOpen(false);
+              forceUpdate();
+            }, 2000);
+          }
+        })
+        .catch((err) => {
+          console.log(err.response);
+          toast.error(err.response.data.message);
+        })
+        .finally(() => {
+          setLoading(false);
+          console.log(data);
+        });
+    });
   };
 
-  // const formatCurrency = (value: any) => {
-  //   if (!value) return value;
-  //   const number = Number(value.replace(/[^0-9]/g, ""));
-  //   return new Intl.NumberFormat("vi-VN").format(number);
-  // };
 
-  // const [formattedValue, setFormattedValue] = useState("");
+  const formatCurrency = (value: any) => {
+    // Chuyển đổi value thành số nếu nó không phải là chuỗi số
+    const numericValue = typeof value === 'string' ? parseFloat(value) : value;
 
-  // const onChangeHandler = (e: any) => {
-  //   const value = e.target.value;
-  //   const numericValue = value.replace(/[^0-9]/g, "");
-  //   const formatted = formatCurrency(numericValue);
-  //   setFormattedValue(formatted);
-  //   form.setValue("salaryByDay", Number(numericValue), {
-  //     shouldValidate: true,
-  //   });
-  // };
+    // Kiểm tra nếu numericValue là NaN (không phải là số) hoặc null, undefined
+    if (isNaN(numericValue) || numericValue == null) {
+      return '';
+    }
 
+    // Format số tiền dưới dạng chuỗi
+    let formattedString = numericValue.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    });
+
+    // Loại bỏ ký hiệu $
+    formattedString = formattedString.replace('$', '');
+
+    // Kiểm tra nếu có phần thập phân là .00 thì loại bỏ
+    if (formattedString.endsWith('.00')) {
+      formattedString = formattedString.slice(0, -3);
+    }
+
+    return formattedString;
+  };
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>
       <Dialog.Trigger className="rounded p-2 hover:bg-[#2bff7e] bg-[#24d369] ">
@@ -498,7 +513,9 @@ export const UsersForm = () => {
                                       Địa chỉ cư trú *
                                     </FormLabel>
                                     <FormControl>
-                                      <Input type="text" {...field} />
+                                      <Input type="text"
+                                        {...field}
+                                      />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
@@ -664,7 +681,14 @@ export const UsersForm = () => {
                                       Lương ngày
                                     </FormLabel>
                                     <FormControl>
-                                      <Input type="text" {...field} />
+                                      <Input type="text"
+                                        {...field}
+                                        value={formatCurrency(field.value)} // Hiển thị lương đã format
+                                        onChange={(e) => {
+                                          const rawValue = e.target.value.replace(/[^\d.]/g, ''); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                          field.onChange(rawValue);
+                                        }}
+                                      />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>
@@ -727,7 +751,14 @@ export const UsersForm = () => {
                                       Lương làm thêm giờ
                                     </FormLabel>
                                     <FormControl>
-                                      <Input type="text" {...field} />
+                                      <Input type="text"
+                                        {...field}
+                                        value={formatCurrency(field.value)} // Hiển thị lương đã format
+                                        onChange={(e) => {
+                                          const rawValue = e.target.value.replace(/[^\d.]/g, ''); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                          field.onChange(rawValue);
+                                        }}
+                                      />
                                     </FormControl>
                                     <FormMessage />
                                   </FormItem>

@@ -84,6 +84,7 @@ import ImageDisplayDialog from "../../product-set/form/imageDisplayDialog";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { NoImage } from "@/constants/images";
+import { error } from "console";
 
 interface OrderId {
     orderId?: orderIds;
@@ -166,18 +167,18 @@ export default function UpdateOrder({ orderId }: OrderId) {
     const [pageSize, setPageSize] = useState<number>(10);
     const [company, setCompany] = useState<Company[]>([]);
 
-      const form = useForm({
+    const form = useForm({
         resolver: zodResolver(UpdateOrderSchema),
         defaultValues: {
             companyId: '',
-            status: '',
+            status: 0,
             startOrder: '',
             endOrder: '',
             vat: 0,
         },
     });
 
-    
+
     const formatDate = (dateString: any) => {
         try {
             const [year, month, day] = dateString.split('-');
@@ -190,10 +191,10 @@ export default function UpdateOrder({ orderId }: OrderId) {
         }
     };
     console.log('data', data)
-    console.log('ordeeidddddd',orderId)
+    console.log('ordeeidddddd', orderId)
     useEffect(() => {
-      
-    
+
+
         const fetchDataCompany = async () => {
             const { data } = await companyApi.getCompanyByType(1);
             setCompany(data.data);
@@ -208,9 +209,9 @@ export default function UpdateOrder({ orderId }: OrderId) {
                 vat: orderId.vat,
             });
         }
-    }, [orderId, currentPage, pageSize, searchTermAll,form])
+    }, [orderId, currentPage, pageSize, searchTermAll, form])
 
-  
+
 
 
     // console.log('orderId', orderId)
@@ -218,6 +219,25 @@ export default function UpdateOrder({ orderId }: OrderId) {
 
     const onSubmit = async (formData: z.infer<typeof UpdateOrderSchema>) => {
         console.log("formData", formData)
+        setLoading(true);
+        const requestBody = {
+            ...formData,
+            orderId: orderId?.id
+        };
+        orderApi.updateOrder(requestBody)
+            .then(({ data }) => {
+                if (data.isSuccess) {
+
+                    console.log("dâtupdatessss", data)
+                    toast.success("Cặp nhật đơn hàng thành công")
+                }
+            })
+            .catch(error => {
+                if (error.response.data) {
+                    toast.error("Ngày kết thúc phải lớn hàn ngày bất đầu")
+                }
+                console.log("errordddddddddd", error)
+            })
     };
 
     const { pending } = useFormStatus();
@@ -229,213 +249,199 @@ export default function UpdateOrder({ orderId }: OrderId) {
             </Dialog.Trigger>
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-                    <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[800px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-                        <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4">
-                            <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary rounded-t-md">
-                                <h2 className="text-2xl text-white">Thêm đơn hàng mới</h2>
+                    <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[700px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+                        <div className="bg-slate-100 flex flex-col space-y-4">
+                            <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary ">
+                                <h2 className="text-2xl text-white">Chỉnh sửa đơn hàng</h2>
                                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
                                     <X className="w-4 h-4" />
                                 </Button>
                             </div>
-                            <div className="grid  p-4 overflow-y-auto  gap-4">
+                            <div className="  p-4 overflow-y-auto">
                                 <Form {...form}>
-                                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6" >
-                                        <div className="">
-                                            <Card>
-                                                <CardHeader>
-                                                    <CardTitle className="text-lg">
-                                                        Chỉnh sửa thông tin đơn hàng
-                                                    </CardTitle>
-                                                </CardHeader>
+                                    <form onSubmit={form.handleSubmit(onSubmit)}  >
+                                        <Card>
+                                            <CardContent className="flex  gap-6 mt-6">
+                                                <div className="flex flex-col gap-6 w-full">
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="companyId"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel className="">Cơ sở nào *</FormLabel>
+                                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                                    <FormControl>
+                                                                        <SelectTrigger>
+                                                                            <SelectValue placeholder="Hãy chọn cơ sở" defaultValue={field.value} />
+                                                                        </SelectTrigger>
+                                                                    </FormControl>
+                                                                    <SelectContent>
+                                                                        {company.map((item) => (
+                                                                            <SelectItem key={item.id} value={item.id}>
+                                                                                {item.name}
+                                                                            </SelectItem>
+                                                                        ))}
+                                                                    </SelectContent>
+                                                                </Select>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="status"
+                                                        render={({ field }) => (
+                                                            <FormItem className="w-full">
+                                                                <FormLabel className="">
+                                                                    Trạng thái *
+                                                                </FormLabel>
+                                                                <Select
+                                                                    onValueChange={(value) =>
+                                                                        field.onChange(Number(value))
+                                                                    }
+                                                                    defaultValue={String(field.value)}
+                                                                >
+                                                                    <FormControl>
+                                                                        <SelectTrigger>
+                                                                            <SelectValue
+                                                                                placeholder="Chọn trạng thái"
+                                                                                defaultValue={String(field.value)}
+                                                                            />
+                                                                        </SelectTrigger>
+                                                                    </FormControl>
+                                                                    <SelectContent>
+                                                                        {Object.values(OrderStatus).map((status) => (
+                                                                            <SelectItem key={status.id} value={String(status.id)}>
+                                                                                {status.des}
+                                                                            </SelectItem>
+                                                                        ))}
+                                                                    </SelectContent>
+                                                                </Select>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                    <FormField
+                                                        control={form.control}
+                                                        name="vat"
+                                                        render={({ field }) => (
+                                                            <FormItem>
+                                                                <FormLabel>VAT</FormLabel>
+                                                                <FormControl>
+                                                                    <Input
+                                                                        type="number"
+                                                                        {...field}
+                                                                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                                                        min="0"
+                                                                        max="100000000"
+                                                                    />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
 
-                                                <CardContent className="flex  gap-6">
-
-                                                    <div className="flex flex-col gap-6 w-full">
+                                                    <div className="md:flex  gap-4 ">
                                                         <FormField
                                                             control={form.control}
-                                                            name="companyId"
+                                                            name="startOrder"
                                                             render={({ field }) => (
-                                                                <FormItem>
-                                                                    <FormLabel className="text-primary-backgroudPrimary">Cơ sở nào *</FormLabel>
-                                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                                        <FormControl>
-                                                                            <SelectTrigger>
-                                                                                <SelectValue placeholder="Hãy chọn cơ sở" defaultValue={field.value} />
-                                                                            </SelectTrigger>
-                                                                        </FormControl>
-                                                                        <SelectContent>
-                                                                            {company.map((item) => (
-                                                                                <SelectItem key={item.id} value={item.id}>
-                                                                                    {item.name}
-                                                                                </SelectItem>
-                                                                            ))}
-                                                                        </SelectContent>
-                                                                    </Select>
+                                                                <FormItem className="flex flex-col">
+                                                                    <FormLabel className="flex items-center">Ngày đặt hàng *</FormLabel>
+                                                                    <Popover modal={true}>
+                                                                        <PopoverTrigger asChild>
+                                                                            <FormControl>
+                                                                                <Button
+                                                                                    variant={"outline"}
+                                                                                    className={cn(
+                                                                                        "w-[240px] pl-3 text-left font-normal",
+                                                                                        !field.value && "text-muted-foreground"
+                                                                                    )}
+                                                                                >
+                                                                                    {field.value ? (
+                                                                                        format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
+                                                                                    ) : (
+                                                                                        <span>Chọn ngày</span>
+                                                                                    )}
+                                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                                </Button>
+                                                                            </FormControl>
+                                                                        </PopoverTrigger>
+                                                                        <PopoverContent className="w-auto p-0" align="start">
+                                                                            <Calendar
+                                                                                mode="single"
+                                                                                selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
+                                                                                onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
+                                                                                // disabled={(date) =>
+                                                                                //     date > new Date() || date < new Date("1900-01-01")
+                                                                                // }
+                                                                                initialFocus
+                                                                            />
+                                                                        </PopoverContent>
+                                                                    </Popover>
                                                                     <FormMessage />
                                                                 </FormItem>
                                                             )}
                                                         />
-                                                        <div className="  flex w-full gap-6">
-                                                            <FormField
-                                                                control={form.control}
-                                                                name="status"
-                                                                render={({ field }) => (
-                                                                    <FormItem className="w-full">
-                                                                        <FormLabel className="text-primary-backgroudPrimary">
-                                                                            Trạng thái *
-                                                                        </FormLabel>
-                                                                        <Select
-                                                                            onValueChange={(value) =>
-                                                                                field.onChange(Number(value))
-                                                                            }
-                                                                            defaultValue={String(field.value)}
-                                                                        >
+                                                        <Truck />
+                                                        <FormField
+                                                            control={form.control}
+                                                            name="endOrder"
+                                                            render={({ field }) => (
+                                                                <FormItem className="flex flex-col">
+                                                                    <FormLabel className="flex items-center ">Ngày Giao hàng *</FormLabel>
+                                                                    <Popover modal={true}>
+                                                                        <PopoverTrigger asChild>
                                                                             <FormControl>
-                                                                                <SelectTrigger>
-                                                                                    <SelectValue
-                                                                                        placeholder="Chọn trạng thái"
-                                                                                        defaultValue={String(field.value)}
-                                                                                    />
-                                                                                </SelectTrigger>
+                                                                                <Button
+                                                                                    variant={"outline"}
+                                                                                    className={cn(
+                                                                                        "w-[240px] pl-3 text-left font-normal",
+                                                                                        !field.value && "text-muted-foreground"
+                                                                                    )}
+                                                                                >
+                                                                                    {field.value ? (
+                                                                                        format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
+                                                                                    ) : (
+                                                                                        <span>Chọn ngày</span>
+                                                                                    )}
+                                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                                </Button>
                                                                             </FormControl>
-                                                                            <SelectContent>
-                                                                                {Object.values(OrderStatus).map((status) => (
-                                                                                    <SelectItem key={status.id} value={String(status.id)}>
-                                                                                        {status.des}
-                                                                                    </SelectItem>
-                                                                                ))}
-                                                                            </SelectContent>
-                                                                        </Select>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                        </div>
-
-                                                        <div className="flex gap-6 items-center">
-                                                            <FormField
-                                                                control={form.control}
-                                                                name="startOrder"
-                                                                render={({ field }) => (
-                                                                    <FormItem className="flex flex-col">
-                                                                        <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày đặt hàng *</FormLabel>
-                                                                        <Popover modal={true}>
-                                                                            <PopoverTrigger asChild>
-                                                                                <FormControl>
-                                                                                    <Button
-                                                                                        variant={"outline"}
-                                                                                        className={cn(
-                                                                                            "w-[240px] pl-3 text-left font-normal",
-                                                                                            !field.value && "text-muted-foreground"
-                                                                                        )}
-                                                                                    >
-                                                                                        {field.value ? (
-                                                                                            format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
-                                                                                        ) : (
-                                                                                            <span>Chọn ngày</span>
-                                                                                        )}
-                                                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                                                    </Button>
-                                                                                </FormControl>
-                                                                            </PopoverTrigger>
-                                                                            <PopoverContent className="w-auto p-0" align="start">
-                                                                                <Calendar
-                                                                                    mode="single"
-                                                                                    selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
-                                                                                    onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
-                                                                                    // disabled={(date) =>
-                                                                                    //     date > new Date() || date < new Date("1900-01-01")
-                                                                                    // }
-                                                                                    initialFocus
-                                                                                />
-                                                                            </PopoverContent>
-                                                                        </Popover>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                            <Truck />
-                                                            <FormField
-                                                                control={form.control}
-                                                                name="endOrder"
-                                                                render={({ field }) => (
-                                                                    <FormItem className="flex flex-col">
-                                                                        <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày Giao hàng *</FormLabel>
-                                                                        <Popover modal={true}>
-                                                                            <PopoverTrigger asChild>
-                                                                                <FormControl>
-                                                                                    <Button
-                                                                                        variant={"outline"}
-                                                                                        className={cn(
-                                                                                            "w-[240px] pl-3 text-left font-normal",
-                                                                                            !field.value && "text-muted-foreground"
-                                                                                        )}
-                                                                                    >
-                                                                                        {field.value ? (
-                                                                                            format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
-                                                                                        ) : (
-                                                                                            <span>Chọn ngày</span>
-                                                                                        )}
-                                                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                                                    </Button>
-                                                                                </FormControl>
-                                                                            </PopoverTrigger>
-                                                                            <PopoverContent className="w-auto p-0" align="start">
-                                                                                <Calendar
-                                                                                    mode="single"
-                                                                                    selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
-                                                                                    onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
-                                                                                    // disabled={(date) =>
-                                                                                    //     date > new Date() || date < new Date("1900-01-01")
-                                                                                    // }
-                                                                                    initialFocus
-                                                                                />
-                                                                            </PopoverContent>
-                                                                        </Popover>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                        </div>
-
-                                                        <div>
-                                                            <FormField
-                                                                control={form.control}
-                                                                name="vat"
-                                                                render={({ field }) => (
-                                                                    <FormItem>
-                                                                        <FormLabel>VAT</FormLabel>
-                                                                        <FormControl>
-                                                                            <Input
-                                                                                type="number"
-                                                                                {...field}
-                                                                                onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                                                                                min="0"
-                                                                                max="100000000"
+                                                                        </PopoverTrigger>
+                                                                        <PopoverContent className="w-auto p-0" align="start">
+                                                                            <Calendar
+                                                                                mode="single"
+                                                                                selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
+                                                                                onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
+                                                                                // disabled={(date) =>
+                                                                                //     date > new Date() || date < new Date("1900-01-01")
+                                                                                // }
+                                                                                initialFocus
                                                                             />
-                                                                        </FormControl>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                        </div>
+                                                                        </PopoverContent>
+                                                                    </Popover>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
                                                     </div>
 
-                                                </CardContent>
-                                            </Card>
-                                        </div>
-                                        <Card>
-                                            <Button
-                                                type="submit"
-                                                className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
-                                                disabled={pending}
-                                            >
-                                                {pending ? "Loading..." : "GỬI"}
-                                            </Button>
+
+                                                    <Card>
+                                                        <Button
+                                                            type="submit"
+                                                            className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
+                                                            disabled={pending}
+                                                        >
+                                                            {pending ? "Loading..." : "GỬI"}
+                                                        </Button>
+                                                    </Card>
+                                                </div>
+                                            </CardContent>
                                         </Card>
                                     </form>
                                 </Form>
-
                             </div>
                         </div>
                     </Dialog.Content>

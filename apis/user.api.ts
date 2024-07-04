@@ -52,6 +52,9 @@ type userUpdateType = {
   dob: string;
   gender: string;
   companyId: string;
+  avatar:string;
+  salaryByDayRequest:SalaryByDayRequest;
+  salaryOverTimeRequest:salaryOverTimeRequest;
 };
 
 export const userApi = {

@@ -57,13 +57,7 @@ export const ProductSchema = z.object({
 
 const salaryRequestSchema = z.object({
   salary: z.coerce.number({ message: "Lương phải là số" }).min(1, { message: "Vui lòng nhập lương" }),
-  startDate: z.string().refine(
-    (date) => {
-      const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;
-      return datePattern.test(date);
-    },
-    { message: "Ngày bắt đầu phải có định dạng dd/MM/yyyy" }
-  )
+  startDate: z.string()
 });
 
 export const UsersSchema = z.object({
@@ -232,8 +226,13 @@ export const UpdateUserForm = z.object({
     }),
   roleId: z.number().int({ message: "Vai trò không hợp lệ" }),
   companyId: z.string().nonempty({ message: "Cơ sở không được để trống" }),
-  salaryByDayRequest: salaryRequestSchema,
-  salaryOverTimeRequest: salaryRequestSchema,
+
+  salaryHistoryResponse: z.object({
+    salaryByDayResponses: salaryRequestSchema,
+    salaryByOverTimeResponses: salaryRequestSchema,
+  }),
 });
+
+
 
 export type ChangePasswordFormType = z.infer<typeof ChangePasswordSchema>;
