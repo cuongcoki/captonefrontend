@@ -50,6 +50,9 @@ import { Pencil } from "lucide-react";
 
 // ** import hooks
 import { useAuth } from "@/hooks/useAuth";
+import { Role } from "@/components/shared/dashboard/users/table/users/data/data";
+import Image from "next/image";
+import { filesApi } from "@/apis/files.api";
 
 const invoices = [
   {
@@ -67,6 +70,7 @@ export default function ProfilePage() {
   const [userId, setUserId] = useState<any>([]);
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>("");
   // ** hooks
   const user = useAuth();
 
@@ -78,6 +82,11 @@ export default function ProfilePage() {
         .getUserId(params.id)
         .then((res) => {
           const userData = res.data.data;
+          filesApi.getFile(userData.avatar).then((res) => {
+            setAvatar(res.data.data);
+            console.log("avatar", res.data.data);
+          });
+          console.log("userData", userData);
           setUserId(userData);
         })
         .catch((error) => {
@@ -167,14 +176,17 @@ export default function ProfilePage() {
           </span>
 
           <div className="w-full flex justify-center sm:justify-start sm:w-auto">
-            <img
+            <Image
+              alt="avatar"
+              width={80}
+              height={80}
               className="object-cover w-20 h-20 mt-3 mr-3 rounded-full"
               src="https://lh3.googleusercontent.com/a/AEdFTp70cvwI5eevfcr4LonOEX5gB2rzx7JnudOcnYbS1qU=s96-c"
             />
           </div>
 
           <div className="w-full sm:w-auto flex flex-col items-center sm:items-start">
-            <p className="font-display mb-2 text-xl text-primary-backgroudPrimary  font-semibold dark:text-gray-200">
+            <p className="font-display mb-2 text-xl dark:text-primary  font-semibold">
               {userId?.firstName} {userId?.lastName}
             </p>
 
@@ -238,7 +250,7 @@ export default function ProfilePage() {
             <Button
               variant="outline"
               size="icon"
-              className="bg-primary-backgroudPrimary text-white m-2 "
+              className="bg-primary text-white m-2 "
             >
               <ListCollapse className="h-4 w-4" />
             </Button>
@@ -250,8 +262,8 @@ export default function ProfilePage() {
       <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
         <div className="p-4 flex flex-col justify-between gap-4">
           <Card>
-            <CardHeader className="font-semibold text-xl">
-              Thông tin cá nhân
+            <CardHeader className="font-semibold text-xl dark:text-primary">
+              Thông Tin Cá Nhân
             </CardHeader>
             <CardContent className="">
               <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
@@ -281,8 +293,8 @@ export default function ProfilePage() {
           </Card>
 
           <Card>
-            <CardHeader className="font-semibold text-xl">
-              Thông tin liên lạc
+            <CardHeader className="font-semibold text-xl dark:text-primary">
+              Thông Tin Liên Lạc
             </CardHeader>
             <CardContent className="">
               <div>
@@ -297,8 +309,8 @@ export default function ProfilePage() {
           </Card>
 
           <Card>
-            <CardHeader className="font-semibold text-xl">
-              Thông tin lương
+            <CardHeader className="font-semibold text-xl dark:text-primary">
+              Thông Tin Lương
             </CardHeader>
             <CardContent className="">
               <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
@@ -338,6 +350,25 @@ export default function ProfilePage() {
               </div>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader className="font-semibold text-xl dark:text-primary">
+              Cơ Sở Làm Việc
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-y-8">
+              <div>
+                <div className="font-extralight text-[0.8rem]">Cơ sở</div>
+                <div>{userId.companyName}</div>
+              </div>
+
+              <div>
+                <div className="font-extralight text-[0.8rem]">Vai trò</div>
+                <div>
+                  {Role.find((role) => role.value === userId.roleId)?.label}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -346,7 +377,7 @@ export default function ProfilePage() {
         <div className="p-4 flex flex-col justify-between gap-4">
           <Card>
             <CardHeader>
-              <CardTitle>Mật khẩu</CardTitle>
+              <CardTitle className="dark:text-primary">Mật Khẩu</CardTitle>
               <CardDescription>
                 Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng xuất.
               </CardDescription>

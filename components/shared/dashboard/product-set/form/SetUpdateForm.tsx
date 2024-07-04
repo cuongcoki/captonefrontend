@@ -509,7 +509,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                       <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8 ">
                         <Card>
                           <CardHeader>
-                            <CardTitle className="text-lg">
+                            <CardTitle className="text-2xl text-primary">
                               Chi tiết bộ sản phẩm
                             </CardTitle>
                           </CardHeader>
@@ -519,7 +519,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                               name="code"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
+                                  <FormLabel className="flex items-center ">
                                     Mã Bộ Sản Phẩm
                                   </FormLabel>
                                   <Input type="text" {...field} />
@@ -532,7 +532,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                               name="name"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
+                                  <FormLabel className="flex items-center">
                                     Tên Bộ Sản Phẩm
                                   </FormLabel>
                                   <Input type="text" {...field} />
@@ -545,7 +545,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                               name="description"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
+                                  <FormLabel className="flex items-center ">
                                     Mô Tả
                                   </FormLabel>
                                   <Textarea {...field} />
@@ -563,7 +563,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                           x-chunk="dashboard-07-chunk-4"
                         >
                           <CardHeader>
-                            <CardTitle className="text-lg">
+                            <CardTitle className="text-lg text-primary">
                               Ảnh Bộ Sản Phẩm
                             </CardTitle>
                           </CardHeader>
@@ -603,7 +603,9 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                     <div>
                       <Card>
                         <CardHeader className="font-semibold text-2xl">
-                          <span>Thông tin sản phẩm trong bộ</span>
+                          <span className="text-primary">
+                            Thông tin sản phẩm trong bộ
+                          </span>
                         </CardHeader>
                         <CardContent className="overflow-auto">
                           {getDetailsProUpdate.map((product, index) => (
@@ -673,7 +675,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                       <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
                         <Card>
                           <CardHeader>
-                            <CardTitle className="text-2xl">
+                            <CardTitle className="text-2xl text-primary">
                               Thêm sản phẩm vào bộ
                             </CardTitle>
                           </CardHeader>
