@@ -73,7 +73,7 @@ export function ComboboxForForm({
               {data.map((component) => (
                 <CommandItem
                   key={component.value}
-                  value={component.value}
+                  value={component.label}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     form.setValue(name, String(component.value));
