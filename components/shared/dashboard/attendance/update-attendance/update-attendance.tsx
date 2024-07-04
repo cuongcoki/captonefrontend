@@ -228,6 +228,7 @@ export default function UpdateAttendance({
     attendanceApi
       .getALlProduct({
         SearchTerm: "",
+        IsInProcessing: true,
         pageIndex: 1,
         pageSize: 10000,
       })

@@ -87,6 +87,9 @@ export default function AddNewMeterialForm() {
       return newFile;
     }
   };
+  const dropArea = document.querySelector(".drag-area");
+  const labelForImage = dropArea?.querySelector("#labelForIamge");
+
   const onSubmit = async (data: AddMaterialType) => {
     const file = (await handleUploadPhoto(materialImage)) as File;
     data.image = file?.name || " ";
@@ -103,7 +106,9 @@ export default function AddNewMeterialForm() {
         if (data.isSuccess) {
           toast.success(data.message);
           form.reset();
+          setMaterialImage("");
           forceUpdate();
+          (labelForImage as HTMLLabelElement).hidden = true;
         }
       })
       .catch((err) => {

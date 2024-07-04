@@ -50,6 +50,9 @@ import { Pencil } from "lucide-react";
 
 // ** import hooks
 import { useAuth } from "@/hooks/useAuth";
+import { Role } from "@/components/shared/dashboard/users/table/users/data/data";
+import Image from "next/image";
+import { filesApi } from "@/apis/files.api";
 
 const invoices = [
   {
@@ -65,6 +68,9 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState<boolean>(false);
   const params = useParams<{ id: string }>();
   const [userId, setUserId] = useState<any>([]);
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>("");
   // ** hooks
   const user = useAuth();
 
@@ -76,6 +82,11 @@ export default function ProfilePage() {
         .getUserId(params.id)
         .then((res) => {
           const userData = res.data.data;
+          filesApi.getFile(userData.avatar).then((res) => {
+            setAvatar(res.data.data);
+            console.log("avatar", res.data.data);
+          });
+          console.log("userData", userData);
           setUserId(userData);
         })
         .catch((error) => {
@@ -88,7 +99,7 @@ export default function ProfilePage() {
     fetchDataUserId();
   }, [params]);
 
-  console.log("datauserId", userId);
+  // console.log("datauserId", userId);
 
   // ** compare tại khoản của tôi và tài khoản khác
   const getMe: boolean = user.user?.id === userId.id;
@@ -104,6 +115,57 @@ export default function ProfilePage() {
 
     return `${day}/${month}/${year}`;
   }
+  function validatePassword(password: string) {
+    // Kiểm tra độ dài tối thiểu
+    if (password.length < 6) {
+      return false;
+    }
+
+    // Kiểm tra có ít nhất một ký tự viết hoa
+    const hasUpperCase = /[A-Z]/.test(password);
+    if (!hasUpperCase) {
+      return false;
+    }
+
+    // Kiểm tra có ít nhất một ký tự đặc biệt
+    const hasSpecialChar = /[^a-zA-Z0-9]/.test(password);
+    if (!hasSpecialChar) {
+      return false;
+    }
+
+    // Nếu thỏa mãn tất cả các điều kiện
+    return true;
+  }
+  const handleChangePassword = () => {
+    console.log("userId", userId.id);
+    console.log("currentPassword", currentPassword);
+    console.log("newPassword", newPassword);
+    if (currentPassword === "" || newPassword === "") {
+      toast.error("Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+    if (!validatePassword(newPassword)) {
+      toast.error(
+        "Mật khẩu mới phải có ít nhất 6 ký tự, bao gồm chữ hoa và ký tự đặc biệt"
+      );
+      return;
+    }
+    const data = {
+      userId: userId.id,
+      oldPassword: currentPassword,
+      newPassword: newPassword,
+    };
+    userApi
+      .changePassword(data)
+      .then((res) => {
+        console.log("res", res);
+        toast.success("Đổi mật khẩu thành công");
+      })
+      .catch((error) => {
+        console.error("Error changing password:", error);
+        toast.error("Đổi mật khẩu thất bại");
+      });
+  };
   return (
     <div className="flex flex-col gap-6 justify-center">
       <header className=" flex justify-between">
@@ -114,14 +176,17 @@ export default function ProfilePage() {
           </span>
 
           <div className="w-full flex justify-center sm:justify-start sm:w-auto">
-            <img
+            <Image
+              alt="avatar"
+              width={80}
+              height={80}
               className="object-cover w-20 h-20 mt-3 mr-3 rounded-full"
               src="https://lh3.googleusercontent.com/a/AEdFTp70cvwI5eevfcr4LonOEX5gB2rzx7JnudOcnYbS1qU=s96-c"
             />
           </div>
 
           <div className="w-full sm:w-auto flex flex-col items-center sm:items-start">
-            <p className="font-display mb-2 text-xl text-primary-backgroudPrimary  font-semibold dark:text-gray-200">
+            <p className="font-display mb-2 text-xl dark:text-primary  font-semibold">
               {userId?.firstName} {userId?.lastName}
             </p>
 
@@ -185,7 +250,7 @@ export default function ProfilePage() {
             <Button
               variant="outline"
               size="icon"
-              className="bg-primary-backgroudPrimary text-white m-2 "
+              className="bg-primary text-white m-2 "
             >
               <ListCollapse className="h-4 w-4" />
             </Button>
@@ -197,8 +262,8 @@ export default function ProfilePage() {
       <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
         <div className="p-4 flex flex-col justify-between gap-4">
           <Card>
-            <CardHeader className="font-semibold text-xl">
-              Thông tin cá nhân
+            <CardHeader className="font-semibold text-xl dark:text-primary">
+              Thông Tin Cá Nhân
             </CardHeader>
             <CardContent className="">
               <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
@@ -228,8 +293,8 @@ export default function ProfilePage() {
           </Card>
 
           <Card>
-            <CardHeader className="font-semibold text-xl">
-              Thông tin liên lạc
+            <CardHeader className="font-semibold text-xl dark:text-primary">
+              Thông Tin Liên Lạc
             </CardHeader>
             <CardContent className="">
               <div>
@@ -244,8 +309,8 @@ export default function ProfilePage() {
           </Card>
 
           <Card>
-            <CardHeader className="font-semibold text-xl">
-              Thông tin lương
+            <CardHeader className="font-semibold text-xl dark:text-primary">
+              Thông Tin Lương
             </CardHeader>
             <CardContent className="">
               <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
@@ -285,6 +350,25 @@ export default function ProfilePage() {
               </div>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader className="font-semibold text-xl dark:text-primary">
+              Cơ Sở Làm Việc
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-y-8">
+              <div>
+                <div className="font-extralight text-[0.8rem]">Cơ sở</div>
+                <div>{userId.companyName}</div>
+              </div>
+
+              <div>
+                <div className="font-extralight text-[0.8rem]">Vai trò</div>
+                <div>
+                  {Role.find((role) => role.value === userId.roleId)?.label}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -292,65 +376,45 @@ export default function ProfilePage() {
       <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
         <div className="p-4 flex flex-col justify-between gap-4">
           <Card>
-            <CardHeader className="font-semibold text-xl">
-              Thông tin tài khoản & mật khẩu
+            <CardHeader>
+              <CardTitle className="dark:text-primary">Mật Khẩu</CardTitle>
+              <CardDescription>
+                Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng xuất.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="">
-              <Tabs defaultValue="account">
-                <TabsList className="grid w-[300px] grid-cols-2">
-                  <TabsTrigger value="account">Tài khoản</TabsTrigger>
-                  <TabsTrigger value="password">Mật khẩu</TabsTrigger>
-                </TabsList>
-                <TabsContent value="account">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Tài khoản</CardTitle>
-                      <CardDescription>
-                        Thực hiện thay đổi cho tài khoản của bạn tại đây. Nhấp
-                        vào lưu khi bạn hoàn tất.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="space-y-1">
-                        <Label htmlFor="name">CCCD/CMND</Label>
-                        <Input id="name" defaultValue="Pedro Duarte" />
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button className="bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90">
-                        Xác nhận thay đổi
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                </TabsContent>
-                <TabsContent value="password">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Mật khẩu</CardTitle>
-                      <CardDescription>
-                        Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ
-                        đăng xuất.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                      <div className="space-y-1">
-                        <Label htmlFor="current">Mật khẩu hiện tại</Label>
-                        <Input id="current" type="password" />
-                      </div>
-                      <div className="space-y-1">
-                        <Label htmlFor="new">Mật khẩu mới</Label>
-                        <Input id="new" type="password" />
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                      <Button className="bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90">
-                        Xác nhận thay đổi
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                </TabsContent>
-              </Tabs>
+            <CardContent className="space-y-2">
+              <div className="space-y-1">
+                <Label htmlFor="current">Mật khẩu hiện tại</Label>
+                <Input
+                  value={currentPassword}
+                  onChange={(e) => {
+                    setCurrentPassword(e.target.value);
+                  }}
+                  id="current"
+                  type="password"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="new">Mật khẩu mới</Label>
+                <Input
+                  id="new"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => {
+                    setNewPassword(e.target.value);
+                  }}
+                />
+                <div id="error" className="text-destructive"></div>
+              </div>
             </CardContent>
+            <CardFooter>
+              <Button
+                className="bg-primary hover:bg-primary/90"
+                onClick={handleChangePassword}
+              >
+                Xác nhận thay đổi
+              </Button>
+            </CardFooter>
           </Card>
         </div>
       </div>

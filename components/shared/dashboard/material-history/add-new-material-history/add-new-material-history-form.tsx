@@ -147,15 +147,7 @@ export default function AddNewMeterialHistoryForm() {
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     const inputValue = event.target.value;
                     // Remove any characters that are not digits or a decimal point
-                    let filteredInput = inputValue.replace(/[^\d.]/g, "");
-
-                    // Split by decimal point and ensure only one decimal point is present
-                    const parts = filteredInput.split(".");
-                    if (parts.length > 2) {
-                      // More than one decimal point
-                      // Join the first part with the rest of the string, excluding additional decimal points
-                      filteredInput = `${parts[0]}.${parts.slice(1).join("")}`;
-                    }
+                    let filteredInput = inputValue.replace(/[^\d]/g, "");
 
                     field.onChange(filteredInput);
                   }}

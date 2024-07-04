@@ -26,13 +26,8 @@ import {
 import { ProductForm } from "../../form/ProductForm";
 import { ProductSearchParams } from "@/types/product.type";
 import { filesApi } from "@/apis/files.api";
+import { ProductStore } from "@/components/shared/dashboard/product/product-store";
 
-type ContexType = {
-  forceUpdate: () => void;
-};
-export const MyContext = createContext<ContexType>({
-  forceUpdate: () => {},
-});
 export default function RenderTableProduct() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -42,14 +37,12 @@ export default function RenderTableProduct() {
   const [open, setOpen] = useState<boolean>(false);
   const [isInProcessing, setIsInProcessing] = useState<boolean>(true);
   const [data, setData] = useState<Product[]>([]);
-
+  const { force } = ProductStore();
   const router = useRouter();
   const pathname = usePathname();
-  const [force, setForce] = useState<number>(1);
   const [isInProcessingString, setIsInProcessingString] = useState<string>(
     isInProcessing.toString()
   );
-  const forceUpdate = () => setForce((prev) => prev + 1);
   type Props = {
     searchParams: ProductSearchParams;
   };
@@ -98,6 +91,7 @@ export default function RenderTableProduct() {
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
         console.error("Error fetching product data:", error);
+        setData([]);
       } finally {
         setLoading(false);
       }
@@ -129,49 +123,43 @@ export default function RenderTableProduct() {
     <div className="px-3">
       <div className="flex flex-col md:flex-row justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
-          <MyContext.Provider value={{ forceUpdate }}>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
-              <Input
-                placeholder="Tìm kiếm sản phẩm..."
-                value={searchTerm}
-                onChange={handleSearchTermChange}
-                className="w-full sm:w-auto"
-              />
-              <Select
-                value={isInProcessingString}
-                onValueChange={(value) => handleIsInProcessingChange(value)}
-              >
-                <SelectTrigger className="w-full sm:w-[180px]">
-                  <SelectValue placeholder="Trạng thái" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="true">Đang xử lý</SelectItem>
-                  <SelectItem value="false">Chưa xử lý</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </MyContext.Provider>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+            <Input
+              placeholder="Tìm kiếm sản phẩm..."
+              value={searchTerm}
+              onChange={handleSearchTermChange}
+              className="w-full sm:w-auto"
+            />
+            <Select
+              value={isInProcessingString}
+              onValueChange={(value) => handleIsInProcessingChange(value)}
+            >
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue placeholder="Trạng thái" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="true">Đang xử lý</SelectItem>
+                <SelectItem value="false">Chưa xử lý</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        <MyContext.Provider value={{ forceUpdate }}>
-          <div className="flex items-center justify-end">
-            <div className="flex items-center space-x-2">
-              <ProductForm />
-            </div>
+        <div className="flex items-center justify-end">
+          <div className="flex items-center space-x-2">
+            <ProductForm />
           </div>
-        </MyContext.Provider>
+        </div>
       </div>
 
-      <MyContext.Provider value={{ forceUpdate }}>
-        <div className="overflow-x-auto">
-          <DataTable columns={columns} data={data} />
-          <DataTablePagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            setCurrentPage={setCurrentPage}
-          />
-        </div>
-      </MyContext.Provider>
+      <div className="overflow-x-auto">
+        <DataTable columns={columns} data={data} />
+        <DataTablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
     </div>
   );
 }

@@ -88,6 +88,7 @@ export function DataTableForMaterial<TData, TValue>({
       try {
         const data = await materialApi.searchMaterial({
           SearchTerm: searchTerm,
+          IsInProcessing: true,
           pageIndex: pageIndex,
           pageSize: 10,
         });
@@ -123,9 +124,9 @@ export function DataTableForMaterial<TData, TValue>({
   }, [searchTerm, pathname, router, pageIndex, force]);
 
   return (
-    <div>
-      <div className="text-3xl text-[#22c55e] w-full text-center mb-3 font-semibold">
-        DANH SÁCH VẬT LIỆU
+    <div className="p-2">
+      <div className="text-3xl text-[#22c55e] w-full text-center mb-3 font-semibold mt-5">
+        DANH SÁCH NGUYÊN VẬT LIỆU
       </div>
       <div className="flex flex-col sm:flex-row justify-center items-center py-4">
         <Input

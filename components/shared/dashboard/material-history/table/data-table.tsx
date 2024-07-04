@@ -96,6 +96,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
     materialApi
       .searchMaterial({
         SearchTerm: "",
+        IsInProcessing: true,
         pageIndex: 1,
         pageSize: 1000,
       })
@@ -161,7 +162,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
   return (
     <div>
       <div className="text-3xl text-[#22c55e] w-full text-center mb-3 font-semibold">
-        LỊCH SỬ NHẬP NGUYÊN LIỆU
+        LỊCH SỬ NHẬP NGUYÊN VẬT LIỆU
       </div>
       <div className="py-4 grid grid-row-3 md:grid-cols-2 xl:grid-cols-3">
         <Input
