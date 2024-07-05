@@ -66,7 +66,7 @@ export default function UpdateAttendance({
   slotProp: string;
   warehouseProp: string;
 }): JSX.Element {
-  const colorSlaryByProduct = "bg-[#16a34a7c]";
+  const colorSlaryByProduct = "bg-white";
   function formatDate(dateStr: String) {
     const [day, month, year] = dateStr.split("/");
     const formattedDay = day.padStart(2, "0");
@@ -620,7 +620,7 @@ export default function UpdateAttendance({
                           className={`${
                             item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
-                              : "bg-[#16a34a7c] dark:bg-black "
+                              : "bg-white dark:bg-card "
                           }`}
                         >
                           Nhấn vào
@@ -634,7 +634,7 @@ export default function UpdateAttendance({
                           className={`${
                             item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
-                              : "bg-[#16a34a7c] dark:bg-black"
+                              : "bg-white dark:bg-card"
                           }`}
                         >
                           Để tạo
@@ -648,7 +648,7 @@ export default function UpdateAttendance({
                           className={`${
                             item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
-                              : "bg-[#16a34a7c] dark:bg-black"
+                              : "bg-white dark:bg-card"
                           }`}
                         >
                           Sản phẩm

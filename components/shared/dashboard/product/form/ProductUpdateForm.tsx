@@ -357,9 +357,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
 
   return (
     <Form {...form}>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 rounded-xl">
         <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-          <Card>
+          <Card className="rounded-xl">
             <CardContent>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="w-full flex flex-col gap-4">

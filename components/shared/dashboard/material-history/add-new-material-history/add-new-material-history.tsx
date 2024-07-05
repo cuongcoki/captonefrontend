@@ -16,9 +16,10 @@ import AddNewMeterialForm from "@/components/shared/dashboard/material/add-new-m
 import AddNewMeterialHistoryForm from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history-form";
 export default function AddNewMeterialHistory() {
   const [focus, setFocus] = React.useState(false);
+  console.log("DIALOG", focus);
   return (
     <>
-      <Dialog>
+      <Dialog open={focus} onOpenChange={setFocus} modal={true}>
         <DialogTrigger asChild>
           <Button className="bg-[#22c55e] mb-2 ml-auto mt-4 md:col-start-2 xl:col-start-3 xl:mt-0">
             <Plus /> Nhập mới
