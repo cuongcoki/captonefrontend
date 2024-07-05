@@ -37,11 +37,10 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-   
         <UpdateUser userId={row._valuesCache.id} />
 
         {/* <UserEditButton user={row._valuesCache as Employee} /> */}
-        <UserBanButton user={row._valuesCache as Employee} />
+        <UserBanButton user={row.original as Employee} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

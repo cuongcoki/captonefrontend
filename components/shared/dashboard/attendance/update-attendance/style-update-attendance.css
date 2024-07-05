@@ -11,8 +11,8 @@
 }
 
 .update-attendance-table th {
-  background-color: #1bc95b;
-  color: rgba(255, 255, 0, 0.808);
+  background-color: rgba(236, 236, 236, 0.493);
+  /* color: rgba(255, 255, 0, 0.808); */
 }
 
 .update-attendance-table th[colspan] {

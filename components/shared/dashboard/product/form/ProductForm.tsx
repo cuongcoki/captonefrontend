@@ -435,14 +435,14 @@ export const ProductForm = () => {
                                   Mô Tả
                                 </FormLabel>
                                 <FormControl>
-                                  <Textarea {...field} />
+                                  <Textarea {...field} className="h-[120px]" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
                             )}
                           />
 
-                          <Separator className="h-1" />
+                          {/* <Separator className="h-1" /> */}
                           <Button
                             type="submit"
                             className="w-full bg-primary hover:bg-primary/90"
