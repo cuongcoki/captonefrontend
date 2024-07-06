@@ -4,6 +4,7 @@ import {
   CreateReportBody,
   GetReportsBody,
   GetReportsResponse,
+  UpdateReportBody,
 } from "@/types/report.type";
 import { SuccessResponse } from "@/types/util.type";
 
@@ -43,7 +44,7 @@ export const reportApi = {
     );
     return response;
   },
-  updateReport: async (requestBody: CreateReportBody) => {
+  updateReport: async (requestBody: UpdateReportBody) => {
     const response = await axiosClient.put<SuccessResponse<null>>(
       `${endPointConstant.BASE_URL}/reports`,
       requestBody,
