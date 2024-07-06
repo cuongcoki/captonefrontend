@@ -28,6 +28,7 @@ const ColorOfTypeStatus: { [key: number]: string } = {
 export default function ReportManagerTable({
   searchParams,
 }: ReportManagerParams) {
+  const user = JSON.parse(localStorage.getItem("userData") || "{}");
   const [params, setParams] = React.useState(searchParams);
   const [totalPage, setTotalPage] = React.useState(0);
   const { force, tableData, setTableData, companyData, setCompanyData } =
@@ -116,37 +117,40 @@ export default function ReportManagerTable({
     buildUrlParams,
   ]);
   return (
-    <div className="p-2 ">
+    <div className="p-3">
       <div className="text-3xl text-[#22c55e] w-full text-center font-semibold mt-3 mb-5">
         DANH SÁCH ĐƠN BÁO CÁO
       </div>
       <div className="my-5 grid grid-cols-10 space-x-5">
-        <div className="col-span-2">
-          <Select
-            value={params.CompanyId}
-            onValueChange={(value) => {
-              setParams((prev) => ({
-                ...prev,
-                CompanyId: value,
-              }));
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Chọn cơ sở" />
-            </SelectTrigger>
-            <SelectContent>
-              {companyData.map((company) => (
-                <SelectItem
-                  key={company.id}
-                  className="hover:bg-gray-100"
-                  value={company.id}
-                >
-                  {company.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {user.roleDescription === "MAIN_ADMIN" && (
+          <div className="col-span-2">
+            <Select
+              value={params.CompanyId}
+              onValueChange={(value) => {
+                setParams((prev) => ({
+                  ...prev,
+                  CompanyId: value,
+                }));
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Chọn cơ sở" />
+              </SelectTrigger>
+              <SelectContent>
+                {companyData.map((company) => (
+                  <SelectItem
+                    key={company.id}
+                    className="hover:bg-gray-100"
+                    value={company.id}
+                  >
+                    {company.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
         <div className="col-span-2">
           <Select
             value={params.ReportType}
@@ -286,7 +290,7 @@ export default function ReportManagerTable({
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white ">
-                            <div className="mx-auto whitespace-normal break-words w-72 ">
+                            <div className="mx-auto whitespace-normal break-words w-64 ">
                               {report.description}
                             </div>
                           </td>
@@ -296,7 +300,7 @@ export default function ReportManagerTable({
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                            <div className="mx-auto whitespace-normal break-words w-72">
+                            <div className="mx-auto whitespace-normal break-words w-64">
                               {report.replyMessage}
                             </div>
                           </td>
