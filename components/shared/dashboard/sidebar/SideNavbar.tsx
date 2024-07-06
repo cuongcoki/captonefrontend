@@ -13,6 +13,8 @@ import {
   CalendarSearch,
   PackagePlus,
   Building,
+  MessageSquareWarning,
+  MessageSquareMore,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -95,6 +97,18 @@ export default function SideNavbar({}: Props) {
                 title: "Công ty",
                 href: "/dashboard/company",
                 icon: Building,
+                variant: "ghost",
+              },
+              {
+                title: "Đơn báo cáo",
+                href: "/employee/report",
+                icon: MessageSquareWarning,
+                variant: "ghost",
+              },
+              {
+                title: "Khiếu nại",
+                href: "/dashboard/report-manager",
+                icon: MessageSquareMore,
                 variant: "ghost",
               },
             ]}

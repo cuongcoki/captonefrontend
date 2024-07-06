@@ -1,0 +1,20 @@
+.report-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.report-table th {
+  background-color: rgba(236, 236, 236, 0.493);
+  /* color: rgba(255, 255, 0, 0.808); */
+}
+
+.report-table th[colspan] {
+  text-align: center;
+}
