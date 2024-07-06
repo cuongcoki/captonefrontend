@@ -1,6 +1,5 @@
-import { companyApi } from "@/apis/company.api";
 import { reportApi } from "@/apis/report.api";
-import { ReportStore } from "@/components/shared/employee/report/report-store";
+import { ReportManagerStore } from "@/components/shared/dashboard/report-manager/report-manager-store";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -20,8 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -30,51 +27,64 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { CompanyAddSchemaType } from "@/schema/company";
-import { reportAddSchema, ReportAddSchemaType } from "@/schema/report";
+import { reportUpdateSchema, ReportUpdateSchemaType } from "@/schema/report";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-export function ReportManagerAdd() {
-  const { ForceRender } = ReportStore();
+export function ReportManagerUpdate({
+  index,
+  children,
+}: {
+  index: number;
+  children: React.ReactNode;
+}) {
+  const { tableData, updateReport } = ReportManagerStore((state) => ({
+    tableData: state.tableData,
+    updateReport: state.updateReport,
+  }));
 
-  const form = useForm<ReportAddSchemaType>({
-    resolver: zodResolver(reportAddSchema),
+  const [reportData] = useState(tableData[index]);
+  const form = useForm<ReportUpdateSchemaType>({
+    resolver: zodResolver(reportUpdateSchema),
     defaultValues: {
-      description: "",
-      reportType: "",
+      replyMessage: reportData.replyMessage || "",
+      status:
+        reportData.status.toString() === "0"
+          ? ""
+          : reportData.status.toString() || "",
     },
   });
-  const onSubmit = (data: ReportAddSchemaType) => {
+  useEffect(() => {
+    console.log("RENDER UPDATE REPORT");
+  }, []);
+  const onSubmit = (data: ReportUpdateSchemaType) => {
     console.log("Submit Company Data", data);
     reportApi
-      .createReport({
-        description: data.description,
-        reportType: Number(data.reportType),
+      .updateReport({
+        id: tableData[index].id,
+        replyMessage: data.replyMessage,
+        status: Number(data.status),
       })
       .then(() => {
-        toast.success("Tạo đơn thành công");
-        ForceRender();
-        form.reset();
+        toast.success("Cập nhật đơn thành công");
+        // ForceRender();
+        updateReport(index, Number(data.status), data.replyMessage);
       })
       .catch((error) => {
-        toast.error("Tạo đơn thất bại");
+        toast.error("Cập nhật đơn thất bại");
         console.log("Error", error);
       });
   };
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="default" className="bg-[#22c55e]">
-          Thêm mới
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[40vw] dark:bg-[#1c1917]">
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3">
-            Thêm mới đơn báo cáo
+            Cập nhật đơn báo cáo
           </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
@@ -83,31 +93,25 @@ export function ReportManagerAdd() {
             <div className="grid gap-2 py-4">
               <FormField
                 control={form.control}
-                name="reportType"
+                name="status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Loại đơn</FormLabel>
+                    <FormLabel>Trạng thái</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Chọn loại đơn" />
+                          <SelectValue placeholder="Vui lòng chọn trạng thái" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem className="hover:bg-gray-100" value="0">
-                          Báo cáo về điểm danh
-                        </SelectItem>
                         <SelectItem className="hover:bg-gray-100" value="1">
-                          Báo cáo về chấm công
+                          Đã xử lý
                         </SelectItem>
                         <SelectItem className="hover:bg-gray-100" value="2">
-                          Báo cáo về lương
-                        </SelectItem>
-                        <SelectItem className="hover:bg-gray-100" value="3">
-                          Các loại đơn khác
+                          Đã từ chối
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -118,13 +122,13 @@ export function ReportManagerAdd() {
               />
               <FormField
                 control={form.control}
-                name="description"
+                name="replyMessage"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nội dung</FormLabel>
+                    <FormLabel>Phản hồi</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Nhập nội dung báo cáo ở đây"
+                        placeholder="Nhập phản hồi ở đây"
                         className="resize-none h-[150px]"
                         {...field}
                       />
@@ -137,7 +141,7 @@ export function ReportManagerAdd() {
             </div>
             <DialogFooter>
               <Button className="mt-3" type="submit">
-                Gửi đơn
+                Lưu phản hồi
               </Button>
             </DialogFooter>
           </form>

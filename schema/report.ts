@@ -9,3 +9,13 @@ export const reportAddSchema = z.object({
 });
 
 export type ReportAddSchemaType = z.infer<typeof reportAddSchema>;
+
+export const reportUpdateSchema = z.object({
+  replyMessage: z
+    .string()
+    .min(1, "Vui lòng nhập nội dung phản hồi")
+    .max(500, "Nội dung phản hồi không quá 500 ký tự"),
+  status: z.string().min(1, "Trạng thái không được để trống"),
+});
+
+export type ReportUpdateSchemaType = z.infer<typeof reportUpdateSchema>;

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { companyApi } from "@/apis/company.api";
 import { set } from "date-fns";
+import { ReportManagerUpdate } from "@/components/shared/dashboard/report-manager/report-manager-update";
 
 const ColorOfTypeStatus: { [key: number]: string } = {
   0: "text-gray-500",
@@ -264,53 +265,52 @@ export default function ReportManagerTable({
                   </thead>
                   <tbody className="divide-y divide-gray-200 ">
                     {tableData.map((report, index) => (
-                      <tr
-                        key={report.id}
-                        className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer "
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
-                          <div className="mx-auto text-center">
-                            {report.fullName}
-                          </div>
-                          <div className="w-32 h-44 bg-gray-300">
-                            {/* <Image
+                      <ReportManagerUpdate key={report.id} index={index}>
+                        <tr className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer ">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
+                            <div className="mx-auto text-center">
+                              {report.fullName}
+                            </div>
+                            <div className="w-32 h-44 bg-gray-300">
+                              {/* <Image
                               src={}
                               alt="avatar"
                               width={100}
                               height={100}
                             /> */}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
-                          <div className="mx-auto text-center">
-                            {report.reportTypeDescription}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white ">
-                          <div className="mx-auto whitespace-normal break-words w-72 ">
-                            {report.description}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                          <div className="mx-auto text-center">
-                            {report.createdDate}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                          <div className="mx-auto whitespace-normal break-words w-72">
-                            {report.replyMessage}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                          <div
-                            className={`mx-auto text-center ${
-                              ColorOfTypeStatus[report.status]
-                            }`}
-                          >
-                            {report.statusDesscription}
-                          </div>
-                        </td>
-                      </tr>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
+                            <div className="mx-auto text-center">
+                              {report.reportTypeDescription}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white ">
+                            <div className="mx-auto whitespace-normal break-words w-72 ">
+                              {report.description}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                            <div className="mx-auto text-center">
+                              {report.createdDate}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                            <div className="mx-auto whitespace-normal break-words w-72">
+                              {report.replyMessage}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                            <div
+                              className={`mx-auto text-center ${
+                                ColorOfTypeStatus[report.status]
+                              }`}
+                            >
+                              {report.statusDesscription}
+                            </div>
+                          </td>
+                        </tr>
+                      </ReportManagerUpdate>
                     ))}
                   </tbody>
                 </table>
@@ -325,7 +325,7 @@ export default function ReportManagerTable({
           size="sm"
           onClick={() => {
             setParams((prev) => {
-              return { ...prev, pageIndex: Number(prev.PageIndex) - 1 };
+              return { ...prev, PageIndex: Number(prev.PageIndex) - 1 };
             });
           }}
           disabled={Number(searchParams.PageIndex) === 1}
@@ -337,7 +337,7 @@ export default function ReportManagerTable({
           size="sm"
           onClick={() => {
             setParams((prev) => {
-              return { ...prev, pageIndex: Number(prev.PageIndex) + 1 };
+              return { ...prev, PageIndex: Number(prev.PageIndex) + 1 };
             });
           }}
           disabled={Number(searchParams.PageIndex) >= totalPage}
