@@ -30,33 +30,33 @@ export const MyContext = createContext<ContexType>({
 
 const enumStatus = [
   {
-    statusName: "UNRESOLVED",
-    description: "chưa giải quyết",
+    statusName: "SIGNED",
+    description: "Đã nhận đơn hàng",
+    id: 0,
+    value: "0"
+  },
+  {
+    statusName: "INPROGRESS",
+    description: "Đang thực hiện",
     id: 1,
     value: "1"
   },
   {
-    statusName: "PROCESSING",
-    description: "xử lý",
+    statusName: "COMPLETED",
+    description: "Đã hoàn thành",
     id: 2,
     value: "2"
   },
   {
-    statusName: "COMPLETED",
-    description: "hoàn thành",
+    statusName: "CANCELLED",
+    description: "Đã hủy",
     id: 3,
     value: "3"
   },
   {
     statusName: "CANCELLED",
-    description: "đã hủy bỏ",
-    id: 4,
-    value: "4"
-  },
-  {
-    statusName: "CANCELLED",
     description: "bỏ chọn",
-    id: 5,
+    id: 4,
     value: " "
   },
 ];

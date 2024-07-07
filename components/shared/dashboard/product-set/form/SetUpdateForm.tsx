@@ -34,6 +34,7 @@ import {
   Eye,
   ImageUp,
   Minus,
+  PackageMinus,
   PackagePlus,
   PencilLine,
   Trash2,
@@ -417,7 +418,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     );
     setUpdateProducts(updatedUpdateProducts);
 
-    toast.success("Đã xóa sản phẩm khỏi danh sách");
+    // toast.success("Đã xóa sản phẩm khỏi danh sách");
   };
 
   // ** hàm thay đổi số lượng khỏi danh sách sản phẩm
@@ -464,7 +465,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       removeProductIds: removeProductIds,
     };
     setApi
-      .updateSet(requestBody, setProductId.id)
+      .updateSet(requestBody, "")
       .then((res) => {
         console.log("Update Successful:", res);
         toast.success(res.data.message);
@@ -611,7 +612,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                           {getDetailsProUpdate.map((product, index) => (
                             <div
                               className="grid grid-cols-10 items-center py-4"
-                              key={index}
+                              key={product.productId}
                             >
                               <div className="col-span-7 flex gap-4">
                                 {product.product.imageResponses.length > 0 && (
@@ -663,8 +664,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                 onClick={() =>
                                   handleDeleteProducts(product.productId)
                                 }
-                              >
-                                <Minus className="h-4 w-4" />
+                              >-
+                                <PackageMinus className="h-4 w-4"/>
                               </Button>
                             </div>
                           ))}

@@ -19,7 +19,7 @@ import { useWindowWidth } from "@react-hook/window-size";
 import { ModeToggle } from "@/components/shared/common/mode-toggle";
 
 type Props = {};
-export default function SideNavbar({}: Props) {
+export default function SideNavbar({ }: Props) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   const onlyWidth = useWindowWidth();
@@ -69,13 +69,15 @@ export default function SideNavbar({}: Props) {
               },
               {
                 title: "Sản phẩm",
-                href: "/dashboard/products",
+                href: "/dashboard/products/product",
+                href1: "/dashboard/products/set",
                 icon: PackageSearch,
                 variant: "ghost",
               },
               {
                 title: "Vật liệu",
-                href: "/dashboard/material",
+                href: "/dashboard/material/history",
+                href1: "/dashboard/material/manager",
                 icon: InspectionPanel,
                 variant: "ghost",
               },

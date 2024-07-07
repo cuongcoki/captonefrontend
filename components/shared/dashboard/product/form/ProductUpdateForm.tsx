@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Upload } from "lucide-react";
+import { EllipsisVertical, Trash2, Upload } from "lucide-react";
 import ImageDisplay from "./ImageDisplay";
 import { ProductUpdateSchema } from "@/schema/product";
 import toast, { Toaster } from "react-hot-toast";
@@ -29,6 +29,24 @@ import { filesApi } from "@/apis/files.api";
 import { Card } from "@/components/ui/card";
 import { CardContent } from "../../home/DashbroadComponents/Cards/Card";
 import { ProductStore } from "@/components/shared/dashboard/product/product-store";
+
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import Image from "next/image";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+
 
 interface ProductData {
   code: string;
@@ -53,15 +71,17 @@ interface ProductID {
 export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const [loading, setLoading] = useState(false);
   const { ForceRender } = ProductStore();
-  // console.log('productId', productId)
+  console.log('productId', productId)
   const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(
     undefined
   );
   const [imageRequests, setImageRequests] = useState<any[]>([]);
+  const [imageRequestsUpdate, setImageRequestsUpdate] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchUpdatedProduct = async () => {
       if (productId) {
+        setImageRequestsUpdate(productId.imageResponses)
         try {
           const updatedData = await Promise.all(
             productId.imageResponses.map(async (image) => {
@@ -233,24 +253,60 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       prevImageUrls.filter((_: any, i: any) => i !== index)
     );
   };
-  console.log("removeImageIds", removeImageIds);
-
+  // console.log("removeImageIds", removeImageIds);
+  console.log("imageAddRequests", imageAddRequests)
+  console.log("imageRequests", imageRequests)
+  console.log("imageRequestsUpdate", imageRequestsUpdate)
+  const [saveUpdateImage, setSaveUpdateImage] = useState<any[]>([]);
+  console.log("saveUpdateImage",saveUpdateImage)
   // Handle toggling blueprint flag for an image
-  const handleToggleBlueprint = (index: number) => {
+  const handleToggleBluePrint = (imageUrl: string, index: number) => {
+    console.log('imageUrl=', imageUrl)
     setImageRequests((prevImageRequests) =>
-      prevImageRequests.map((req, i) =>
-        i === index ? { ...req, isBluePrint: !req.isBluePrint } : req
+      prevImageRequests.map((req) =>
+        req.imageUrl === imageUrl ? { ...req, isBluePrint: !req.isBluePrint } : req
       )
     );
+    setImageAddRequests((prevImageRequests) =>
+      prevImageRequests.map((req) =>
+        req.imageUrl === imageUrl ? { ...req, isBluePrint: !req.isBluePrint } : req
+      )
+    );
+
+    if (imageRequestsUpdate.map((item, index) => index === index)) {
+      setImageRequestsUpdate((prevImageRequests) =>
+        prevImageRequests.map((req, i) =>
+          i === index ? { ...req, isBluePrint: !req.isBluePrint } : req
+        )
+      );
+      setSaveUpdateImage((prevSaveUpdateImage) => {
+        const updatedSaveUpdateImage = [...prevSaveUpdateImage];
+        updatedSaveUpdateImage[index] = {
+          ...imageRequestsUpdate[index],
+          isBluePrint: !imageRequestsUpdate[index]?.isBluePrint,
+        };
+        return updatedSaveUpdateImage;
+      });
+    }
+
+    
+
   };
 
   // Handle toggling main image flag for an image
-  const handleToggleMainImage = (index: number) => {
+  const handleToggleMainImage = (imageUrl: string) => {
+    console.log('imageUrl=', imageUrl)
     setImageRequests((prevImageRequests) =>
-      prevImageRequests.map((req, i) =>
-        i === index ? { ...req, isMainImage: !req.isMainImage } : req
+      prevImageRequests.map((req) =>
+        req.imageUrl ? { ...req, isMainImage: !req.isMainImage } : req
       )
     );
+    setImageAddRequests((prevImageRequests) =>
+      prevImageRequests.map((req) =>
+        req.imageUrl ? { ...req, isMainImage: !req.isMainImage } : req
+      )
+    );
+
   };
 
   const handlePostImage = async () => {
@@ -288,17 +344,24 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     // }
     setLoading(true);
     setIsSubmitting(true);
-
+    if (saveUpdateImage.length > 0) {
+      // Push saveUpdateImage into imageAddRequests array
+      setImageAddRequests((prevImageAddRequests) => [
+        ...prevImageAddRequests,
+        ...saveUpdateImage,
+      ]);
+    }
+    console.log(imageAddRequests)
     try {
       await handlePostImage();
 
       const requestBody = {
         id: formData.id,
-        code: formData.code,
+        code: formData.code.trim(),
         price: formData.price,
-        size: formData.size,
-        description: formData.description,
-        name: formData.name,
+        size: formData.size.trim(),
+        description: formData.description.trim(),
+        name: formData.name.trim(),
         isInProcessing: formData.isInProcessing,
         addImagesRequest: imageAddRequests.map((image, index) => ({
           imageUrl: nameImage[index],
@@ -319,32 +382,32 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
           console.error("Error updating product:", error);
         });
 
-      //   try {
-      //     const response = await productApi.updateProduct(
-      //       requestBody,
-      //       formData.id
-      //     );
-      //     toast.success(response.data.message); // Assuming your API returns a message field in the response
-      //     console.log("Update Successful:", response);
-      //   } catch (error: any) {
-      //     if (
-      //       error.response &&
-      //       error.response.data &&
-      //       error.response.data.message
-      //     ) {
-      //       // Xử lý lỗi từ server
-      //       toast.error(`Update error: ${error.response.data.message}`);
-      //     } else if (error.request) {
-      //       // Xử lý lỗi khi không có phản hồi từ server
-      //       toast.error(
-      //         "No response from server while updating. Please try again later."
-      //       );
-      //     } else {
-      //       // Xử lý các lỗi khác
-      //       toast.error(`Unexpected error during update: ${error.message}`);
-      //     }
-      //     throw error; // Re-throw the error to stop further execution
-      //   }
+        try {
+          const response = await productApi.updateProduct(
+            requestBody,
+            formData.id
+          );
+          toast.success(response.data.message); // Assuming your API returns a message field in the response
+          console.log("Update Successful:", response);
+        } catch (error: any) {
+          if (
+            error.response &&
+            error.response.data &&
+            error.response.data.message
+          ) {
+            // Xử lý lỗi từ server
+            toast.error(`Update error: ${error.response.data.message}`);
+          } else if (error.request) {
+            // Xử lý lỗi khi không có phản hồi từ server
+            toast.error(
+              "No response from server while updating. Please try again later."
+            );
+          } else {
+            // Xử lý các lỗi khác
+            toast.error(`Unexpected error during update: ${error.message}`);
+          }
+          throw error; // Re-throw the error to stop further execution
+        }
     } catch (error: any) {
       console.error("Error updating product:", error);
     } finally {
@@ -353,7 +416,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     }
   };
 
-  useEffect(() => {}, [removeImageIds]);
+  useEffect(() => { }, [removeImageIds]);
 
   return (
     <Form {...form}>
@@ -513,12 +576,85 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
             {imageRequests.length > 0 && (
               <CardContent className="relative w-full h-full">
                 {/* phần hiển thị ảnh xem trước */}
-                <ImageDisplay
-                  images={imageRequests}
-                  onDelete={handleDeleteImage}
-                  onToggleBlueprint={handleToggleBlueprint}
-                  onToggleMainImage={handleToggleMainImage}
-                />
+                <div className="flex items-center justify-center w-full h-full ">
+                  <Carousel className="w-full h-full flex flex-col">
+                    <CarouselContent className="w-full h-full">
+                      {imageRequests.map((image, index) => (
+                        <CarouselItem
+                          className="w-full h-full flex items-center justify-center"
+                          key={index}
+                        >
+                          <CardContent className="w-full h-full relative flex aspect-square items-center justify-center p-6 bg-black">
+                            <Image
+                              src={image.imageUrl}
+                              alt={`image-${index}`}
+                              width={500}
+                              height={500}
+                              className="h-full w-full object-contain bg-cover bg-center  bg-no-repeat  pointer-events-none"
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-0 top-0 "
+                              onClick={() => handleDeleteImage(index, image.id)}
+                            >
+                              <Trash2
+                                size={35}
+                                className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
+                              />
+                            </button>
+
+                            <HoverCard>
+                              <HoverCardTrigger className="absolute left-0 top-0 ">
+                                <EllipsisVertical
+                                  size={35}
+                                  className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5"
+                                />
+                              </HoverCardTrigger>
+                              <HoverCardContent align="start" className="w-full">
+                                <div className="grid gap-4">
+                                  <div className="space-y-2">
+                                    <h4 className="font-medium leading-none">Loại ảnh</h4>
+                                    <p className="text-sm text-muted-foreground">
+                                      Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
+                                    </p>
+                                  </div>
+                                  <div className="grid gap-2">
+                                    <div className="flex justify-between items-center">
+                                      <Label htmlFor={`isBluePrint-${index}`}>
+                                        [Ảnh] bản thiết kế
+                                      </Label>
+                                      <Switch
+                                        className="data-[state=checked]:bg-primary"
+                                        id={`isBluePrint-${index}`}
+                                        checked={image.isBluePrint}
+                                        onCheckedChange={() => handleToggleBluePrint(image.imageUrl, index)}
+                                      />
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                      <Label htmlFor={`isMainImage-${index}`}>
+                                        [Ảnh] Chính
+                                      </Label>
+                                      <Switch
+                                        className="data-[state=checked]:bg-primary"
+                                        id={`isMainImage-${index}`}
+                                        checked={image.isMainImage}
+                                        onCheckedChange={() => handleToggleMainImage(image.imageUrl)}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </HoverCardContent>
+                            </HoverCard>
+                          </CardContent>
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <div className="  absolute left-[50%] bottom-[6%] transform: translate-x-[50%] transform: translate-y-[50%]">
+                      <CarouselNext />
+                      <CarouselPrevious />
+                    </div>
+                  </Carousel>
+                </div>
 
                 {/* Phần add thêm image */}
                 <input

@@ -69,13 +69,15 @@ export default function BottomNavbar({}: Props) {
               },
               {
                 title: "Sản phẩm",
-                href: "/dashboard/products",
+                href: "/dashboard/products/product",
+                href1: "/dashboard/products/set",
                 icon: PackageSearch,
                 variant: "ghost",
               },
               {
                 title: "Vật liệu",
-                href: "/dashboard/material",
+                href: "/dashboard/material/history",
+                href1: "/dashboard/material/manager",
                 icon: InspectionPanel,
                 variant: "ghost",
               },
