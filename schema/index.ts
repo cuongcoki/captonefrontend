@@ -73,8 +73,10 @@ export const ProductSchema = z.object({
 });
 
 const salaryRequestSchema = z.object({
-  salary: z.coerce.number({ message: "Lương phải là số" }).min(1, { message: "Vui lòng nhập lương" }),
-  startDate: z.string()
+  salary: z.coerce
+    .number({ message: "Lương phải là số" })
+    .min(1, { message: "Vui lòng nhập lương" }),
+  startDate: z.string().min(1, { message: "Vui lòng nhập ngày bắt đầu" }),
 });
 
 export const UsersSchema = z.object({
@@ -244,7 +246,5 @@ export const UpdateUserForm = z.object({
     salaryByOverTimeResponses: salaryRequestSchema,
   }),
 });
-
-
 
 export type ChangePasswordFormType = z.infer<typeof ChangePasswordSchema>;

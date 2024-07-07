@@ -56,7 +56,8 @@ const comboboxData: ComboboxDataType[] = [
 //     value: "f6a24556-9ae6-4aed-95f9-34289595db21",
 //   },
 // ];
-
+const noIamge =
+  "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
 export default function UpdateAttendance({
   dateProp,
   slotProp,
@@ -66,7 +67,7 @@ export default function UpdateAttendance({
   slotProp: string;
   warehouseProp: string;
 }): JSX.Element {
-  const colorSlaryByProduct = "bg-[#16a34a7c]";
+  const colorSlaryByProduct = "bg-white";
   function formatDate(dateStr: String) {
     const [day, month, year] = dateStr.split("/");
     const formattedDay = day.padStart(2, "0");
@@ -99,6 +100,9 @@ export default function UpdateAttendance({
   const [selectWareHouseData, setSelectWareHouseData] = useState<
     ComboboxDataType[]
   >([]);
+  const [imageOfUser, setImageOfUser] = useState<Map<string, string>>(
+    new Map<string, string>()
+  );
   useEffect(() => {
     companyApi.getCompanyByType(0).then(({ data }) => {
       console.log("Company Data: ", data);
@@ -110,23 +114,44 @@ export default function UpdateAttendance({
       }
     });
   }, [warehouseProp]);
-  // Conver 7/1/2024 to 07/01/2024
 
   // GET USERS DATA
   useEffect(() => {
-    attendanceApi
-      .getUserByCompanyId({
-        CompanyId: warehouse,
-      })
-      .then(({ data }) => {
-        console.log("GetUSERS:", data.data);
-        setUsers(data.data);
-        setUser(data.data);
-      })
-      .catch((error) => {
+    let userD: User[] = [];
+    const FetchGetUser = async () => {
+      try {
+        const response = await attendanceApi.getUserByCompanyId({
+          CompanyId: warehouse,
+        });
+        const data = response.data.data;
+        console.log("GetUSERS:", data);
+        // setUsers(data);
+        // setUser(data);
+        userD = data;
+      } catch (error) {
         console.log("Error getUserByCompanyId: ", error);
-      });
-  }, [users, setUser, warehouse]);
+      }
+    };
+
+    const FetchImageOfUser = async () => {
+      await FetchGetUser();
+      const iamges = new Map<string, string>();
+      for (let i = 0; i < userD.length; i++) {
+        try {
+          const response = await filesApi.getFile(userD[i].avatar);
+          // userD[i].avatar = response.data.data;
+          iamges.set(userD[i].id, response.data.data);
+        } catch (error) {
+          console.log("Error get image: ", error);
+        }
+      }
+      console.log("iamges of user", iamges);
+      setImageOfUser(iamges);
+      setUsers(userD);
+      setUser(userD);
+    };
+    FetchImageOfUser();
+  }, [setUser, warehouse]);
   // GET ATTENDANCE DATA
   useEffect(() => {
     const getImage = async (name: string) => {
@@ -469,13 +494,16 @@ export default function UpdateAttendance({
                         <>
                           <td rowSpan={item.products.length}>
                             <div className="w-[90px] h-[120px] bg-gray-400 mx-auto">
-                              {/* <Image
-                              width={90}
-                              height={120}
-                              src={item.image}
-                              alt={item.userName}
-                              className="object-cover w-full h-full"
-                            /> */}
+                              <Image
+                                width={90}
+                                height={120}
+                                src={
+                                  (imageOfUser.get(item.userID) as string) ||
+                                  noIamge
+                                }
+                                alt={item.userName}
+                                className="object-cover w-full h-full"
+                              />
                             </div>
                           </td>
                           <td
@@ -589,13 +617,15 @@ export default function UpdateAttendance({
                   <tr>
                     <td>
                       <div className="w-[90px] h-[120px] bg-gray-400 mx-auto">
-                        {/* <Image
-                        width={90}
-                        height={120}
-                        src={item.image}
-                        alt={item.userName}
-                        className="object-cover w-full h-full"
-                      /> */}
+                        <Image
+                          width={90}
+                          height={120}
+                          src={
+                            (imageOfUser.get(item.userID) as string) || noIamge
+                          }
+                          alt={item.userName}
+                          className="object-cover w-full h-full"
+                        />
                       </div>
                     </td>
                     <td>{item.userName}</td>
@@ -620,7 +650,7 @@ export default function UpdateAttendance({
                           className={`${
                             item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
-                              : "bg-[#16a34a7c] dark:bg-black "
+                              : "bg-white dark:bg-card "
                           }`}
                         >
                           Nhấn vào
@@ -634,7 +664,7 @@ export default function UpdateAttendance({
                           className={`${
                             item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
-                              : "bg-[#16a34a7c] dark:bg-black"
+                              : "bg-white dark:bg-card"
                           }`}
                         >
                           Để tạo
@@ -648,7 +678,7 @@ export default function UpdateAttendance({
                           className={`${
                             item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
-                              : "bg-[#16a34a7c] dark:bg-black"
+                              : "bg-white dark:bg-card"
                           }`}
                         >
                           Sản phẩm

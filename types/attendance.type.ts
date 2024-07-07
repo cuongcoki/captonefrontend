@@ -114,6 +114,7 @@ export type User = {
   salaryByDay: string;
   isActive: string;
   roleId: string;
+  avatar: string;
 };
 
 export type GetUsersResponse = SearchResponse<User[]>;

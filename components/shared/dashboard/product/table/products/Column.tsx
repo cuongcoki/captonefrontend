@@ -160,8 +160,8 @@ export const columns: ColumnDef<Product>[] = [
         <span
           className={`${
             isInProcessing.value === true
-              ? "bg-primary"
-              : "bg-yellow-200 text-black"
+              ? "p-2 rounded-xl text-black bg-secondary border dark:bg-white"
+              : "bg-secondary text-black dark:bg-white"
           } border px-2 py-1 rounded-full`}
         >
           {isInProcessing.label}

@@ -67,7 +67,7 @@ interface UserData {
   gender: string;
   phone: string;
   companyId: string;
-  roleId: number
+  roleId: number;
 }
 
 interface UserID {
@@ -113,14 +113,13 @@ type Company = {
   companyTypeDescription: string;
 };
 interface SalaryByRequest {
-  salary: any,
-  startDate: any
+  salary: any;
+  startDate: any;
 }
 interface SalaryHistoryResponse {
   salaryByDayResponses: SalaryByRequest;
   salaryByOverTimeResponses: SalaryByRequest;
 }
-
 
 type User = {
   id: any;
@@ -133,8 +132,8 @@ type User = {
   dob: any;
   salaryHistoryResponse: SalaryHistoryResponse;
   companyId: any;
-  roleId: any
-}
+  roleId: any;
+};
 
 export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   const [open, setOpen] = useState<boolean>(false);
@@ -240,10 +239,10 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   const formatDate = (dateString: string) => {
     try {
       const parsedDate = parseISO(dateString);
-      return format(parsedDate, 'dd/MM/yyyy');
+      return format(parsedDate, "dd/MM/yyyy");
     } catch (error) {
-      console.error('Error formatting date:', error);
-      return ''; // Hoặc xử lý lỗi khác tùy theo trường hợp
+      console.error("Error formatting date:", error);
+      return ""; // Hoặc xử lý lỗi khác tùy theo trường hợp
     }
   };
 
@@ -251,7 +250,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
     const fetchDataCompany = async () => {
       const { data } = await companyApi.getCompanyByType(0);
       setCompany(data.data);
-    }
+    };
 
     const fetchRoleData = () => {
       setLoading(true);
@@ -279,10 +278,9 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
             ...userData,
             dob: formatDate(userData.dob),
           };
-          filesApi.getFile(userData.avatar)
-            .then(({ data }) => {
-              setImageRequests(data.data);
-            })
+          filesApi.getFile(userData.avatar).then(({ data }) => {
+            setImageRequests(data.data);
+          });
           form.reset(formattedUserData);
           // setFormattedValue(formatCurrency(userData.salaryByDay.toString()));
         })
@@ -298,7 +296,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
     fetchRoleData();
     if (userId) {
       fetchDataUserId();
-
     }
   }, [userId]);
   // console.log('imageRequests', imageRequests)
@@ -318,60 +315,75 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       companyId: user?.companyId,
       salaryHistoryResponse: {
         salaryByDayResponses: {
-          salary: user?.salaryHistoryResponse?.salaryByDayResponses?.salary || 0,
-          startDate: user?.salaryHistoryResponse?.salaryByDayResponses?.startDate || '',
+          salary:
+            user?.salaryHistoryResponse?.salaryByDayResponses?.salary || 0,
+          startDate:
+            user?.salaryHistoryResponse?.salaryByDayResponses?.startDate || "",
         },
         salaryByOverTimeResponses: {
-          salary: user?.salaryHistoryResponse?.salaryByOverTimeResponses?.salary || 0,
-          startDate: user?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate || '',
-        }
-      }
+          salary:
+            user?.salaryHistoryResponse?.salaryByOverTimeResponses?.salary || 0,
+          startDate:
+            user?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate ||
+            "",
+        },
+      },
     },
   });
 
-
   const formatDateData = (dateString: any) => {
     // Kiểm tra và chuyển đổi dateString sang định dạng 'yyyy-MM-dd' nếu cần thiết
-    const formattedDate = typeof dateString === 'string' ? dateString.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1') : dateString;
+    const formattedDate =
+      typeof dateString === "string"
+        ? dateString.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
+        : dateString;
 
     // Phân tích và định dạng lại ngày tháng
-    const parsedDate = parse(formattedDate, 'yyyy-MM-dd', new Date());
-    return format(parsedDate, 'dd/MM/yyyy');
+    const parsedDate = parse(formattedDate, "yyyy-MM-dd", new Date());
+    return format(parsedDate, "dd/MM/yyyy");
   };
 
   const formatCurrency = (value: any) => {
-    const numericValue = typeof value === 'string' ? parseFloat(value) : value;
+    // Chuyển đổi value thành số nếu nó không phải là chuỗi số
+    const numericValue = typeof value === "string" ? parseFloat(value) : value;
 
+    // Kiểm tra nếu numericValue là NaN (không phải là số) hoặc null, undefined
     if (isNaN(numericValue) || numericValue == null) {
-      return '';
+      return "";
     }
 
-    let formattedString = numericValue.toLocaleString('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    // Format số tiền dưới dạng chuỗi
+    let formattedString = numericValue.toLocaleString("de-DE", {
+      style: "currency",
+      currency: "USD",
     });
 
-    formattedString = formattedString.replace('$', '');
+    // Loại bỏ ký hiệu $
+    formattedString = formattedString.replace(" $", "");
 
-    if (formattedString.endsWith('.00')) {
+    // Kiểm tra nếu có phần thập phân là .00 thì loại bỏ
+    if (formattedString.endsWith(",00")) {
       formattedString = formattedString.slice(0, -3);
     }
 
     return formattedString;
   };
 
-
   const onSubmit = async (data: z.infer<typeof UpdateUserForm>) => {
     // Format startDate của salaryByDayRequest
     const formattedSalaryByDayRequest = {
       salary: data.salaryHistoryResponse.salaryByDayResponses.salary,
-      startDate: formatDateData(data.salaryHistoryResponse.salaryByDayResponses.startDate),
+      startDate: formatDateData(
+        data.salaryHistoryResponse.salaryByDayResponses.startDate
+      ),
     };
   
     // Format startDate của salaryOverTimeRequest
     const formattedSalaryOverTimeRequest = {
       salary: data.salaryHistoryResponse.salaryByOverTimeResponses.salary,
-      startDate: formatDateData(data.salaryHistoryResponse.salaryByOverTimeResponses.startDate),
+      startDate: formatDateData(
+        data.salaryHistoryResponse.salaryByOverTimeResponses.startDate
+      ),
     };
   
     // Tạo đối tượng dữ liệu đã format
@@ -482,42 +494,44 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                         <Card className="md:col-span-5 col-span-1">
                           <CardContent className="relative">
                             <div className="grid grid-cols-1 gap-2">
-                              {/* firstName */}
-                              <FormField
-                                control={form.control}
-                                name="firstName"
-                                render={({ field }) => {
-                                  return (
-                                    <FormItem>
-                                      <FormLabel className="text-primary">
-                                        Tên nhân viên
-                                      </FormLabel>
-                                      <FormControl>
-                                        <Input type="text" {...field} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  );
-                                }}
-                              />
-                              {/* lastName */}
-                              <FormField
-                                control={form.control}
-                                name="lastName"
-                                render={({ field }) => {
-                                  return (
-                                    <FormItem>
-                                      <FormLabel className="text-primary">
-                                        Họ Nhân Viên
-                                      </FormLabel>
-                                      <FormControl>
-                                        <Input type="text" {...field} />
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  );
-                                }}
-                              />
+                              <div className="grid grid-cols-2 gap-x-5">
+                                {/* lastName */}
+                                <FormField
+                                  control={form.control}
+                                  name="lastName"
+                                  render={({ field }) => {
+                                    return (
+                                      <FormItem>
+                                        <FormLabel className="text-primary">
+                                          Họ Nhân Viên
+                                        </FormLabel>
+                                        <FormControl>
+                                          <Input type="text" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    );
+                                  }}
+                                />
+                                {/* firstName */}
+                                <FormField
+                                  control={form.control}
+                                  name="firstName"
+                                  render={({ field }) => {
+                                    return (
+                                      <FormItem>
+                                        <FormLabel className="text-primary">
+                                          Tên nhân viên
+                                        </FormLabel>
+                                        <FormControl>
+                                          <Input type="text" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    );
+                                  }}
+                                />
+                              </div>
                               {/* CMND/CCCD */}
                               <FormField
                                 control={form.control}
@@ -543,43 +557,65 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   </FormItem>
                                 )}
                               />
-                              {/* gender */}
-                              <FormField
-                                control={form.control}
-                                name="gender"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="text-primary">
-                                      Giới tính
-                                    </FormLabel>
-                                    <FormControl>
-                                      <RadioGroup
-                                        onValueChange={field.onChange}
-                                        defaultValue={field.value}
-                                        className="flex items-center space-x-4"
-                                      >
-                                        <FormItem className="flex items-center space-x-2">
-                                          <FormControl>
-                                            <RadioGroupItem value="Male" />
-                                          </FormControl>
-                                          <FormLabel className="font-normal">
-                                            Nam
-                                          </FormLabel>
-                                        </FormItem>
-                                        <FormItem className="flex items-center space-x-2">
-                                          <FormControl>
-                                            <RadioGroupItem value="Female" />
-                                          </FormControl>
-                                          <FormLabel className="font-normal">
-                                            Nữ
-                                          </FormLabel>
-                                        </FormItem>
-                                      </RadioGroup>
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
+                              <div className="grid grid-cols-2 gap-x-5">
+                                {/* dob */}
+                                <FormField
+                                  control={form.control}
+                                  name="dob"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-primary-backgroudPrimary">
+                                        Ngày sinh
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="text"
+                                          placeholder="DD/MM/YYYY"
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                {/* gender */}
+                                <FormField
+                                  control={form.control}
+                                  name="gender"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-primary">
+                                        Giới tính
+                                      </FormLabel>
+                                      <FormControl>
+                                        <RadioGroup
+                                          onValueChange={field.onChange}
+                                          defaultValue={field.value}
+                                          className="flex items-center space-x-4"
+                                        >
+                                          <FormItem className="flex items-center space-x-2">
+                                            <FormControl>
+                                              <RadioGroupItem value="Male" />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">
+                                              Nam
+                                            </FormLabel>
+                                          </FormItem>
+                                          <FormItem className="flex items-center space-x-2">
+                                            <FormControl>
+                                              <RadioGroupItem value="Female" />
+                                            </FormControl>
+                                            <FormLabel className="font-normal">
+                                              Nữ
+                                            </FormLabel>
+                                          </FormItem>
+                                        </RadioGroup>
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
                             </div>
                           </CardContent>
                         </Card>
@@ -627,7 +663,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                           </div>
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
                             <FormField
                               control={form.control}
                               name="companyId"
@@ -645,20 +680,19 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                         <SelectTrigger>
                                           <SelectValue
                                             placeholder="Hãy chọn cơ sở"
-                                            defaultValue={
-                                              field.value
-                                            }
+                                            defaultValue={field.value}
                                           />
                                         </SelectTrigger>
                                       </FormControl>
                                       <SelectContent>
-                                        {
-                                          company.map((item) => (
-                                            <SelectItem value={item.id} key={item.id}>
-                                              {item.name}
-                                            </SelectItem>
-                                          ))
-                                        }
+                                        {company.map((item) => (
+                                          <SelectItem
+                                            value={item.id}
+                                            key={item.id}
+                                          >
+                                            {item.name}
+                                          </SelectItem>
+                                        ))}
                                       </SelectContent>
                                     </Select>
                                     <FormMessage />
@@ -666,64 +700,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                 );
                               }}
                             />
-
                           </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* dob */}
-                            <FormField
-                              control={form.control}
-                              name="dob"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-primary-backgroudPrimary">
-                                    Ngày sinh
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input type="text" placeholder="DD/MM/YYYY" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
-                            {/* gender */}
-                            <FormField
-                              control={form.control}
-                              name="gender"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="text-primary-backgroudPrimary">
-                                    Giới tính
-                                  </FormLabel>
-                                  <FormControl>
-                                    <RadioGroup
-                                      onValueChange={field.onChange}
-                                      defaultValue={field.value}
-                                      className="flex items-center space-x-4"
-                                    >
-                                      <FormItem className="flex items-center space-x-2">
-                                        <FormControl>
-                                          <RadioGroupItem value="Male" />
-                                        </FormControl>
-                                        <FormLabel className="font-normal">Nam</FormLabel>
-                                      </FormItem>
-                                      <FormItem className="flex items-center space-x-2">
-                                        <FormControl>
-                                          <RadioGroupItem value="Female" />
-                                        </FormControl>
-                                        <FormLabel className="font-normal">Nữ</FormLabel>
-                                      </FormItem>
-                                    </RadioGroup>
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
-                          </div>
-
-
                         </CardContent>
                       </Card>
 
@@ -747,7 +724,11 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                         {...field}
                                         value={formatCurrency(field.value)} // Hiển thị lương đã format
                                         onChange={(e) => {
-                                          const rawValue = e.target.value.replace(/[^\d.]/g, ''); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                          const rawValue =
+                                            e.target.value.replace(
+                                              /[^\d.]/g,
+                                              ""
+                                            ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
                                           field.onChange(rawValue);
                                         }}
                                       />
@@ -761,8 +742,10 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                               control={form.control}
                               name="salaryHistoryResponse.salaryByDayResponses.startDate"
                               render={({ field }) => (
-                                <FormItem className="flex flex-col text-primary">
-                                  <FormLabel>Ngày đặt hàng *</FormLabel>
+                                <FormItem className="flex flex-col ">
+                                  <FormLabel className="text-primary">
+                                    Ngày bắt đầu *
+                                  </FormLabel>
                                   <Popover modal={true}>
                                     <PopoverTrigger asChild>
                                       <FormControl>
@@ -770,11 +753,12 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                           variant={"outline"}
                                           className={cn(
                                             "w-[240px] pl-3 text-left font-normal",
-                                            !field.value && "text-muted-foreground"
+                                            !field.value &&
+                                              "text-muted-foreground"
                                           )}
                                         >
                                           {field.value ? (
-                                            format(parse(field.value, "yyyy-MM-dd", new Date()), "PPP")
+                                            field.value
                                           ) : (
                                             <span>Chọn ngày</span>
                                           )}
@@ -782,12 +766,29 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                         </Button>
                                       </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <PopoverContent
+                                      className="w-auto p-0"
+                                      align="start"
+                                    >
                                       <Calendar
                                         mode="single"
-                                        selected={field.value ? parse(field.value, "yyyy-MM-dd", new Date()) : undefined}
-                                        onSelect={(date: any) => field.onChange(format(date, "yyyy-MM-dd"))}
-                                        disabled={(date) => date < new Date("2024-01-01")}
+                                        selected={
+                                          field.value
+                                            ? parse(
+                                                field.value,
+                                                "dd/MM/yyyy",
+                                                new Date()
+                                              )
+                                            : undefined
+                                        }
+                                        onSelect={(date: any) =>
+                                          field.onChange(
+                                            format(date, "dd/MM/yyyy")
+                                          )
+                                        }
+                                        disabled={(date) =>
+                                          date < new Date("2024-01-01")
+                                        }
                                         initialFocus
                                       />
                                     </PopoverContent>
@@ -796,7 +797,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                 </FormItem>
                               )}
                             />
-
                           </div>
 
                           {/* salaryOverTimeRequest */}
@@ -811,10 +811,16 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                       Lương làm thêm giờ
                                     </FormLabel>
                                     <FormControl>
-                                      <Input type="text" {...field}
+                                      <Input
+                                        type="text"
+                                        {...field}
                                         value={formatCurrency(field.value)}
                                         onChange={(e) => {
-                                          const rawValue = e.target.value.replace(/[^\d.]/g, '');
+                                          const rawValue =
+                                            e.target.value.replace(
+                                              /[^\d.]/g,
+                                              ""
+                                            );
                                           field.onChange(rawValue);
                                         }}
                                       />
@@ -830,7 +836,9 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                               name="salaryHistoryResponse.salaryByOverTimeResponses.startDate"
                               render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                  <FormLabel className="flex items-center text-primary">Ngày đặt hàng *</FormLabel>
+                                  <FormLabel className="flex items-center text-primary">
+                                    Ngày bắt đầu *
+                                  </FormLabel>
                                   <Popover modal={true}>
                                     <PopoverTrigger asChild>
                                       <FormControl>
@@ -838,11 +846,12 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                           variant={"outline"}
                                           className={cn(
                                             "w-[240px] pl-3 text-left font-normal",
-                                            !field.value && "text-muted-foreground"
+                                            !field.value &&
+                                              "text-muted-foreground"
                                           )}
                                         >
                                           {field.value ? (
-                                            format(parse(field.value, "yyyy-MM-dd", new Date()), "PPP")
+                                            field.value
                                           ) : (
                                             <span>Chọn ngày</span>
                                           )}
@@ -850,12 +859,29 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                         </Button>
                                       </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
+                                    <PopoverContent
+                                      className="w-auto p-0"
+                                      align="start"
+                                    >
                                       <Calendar
                                         mode="single"
-                                        selected={field.value ? parse(field.value, "yyyy-MM-dd", new Date()) : undefined}
-                                        onSelect={(date: any) => field.onChange(format(date, "yyyy-MM-dd"))}
-                                        disabled={(date) => date < new Date("2024-01-01")}
+                                        selected={
+                                          field.value
+                                            ? parse(
+                                                field.value,
+                                                "dd/MM/yyyy",
+                                                new Date()
+                                              )
+                                            : undefined
+                                        }
+                                        onSelect={(date: any) =>
+                                          field.onChange(
+                                            format(date, "dd/MM/yyyy")
+                                          )
+                                        }
+                                        disabled={(date) =>
+                                          date < new Date("2024-01-01")
+                                        }
                                         initialFocus
                                       />
                                     </PopoverContent>
@@ -864,13 +890,10 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                 </FormItem>
                               )}
                             />
-
                           </div>
                         </CardContent>
                       </Card>
                     </div>
-
-
 
                     <Separator className="h-1 my-1" />
                     <Button

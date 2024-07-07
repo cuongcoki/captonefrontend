@@ -8,7 +8,7 @@ export default function page({ searchParams }: CompanyParams) {
   searchParams.companyType = searchParams.companyType || "";
   searchParams.pageIndex = searchParams.pageIndex || 1;
   return (
-    <div className="h-[94.8vh]">
+    <div className="min-h-[100vh] max-h-max">
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm ">
         <CompanyTable searchParams={searchParams} />
       </div>
