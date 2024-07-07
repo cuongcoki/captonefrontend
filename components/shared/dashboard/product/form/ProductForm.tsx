@@ -216,11 +216,11 @@ export const ProductForm = () => {
       // Ensure `nameImage` has been updated
       if (imageRequests && nameImage) {
         const requestBody = {
-          code: data.code,
+          code: data.code.trim(),
           price: data.price,
-          size: data.size,
-          description: data.description,
-          name: data.name,
+          size: data.size.trim(),
+          description: data.description.trim(),
+          name: data.name.trim(),
           imageRequests: imageRequests.map((image, index) => ({
             imageUrl: nameImage[index],
             isBluePrint: image.isBluePrint,

@@ -7,13 +7,19 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import Link from "next/link";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
+interface OrderData {
+  id: string;
+  status: string;
+  // Các thuộc tính khác của dữ liệu nếu có
+}
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends OrderData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -51,8 +57,8 @@ export function DataTable<TData, TValue>({
                 data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-3">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  <TableCell key={cell.id} className="py-3 text-center">
+                     <Link href={`/dashboard/order/${row.original.id}`} >{flexRender(cell.column.columnDef.cell, cell.getContext())}</Link> 
                   </TableCell>
                 ))}
               </TableRow>

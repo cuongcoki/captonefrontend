@@ -32,6 +32,7 @@ interface NavProps {
   links: {
     title: string;
     href?: any;
+    href1?: any;
     icon: LucideIcon;
     variant: "colorCompany" | "ghost";
   }[];
@@ -106,18 +107,14 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     className={cn(
                       buttonVariants({
                         variant:
-                          link.href === pathname ||
-                          pathname.includes(`${link.href}/history`) ||
-                          pathname.includes(`${link.href}/manage`) ||
-                          pathname.includes(`${link.href}/set`) ||
-                          pathname.includes(`${link.href}/product`)
+                          link.href === pathname || link.href1 === pathname
                             ? "colorCompany"
                             : "ghost",
                         size: "icon",
                       }),
                       "h-9 w-9",
                       link.variant === "colorCompany" &&
-                        "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                      "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                     )}
                   >
                     <link.icon className="h-4 w-4" />
@@ -139,26 +136,22 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   buttonVariants({
                     variant:
                       pathname === pathname
-                        ? link.href === pathname ||
-                          pathname.includes(`${link.href}/history`) ||
-                          pathname.includes(`${link.href}/manage`) ||
-                          pathname.includes(`${link.href}/set`) ||
-                          pathname.includes(`${link.href}/product`)
+                        ? link.href === pathname || link.href1 === pathname
                           ? "colorCompany"
                           : "ghost"
                         : pathname === pathname
-                        ? link.href === pathname ||
-                          pathname.includes(`${link.href}/history`) ||
-                          pathname.includes(`${link.href}/manage`) ||
-                          pathname.includes(`${link.href}/set`) ||
-                          pathname.includes(`${link.href}/product`)
-                          ? "colorCompany"
-                          : "ghost"
-                        : null,
+                          ? link.href === pathname ||
+                            pathname.includes(`${link.href}/history`) ||
+                            pathname.includes(`${link.href}/manage`) ||
+                            pathname.includes(`${link.href}/set`) ||
+                            pathname.includes(`${link.href}/product`)
+                            ? "colorCompany"
+                            : "ghost"
+                          : null,
                     size: "sm",
                   }),
                   link.variant === "colorCompany" &&
-                    "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
+                  "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                   "justify-start"
                 )}
               >
@@ -169,6 +162,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
           )}
         </nav>
       </div>
+      {/* data bottombar */}
     </TooltipProvider>
   );
 }
