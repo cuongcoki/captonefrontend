@@ -110,10 +110,10 @@ export default function UpdateAttendance({
       }
     });
   }, [warehouseProp]);
-  // Conver 7/1/2024 to 07/01/2024
 
   // GET USERS DATA
   useEffect(() => {
+    let userD;
     attendanceApi
       .getUserByCompanyId({
         CompanyId: warehouse,
@@ -126,7 +126,7 @@ export default function UpdateAttendance({
       .catch((error) => {
         console.log("Error getUserByCompanyId: ", error);
       });
-  }, [users, setUser, warehouse]);
+  }, [setUser, warehouse]);
   // GET ATTENDANCE DATA
   useEffect(() => {
     const getImage = async (name: string) => {

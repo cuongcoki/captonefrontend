@@ -87,4 +87,30 @@ export const materiaHistoryApi = {
       }
     );
   },
+  deleteMaterialHistory: (id: string) => {
+    return axiosClient.delete<SuccessResponse<null>>(
+      `${endPointConstant.BASE_URL}/material-history/${id}`,
+      {
+        cache: {
+          update: () => {
+            cacheIds.forEach((id) => {
+              axiosClient.storage.remove(id);
+            });
+            cacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
+
+            // Xóa cache ID của getMaterialHistory có cùng ID
+            const materialHistoryCacheId = materialHistoryCacheIds.get(id);
+            if (materialHistoryCacheId) {
+              axiosClient.storage.remove(materialHistoryCacheId);
+              materialHistoryCacheIds.delete(id);
+              console.log(
+                "Removed materialHistoryCacheId:",
+                materialHistoryCacheId
+              ); // Log cache ID sau khi xóa
+            }
+          },
+        },
+      }
+    );
+  },
 };
