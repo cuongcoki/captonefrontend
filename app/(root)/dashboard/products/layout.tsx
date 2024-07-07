@@ -6,7 +6,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const selectStyle = "bg-[#22c55e] text-white";
   return (
-    <div className="w-full h-max">
+    <div className="w-full min-h-[100vh] max-h-max">
       <Card className="w-[30%] mb-5 rounded-full">
         <div className="grid grid-cols-2 bg-white rounded-full p-1 min-w-max">
           <Link href={"/dashboard/products/product"}>
