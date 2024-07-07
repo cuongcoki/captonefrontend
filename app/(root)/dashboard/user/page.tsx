@@ -6,7 +6,5 @@ type Props = {
 };
 
 export default function Page({ searchParams }: Props) {
-  return (
-      <UsersPage searchParams={searchParams} />
-  );
+  return <UsersPage searchParams={searchParams} />;
 }

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { DataTableRowActions } from "./data-table-row-actions"
 import Image from "next/image"
-import { IsInProcessing } from "./data/data"
+import { IsInProcessing,StatusOrder } from "./data/data"
 import { ArrowUpDown } from "lucide-react"
 export type Order = {
    id: string,
@@ -85,6 +85,16 @@ export const columns: ColumnDef<Order>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => {
+      const statusOr = StatusOrder.find((statusOr) => statusOr.value === row.getValue("status"));
+
+      if (!statusOr) {
+        return null;
+      }
+
+      return <span>{statusOr.label}</span>;
+    },
+    
   },
 
  
@@ -113,9 +123,9 @@ export const columns: ColumnDef<Order>[] = [
   },
 
 
-  {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
-  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <DataTableRowActions row={row} />,
+  // },
 
 ]

@@ -1,6 +1,6 @@
 // ** Axios import
 import axios from "axios";
-
+import { useRouter,usePathname } from 'next/navigation';
 // ** Config import
 import jwtConfig from "@/configs/auth";
 import { authService } from "./authService";
@@ -60,8 +60,10 @@ axiosClient.interceptors.response.use(
             console.log("loi1");
             console.log(err);
             authService.removeLocalStorageWhenLogout();
-
-            window.location.href = jwtConfig.loginEndpoint;
+            const pathname = usePathname();
+            if (pathname!== "/sign-in") {
+              window.location.href = jwtConfig.loginEndpoint;
+            }
           });
       }
 

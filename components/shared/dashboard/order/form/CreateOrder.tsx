@@ -775,7 +775,7 @@ export default function CreateOrder() {
                                                                         )}
                                                                     </>
                                                                 ) : (
-                                                                    <>s
+                                                                    <>
                                                                         {searchResultsSet !== null ? (
                                                                             <Card className="my-4">
                                                                                 <CardHeader className="font-semibold text-xl">

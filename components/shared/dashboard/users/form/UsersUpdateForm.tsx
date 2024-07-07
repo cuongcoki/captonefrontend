@@ -177,6 +177,10 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
+      if (file.size > 1024 * 1024) { // Kiểm tra kích thước tệp > 1MB
+        toast.error("Kích cỡ quá 1M. Hãy đăng file nhỏ hơn");
+        return;
+      }
       const newImageRequest = URL.createObjectURL(file);
       setImageRequests(newImageRequest);
       const extension = file.name.substring(file.name.lastIndexOf("."));
@@ -220,7 +224,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       // Xử lý các hành động sau khi tải lên thành công
       const fileName = imageUrls.name; // Lấy tên tệp của ảnh đầu tiên
       const { data } = await filesApi.getFile(fileName);
-
+      console.log("data dang anh",data.data)
       // Assuming data.data contains the image name
       // const names = data.data;
       // setNameImage(fileName);
@@ -366,8 +370,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   };
 
   const onSubmit = async (data: z.infer<typeof UpdateUserForm>) => {
-    // console.log("data====update", data);
-    handlePostImage();
     // Format startDate của salaryByDayRequest
     const formattedSalaryByDayRequest = {
       salary: data.salaryHistoryResponse.salaryByDayResponses.salary,
@@ -375,7 +377,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
         data.salaryHistoryResponse.salaryByDayResponses.startDate
       ),
     };
-
+  
     // Format startDate của salaryOverTimeRequest
     const formattedSalaryOverTimeRequest = {
       salary: data.salaryHistoryResponse.salaryByOverTimeResponses.salary,
@@ -383,7 +385,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
         data.salaryHistoryResponse.salaryByOverTimeResponses.startDate
       ),
     };
-
+  
     // Tạo đối tượng dữ liệu đã format
     const formattedData = {
       id: data.id,
@@ -399,17 +401,17 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       companyId: data.companyId,
       roleId: data.roleId,
     };
-
-    console.log(
-      "formattedDataformatte=============dDataformattedDataformattedData",
-      formattedData
-    );
+  
+    console.log("formattedDataformatte=============dDataformattedDataformattedData", formattedData);
+  
     try {
       setLoading(true);
-      userApi.userUpdate(formattedData).then(({ data }) => {
-        console.log("Response data:", data.data);
-        toast.success("Cập nhật thành công!");
-      });
+      // Đợi cho ảnh được tải lên trước
+      await handlePostImage();
+      // Sau khi ảnh đã được tải lên, gửi yêu cầu cập nhật người dùng
+      const response = await userApi.userUpdate(formattedData);
+      console.log("Response data:", response.data);
+      toast.success("Cập nhật thành công!");
       // setOpen(false);
     } catch (error) {
       console.error("Error updating user:", error);
@@ -418,6 +420,9 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       setLoading(false);
     }
   };
+  
+
+
 
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>

@@ -221,7 +221,7 @@ export default function CountProduct({
               onChange={(event) => {
                 setSearchInput(event.target.value);
               }}
-              placeholder="Nhập tên sản phẩm ..."
+              placeholder="Nhập tên hoặc mã sản phẩm ..."
             />
             {searchData && (
               <ul
@@ -251,7 +251,7 @@ export default function CountProduct({
                       setSearchInput("");
                     }}
                   >
-                    {item.name}
+                    {`[${item.code}]:${item.name}`}
                   </li>
                 ))}
               </ul>

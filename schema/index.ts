@@ -14,14 +14,31 @@ export const RegisterSchema = z.object({
     message: "Mật khẩu phải có ít nhất 6 ký tự",
   }),
 });
+const idSchema = z
+  .string()
+  .refine((val) => /^\d+$/.test(val), {
+    message: "Tài khoản phải là số",
+  })
+  .refine((val) => [9, 10, 12].includes(val.length), {
+    message: "Tài khoản phải là CMND (9 số), CCCD (12 số) hoặc số điện thoại (10 số)",
+  });
+
+const passwordSchema = z
+  .string()
+  .min(1, { message: "Vui lòng nhập mật khẩu của bạn" })
+  .refine((val) => /[A-Z]/.test(val), {
+    message: "Mật khẩu phải có ít nhất một chữ cái viết hoa",
+  })
+  .refine((val) => /[0-9]/.test(val), {
+    message: "Mật khẩu phải có ít nhất một chữ số",
+  })
+  .refine((val) => /[!@#$%^&*(),.?":{}|<>]/.test(val), {
+    message: "Mật khẩu phải có ít nhất một ký tự đặc biệt",
+  });
 
 export const SignInSchema = z.object({
-  id: z.string().min(1, {
-    message: "Vui lòng nhập tài khoản của bạn",
-  }),
-  password: z.string().min(1, {
-    message: "Vui lòng nhập mật khẩu của bạn",
-  }),
+  id: idSchema,
+  password: passwordSchema,
 });
 
 export const RoleSchema = z.object({
@@ -73,12 +90,7 @@ export const UsersSchema = z.object({
     { message: "Ngày sinh phải có định dạng dd/MM/yyyy" }
   ),
 
-  gender: z.string().refine(
-    (gender) => {
-      return gender === "Male" || gender === "Female";
-    },
-    { message: "Giới tính phải là 'Nam' hoặc 'Nữ'" }
-  ),
+  gender: z.string(),
   address: z.string().min(1, { message: "Yêu cầu nhập địa chỉ của nhân viên" }),
   phone: z.string().refine(
     (phone) => {
