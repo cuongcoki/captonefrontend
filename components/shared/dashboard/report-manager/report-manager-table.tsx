@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./report-manager-table.css";
 import { Input } from "@/components/ui/input";
 import { ReportManagerParams } from "@/types/report.type";
@@ -28,13 +28,13 @@ const ColorOfTypeStatus: { [key: number]: string } = {
 export default function ReportManagerTable({
   searchParams,
 }: ReportManagerParams) {
-  const user = JSON.parse(localStorage.getItem("userData") || "{}");
   const [params, setParams] = React.useState(searchParams);
   const [totalPage, setTotalPage] = React.useState(0);
   const { force, tableData, setTableData, companyData, setCompanyData } =
     ReportManagerStore();
   const router = useRouter();
   const pathName = usePathname();
+  const [user, setUserData] = useState<any>();
   const buildUrlParams = useCallback(
     (pathName: string, params: any): string => {
       let url = pathName + "?";
@@ -52,6 +52,8 @@ export default function ReportManagerTable({
   );
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+    setUserData(userData);
+
     let companyId =
       userData?.roleId == "2" ? userData?.companyId : params.CompanyId;
 
@@ -122,7 +124,7 @@ export default function ReportManagerTable({
         DANH SÁCH ĐƠN BÁO CÁO
       </div>
       <div className="my-5 grid grid-cols-10 space-x-5">
-        {user.roleDescription === "MAIN_ADMIN" && (
+        {user && user.roleDescription === "MAIN_ADMIN" && (
           <div className="col-span-2">
             <Select
               value={params.CompanyId}
@@ -150,7 +152,6 @@ export default function ReportManagerTable({
             </Select>
           </div>
         )}
-
         <div className="col-span-2">
           <Select
             value={params.ReportType}
