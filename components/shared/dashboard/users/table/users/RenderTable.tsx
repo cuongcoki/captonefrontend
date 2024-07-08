@@ -94,16 +94,23 @@ export default function RenderTableUsers({ searchParams }: Props) {
     };
 
     fetchData();
-  }, [searchParams, currentPage, pageSize, force, data, roles]);
+  }, [searchParams, currentPage, pageSize, force, roles]);
 
   console.log("Data:", data);
+  const setCurrendPageToOne = () => {
+    setCurrentPage(1);
+  };
 
   return (
     <div className="px-3 ">
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
           <MyContext.Provider value={{ forceUpdate }}>
-            <TableUserFeature searchOptions={searchParams} roles={roles} />
+            <TableUserFeature
+              searchOptions={searchParams}
+              roles={roles}
+              setCurrentPageToOne={setCurrendPageToOne}
+            />
           </MyContext.Provider>
         </div>
 

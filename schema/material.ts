@@ -79,10 +79,10 @@ export const AddMaterialSchema = z.object({
     .refine(
       (value) => {
         const parsedValue = parseFloat(value);
-        return !isNaN(parsedValue) && parsedValue > 0;
+        return !isNaN(parsedValue) && parsedValue >= 0;
       },
       {
-        message: "Số lượng phải lớn hơn 0",
+        message: "Số lượng phải lớn hơn bằng 0",
       }
     ),
 });
