@@ -269,6 +269,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
         .getUserId(userId)
         .then((res) => {
           const userData = res.data.data;
+
           setUser(userData);
           const formattedUserData = {
             ...userData,
@@ -442,7 +443,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                   <X className="w-4 h-4" />
                 </Button>
               </div>
-              <div className="grid gap-4 p-4 overflow-y-auto h-[650px]">
+              <div className="grid gap-4 p-4 overflow-y-auto h-[600px]">
                 <Form {...form}>
                   {/* <Toaster /> */}
                   <form
@@ -527,47 +528,27 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   }}
                                 />
                               </div>
-                              {/* CMND/CCCD */}
-                              <FormField
-                                control={form.control}
-                                name="id"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="text-primary">
-                                      Số định danh cá nhân/CMND
-                                    </FormLabel>
-                                    <FormControl>
-                                      <InputOTP maxLength={12} {...field}>
-                                        <InputOTPGroup>
-                                          {[...Array(12)].map((_, index) => (
-                                            <InputOTPSlot
-                                              key={index}
-                                              index={index}
-                                            />
-                                          ))}
-                                        </InputOTPGroup>
-                                      </InputOTP>
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              <div className="grid grid-cols-2 gap-x-5">
-                                {/* dob */}
+                              <div className="flex gap-x-10">
+                                {/* CMND/CCCD */}
                                 <FormField
                                   control={form.control}
-                                  name="dob"
+                                  name="id"
                                   render={({ field }) => (
                                     <FormItem>
-                                      <FormLabel className="text-primary-backgroudPrimary">
-                                        Ngày sinh
+                                      <FormLabel className="text-primary">
+                                        Số định danh cá nhân/CMND
                                       </FormLabel>
                                       <FormControl>
-                                        <Input
-                                          type="text"
-                                          placeholder="DD/MM/YYYY"
-                                          {...field}
-                                        />
+                                        <InputOTP maxLength={12} {...field}>
+                                          <InputOTPGroup>
+                                            {[...Array(12)].map((_, index) => (
+                                              <InputOTPSlot
+                                                key={index}
+                                                index={index}
+                                              />
+                                            ))}
+                                          </InputOTPGroup>
+                                        </InputOTP>
                                       </FormControl>
                                       <FormMessage />
                                     </FormItem>
@@ -611,283 +592,369 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   )}
                                 />
                               </div>
+                              <div className="grid grid-cols-2 gap-x-5">
+                                {/* dob */}
+                                <FormField
+                                  control={form.control}
+                                  name="dob"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="text-primary">
+                                        Ngày sinh
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="text"
+                                          placeholder="DD/MM/YYYY"
+                                          {...field}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
                             </div>
                           </CardContent>
                         </Card>
                       </div>
-                      <Card>
-                        <CardContent>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* address */}
-                            <FormField
-                              control={form.control}
-                              name="address"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem>
-                                    <FormLabel className="text-primary">
-                                      Địa chỉ cư trú
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input type="text" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                );
-                              }}
-                            />
-
-                            {/* phone */}
-                            <FormField
-                              control={form.control}
-                              name="phone"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem>
-                                    <FormLabel className="text-primary">
-                                      Số điện thoại
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input type="text" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                );
-                              }}
-                            />
-                          </div>
-
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="companyId"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem>
-                                    <FormLabel className="text-primary-backgroudPrimary">
-                                      Cơ sở nào
-                                    </FormLabel>
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      defaultValue={field.value}
-                                    >
+                      <div className="flex gap-x-5">
+                        <Card>
+                          <CardContent>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {/* address */}
+                              <FormField
+                                control={form.control}
+                                name="address"
+                                render={({ field }) => {
+                                  return (
+                                    <FormItem>
+                                      <FormLabel className="text-primary">
+                                        Địa chỉ cư trú
+                                      </FormLabel>
                                       <FormControl>
-                                        <SelectTrigger>
-                                          <SelectValue
-                                            placeholder="Hãy chọn cơ sở"
-                                            defaultValue={field.value}
-                                          />
-                                        </SelectTrigger>
+                                        <Input type="text" {...field} />
                                       </FormControl>
-                                      <SelectContent>
-                                        {company.map((item) => (
-                                          <SelectItem
-                                            value={item.id}
-                                            key={item.id}
+                                      <FormMessage />
+                                    </FormItem>
+                                  );
+                                }}
+                              />
+
+                              {/* phone */}
+                              <FormField
+                                control={form.control}
+                                name="phone"
+                                render={({ field }) => {
+                                  return (
+                                    <FormItem>
+                                      <FormLabel className="text-primary">
+                                        Số điện thoại
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input type="text" {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  );
+                                }}
+                              />
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <FormField
+                                control={form.control}
+                                name="companyId"
+                                render={({ field }) => {
+                                  return (
+                                    <FormItem>
+                                      <FormLabel className="text-primary">
+                                        Cơ sở nào
+                                      </FormLabel>
+                                      <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value}
+                                      >
+                                        <FormControl>
+                                          <SelectTrigger>
+                                            <SelectValue
+                                              placeholder="Hãy chọn cơ sở"
+                                              defaultValue={field.value}
+                                            />
+                                          </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                          {company.map((item) => (
+                                            <SelectItem
+                                              value={item.id}
+                                              key={item.id}
+                                            >
+                                              {item.name}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                      <FormMessage />
+                                    </FormItem>
+                                  );
+                                }}
+                              />
+                              {/* role */}
+                              <FormField
+                                control={form.control}
+                                name="roleId"
+                                render={({ field }) => {
+                                  return (
+                                    <FormItem>
+                                      <FormLabel className="text-primary">
+                                        Vai trò *
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Select
+                                          value={field.value.toString()}
+                                          onValueChange={(value) => {
+                                            field.onChange(parseInt(value));
+                                          }}
+                                        >
+                                          <SelectTrigger>
+                                            <SelectValue
+                                              placeholder="Hãy chọn vai trò"
+                                              defaultValue={field.value}
+                                            />
+                                            <SelectContent>
+                                              <SelectItem
+                                                className="hover:bg-gray-100"
+                                                value="1"
+                                              >
+                                                Quản lý hệ thống
+                                              </SelectItem>
+                                              <SelectItem
+                                                className="hover:bg-gray-100"
+                                                value="2"
+                                              >
+                                                Quản lý cơ sở
+                                              </SelectItem>
+                                              <SelectItem
+                                                className="hover:bg-gray-100"
+                                                value="3"
+                                              >
+                                                Quản lý số lượng
+                                              </SelectItem>
+                                              <SelectItem
+                                                className="hover:bg-gray-100"
+                                                value="4"
+                                              >
+                                                Nhân viên vận chuyển
+                                              </SelectItem>
+                                              <SelectItem
+                                                className="hover:bg-gray-100"
+                                                value="5"
+                                              >
+                                                Nhân viên thường
+                                              </SelectItem>
+                                            </SelectContent>
+                                          </SelectTrigger>
+                                        </Select>
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  );
+                                }}
+                              />
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        {/* tính lương  */}
+                        <Card>
+                          <CardContent className="mt-5 flex flex-col gap-2">
+                            {/* salaryByDayRequest */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <FormField
+                                control={form.control}
+                                name="salaryHistoryResponse.salaryByDayResponses.salary"
+                                render={({ field }) => {
+                                  return (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center text-primary">
+                                        Lương ngày
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="text"
+                                          {...field}
+                                          value={formatCurrency(field.value)} // Hiển thị lương đã format
+                                          onChange={(e) => {
+                                            const rawValue =
+                                              e.target.value.replace(
+                                                /[^\d.]/g,
+                                                ""
+                                              ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                            field.onChange(rawValue);
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  );
+                                }}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="salaryHistoryResponse.salaryByDayResponses.startDate"
+                                render={({ field }) => (
+                                  <FormItem className="flex flex-col ">
+                                    <FormLabel className="text-primary">
+                                      Ngày bắt đầu *
+                                    </FormLabel>
+                                    <Popover modal={true}>
+                                      <PopoverTrigger asChild>
+                                        <FormControl>
+                                          <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                              "w-[240px] pl-3 text-left font-normal",
+                                              !field.value &&
+                                                "text-muted-foreground"
+                                            )}
                                           >
-                                            {item.name}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
+                                            {field.value ? (
+                                              field.value
+                                            ) : (
+                                              <span>Chọn ngày</span>
+                                            )}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                          </Button>
+                                        </FormControl>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                      >
+                                        <Calendar
+                                          mode="single"
+                                          selected={
+                                            field.value
+                                              ? parse(
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
+                                              : undefined
+                                          }
+                                          onSelect={(date: any) =>
+                                            field.onChange(
+                                              format(date, "dd/MM/yyyy")
+                                            )
+                                          }
+                                          disabled={(date) =>
+                                            date < new Date("2024-01-01")
+                                          }
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
                                     <FormMessage />
                                   </FormItem>
-                                );
-                              }}
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
+                                )}
+                              />
+                            </div>
 
-                      {/* tính lương  */}
-                      <Card>
-                        <CardContent className="mt-5 flex flex-col gap-2">
-                          {/* salaryByDayRequest */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="salaryHistoryResponse.salaryByDayResponses.salary"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem>
+                            {/* salaryOverTimeRequest */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <FormField
+                                control={form.control}
+                                name="salaryHistoryResponse.salaryByOverTimeResponses.salary"
+                                render={({ field }) => {
+                                  return (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center  text-primary">
+                                        Lương làm thêm giờ
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="text"
+                                          {...field}
+                                          value={formatCurrency(field.value)}
+                                          onChange={(e) => {
+                                            const rawValue =
+                                              e.target.value.replace(
+                                                /[^\d.]/g,
+                                                ""
+                                              );
+                                            field.onChange(rawValue);
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  );
+                                }}
+                              />
+
+                              <FormField
+                                control={form.control}
+                                name="salaryHistoryResponse.salaryByOverTimeResponses.startDate"
+                                render={({ field }) => (
+                                  <FormItem className="flex flex-col">
                                     <FormLabel className="flex items-center text-primary">
-                                      Lương ngày
+                                      Ngày bắt đầu *
                                     </FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        type="text"
-                                        {...field}
-                                        value={formatCurrency(field.value)} // Hiển thị lương đã format
-                                        onChange={(e) => {
-                                          const rawValue =
-                                            e.target.value.replace(
-                                              /[^\d.]/g,
-                                              ""
-                                            ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                                          field.onChange(rawValue);
-                                        }}
-                                      />
-                                    </FormControl>
+                                    <Popover modal={true}>
+                                      <PopoverTrigger asChild>
+                                        <FormControl>
+                                          <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                              "w-[240px] pl-3 text-left font-normal",
+                                              !field.value &&
+                                                "text-muted-foreground"
+                                            )}
+                                          >
+                                            {field.value ? (
+                                              field.value
+                                            ) : (
+                                              <span>Chọn ngày</span>
+                                            )}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                          </Button>
+                                        </FormControl>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                      >
+                                        <Calendar
+                                          mode="single"
+                                          selected={
+                                            field.value
+                                              ? parse(
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
+                                              : undefined
+                                          }
+                                          onSelect={(date: any) =>
+                                            field.onChange(
+                                              format(date, "dd/MM/yyyy")
+                                            )
+                                          }
+                                          disabled={(date) =>
+                                            date < new Date("2024-01-01")
+                                          }
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
                                     <FormMessage />
                                   </FormItem>
-                                );
-                              }}
-                            />
-                            <FormField
-                              control={form.control}
-                              name="salaryHistoryResponse.salaryByDayResponses.startDate"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-col ">
-                                  <FormLabel className="text-primary">
-                                    Ngày bắt đầu *
-                                  </FormLabel>
-                                  <Popover modal={true}>
-                                    <PopoverTrigger asChild>
-                                      <FormControl>
-                                        <Button
-                                          variant={"outline"}
-                                          className={cn(
-                                            "w-[240px] pl-3 text-left font-normal",
-                                            !field.value &&
-                                              "text-muted-foreground"
-                                          )}
-                                        >
-                                          {field.value ? (
-                                            field.value
-                                          ) : (
-                                            <span>Chọn ngày</span>
-                                          )}
-                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
-                                      </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                      className="w-auto p-0"
-                                      align="start"
-                                    >
-                                      <Calendar
-                                        mode="single"
-                                        selected={
-                                          field.value
-                                            ? parse(
-                                                field.value,
-                                                "dd/MM/yyyy",
-                                                new Date()
-                                              )
-                                            : undefined
-                                        }
-                                        onSelect={(date: any) =>
-                                          field.onChange(
-                                            format(date, "dd/MM/yyyy")
-                                          )
-                                        }
-                                        disabled={(date) =>
-                                          date < new Date("2024-01-01")
-                                        }
-                                        initialFocus
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-
-                          {/* salaryOverTimeRequest */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <FormField
-                              control={form.control}
-                              name="salaryHistoryResponse.salaryByOverTimeResponses.salary"
-                              render={({ field }) => {
-                                return (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center  text-primary">
-                                      Lương làm thêm giờ
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        type="text"
-                                        {...field}
-                                        value={formatCurrency(field.value)}
-                                        onChange={(e) => {
-                                          const rawValue =
-                                            e.target.value.replace(
-                                              /[^\d.]/g,
-                                              ""
-                                            );
-                                          field.onChange(rawValue);
-                                        }}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                );
-                              }}
-                            />
-
-                            <FormField
-                              control={form.control}
-                              name="salaryHistoryResponse.salaryByOverTimeResponses.startDate"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                  <FormLabel className="flex items-center text-primary">
-                                    Ngày bắt đầu *
-                                  </FormLabel>
-                                  <Popover modal={true}>
-                                    <PopoverTrigger asChild>
-                                      <FormControl>
-                                        <Button
-                                          variant={"outline"}
-                                          className={cn(
-                                            "w-[240px] pl-3 text-left font-normal",
-                                            !field.value &&
-                                              "text-muted-foreground"
-                                          )}
-                                        >
-                                          {field.value ? (
-                                            field.value
-                                          ) : (
-                                            <span>Chọn ngày</span>
-                                          )}
-                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
-                                      </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                      className="w-auto p-0"
-                                      align="start"
-                                    >
-                                      <Calendar
-                                        mode="single"
-                                        selected={
-                                          field.value
-                                            ? parse(
-                                                field.value,
-                                                "dd/MM/yyyy",
-                                                new Date()
-                                              )
-                                            : undefined
-                                        }
-                                        onSelect={(date: any) =>
-                                          field.onChange(
-                                            format(date, "dd/MM/yyyy")
-                                          )
-                                        }
-                                        disabled={(date) =>
-                                          date < new Date("2024-01-01")
-                                        }
-                                        initialFocus
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
+                                )}
+                              />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
 
                     <Separator className="h-1 my-1" />
