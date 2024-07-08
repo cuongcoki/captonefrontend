@@ -32,6 +32,7 @@ interface NavProps {
     links: {
         title: string;
         href?: any;
+        href1?:any;
         icon: LucideIcon;
         variant: "colorCompany" | "ghost";
     }[];
@@ -78,11 +79,7 @@ export function NavMobile({ links, isCollapsed }: NavProps) {
                                         className={cn(
                                             buttonVariants({
                                                 variant:
-                                                    link.href === pathname ||
-                                                        pathname.includes(`${link.href}/history`) ||
-                                                        pathname.includes(`${link.href}/manage`) ||
-                                                        pathname.includes(`${link.href}/set`) ||
-                                                        pathname.includes(`${link.href}/product`)
+                                                    link.href === pathname || link.href1 === pathname
                                                         ? "colorCompany"
                                                         : "ghost",
                                                 size: "icon",

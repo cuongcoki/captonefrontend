@@ -244,42 +244,30 @@ export const UsersForm = () => {
     // Đảm bảo handlePostImage đã hoàn thành và lấy được nameImage
     handlePostImage().then(() => {
       const avatar = nameImage;
+      const requestBody = {
+        firstName: data.firstName.trim(),
+        lastName: data.lastName.trim(),
+        dob: data.dob.trim(),
+        gender: data.gender,
+        address: data.address.trim(),
+        phone: data.phone.trim(),
+        password: data.password,
+        roleId: Number(data.roleId),
+        isActive: data.isActive,
+        companyId: data.companyId,
+        id: data.id,
+        salaryByDayRequest: data.salaryByDayRequest,
+        salaryOverTimeRequest: data.salaryOverTimeRequest,
+        avatar: avatar,
+      };
 
-      const {
-        firstName,
-        lastName,
-        dob,
-        gender,
-        address,
-        phone,
-        password,
-        isActive,
-        companyId,
-        id,
-        salaryByDayRequest,
-        salaryOverTimeRequest,
-      } = data;
-      const roleId = Number(data.roleId);
+      console.log("requestBody", requestBody);
+
       setLoading(true);
       // console.log("dataCreateUser", data);
 
       userApi
-        .createUser({
-          firstName,
-          lastName,
-          dob,
-          gender,
-          address,
-          phone,
-          password,
-          roleId,
-          isActive,
-          companyId,
-          id,
-          avatar,
-          salaryByDayRequest,
-          salaryOverTimeRequest,
-        })
+        .createUser(requestBody)
         .then(({ data }) => {
           if (data.isSuccess) {
             toast.success(data.message);

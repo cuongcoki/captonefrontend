@@ -11,4 +11,23 @@ export const IsInProcessing = [
 
 ]
 
+export const StatusOrder = [
+  {
+    value: 0,
+    label: "Đã nhận đơn hàng",
+  },
+  {
+    value: 1,
+    label: "Đang thực hiện",
+  },
+  {
+    value: 2,
+    label: "Đã hoàn thành",
+  },
+  {
+    value: 3,
+    label: "Đã hủy",
+  },
+ 
+];
 
