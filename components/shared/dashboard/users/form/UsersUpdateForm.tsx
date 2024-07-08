@@ -43,7 +43,7 @@ import { Separator } from "@/components/ui/separator";
 
 // ** import REACT
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -56,6 +56,7 @@ import ImageDisplayAvatar from "./ImageDisplay";
 import { CalendarIcon, Plus, Upload, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { companyApi } from "@/apis/company.api";
+import { MyContext } from "@/components/shared/dashboard/users/table/users/RenderTable";
 
 // ** type
 interface UserData {
@@ -143,6 +144,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   const handleOnDialog = () => {
     setOpen(true);
   };
+  const { forceUpdate } = useContext(MyContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<User>();
   const [roles, setRoles] = useState<
@@ -416,6 +418,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       // Sau khi ảnh đã được tải lên, gửi yêu cầu cập nhật người dùng
       const response = await userApi.userUpdate(formattedData);
       console.log("Response data:", response.data);
+      forceUpdate();
       toast.success("Cập nhật thành công!");
       // setOpen(false);
     } catch (error) {
@@ -505,7 +508,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                     return (
                                       <FormItem>
                                         <FormLabel className="text-primary">
-                                          Họ Nhân Viên
+                                          Họ Nhân Viên *
                                         </FormLabel>
                                         <FormControl>
                                           <Input type="text" {...field} />
@@ -523,7 +526,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                     return (
                                       <FormItem>
                                         <FormLabel className="text-primary">
-                                          Tên nhân viên
+                                          Tên nhân viên *
                                         </FormLabel>
                                         <FormControl>
                                           <Input type="text" {...field} />
@@ -542,7 +545,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   render={({ field }) => (
                                     <FormItem>
                                       <FormLabel className="text-primary">
-                                        Số định danh cá nhân/CMND
+                                        CCCD/CMND *
                                       </FormLabel>
                                       <FormControl>
                                         <InputOTP maxLength={12} {...field}>
@@ -567,7 +570,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   render={({ field }) => (
                                     <FormItem>
                                       <FormLabel className="text-primary">
-                                        Giới tính
+                                        Giới tính *
                                       </FormLabel>
                                       <FormControl>
                                         <RadioGroup
@@ -606,7 +609,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   render={({ field }) => (
                                     <FormItem>
                                       <FormLabel className="text-primary">
-                                        Ngày sinh
+                                        Ngày sinh *
                                       </FormLabel>
                                       <FormControl>
                                         <Input
@@ -636,7 +639,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="text-primary">
-                                        Địa chỉ cư trú
+                                        Địa chỉ cư trú *
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />
@@ -655,7 +658,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="text-primary">
-                                        Số điện thoại
+                                        Số điện thoại *
                                       </FormLabel>
                                       <FormControl>
                                         <Input type="text" {...field} />
@@ -675,7 +678,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="text-primary">
-                                        Cơ sở nào
+                                        Cơ sở nào *
                                       </FormLabel>
                                       <Select
                                         onValueChange={field.onChange}
@@ -783,7 +786,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="flex items-center text-primary">
-                                        Lương ngày
+                                        Lương ngày *
                                       </FormLabel>
                                       <FormControl>
                                         <Input
@@ -875,7 +878,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                   return (
                                     <FormItem>
                                       <FormLabel className="flex items-center  text-primary">
-                                        Lương làm thêm giờ
+                                        Lương làm thêm giờ *
                                       </FormLabel>
                                       <FormControl>
                                         <Input
