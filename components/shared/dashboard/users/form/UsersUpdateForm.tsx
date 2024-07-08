@@ -248,6 +248,16 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       return ""; // Hoặc xử lý lỗi khác tùy theo trường hợp
     }
   };
+  // Hàm chuyển đổi ngày tháng từ yyyy-MM-dd sang dd/MM/yyyy
+  function formatDate2(inputDate: string) {
+    // Tách các phần của ngày tháng từ chuỗi nhập vào
+    const [year, month, day] = inputDate.split("-");
+
+    // Chuyển đổi thành định dạng dd/MM/yyyy
+    const formattedDate = `${day}/${month}/${year}`;
+
+    return formattedDate;
+  }
 
   useEffect(() => {
     const fetchDataCompany = async () => {
@@ -348,29 +358,22 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   };
 
   const formatCurrency = (value: any) => {
-    // Chuyển đổi value thành số nếu nó không phải là chuỗi số
-    const numericValue = typeof value === "string" ? parseFloat(value) : value;
+    if (!value) return "";
+    let valueString = value.toString();
 
-    // Kiểm tra nếu numericValue là NaN (không phải là số) hoặc null, undefined
-    if (isNaN(numericValue) || numericValue == null) {
-      return "";
-    }
+    // Remove all non-numeric characters, including dots
+    valueString = valueString.replace(/\D/g, "");
 
-    // Format số tiền dưới dạng chuỗi
-    let formattedString = numericValue.toLocaleString("de-DE", {
-      style: "currency",
-      currency: "USD",
-    });
+    // Reverse the string to handle grouping from the end
+    let reversed = valueString.split("").reverse().join("");
 
-    // Loại bỏ ký hiệu $
-    formattedString = formattedString.replace(" $", "");
+    // Add dots every 3 characters
+    let formattedReversed = reversed.match(/.{1,3}/g).join(".");
 
-    // Kiểm tra nếu có phần thập phân là .00 thì loại bỏ
-    if (formattedString.endsWith(",00")) {
-      formattedString = formattedString.slice(0, -3);
-    }
+    // Reverse back to original order
+    let formatted = formattedReversed.split("").reverse().join("");
 
-    return formattedString;
+    return formatted;
   };
 
   const onSubmit = async (data: z.infer<typeof UpdateUserForm>) => {
@@ -497,7 +500,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                         </Card>
 
                         <Card className="md:col-span-5 col-span-1">
-                          <CardContent className="relative">
+                          <CardContent className="relative mt-5">
                             <div className="grid grid-cols-1 gap-2">
                               <div className="grid grid-cols-2 gap-x-5">
                                 {/* lastName */}
@@ -828,7 +831,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                             )}
                                           >
                                             {field.value ? (
-                                              field.value
+                                              formatDate2(field.value)
                                             ) : (
                                               <span>Chọn ngày</span>
                                             )}
@@ -842,18 +845,9 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                       >
                                         <Calendar
                                           mode="single"
-                                          selected={
-                                            field.value
-                                              ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
-                                              : undefined
-                                          }
                                           onSelect={(date: any) =>
                                             field.onChange(
-                                              format(date, "dd/MM/yyyy")
+                                              format(date, "yyyy-MM-dd")
                                             )
                                           }
                                           disabled={(date) =>
@@ -921,7 +915,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                             )}
                                           >
                                             {field.value ? (
-                                              field.value
+                                              formatDate2(field.value)
                                             ) : (
                                               <span>Chọn ngày</span>
                                             )}
@@ -935,18 +929,9 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                       >
                                         <Calendar
                                           mode="single"
-                                          selected={
-                                            field.value
-                                              ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
-                                              : undefined
-                                          }
                                           onSelect={(date: any) =>
                                             field.onChange(
-                                              format(date, "dd/MM/yyyy")
+                                              format(date, "yyyy-MM-dd")
                                             )
                                           }
                                           disabled={(date) =>
