@@ -114,7 +114,7 @@ export const UsersSchema = z.object({
       },
       { message: "Mật khẩu phải chứa ít nhất một ký tự đặc biệt" }
     ),
-  roleId: z.number().min(1, { message: "roleId là bắt buộc" }),
+  roleId: z.string().min(1, { message: "roleId là bắt buộc" }),
   isActive: z.boolean(),
   companyId: z.string().min(1, { message: "Vui lòng chọn công ty" }),
   id: z.string().refine(

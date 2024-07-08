@@ -15,9 +15,14 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 type Props = {
   searchOptions: UserSearchParams;
   roles: any;
+  setCurrentPageToOne: () => void;
 };
 
-export default function TableUserFeature({ searchOptions, roles }: Props) {
+export default function TableUserFeature({
+  searchOptions,
+  roles,
+  setCurrentPageToOne,
+}: Props) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -35,16 +40,19 @@ export default function TableUserFeature({ searchOptions, roles }: Props) {
   const isActiveChange = (value: string) => {
     setIsActive(value);
     handleSearch("isActive", value)();
+    setCurrentPageToOne();
   };
 
   const roleIdChange = (value: string) => {
     setRoleId(value);
     handleSearch("roleId", value)();
+    setCurrentPageToOne();
   };
 
   const searchTearmChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTearm(event.target.value);
     handleSearch("searchTearm", event.target.value)();
+    setCurrentPageToOne();
   };
 
   const handleSearch = (name: string, term: string) => () => {
