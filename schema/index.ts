@@ -1,3 +1,4 @@
+import { isBefore, isEqual, parse } from "date-fns";
 import * as z from "zod";
 
 export const RegisterSchema = z.object({
@@ -20,7 +21,8 @@ const idSchema = z
     message: "Tài khoản phải là số",
   })
   .refine((val) => [9, 10, 12].includes(val.length), {
-    message: "Tài khoản phải là CMND (9 số), CCCD (12 số) hoặc số điện thoại (10 số)",
+    message:
+      "Tài khoản phải là CMND (9 số), CCCD (12 số) hoặc số điện thoại (10 số)",
   });
 
 const passwordSchema = z
@@ -76,7 +78,33 @@ const salaryRequestSchema = z.object({
   salary: z.coerce
     .number({ message: "Lương phải là số" })
     .min(1, { message: "Vui lòng nhập lương" }),
-  startDate: z.string().min(1, { message: "Vui lòng nhập ngày bắt đầu" }),
+  startDate: z.string().refine(
+    (dateStr) => {
+      // Parse the date string
+      const parsedDate = parse(dateStr, "dd/MM/yyyy", new Date());
+
+      // Check if the parsed date is before or equal to the current date
+      const now = new Date();
+      return isBefore(parsedDate, now) || isEqual(parsedDate, now);
+    },
+    { message: "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày hiện tại" }
+  ),
+});
+const salaryRequestSchemaForUpdate = z.object({
+  salary: z.coerce
+    .number({ message: "Lương phải là số" })
+    .min(1, { message: "Vui lòng nhập lương" }),
+  startDate: z.string().refine(
+    (dateStr) => {
+      // Parse the date string
+      const parsedDate = parse(dateStr, "yyyy-MM-dd", new Date());
+
+      // Check if the parsed date is before or equal to the current date
+      const now = new Date();
+      return isBefore(parsedDate, now) || isEqual(parsedDate, now);
+    },
+    { message: "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày hiện tại" }
+  ),
 });
 
 export const UsersSchema = z.object({
@@ -242,8 +270,8 @@ export const UpdateUserForm = z.object({
   companyId: z.string().nonempty({ message: "Cơ sở không được để trống" }),
 
   salaryHistoryResponse: z.object({
-    salaryByDayResponses: salaryRequestSchema,
-    salaryByOverTimeResponses: salaryRequestSchema,
+    salaryByDayResponses: salaryRequestSchemaForUpdate,
+    salaryByOverTimeResponses: salaryRequestSchemaForUpdate,
   }),
 });
 
