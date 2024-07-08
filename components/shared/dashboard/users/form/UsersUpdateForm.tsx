@@ -177,7 +177,8 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
-      if (file.size > 1024 * 1024) { // Kiểm tra kích thước tệp > 1MB
+      if (file.size > 1024 * 1024) {
+        // Kiểm tra kích thước tệp > 1MB
         toast.error("Kích cỡ quá 1M. Hãy đăng file nhỏ hơn");
         return;
       }
@@ -224,7 +225,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       // Xử lý các hành động sau khi tải lên thành công
       const fileName = imageUrls.name; // Lấy tên tệp của ảnh đầu tiên
       const { data } = await filesApi.getFile(fileName);
-      console.log("data dang anh",data.data)
+      console.log("data dang anh", data.data);
       // Assuming data.data contains the image name
       // const names = data.data;
       // setNameImage(fileName);
@@ -378,7 +379,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
         data.salaryHistoryResponse.salaryByDayResponses.startDate
       ),
     };
-  
+
     // Format startDate của salaryOverTimeRequest
     const formattedSalaryOverTimeRequest = {
       salary: data.salaryHistoryResponse.salaryByOverTimeResponses.salary,
@@ -386,7 +387,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
         data.salaryHistoryResponse.salaryByOverTimeResponses.startDate
       ),
     };
-  
+
     // Tạo đối tượng dữ liệu đã format
     const formattedData = {
       id: data.id,
@@ -402,9 +403,12 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       companyId: data.companyId,
       roleId: data.roleId,
     };
-  
-    console.log("formattedDataformatte=============dDataformattedDataformattedData", formattedData);
-  
+
+    console.log(
+      "formattedDataformatte=============dDataformattedDataformattedData",
+      formattedData
+    );
+
     try {
       setLoading(true);
       // Đợi cho ảnh được tải lên trước
@@ -421,9 +425,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       setLoading(false);
     }
   };
-  
-
-
 
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>
@@ -499,7 +500,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                 {/* lastName */}
                                 <FormField
                                   control={form.control}
-                                  name="lastName"
+                                  name="firstName"
                                   render={({ field }) => {
                                     return (
                                       <FormItem>
@@ -517,7 +518,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                 {/* firstName */}
                                 <FormField
                                   control={form.control}
-                                  name="firstName"
+                                  name="lastName"
                                   render={({ field }) => {
                                     return (
                                       <FormItem>

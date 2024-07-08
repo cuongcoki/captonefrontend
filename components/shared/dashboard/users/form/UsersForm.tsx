@@ -367,12 +367,12 @@ export const UsersForm = () => {
                         <Card className="md:col-span-5 col-span-1">
                           <CardContent className="relative mt-5">
                             <div className="grid grid-cols-1 gap-2">
-                              {/* firstName */}
                               <div className="grid grid-cols-2 gap-x-5">
-                                {/* lastName */}
+                                {/* firstName */}
+
                                 <FormField
                                   control={form.control}
-                                  name="lastName"
+                                  name="firstName"
                                   render={({ field }) => {
                                     return (
                                       <FormItem>
@@ -387,9 +387,11 @@ export const UsersForm = () => {
                                     );
                                   }}
                                 />
+                                {/* lastName */}
+
                                 <FormField
                                   control={form.control}
-                                  name="firstName"
+                                  name="lastName"
                                   render={({ field }) => {
                                     return (
                                       <FormItem>
