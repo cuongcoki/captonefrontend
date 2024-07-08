@@ -94,7 +94,7 @@ export default function RenderTableUsers({ searchParams }: Props) {
     };
 
     fetchData();
-  }, [searchParams, currentPage, pageSize, force, data, roles]);
+  }, [searchParams, currentPage, pageSize, force, roles]);
 
   console.log("Data:", data);
   const setCurrendPageToOne = () => {
