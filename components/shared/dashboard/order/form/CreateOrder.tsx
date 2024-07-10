@@ -486,7 +486,7 @@ export default function CreateOrder() {
                                                                         name="companyId"
                                                                         render={({ field }) => (
                                                                             <FormItem>
-                                                                                <FormLabel className="text-primary-backgroudPrimary">Cơ sở nào *</FormLabel>
+                                                                                <FormLabel className="text-primary-backgroudPrimary">Công ty *</FormLabel>
                                                                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                                                     <FormControl>
                                                                                         <SelectTrigger>
@@ -506,40 +506,64 @@ export default function CreateOrder() {
                                                                         )}
                                                                     />
                                                                     <div className="  flex w-full gap-6">
-                                                                        <FormField
-                                                                            control={form.control}
-                                                                            name="status"
-                                                                            render={({ field }) => (
-                                                                                <FormItem className="w-full">
-                                                                                    <FormLabel className="text-primary-backgroudPrimary">
-                                                                                        Trạng thái *
-                                                                                    </FormLabel>
-                                                                                    <Select
-                                                                                        onValueChange={(value) =>
-                                                                                            field.onChange(Number(value))
-                                                                                        }
-                                                                                        defaultValue={String(field.value)}
-                                                                                    >
+                                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                                            <FormField
+                                                                                control={form.control}
+                                                                                name="status"
+                                                                                render={({ field }) => (
+                                                                                    <FormItem className="w-full">
+                                                                                        <FormLabel className="text-primary-backgroudPrimary">
+                                                                                            Trạng thái *
+                                                                                        </FormLabel>
+                                                                                        <Select
+                                                                                            onValueChange={(value) =>
+                                                                                                field.onChange(Number(value))
+                                                                                            }
+                                                                                            defaultValue={String(field.value)}
+                                                                                        >
+                                                                                            <FormControl>
+                                                                                                <SelectTrigger>
+                                                                                                    <SelectValue
+                                                                                                        placeholder="Chọn trạng thái"
+                                                                                                        defaultValue={String(field.value)}
+                                                                                                    />
+                                                                                                </SelectTrigger>
+                                                                                            </FormControl>
+                                                                                            <SelectContent>
+                                                                                                {Object.values(OrderStatus).map((status) => (
+                                                                                                    <SelectItem key={status.id} value={String(status.id)}>
+                                                                                                        {status.des}
+                                                                                                    </SelectItem>
+                                                                                                ))}
+                                                                                            </SelectContent>
+                                                                                        </Select>
+                                                                                        <FormMessage />
+                                                                                    </FormItem>
+                                                                                )}
+                                                                            />
+
+                                                                            <FormField
+                                                                                control={form.control}
+                                                                                name="vat"
+                                                                                render={({ field }) => (
+                                                                                    <FormItem>
+                                                                                        <FormLabel>%Thuế</FormLabel>
                                                                                         <FormControl>
-                                                                                            <SelectTrigger>
-                                                                                                <SelectValue
-                                                                                                    placeholder="Chọn trạng thái"
-                                                                                                    defaultValue={String(field.value)}
-                                                                                                />
-                                                                                            </SelectTrigger>
+                                                                                            <Input
+                                                                                                type="number"
+                                                                                                placeholder="vat..."
+                                                                                                {...field}
+                                                                                                onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                                                                                min="0"
+                                                                                                max="100000000"
+                                                                                                step="0.01"
+                                                                                            />
                                                                                         </FormControl>
-                                                                                        <SelectContent>
-                                                                                            {Object.values(OrderStatus).map((status) => (
-                                                                                                <SelectItem key={status.id} value={String(status.id)}>
-                                                                                                    {status.des}
-                                                                                                </SelectItem>
-                                                                                            ))}
-                                                                                        </SelectContent>
-                                                                                    </Select>
-                                                                                    <FormMessage />
-                                                                                </FormItem>
-                                                                            )}
-                                                                        />
+                                                                                        <FormMessage />
+                                                                                    </FormItem>
+                                                                                )}
+                                                                            />
+                                                                        </div>
                                                                     </div>
 
                                                                     <div className="flex gap-6 items-center">
@@ -548,7 +572,7 @@ export default function CreateOrder() {
                                                                             name="startOrder"
                                                                             render={({ field }) => (
                                                                                 <FormItem className="flex flex-col">
-                                                                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày đặt hàng *</FormLabel>
+                                                                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày bắt đầu *</FormLabel>
                                                                                     <Popover modal={true}>
                                                                                         <PopoverTrigger asChild>
                                                                                             <FormControl>
@@ -584,13 +608,13 @@ export default function CreateOrder() {
                                                                                 </FormItem>
                                                                             )}
                                                                         />
-                                                                        <Truck />
+
                                                                         <FormField
                                                                             control={form.control}
                                                                             name="endOrder"
                                                                             render={({ field }) => (
                                                                                 <FormItem className="flex flex-col">
-                                                                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày Giao hàng *</FormLabel>
+                                                                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày kết thúc *</FormLabel>
                                                                                     <Popover modal={true}>
                                                                                         <PopoverTrigger asChild>
                                                                                             <FormControl>
@@ -629,27 +653,7 @@ export default function CreateOrder() {
                                                                     </div>
 
                                                                     <div>
-                                                                        <FormField
-                                                                            control={form.control}
-                                                                            name="vat"
-                                                                            render={({ field }) => (
-                                                                                <FormItem>
-                                                                                    <FormLabel>VAT</FormLabel>
-                                                                                    <FormControl>
-                                                                                        <Input
-                                                                                            type="number"
-                                                                                            placeholder="vat..."
-                                                                                            {...field}
-                                                                                            onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                                                                                            min="0"
-                                                                                            max="100000000"
-                                                                                            step="0.01"
-                                                                                        />
-                                                                                    </FormControl>
-                                                                                    <FormMessage />
-                                                                                </FormItem>
-                                                                            )}
-                                                                        />
+
                                                                     </div>
                                                                 </div>
 
@@ -947,7 +951,7 @@ export default function CreateOrder() {
                                                                                                 />
                                                                                             </div>
 
-                                                                                          
+
                                                                                         </TableCell>
 
 
