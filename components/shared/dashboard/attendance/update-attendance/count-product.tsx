@@ -43,15 +43,6 @@ export default function CountProduct({
   const [dataProduct, setDataProduct] = useState<ComboboxDataType[]>([]);
   const [dataPhase, setDataPhase] = useState<ComboboxDataType[]>([]);
 
-  // useEffect(() => {
-  //   console.log("List Product", listProduct);
-  //   setDataProduct(
-  //     listProduct.data.data.map((product) => ({
-  //       label: product.name,
-  //       value: product.id,
-  //     }))
-  //   );
-  // }, [listProduct]);
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchData, setSearchData] = useState<GetAllProductResponse | null>(
     null
@@ -134,11 +125,10 @@ export default function CountProduct({
     setIsUpdate(true);
   };
   const updateQuantityOfProduct = (indexP: number, value: string) => {
-    if (value === "") return;
     if (Number(value) < 0) return;
     setUserData((prev) => {
       const newProducts = [...prev.products];
-      newProducts[indexP].quantity = value;
+      newProducts[indexP].quantity = Number(value).toString();
       return {
         ...prev,
         products: newProducts,
