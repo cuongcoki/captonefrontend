@@ -31,6 +31,7 @@ import ImageDisplayID from "./ImageDisplayID";
 import ImageDisplay from "./ImageDisplay";
 import { Textarea } from "@/components/ui/textarea";
 import { filesApi } from "@/apis/files.api";
+import {IconImage} from "./IconImage";
 
 interface ImageResponse {
   id: string;
@@ -109,7 +110,7 @@ export default function SetProduct({ setProduct }: SetProductProps) {
     }
     return text;
   };
-  // console.log('setProductdetaill', setProduct)
+  console.log('setProductdetaill', setProduct)
   console.log("selectedProductselectedProduct", selectedProduct);
   return (
     <Card x-chunk="dashboard-07-chunk-1" className="h-max">
@@ -120,6 +121,7 @@ export default function SetProduct({ setProduct }: SetProductProps) {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Ảnh Sản Phẩm</TableHead>
               <TableHead>Mã Sản Phẩm</TableHead>
               <TableHead>Tên Sản Phẩm</TableHead>
               <TableHead>Số lượng</TableHead>
@@ -128,6 +130,11 @@ export default function SetProduct({ setProduct }: SetProductProps) {
           <TableBody>
             {setProduct.map((pro, index) => (
               <TableRow key={index} onClick={() => handleOpenDialog(pro)}>
+                <TableCell className="font-semibold">
+                    <div className="w-[50px] h-[50px] rounded-lg shadow-md">
+                      <IconImage pro={pro.product.imageResponses} />
+                    </div>
+                </TableCell>
                 <TableCell className="font-semibold">
                   {limitLength(pro.product.code, 50)}
                 </TableCell>

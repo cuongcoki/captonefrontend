@@ -50,7 +50,7 @@ const AuthProvider = ({ children }: Props) => {
 
       const decodedToken: any = jwtDecode(storedToken)
       const currentTime = Date.now() / 1000
-      console.log('decodedToken',decodedToken)
+      console.log('decodedToken', decodedToken)
       if (decodedToken.exp < currentTime) {
         try {
           const response = await authService.refreshToken()
