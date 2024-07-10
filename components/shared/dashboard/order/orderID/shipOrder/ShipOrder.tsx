@@ -249,7 +249,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
                     setLoading(false);
                 })
         }
-    }, [order, valueStatus])
+    }, [orderId,order, valueStatus])
 
     // ** handle render order detail
     const [indexItemShipOrder, setIndexItemShipOrder] = useState<number>(0);
@@ -413,7 +413,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
                         <div className="font-semibold">Đơn hàng chi tiết</div>
                         <ul className="  h-[160px] overflow-auto">
                             {data[indexItemShipOrder]?.shipOrderDetailResponses.map((products, index) => (
-                                <li className="">
+                                <li className="" key={index}>
                                     <span className="text-muted-foreground">
                                         {products.product?.name} x <span>{products.quantity}</span>
                                     </span>

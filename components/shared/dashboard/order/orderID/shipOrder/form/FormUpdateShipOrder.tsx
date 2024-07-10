@@ -341,7 +341,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
             });
         }
 
-    }, [orderId, shipOrderId]);
+    }, [,reset,orderId, shipOrderId]);
 
 
 
@@ -372,7 +372,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         };
 
         fetchData();
-    }, [currentPage, pageSize, dataEm]);
+    }, [isActive,roleId,searchTearm,currentPage, pageSize, dataEm]);
 
 
 
@@ -443,7 +443,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                 <div className=" w-full grid grid-cols-4 gap-4 min-h-[100px]  overflow-y-auto ">
                                     {
                                         order.productOrderResponses.map(pro => (
-                                            <div className="group relative w-[100px] h-[100px] shadow-md">
+                                            <div className="group relative w-[100px] h-[100px] shadow-md" key={pro.productId}>
                                                 <Image src={pro.imageProductUrl} alt="ảnh sản phẩm" className="w-full h-full object-contain" width={900} height={900} />
                                                 <Check className={`${shipOrderDetailRequests.some(item => item.itemId === pro.productId) ? "absolute top-0 right-0 bg-primary text-white" : "hidden"}`} />
                                                 <Button variant={"ghost"} size={"icon"} className="absolute bottom-0 left-0 w-full opacity-0 group-hover:opacity-100 hover:bg-primary" onClick={() => handleAddProducts(pro.imageProductUrl, pro.productId, productType)}><CirclePlus className="text-white" /></Button>
@@ -452,7 +452,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                     }
                                     {
                                         order.setOrderResponses.map(pro => (
-                                            <div className="group relative w-[100px] h-[100px] shadow-md">
+                                            <div className="group relative w-[100px] h-[100px] shadow-md" key={pro.setId}>
                                                 <Image src={pro.imageSetUrl} alt="ảnh bộ sản phẩm" className="w-full h-full object-contain" width={900} height={900} />
                                                 <Check className={`${shipOrderDetailRequests.some(item => item.itemId === pro.setId) ? "absolute top-0 right-0 bg-primary text-white" : "hidden"}`} />
                                                 <Button variant={"ghost"} size={"icon"} className="absolute bottom-0 left-0 w-full opacity-0 group-hover:opacity-100 hover:bg-primary " onClick={() => handleAddProducts(pro.imageSetUrl, pro.setId, setType)}><CirclePlus className="text-white" /></Button>
@@ -473,7 +473,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                             <TableBody className="min-h-[200px] overflow-y-auto">
                                                 {
                                                     productDetail.map((proDetail, index) => (
-                                                        <TableRow >
+                                                        <TableRow key={proDetail.itemId}>
                                                             <TableCell className="font-medium">
                                                                 <div className="w-[50px] h-[50px] rounded-md shadow-md">
                                                                     <Image src={proDetail.imgProducts[0]} width={900} height={900} alt="ảnh sản phẩm" className="w-ful h-ful object-contain" />

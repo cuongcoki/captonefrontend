@@ -167,7 +167,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
         }
         fetchDataOrderIds();
         fetchDataOrderId();
-    }, [data, dataId])
+    }, [data, dataId, params.id])
 
 
     return (
