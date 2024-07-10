@@ -33,8 +33,8 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "company.name",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" >
-          Tên Công ty
+        <Button variant="ghost" className="">
+          Tên Công Ty
         </Button>
       )
     },
@@ -45,34 +45,34 @@ export const columns: ColumnDef<Order>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" >
-          Tên giám đốc
+          Tên Giám Đốc
         </Button>
       )
     },
   },
 
-  {
-    accessorKey: "company.email",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" >
-          @mail
-        </Button>
-      )
-    },
-  },
+  // {
+  //   accessorKey: "company.email",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button variant="ghost" >
+  //         @mail
+  //       </Button>
+  //     )
+  //   },
+  // },
 
 
-  {
-    accessorKey: "company.directorPhone",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" >
-          Điện thoại giám đốc
-        </Button>
-      )
-    },
-  },
+  // {
+  //   accessorKey: "company.directorPhone",
+  //   header: ({ column }) => {
+  //     return (
+  //       <Button variant="ghost" >
+  //         Điện thoại giám đốc
+  //       </Button>
+  //     )
+  //   },
+  // },
 
 
 
@@ -81,7 +81,7 @@ export const columns: ColumnDef<Order>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" >
-          Trạng thái
+          Trạng Thái
         </Button>
       )
     },
@@ -104,7 +104,7 @@ export const columns: ColumnDef<Order>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" >
-          Ngày bất đầu đơn hàng
+          Ngày Bất Đầu
         </Button>
       )
     },
@@ -116,7 +116,7 @@ export const columns: ColumnDef<Order>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" >
-          Ngày kết thúc đơn hàng
+          Ngày Kết Thúc
         </Button>
       )
     },

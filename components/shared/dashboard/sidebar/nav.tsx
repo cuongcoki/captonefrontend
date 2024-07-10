@@ -33,8 +33,10 @@ interface NavProps {
     title: string;
     href?: any;
     href1?: any;
+    hrefCon?: any[];
     icon: LucideIcon;
     variant: "colorCompany" | "ghost";
+
   }[];
 }
 
@@ -64,6 +66,32 @@ export function Nav({ links, isCollapsed }: NavProps) {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [checkLink, setCheckLink] = useState("");
+  const [getNameLink, setGetNameLink] = useState<{ id: number, title: string, href: string }[]>([]);
+  const checkLinkCon = [
+    {
+      href1: "/dashboard/material/manager",
+    },
+    {
+      href1: "/dashboard/products/set",
+    }
+  ]
+  const toggleDropdown = (nameLink: string, hrefCon: any, event: any) => {
+    console.log('nameLink', nameLink)
+    setCheckLink(nameLink)
+    setGetNameLink(hrefCon)
+    event.preventDefault();
+    const conCheckLink = checkLinkCon.some(item => item.href1 === nameLink);
+    if (conCheckLink) {
+      setIsOpen(!isOpen);
+    }
+  };
+
+  const closeDropdown = (nameLink: string) => {
+    setIsOpen(false);
   };
   return (
     <TooltipProvider>
@@ -125,39 +153,86 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   side="right"
                   className="flex items-center gap-4"
                 >
-                  {link.title}
+
+
+                  {
+                    link.hrefCon ? (
+                      <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu" >
+                        {
+                          link.hrefCon.map((linkCon, index) => (
+                            <li key={index} className={`${pathname === linkCon.href ? "bg-primary hover:bg-primary/90 text-white hover:text-white" : "text-gray-700"} p-1  text-sm  hover:bg-gray-100`}>
+                              <Link
+                                href={linkCon.href}
+                                className="flex items-center gap-2"
+                              >{linkCon.title}</Link>
+                            </li>
+                          ))}
+                      </ul>
+                    ) : (
+                      <> {link.title}</>
+                    )
+                  }
+
                 </TooltipContent>
               </Tooltip>
             ) : (
-              <Link
-                key={index}
-                href={link.href}
-                className={cn(
-                  buttonVariants({
-                    variant:
-                      pathname === pathname
-                        ? link.href === pathname || link.href1 === pathname
-                          ? "colorCompany"
-                          : "ghost"
-                        : pathname === pathname
-                          ? link.href === pathname ||
-                            pathname.includes(`${link.href}/history`) ||
-                            pathname.includes(`${link.href}/manage`) ||
-                            pathname.includes(`${link.href}/set`) ||
-                            pathname.includes(`${link.href}/product`)
+              <>
+                <Link
+                  key={index}
+                  href={link.href}
+                  className={cn(
+                    buttonVariants({
+                      variant:
+                        pathname === pathname
+                          ? link.href === pathname || link.href1 === pathname
                             ? "colorCompany"
                             : "ghost"
-                          : null,
-                    size: "sm",
-                  }),
-                  link.variant === "colorCompany" &&
-                  "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                  "justify-start"
+                          : pathname === pathname
+                            ? link.href === pathname ||
+                              pathname.includes(`${link.href}/history`) ||
+                              pathname.includes(`${link.href}/manage`) ||
+                              pathname.includes(`${link.href}/set`) ||
+                              pathname.includes(`${link.href}/product`)
+                              ? "colorCompany"
+                              : "ghost"
+                            : null,
+                      size: "sm",
+                    }),
+                    link.variant === "colorCompany" &&
+                    "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
+                    "justify-start"
+                  )}
+                >
+                  <link.icon className="mr-2 h-5 w-5" />
+                  {
+                    link.href1 ? (
+                      <span className="flex justify-between w-full" onClick={(event) => toggleDropdown(link.href1, link.hrefCon, event)}>{link.title}</span>
+                    ) : (
+                      <span className="w-full">{link.title} </span>
+                    )
+                  }
+                </Link>
+                {link.href1 === checkLink && isOpen && (
+                  <div className=" right-0 mt-2  rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                    <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                      {
+                        getNameLink.map((item) => (
+                          <li key={item.id}>
+                            <Link
+                              href={item.href}
+                              className={`${pathname === item.href ? "bg-primary hover:bg-primary/90 text-white hover:text-white" : "text-gray-700"}  block px-4 py-2 text-sm  hover:bg-gray-100`}
+                              onClick={() => closeDropdown("")}
+                            >
+                              {item.title}
+                            </Link>
+                          </li>
+                        ))
+                      }
+                    </ul>
+                  </div>
                 )}
-              >
-                <link.icon className="mr-2 h-4 w-4" />
-                {link.title}
-              </Link>
+              </>
+
             )
           )}
         </nav>
