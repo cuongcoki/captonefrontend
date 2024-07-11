@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,6 +32,11 @@ export function DataTable<TData extends OrderData, TValue>({
     state: { sorting },
     onSortingChange: setSorting,
   });
+  const router = useRouter();
+  const handleGotoDetail = (id: string) => {
+    router.push(`/dashboard/order/${id}`);
+    console.log('id',id)
+  }
 
   return (
     <div className="rounded-md border">
@@ -39,7 +45,7 @@ export function DataTable<TData extends OrderData, TValue>({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id} className="py-1 text-inherit">
+                <TableHead key={header.id} className="py-1 text-inherit text-center">
                   {header.isPlaceholder
                     ? null
                     : flexRender(header.column.columnDef.header, header.getContext())}
@@ -52,15 +58,20 @@ export function DataTable<TData extends OrderData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
+
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
+
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-3 text-center">
-                     <Link href={`/dashboard/order/${row.original.id}`} >{flexRender(cell.column.columnDef.cell, cell.getContext())}</Link> 
+                  <TableCell key={cell.id} className="py-3 text-center" onClick={() => handleGotoDetail(row.original.id)}>
+                    {/* <Link href={`/dashboard/order/${row.original.id}`} > */}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {/* </Link> */}
                   </TableCell>
                 ))}
+
               </TableRow>
             ))
           ) : (

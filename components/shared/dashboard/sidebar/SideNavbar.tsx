@@ -73,6 +73,18 @@ export default function SideNavbar({ }: Props) {
                 title: "Sản phẩm",
                 href: "/dashboard/products/product",
                 href1: "/dashboard/products/set",
+                hrefCon:[
+                  {
+                    id:1,
+                    title: "Sản phẩm",
+                    href:"/dashboard/products/product",
+                  },
+                  {
+                    id:2,
+                    title: "Bộ sản phẩm",
+                    href:"/dashboard/products/set",
+                  },
+                ],
                 icon: PackageSearch,
                 variant: "ghost",
               },
@@ -80,6 +92,18 @@ export default function SideNavbar({ }: Props) {
                 title: "Vật liệu",
                 href: "/dashboard/material/history",
                 href1: "/dashboard/material/manager",
+                hrefCon:[
+                  {
+                    id:1,
+                    title: "Lịch sử nhập",
+                    href:"/dashboard/material/history",
+                  },
+                  {
+                    id:2,
+                    title: "Nguyên vật liệu",
+                    href:"/dashboard/material/manager",
+                  },
+                ],
                 icon: InspectionPanel,
                 variant: "ghost",
               },

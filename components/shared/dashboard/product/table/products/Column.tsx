@@ -28,7 +28,7 @@ export const columns: ColumnDef<Product>[] = [
     accessorKey: "imageResponses",
     header: ({ column }) => <Button variant="ghost">Hình Ảnh</Button>,
     cell: ({ row }) => {
-      const firstImage = row.original.imageResponses[0];
+      const firstImage = row.original.imageResponses.find(item => item.isMainImage === true) || row.original.imageResponses[0];
       return firstImage ? (
         <Link
           href={`/dashboard/products/product/${row.original.id}`}
