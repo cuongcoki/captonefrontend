@@ -15,13 +15,14 @@ import {
   Building,
   MessageSquareWarning,
   MessageSquareMore,
+  Coins,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
 import { ModeToggle } from "@/components/shared/common/mode-toggle";
 
 type Props = {};
-export default function SideNavbar({ }: Props) {
+export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   const onlyWidth = useWindowWidth();
@@ -73,16 +74,16 @@ export default function SideNavbar({ }: Props) {
                 title: "Sản phẩm",
                 href: "/dashboard/products/product",
                 href1: "/dashboard/products/set",
-                hrefCon:[
+                hrefCon: [
                   {
-                    id:1,
+                    id: 1,
                     title: "Sản phẩm",
-                    href:"/dashboard/products/product",
+                    href: "/dashboard/products/product",
                   },
                   {
-                    id:2,
+                    id: 2,
                     title: "Bộ sản phẩm",
-                    href:"/dashboard/products/set",
+                    href: "/dashboard/products/set",
                   },
                 ],
                 icon: PackageSearch,
@@ -92,16 +93,16 @@ export default function SideNavbar({ }: Props) {
                 title: "Vật liệu",
                 href: "/dashboard/material/history",
                 href1: "/dashboard/material/manager",
-                hrefCon:[
+                hrefCon: [
                   {
-                    id:1,
+                    id: 1,
                     title: "Lịch sử nhập",
-                    href:"/dashboard/material/history",
+                    href: "/dashboard/material/history",
                   },
                   {
-                    id:2,
+                    id: 2,
                     title: "Nguyên vật liệu",
-                    href:"/dashboard/material/manager",
+                    href: "/dashboard/material/manager",
                   },
                 ],
                 icon: InspectionPanel,
@@ -135,6 +136,12 @@ export default function SideNavbar({ }: Props) {
                 title: "Khiếu nại",
                 href: "/dashboard/report-manager",
                 icon: MessageSquareMore,
+                variant: "ghost",
+              },
+              {
+                title: "Lương",
+                href: "/dashboard/salary",
+                icon: Coins,
                 variant: "ghost",
               },
             ]}
