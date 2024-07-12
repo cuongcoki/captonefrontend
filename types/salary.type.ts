@@ -9,6 +9,11 @@ export type SearchSalaryParams = {
   };
 };
 
+export type SalaryDetailParams = {
+  year: string;
+  month: string;
+};
+
 export type SalaryType = {
   salaryId: string;
   userId: string;

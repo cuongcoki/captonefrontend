@@ -1,5 +1,5 @@
 import SalaryTable from "@/components/shared/dashboard/salary/salary-table";
-import { SearchSalaryParams } from "@/types/salary.tpe";
+import { SearchSalaryParams } from "@/types/salary.type";
 import React from "react";
 
 export default function page({ searchParams }: SearchSalaryParams) {

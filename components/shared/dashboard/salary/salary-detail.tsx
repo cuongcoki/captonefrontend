@@ -1,6 +1,5 @@
+"use client";
 import React from "react";
-
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,15 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import {
   Table,
   TableBody,
@@ -28,13 +19,44 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { ChevronDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 import SalaryHistoryReceived from "@/components/shared/dashboard/salary/salary-history/salary-history-received";
 import SalaryHistorySalaryByDay from "@/components/shared/dashboard/salary/salary-history/salary-history-salary-by-day";
 import SalaryHistorySalaryByOverTime from "@/components/shared/dashboard/salary/salary-history/salary-history-salary-by-overtime";
-export default function SalaryDetail({ id }: { id: string }) {
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { SalaryDetailParams } from "@/types/salary.type";
+const dataNow = new Date();
+const yearNow = dataNow.getFullYear();
+const listYear = [yearNow, yearNow - 1, yearNow - 2, yearNow - 3];
+const listMonth = [
+  { value: "1", label: "Tháng 1" },
+  { value: "2", label: "Tháng 2" },
+  { value: "3", label: "Tháng 3" },
+  { value: "4", label: "Tháng 4" },
+  { value: "5", label: "Tháng 5" },
+  { value: "6", label: "Tháng 6" },
+  { value: "7", label: "Tháng 7" },
+  { value: "8", label: "Tháng 8" },
+  { value: "9", label: "Tháng 9" },
+  { value: "10", label: "Tháng 10" },
+  { value: "11", label: "Tháng 11" },
+  { value: "12", label: "Tháng 12" },
+];
+export default function SalaryDetail({
+  id,
+  SearchParams,
+}: {
+  id: string;
+  SearchParams: SalaryDetailParams;
+}) {
+  const [params, setParams] = React.useState<SalaryDetailParams>(SearchParams);
   return (
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
@@ -79,61 +101,71 @@ export default function SalaryDetail({ id }: { id: string }) {
           <div className="flex items-center">
             <TabsList></TabsList>
             <div className="ml-auto flex items-center gap-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-7 gap-1 text-sm"
-                  >
-                    <span className="sr-only sm:not-sr-only">Năm 2024</span>
-                    <ChevronDown />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem checked>
-                    Fulfilled
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem>Declined</DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem>Refunded</DropdownMenuCheckboxItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-7 gap-1 text-sm"
-                  >
-                    <span className="sr-only sm:not-sr-only">Tháng 7</span>
-                    <ChevronDown />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem checked>
-                    Fulfilled
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem>Declined</DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem>Refunded</DropdownMenuCheckboxItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Select
+                value={params.year}
+                onValueChange={(value) => {
+                  setParams((prev) => {
+                    return {
+                      ...prev,
+                      year: value,
+                    };
+                  });
+                }}
+              >
+                <SelectTrigger className="h-8 w-32">
+                  <SelectValue placeholder="Chọn năm" />
+                </SelectTrigger>
+                <SelectContent>
+                  {listYear.map((year) => (
+                    <SelectItem
+                      key={year}
+                      className="hover:bg-gray-100 h-8"
+                      value={year.toString()}
+                    >
+                      Năm {year}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select
+                value={params.month}
+                onValueChange={(value) => {
+                  setParams((prev) => {
+                    return {
+                      ...prev,
+                      month: value,
+                    };
+                  });
+                }}
+              >
+                <SelectTrigger className="h-8 w-32">
+                  <SelectValue placeholder="Chọn tháng" />
+                </SelectTrigger>
+                <SelectContent>
+                  {listMonth.map((month) => (
+                    <SelectItem
+                      key={month.value}
+                      className="hover:bg-gray-100"
+                      value={month.value.toString()}
+                    >
+                      {month.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <TabsContent value="week">
             <Card x-chunk="dashboard-05-chunk-3">
               <CardHeader className="px-7">
-                <CardTitle>Sản phẩm tạo ra</CardTitle>
-                <CardDescription className="flex">
+                <CardTitle className="mb-3">Sản phẩm tạo ra</CardTitle>
+                <div className="flex">
                   <div>Số lượng sản phẩm tạo ra trong tháng 7 năm 2024</div>
                   <div className="ml-auto">
                     Tổng lương sản phẩm:{" "}
                     <span className="font-bold">8.300.000</span>
                   </div>
-                </CardDescription>
+                </div>
               </CardHeader>
               <CardContent>
                 <Table>
@@ -309,10 +341,10 @@ export default function SalaryDetail({ id }: { id: string }) {
             <TabsTrigger value="over-time">Tăng ca</TabsTrigger>
           </TabsList>
           <TabsContent value="salary">
-            <SalaryHistorySalaryByDay />
+            <SalaryHistorySalaryByDay id={id} />
           </TabsContent>
           <TabsContent value="over-time">
-            <SalaryHistorySalaryByOverTime />
+            <SalaryHistorySalaryByOverTime id={id} />
           </TabsContent>
         </Tabs>
       </div>

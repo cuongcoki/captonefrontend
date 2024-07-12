@@ -9,12 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
 import { SalaryType, SearchSalaryParams } from "@/types/salary.type";
 import Image from "next/image";
 import { companyApi } from "@/apis/company.api";
-import Link from "next/link";
 const fakeApi = ({ searchParams }: SearchSalaryParams) => {
   return new Promise<{ data: { data: SalaryType[]; totalPages: number } }>(
     (resolve) => {
@@ -22,8 +20,8 @@ const fakeApi = ({ searchParams }: SearchSalaryParams) => {
         const data = {
           data: [
             {
-              salaryId: "1",
-              userId: "u1",
+              salaryId: "12345",
+              userId: "123456789012",
               fullName: "John Doe",
               avatar:
                 "https://top10tphcm.com/wp-content/uploads/2023/02/gai-dep-nhat-viet-nam-6.jpg",
@@ -281,7 +279,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
                         key={item.salaryId}
                         onClick={() => {
                           router.push(
-                            `/dashboard/salary/detail/${item.salaryId}`
+                            `/dashboard/salary/detail/${item.userId}`
                           );
                         }}
                         className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer "
