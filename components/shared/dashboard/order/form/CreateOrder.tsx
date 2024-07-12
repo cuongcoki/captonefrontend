@@ -447,14 +447,14 @@ export default function CreateOrder() {
     return (
         <>
             <Dialog.Root open={open} onOpenChange={handleOnDialog}>
-                <Dialog.Trigger className="rounded p-2 hover:bg-gray-200">
+                <Dialog.Trigger className="rounded p-2 hover:bg-[#2bff7e] bg-[#24d369] ">
                     <Plus />
                 </Dialog.Trigger>
                 <Dialog.Portal>
                     <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
                         <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1200px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
                             <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4">
-                                <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary rounded-t-md">
+                                <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                                     <h2 className="text-2xl text-white">Thêm đơn hàng mới</h2>
                                     <Button variant="outline" size="icon" onClick={handleOffDialog}>
                                         <X className="w-4 h-4" />
@@ -462,41 +462,379 @@ export default function CreateOrder() {
                                 </div>
                                 <div className="grid  p-4 overflow-y-auto h-[650px] gap-4">
 
-                                    <Tabs defaultValue="account" className="">
-                                        <TabsList className="grid w-full grid-cols-2">
-                                            <TabsTrigger value="account">Đơn hàng</TabsTrigger>
-                                            <TabsTrigger value="password">Sản phẩm</TabsTrigger>
-                                        </TabsList>
-                                        <TabsContent value="account" >
-                                            <Form {...form}>
-                                                <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6" >
-                                                    <div className="">
-                                                        <Card>
-                                                            <CardHeader>
-                                                                <CardTitle className="text-lg">
-                                                                    Chi tiết đơn hàng
-                                                                </CardTitle>
+                                    <div className="grid gap-4  lg:grid-cols-5 lg:gap-8">
+                                        <div className="grid auto-rows-max items-start gap-4 lg:col-span-5 lg:gap-8">
+                                            <Card>
+                                                <CardHeader>
+                                                    <CardTitle className="text-lg text-primary">
+                                                        Thêm sản phẩm cho đơn hàng
+                                                    </CardTitle>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    <div className="flex items-center my-4">
+                                                        <div className="flex items-center border w-full rounded-lg px-2 " >
+                                                            <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
+                                                            <DropdownMenu>
+                                                                <DropdownMenuTrigger asChild>
+                                                                    <ChevronDown className="mr-2 h-4 w-4  text-primary-backgroudPrimary" />
+                                                                </DropdownMenuTrigger>
+                                                                <DropdownMenuContent align="start" >
+                                                                    <DropdownMenuItem onClick={handleCheckProduct}>Sản phẩm</DropdownMenuItem>
+                                                                    <DropdownMenuItem onClick={handleCheckOrder}>Bộ sản phẩm</DropdownMenuItem>
+                                                                </DropdownMenuContent>
+                                                            </DropdownMenu>
+
+                                                            {
+                                                                !checkProducts ? (
+                                                                    <Input
+                                                                        placeholder="tìm kiếm tên sản phẩm ..."
+                                                                        value={searchTerm}
+                                                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                                                        className="border-none w-full"
+                                                                    />
+                                                                ) : (
+                                                                    <Input
+                                                                        placeholder="tìm kiếm bộ sản phẩm ..."
+                                                                        value={searchTermSet}
+                                                                        onChange={(e) => setSearchTermSet(e.target.value)}
+                                                                        className="border-none w-full"
+                                                                    />
+                                                                )
+                                                            }
+
+                                                        </div>
+                                                    </div>
+                                                    {
+                                                        !checkProducts ? (
+                                                            <>
+                                                                {searchResults !== null ? (
+                                                                    <Card className="my-4">
+                                                                        <CardHeader className="font-semibold text-xl">
+                                                                            <span>Thông tin sản phẩm</span>
+                                                                        </CardHeader>
+                                                                        <CardContent className="overflow-y-auto">
+                                                                            <Table>
+                                                                                <TableHeader>
+                                                                                    <TableRow>
+                                                                                        <TableHead className="w-[100px]">
+                                                                                            Ảnh
+                                                                                        </TableHead>
+                                                                                        <TableHead>Tên</TableHead>
+                                                                                        <TableHead>Mã Code</TableHead>
+                                                                                        <TableHead className="text-right">
+                                                                                        </TableHead>
+                                                                                    </TableRow>
+                                                                                </TableHeader>
+
+                                                                                <TableBody>
+                                                                                    {searchResults !== null ? (
+                                                                                        searchResults.map((product) => (
+                                                                                            <TableRow key={product.id}>
+                                                                                                <TableCell className="font-medium">
+                                                                                                    <ImageDisplayDialog
+                                                                                                        images={product?.imageUrl}
+                                                                                                    />
+                                                                                                </TableCell>
+                                                                                                <TableCell>
+                                                                                                    {product?.name}
+                                                                                                </TableCell>
+                                                                                                <TableCell>
+                                                                                                    {product?.code}
+                                                                                                </TableCell>
+                                                                                                <TableCell>
+                                                                                                    <Button
+                                                                                                        variant="outline"
+                                                                                                        size="icon"
+                                                                                                        onClick={() =>
+                                                                                                            handleAddProducts(product)
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <PackagePlus className="h-4 w-4" />
+                                                                                                    </Button>
+                                                                                                </TableCell>
+                                                                                            </TableRow>
+                                                                                        ))
+                                                                                    ) : (
+                                                                                        <TableRow className="text-center flex justify-center items-center w-full">
+                                                                                            không thấy sản phẩm nào
+                                                                                        </TableRow>
+                                                                                    )}
+                                                                                </TableBody>
+                                                                            </Table>
+                                                                        </CardContent>
+                                                                    </Card>
+                                                                ) : (
+                                                                    ""
+                                                                )}
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                {searchResultsSet !== null ? (
+                                                                    <Card className="my-4">
+                                                                        <CardHeader className="font-semibold text-xl">
+                                                                            <span>Thông tin Bộ sản phẩm</span>
+                                                                        </CardHeader>
+                                                                        <CardContent className=" md:w-full overflow-auto">
+                                                                            <Table>
+                                                                                <TableHeader>
+                                                                                    <TableRow>
+                                                                                        <TableHead className="w-[100px]">
+                                                                                            Ảnh
+                                                                                        </TableHead>
+                                                                                        <TableHead>Tên</TableHead>
+                                                                                        <TableHead>Mã Code</TableHead>
+                                                                                        <TableHead className="text-right">
+                                                                                        </TableHead>
+                                                                                    </TableRow>
+                                                                                </TableHeader>
+
+                                                                                <TableBody>
+                                                                                    {searchResultsSet !== null ? (
+                                                                                        searchResultsSet.map((product) => (
+                                                                                            <TableRow key={product.id}>
+                                                                                                <TableCell className="font-medium">
+                                                                                                    <ImageDisplayDialog
+                                                                                                        images={product?.imageUrl}
+                                                                                                    />
+                                                                                                </TableCell>
+                                                                                                <TableCell>
+                                                                                                    {product?.name}
+                                                                                                </TableCell>
+                                                                                                <TableCell>
+                                                                                                    {product?.code}
+                                                                                                </TableCell>
+                                                                                                <TableCell>
+                                                                                                    <Button
+                                                                                                        variant="outline"
+                                                                                                        size="icon"
+                                                                                                        onClick={() =>
+                                                                                                            handleAddProducts(product)
+                                                                                                        }
+                                                                                                    >
+                                                                                                        <PackagePlus className="h-4 w-4" />
+                                                                                                    </Button>
+                                                                                                </TableCell>
+                                                                                            </TableRow>
+                                                                                        ))
+                                                                                    ) : (
+                                                                                        <TableRow className="text-center flex justify-center items-center w-full">
+                                                                                            không thấy sản phẩm nào
+                                                                                        </TableRow>
+                                                                                    )}
+                                                                                </TableBody>
+                                                                            </Table>
+                                                                        </CardContent>
+                                                                    </Card>
+                                                                ) : (
+                                                                    ""
+                                                                )}
+                                                            </>
+                                                        )
+                                                    }
+                                                    <div className="md:col-span-1 md:mt-0">
+                                                        <Card className="mt-4">
+                                                            <CardHeader className="font-semibold text-xl">
+                                                                <span>Thông tin sản phẩm đã thêm</span>
                                                             </CardHeader>
+                                                            <CardContent className=" overflow-auto md:w-full">
+                                                                <Table className="overflow-x-auto">
+                                                                    <TableHeader>
+                                                                        <TableRow>
+                                                                            <TableHead className="w-[100px]">Sản phẩm</TableHead>
+                                                                            <TableHead>Tên sản phẩm</TableHead>
+                                                                            <TableHead>Số lượng</TableHead>
+                                                                            <TableHead>Đơn vị giá</TableHead>
+                                                                            <TableHead>Ghi chú</TableHead>
+                                                                            <TableHead ></TableHead>
+                                                                        </TableRow>
+                                                                    </TableHeader>
 
-                                                            <CardContent className="flex  gap-6">
+                                                                    <TableBody>
+                                                                        {getDetailsPro.map((product, index) => (
+                                                                            <TableRow key={index}>
+                                                                                <TableCell className="font-medium w-[20%]">
+                                                                                    <div className="flex  gap-4">
+                                                                                        <Image
+                                                                                            alt="ảnh mẫu"
+                                                                                            className="w-[50px] h-[50px] rounded-lg object-contain"
+                                                                                            width={900}
+                                                                                            height={900}
+                                                                                            src={
+                                                                                                product?.imageUrl === "Image_not_found" ? NoImage : product?.imageUrl
+                                                                                            }
+                                                                                        />
 
-                                                                <div className="flex flex-col gap-6 w-full">
+
+                                                                                        <div className="font-medium dark:text-white">
+
+                                                                                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                                                                                                <b>Code: </b>
+                                                                                                {product.code}
+                                                                                            </div>
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </TableCell>
+                                                                                <TableCell>
+                                                                                    {product.name}
+                                                                                </TableCell>
+
+                                                                                <TableCell className="font-medium">
+                                                                                    <input
+                                                                                        type="number"
+                                                                                        name="quantity"
+                                                                                        value={
+                                                                                            productsRequest.find(
+                                                                                                (item) => item.productIdOrSetId === product.id
+                                                                                            )?.quantity || 0
+                                                                                        }
+                                                                                        onChange={(e) =>
+                                                                                            handleChange(
+                                                                                                product.id,
+                                                                                                "quantity",
+                                                                                                parseInt(e.target.value)
+                                                                                            )
+                                                                                        }
+                                                                                        className="w-16 text-center outline-none"
+                                                                                    />
+                                                                                </TableCell>
+
+                                                                                <TableCell className="font-medium">
+                                                                                    <input
+                                                                                        type="number"
+                                                                                        name="unitPrice"
+                                                                                        value={
+                                                                                            productsRequest.find(
+                                                                                                (item) => item.productIdOrSetId === product.id
+                                                                                            )?.unitPrice || 0
+                                                                                        }
+                                                                                        onChange={(e) =>
+                                                                                            handleChange(
+                                                                                                product.id,
+                                                                                                "unitPrice",
+                                                                                                parseInt(e.target.value)
+                                                                                            )
+                                                                                        }
+                                                                                        className="w-16 text-center outline-none"
+                                                                                    />
+                                                                                </TableCell>
+
+                                                                                <TableCell className="relative">
+                                                                                    <div className="overflow-auto bg-green-200 p-4 w-[200px] h-24 text-justify break-words whitespace-pre-wrap">
+                                                                                        <Textarea
+                                                                                            id="note"
+                                                                                            name="note"
+                                                                                            value={
+                                                                                                productsRequest.find(
+                                                                                                    (item) => item.productIdOrSetId === product.id
+                                                                                                )?.note || ""
+                                                                                            }
+                                                                                            onChange={(e) =>
+                                                                                                handleChange(
+                                                                                                    product.id,
+                                                                                                    "note",
+                                                                                                    e.target.value
+                                                                                                )
+                                                                                            }
+                                                                                            className="col-span-3 bg-green-200"
+                                                                                        />
+                                                                                    </div>
+
+
+                                                                                </TableCell>
+
+
+
+
+                                                                                <TableCell className="font-medium">
+                                                                                    <Button
+                                                                                        variant="outline"
+                                                                                        size="icon"
+                                                                                        onClick={() =>
+                                                                                            handleMinusProducts(product.id)
+                                                                                        }
+                                                                                    >
+                                                                                        <Minus className="h-4 w-4" />
+                                                                                    </Button>
+                                                                                </TableCell>
+                                                                            </TableRow>
+
+                                                                        ))}
+                                                                    </TableBody>
+                                                                </Table>
+                                                            </CardContent>
+                                                        </Card>
+                                                    </div>
+                                                </CardContent>
+                                            </Card>
+                                        </div>
+                                    </div>
+
+                                    <Form {...form}>
+                                        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6" >
+                                            <div className="">
+                                                <Card>
+                                                    <CardHeader>
+                                                        <CardTitle className="text-lg text-primary">
+                                                            Chi tiết đơn hàng
+                                                        </CardTitle>
+                                                    </CardHeader>
+
+                                                    <CardContent className="flex  gap-6">
+
+                                                        <div className="flex flex-col gap-6 w-full">
+                                                            <FormField
+                                                                control={form.control}
+                                                                name="companyId"
+                                                                render={({ field }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel className="text-primary-backgroudPrimary">Công ty *</FormLabel>
+                                                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                                            <FormControl>
+                                                                                <SelectTrigger>
+                                                                                    <SelectValue placeholder="Hãy chọn cơ sở" defaultValue={field.value} />
+                                                                                </SelectTrigger>
+                                                                            </FormControl>
+                                                                            <SelectContent>
+                                                                                {company.map((item) => (
+                                                                                    <SelectItem key={item.id} value={item.id}>
+                                                                                        {item.name}
+                                                                                    </SelectItem>
+                                                                                ))}
+                                                                            </SelectContent>
+                                                                        </Select>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                            <div className="  flex w-full gap-6">
+                                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                                     <FormField
                                                                         control={form.control}
-                                                                        name="companyId"
+                                                                        name="status"
                                                                         render={({ field }) => (
-                                                                            <FormItem>
-                                                                                <FormLabel className="text-primary-backgroudPrimary">Công ty *</FormLabel>
-                                                                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                                            <FormItem className="w-full">
+                                                                                <FormLabel className="text-primary-backgroudPrimary">
+                                                                                    Trạng thái *
+                                                                                </FormLabel>
+                                                                                <Select
+                                                                                    onValueChange={(value) =>
+                                                                                        field.onChange(Number(value))
+                                                                                    }
+                                                                                    defaultValue={String(field.value)}
+                                                                                >
                                                                                     <FormControl>
                                                                                         <SelectTrigger>
-                                                                                            <SelectValue placeholder="Hãy chọn cơ sở" defaultValue={field.value} />
+                                                                                            <SelectValue
+                                                                                                placeholder="Chọn trạng thái"
+                                                                                                defaultValue={String(field.value)}
+                                                                                            />
                                                                                         </SelectTrigger>
                                                                                     </FormControl>
                                                                                     <SelectContent>
-                                                                                        {company.map((item) => (
-                                                                                            <SelectItem key={item.id} value={item.id}>
-                                                                                                {item.name}
+                                                                                        {Object.values(OrderStatus).map((status) => (
+                                                                                            <SelectItem key={status.id} value={String(status.id)}>
+                                                                                                {status.des}
                                                                                             </SelectItem>
                                                                                         ))}
                                                                                     </SelectContent>
@@ -505,484 +843,138 @@ export default function CreateOrder() {
                                                                             </FormItem>
                                                                         )}
                                                                     />
-                                                                    <div className="  flex w-full gap-6">
-                                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                                            <FormField
-                                                                                control={form.control}
-                                                                                name="status"
-                                                                                render={({ field }) => (
-                                                                                    <FormItem className="w-full">
-                                                                                        <FormLabel className="text-primary-backgroudPrimary">
-                                                                                            Trạng thái *
-                                                                                        </FormLabel>
-                                                                                        <Select
-                                                                                            onValueChange={(value) =>
-                                                                                                field.onChange(Number(value))
-                                                                                            }
-                                                                                            defaultValue={String(field.value)}
-                                                                                        >
-                                                                                            <FormControl>
-                                                                                                <SelectTrigger>
-                                                                                                    <SelectValue
-                                                                                                        placeholder="Chọn trạng thái"
-                                                                                                        defaultValue={String(field.value)}
-                                                                                                    />
-                                                                                                </SelectTrigger>
-                                                                                            </FormControl>
-                                                                                            <SelectContent>
-                                                                                                {Object.values(OrderStatus).map((status) => (
-                                                                                                    <SelectItem key={status.id} value={String(status.id)}>
-                                                                                                        {status.des}
-                                                                                                    </SelectItem>
-                                                                                                ))}
-                                                                                            </SelectContent>
-                                                                                        </Select>
-                                                                                        <FormMessage />
-                                                                                    </FormItem>
-                                                                                )}
-                                                                            />
 
-                                                                            <FormField
-                                                                                control={form.control}
-                                                                                name="vat"
-                                                                                render={({ field }) => (
-                                                                                    <FormItem>
-                                                                                        <FormLabel>%Thuế</FormLabel>
+                                                                    <FormField
+                                                                        control={form.control}
+                                                                        name="vat"
+                                                                        render={({ field }) => (
+                                                                            <FormItem>
+                                                                                <FormLabel>%Thuế</FormLabel>
+                                                                                <FormControl>
+                                                                                    <Input
+                                                                                        type="number"
+                                                                                        placeholder="vat..."
+                                                                                        {...field}
+                                                                                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                                                                        min="0"
+                                                                                        max="100000000"
+                                                                                        step="0.01"
+                                                                                    />
+                                                                                </FormControl>
+                                                                                <FormMessage />
+                                                                            </FormItem>
+                                                                        )}
+                                                                    />
+                                                                </div>
+
+                                                                <div className="flex gap-6 items-center">
+                                                                    <FormField
+                                                                        control={form.control}
+                                                                        name="startOrder"
+                                                                        render={({ field }) => (
+                                                                            <FormItem className="flex flex-col">
+                                                                                <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày bắt đầu *</FormLabel>
+                                                                                <Popover modal={true}>
+                                                                                    <PopoverTrigger asChild>
                                                                                         <FormControl>
-                                                                                            <Input
-                                                                                                type="number"
-                                                                                                placeholder="vat..."
-                                                                                                {...field}
-                                                                                                onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                                                                                                min="0"
-                                                                                                max="100000000"
-                                                                                                step="0.01"
-                                                                                            />
-                                                                                        </FormControl>
-                                                                                        <FormMessage />
-                                                                                    </FormItem>
-                                                                                )}
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className="flex gap-6 items-center">
-                                                                        <FormField
-                                                                            control={form.control}
-                                                                            name="startOrder"
-                                                                            render={({ field }) => (
-                                                                                <FormItem className="flex flex-col">
-                                                                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày bắt đầu *</FormLabel>
-                                                                                    <Popover modal={true}>
-                                                                                        <PopoverTrigger asChild>
-                                                                                            <FormControl>
-                                                                                                <Button
-                                                                                                    variant={"outline"}
-                                                                                                    className={cn(
-                                                                                                        "w-[240px] pl-3 text-left font-normal",
-                                                                                                        !field.value && "text-muted-foreground"
-                                                                                                    )}
-                                                                                                >
-                                                                                                    {field.value ? (
-                                                                                                        format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
-                                                                                                    ) : (
-                                                                                                        <span>Chọn ngày</span>
-                                                                                                    )}
-                                                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                                                                </Button>
-                                                                                            </FormControl>
-                                                                                        </PopoverTrigger>
-                                                                                        <PopoverContent className="w-auto p-0" align="start">
-                                                                                            <Calendar
-                                                                                                mode="single"
-                                                                                                selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
-                                                                                                onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
-                                                                                                // disabled={(date) =>
-                                                                                                //     date > new Date() || date < new Date("1900-01-01")
-                                                                                                // }
-                                                                                                initialFocus
-                                                                                            />
-                                                                                        </PopoverContent>
-                                                                                    </Popover>
-                                                                                    <FormMessage />
-                                                                                </FormItem>
-                                                                            )}
-                                                                        />
-
-                                                                        <FormField
-                                                                            control={form.control}
-                                                                            name="endOrder"
-                                                                            render={({ field }) => (
-                                                                                <FormItem className="flex flex-col">
-                                                                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày kết thúc *</FormLabel>
-                                                                                    <Popover modal={true}>
-                                                                                        <PopoverTrigger asChild>
-                                                                                            <FormControl>
-                                                                                                <Button
-                                                                                                    variant={"outline"}
-                                                                                                    className={cn(
-                                                                                                        "w-[240px] pl-3 text-left font-normal",
-                                                                                                        !field.value && "text-muted-foreground"
-                                                                                                    )}
-                                                                                                >
-                                                                                                    {field.value ? (
-                                                                                                        format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
-                                                                                                    ) : (
-                                                                                                        <span>Chọn ngày</span>
-                                                                                                    )}
-                                                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                                                                </Button>
-                                                                                            </FormControl>
-                                                                                        </PopoverTrigger>
-                                                                                        <PopoverContent className="w-auto p-0" align="start">
-                                                                                            <Calendar
-                                                                                                mode="single"
-                                                                                                selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
-                                                                                                onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
-                                                                                                // disabled={(date) =>
-                                                                                                //     date > new Date() || date < new Date("1900-01-01")
-                                                                                                // }
-                                                                                                initialFocus
-                                                                                            />
-                                                                                        </PopoverContent>
-                                                                                    </Popover>
-                                                                                    <FormMessage />
-                                                                                </FormItem>
-                                                                            )}
-                                                                        />
-                                                                    </div>
-
-                                                                    <div>
-
-                                                                    </div>
-                                                                </div>
-
-                                                            </CardContent>
-                                                        </Card>
-                                                    </div>
-                                                    <Card>
-                                                        <Button
-                                                            type="submit"
-                                                            className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
-                                                            disabled={pending}
-                                                        >
-                                                            {pending ? "Loading..." : "GỬI"}
-                                                        </Button>
-                                                    </Card>
-                                                </form>
-                                            </Form>
-                                        </TabsContent>
-                                        <TabsContent value="password">
-                                            <div className="grid gap-4  lg:grid-cols-5 lg:gap-8">
-                                                <div className="grid auto-rows-max items-start gap-4 lg:col-span-5 lg:gap-8">
-                                                    <Card>
-                                                        <CardHeader>
-                                                            <CardTitle className="text-lg">
-                                                                Thêm sản phẩm cho đơn hàng
-                                                            </CardTitle>
-                                                        </CardHeader>
-                                                        <CardContent>
-                                                            <div className="flex items-center my-4">
-                                                                <div className="flex items-center border w-full rounded-lg px-2 " >
-                                                                    <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
-                                                                    <DropdownMenu>
-                                                                        <DropdownMenuTrigger asChild>
-                                                                            <ChevronDown className="mr-2 h-4 w-4  text-primary-backgroudPrimary" />
-                                                                        </DropdownMenuTrigger>
-                                                                        <DropdownMenuContent align="start" >
-                                                                            <DropdownMenuItem onClick={handleCheckProduct}>Sản phẩm</DropdownMenuItem>
-                                                                            <DropdownMenuItem onClick={handleCheckOrder}>Bộ sản phẩm</DropdownMenuItem>
-                                                                        </DropdownMenuContent>
-                                                                    </DropdownMenu>
-
-                                                                    {
-                                                                        !checkProducts ? (
-                                                                            <Input
-                                                                                placeholder="tìm kiếm tên sản phẩm ..."
-                                                                                value={searchTerm}
-                                                                                onChange={(e) => setSearchTerm(e.target.value)}
-                                                                                className="border-none w-full"
-                                                                            />
-                                                                        ) : (
-                                                                            <Input
-                                                                                placeholder="tìm kiếm bộ sản phẩm ..."
-                                                                                value={searchTermSet}
-                                                                                onChange={(e) => setSearchTermSet(e.target.value)}
-                                                                                className="border-none w-full"
-                                                                            />
-                                                                        )
-                                                                    }
-
-                                                                </div>
-                                                            </div>
-                                                            {
-                                                                !checkProducts ? (
-                                                                    <>
-                                                                        {searchResults !== null ? (
-                                                                            <Card className="my-4">
-                                                                                <CardHeader className="font-semibold text-xl">
-                                                                                    <span>Thông tin sản phẩm</span>
-                                                                                </CardHeader>
-                                                                                <CardContent className="overflow-y-auto">
-                                                                                    <Table>
-                                                                                        <TableHeader>
-                                                                                            <TableRow>
-                                                                                                <TableHead className="w-[100px]">
-                                                                                                    Ảnh
-                                                                                                </TableHead>
-                                                                                                <TableHead>Tên</TableHead>
-                                                                                                <TableHead>Mã Code</TableHead>
-                                                                                                <TableHead className="text-right">
-                                                                                                </TableHead>
-                                                                                            </TableRow>
-                                                                                        </TableHeader>
-
-                                                                                        <TableBody>
-                                                                                            {searchResults !== null ? (
-                                                                                                searchResults.map((product) => (
-                                                                                                    <TableRow key={product.id}>
-                                                                                                        <TableCell className="font-medium">
-                                                                                                            <ImageDisplayDialog
-                                                                                                                images={product?.imageUrl}
-                                                                                                            />
-                                                                                                        </TableCell>
-                                                                                                        <TableCell>
-                                                                                                            {product?.name}
-                                                                                                        </TableCell>
-                                                                                                        <TableCell>
-                                                                                                            {product?.code}
-                                                                                                        </TableCell>
-                                                                                                        <TableCell>
-                                                                                                            <Button
-                                                                                                                variant="outline"
-                                                                                                                size="icon"
-                                                                                                                onClick={() =>
-                                                                                                                    handleAddProducts(product)
-                                                                                                                }
-                                                                                                            >
-                                                                                                                <PackagePlus className="h-4 w-4" />
-                                                                                                            </Button>
-                                                                                                        </TableCell>
-                                                                                                    </TableRow>
-                                                                                                ))
-                                                                                            ) : (
-                                                                                                <TableRow className="text-center flex justify-center items-center w-full">
-                                                                                                    không thấy sản phẩm nào
-                                                                                                </TableRow>
-                                                                                            )}
-                                                                                        </TableBody>
-                                                                                    </Table>
-                                                                                </CardContent>
-                                                                            </Card>
-                                                                        ) : (
-                                                                            ""
-                                                                        )}
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        {searchResultsSet !== null ? (
-                                                                            <Card className="my-4">
-                                                                                <CardHeader className="font-semibold text-xl">
-                                                                                    <span>Thông tin Bộ sản phẩm</span>
-                                                                                </CardHeader>
-                                                                                <CardContent className=" md:w-full overflow-auto">
-                                                                                    <Table>
-                                                                                        <TableHeader>
-                                                                                            <TableRow>
-                                                                                                <TableHead className="w-[100px]">
-                                                                                                    Ảnh
-                                                                                                </TableHead>
-                                                                                                <TableHead>Tên</TableHead>
-                                                                                                <TableHead>Mã Code</TableHead>
-                                                                                                <TableHead className="text-right">
-                                                                                                </TableHead>
-                                                                                            </TableRow>
-                                                                                        </TableHeader>
-
-                                                                                        <TableBody>
-                                                                                            {searchResultsSet !== null ? (
-                                                                                                searchResultsSet.map((product) => (
-                                                                                                    <TableRow key={product.id}>
-                                                                                                        <TableCell className="font-medium">
-                                                                                                            <ImageDisplayDialog
-                                                                                                                images={product?.imageUrl}
-                                                                                                            />
-                                                                                                        </TableCell>
-                                                                                                        <TableCell>
-                                                                                                            {product?.name}
-                                                                                                        </TableCell>
-                                                                                                        <TableCell>
-                                                                                                            {product?.code}
-                                                                                                        </TableCell>
-                                                                                                        <TableCell>
-                                                                                                            <Button
-                                                                                                                variant="outline"
-                                                                                                                size="icon"
-                                                                                                                onClick={() =>
-                                                                                                                    handleAddProducts(product)
-                                                                                                                }
-                                                                                                            >
-                                                                                                                <PackagePlus className="h-4 w-4" />
-                                                                                                            </Button>
-                                                                                                        </TableCell>
-                                                                                                    </TableRow>
-                                                                                                ))
-                                                                                            ) : (
-                                                                                                <TableRow className="text-center flex justify-center items-center w-full">
-                                                                                                    không thấy sản phẩm nào
-                                                                                                </TableRow>
-                                                                                            )}
-                                                                                        </TableBody>
-                                                                                    </Table>
-                                                                                </CardContent>
-                                                                            </Card>
-                                                                        ) : (
-                                                                            ""
-                                                                        )}
-                                                                    </>
-                                                                )
-                                                            }
-                                                            <div className="md:col-span-1 md:mt-0">
-                                                                <Card className="mt-4">
-                                                                    <CardHeader className="font-semibold text-xl">
-                                                                        <span>Thông tin sản phẩm đã thêm</span>
-                                                                    </CardHeader>
-                                                                    <CardContent className=" overflow-auto md:w-full">
-                                                                        <Table className="overflow-x-auto">
-                                                                            <TableHeader>
-                                                                                <TableRow>
-                                                                                    <TableHead className="w-[100px]">Sản phẩm</TableHead>
-                                                                                    <TableHead>Tên sản phẩm</TableHead>
-                                                                                    <TableHead>Số lượng</TableHead>
-                                                                                    <TableHead>Đơn vị giá</TableHead>
-                                                                                    <TableHead>Ghi chú</TableHead>
-                                                                                    <TableHead ></TableHead>
-                                                                                </TableRow>
-                                                                            </TableHeader>
-
-                                                                            <TableBody>
-                                                                                {getDetailsPro.map((product, index) => (
-                                                                                    <TableRow key={index}>
-                                                                                        <TableCell className="font-medium w-[20%]">
-                                                                                            <div className="flex  gap-4">
-                                                                                                <Image
-                                                                                                    alt="ảnh mẫu"
-                                                                                                    className="w-[50px] h-[50px] rounded-lg object-contain"
-                                                                                                    width={900}
-                                                                                                    height={900}
-                                                                                                    src={
-                                                                                                        product?.imageUrl === "Image_not_found" ? NoImage : product?.imageUrl
-                                                                                                    }
-                                                                                                />
-
-
-                                                                                                <div className="font-medium dark:text-white">
-
-                                                                                                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                                                                        <b>Code: </b>
-                                                                                                        {product.code}
-                                                                                                    </div>
-
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </TableCell>
-                                                                                        <TableCell>
-                                                                                            {product.name}
-                                                                                        </TableCell>
-
-                                                                                        <TableCell className="font-medium">
-                                                                                            <input
-                                                                                                type="number"
-                                                                                                name="quantity"
-                                                                                                value={
-                                                                                                    productsRequest.find(
-                                                                                                        (item) => item.productIdOrSetId === product.id
-                                                                                                    )?.quantity || 0
-                                                                                                }
-                                                                                                onChange={(e) =>
-                                                                                                    handleChange(
-                                                                                                        product.id,
-                                                                                                        "quantity",
-                                                                                                        parseInt(e.target.value)
-                                                                                                    )
-                                                                                                }
-                                                                                                className="w-16 text-center outline-none"
-                                                                                            />
-                                                                                        </TableCell>
-
-                                                                                        <TableCell className="font-medium">
-                                                                                            <input
-                                                                                                type="number"
-                                                                                                name="unitPrice"
-                                                                                                value={
-                                                                                                    productsRequest.find(
-                                                                                                        (item) => item.productIdOrSetId === product.id
-                                                                                                    )?.unitPrice || 0
-                                                                                                }
-                                                                                                onChange={(e) =>
-                                                                                                    handleChange(
-                                                                                                        product.id,
-                                                                                                        "unitPrice",
-                                                                                                        parseInt(e.target.value)
-                                                                                                    )
-                                                                                                }
-                                                                                                className="w-16 text-center outline-none"
-                                                                                            />
-                                                                                        </TableCell>
-
-                                                                                        <TableCell className="relative">
-                                                                                            <div className="overflow-auto bg-green-200 p-4 w-[200px] h-24 text-justify break-words whitespace-pre-wrap">
-                                                                                                <Textarea
-                                                                                                    id="note"
-                                                                                                    name="note"
-                                                                                                    value={
-                                                                                                        productsRequest.find(
-                                                                                                            (item) => item.productIdOrSetId === product.id
-                                                                                                        )?.note || ""
-                                                                                                    }
-                                                                                                    onChange={(e) =>
-                                                                                                        handleChange(
-                                                                                                            product.id,
-                                                                                                            "note",
-                                                                                                            e.target.value
-                                                                                                        )
-                                                                                                    }
-                                                                                                    className="col-span-3 bg-green-200"
-                                                                                                />
-                                                                                            </div>
-
-
-                                                                                        </TableCell>
-
-
-
-
-                                                                                        <TableCell className="font-medium">
                                                                                             <Button
-                                                                                                variant="outline"
-                                                                                                size="icon"
-                                                                                                onClick={() =>
-                                                                                                    handleMinusProducts(product.id)
-                                                                                                }
+                                                                                                variant={"outline"}
+                                                                                                className={cn(
+                                                                                                    "w-[240px] pl-3 text-left font-normal",
+                                                                                                    !field.value && "text-muted-foreground"
+                                                                                                )}
                                                                                             >
-                                                                                                <Minus className="h-4 w-4" />
+                                                                                                {field.value ? (
+                                                                                                    format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
+                                                                                                ) : (
+                                                                                                    <span>Chọn ngày</span>
+                                                                                                )}
+                                                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                                                             </Button>
-                                                                                        </TableCell>
-                                                                                    </TableRow>
+                                                                                        </FormControl>
+                                                                                    </PopoverTrigger>
+                                                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                                                        <Calendar
+                                                                                            mode="single"
+                                                                                            selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
+                                                                                            onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
+                                                                                            // disabled={(date) =>
+                                                                                            //     date > new Date() || date < new Date("1900-01-01")
+                                                                                            // }
+                                                                                            initialFocus
+                                                                                        />
+                                                                                    </PopoverContent>
+                                                                                </Popover>
+                                                                                <FormMessage />
+                                                                            </FormItem>
+                                                                        )}
+                                                                    />
 
-                                                                                ))}
-                                                                            </TableBody>
-                                                                        </Table>
-                                                                    </CardContent>
-                                                                </Card>
+                                                                    <FormField
+                                                                        control={form.control}
+                                                                        name="endOrder"
+                                                                        render={({ field }) => (
+                                                                            <FormItem className="flex flex-col">
+                                                                                <FormLabel className="flex items-center text-primary-backgroudPrimary">Ngày kết thúc *</FormLabel>
+                                                                                <Popover modal={true}>
+                                                                                    <PopoverTrigger asChild>
+                                                                                        <FormControl>
+                                                                                            <Button
+                                                                                                variant={"outline"}
+                                                                                                className={cn(
+                                                                                                    "w-[240px] pl-3 text-left font-normal",
+                                                                                                    !field.value && "text-muted-foreground"
+                                                                                                )}
+                                                                                            >
+                                                                                                {field.value ? (
+                                                                                                    format(parse(field.value, "dd/MM/yyyy", new Date()), "PPP")
+                                                                                                ) : (
+                                                                                                    <span>Chọn ngày</span>
+                                                                                                )}
+                                                                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                                            </Button>
+                                                                                        </FormControl>
+                                                                                    </PopoverTrigger>
+                                                                                    <PopoverContent className="w-auto p-0" align="start">
+                                                                                        <Calendar
+                                                                                            mode="single"
+                                                                                            selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
+                                                                                            onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
+                                                                                            // disabled={(date) =>
+                                                                                            //     date > new Date() || date < new Date("1900-01-01")
+                                                                                            // }
+                                                                                            initialFocus
+                                                                                        />
+                                                                                    </PopoverContent>
+                                                                                </Popover>
+                                                                                <FormMessage />
+                                                                            </FormItem>
+                                                                        )}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </CardContent>
-                                                    </Card>
-                                                </div>
-                                            </div>
-                                        </TabsContent>
-                                    </Tabs>
 
+
+
+                                                            <div>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </CardContent>
+                                                </Card>
+                                            </div>
+                                            <Card>
+                                                <Button
+                                                    type="submit"
+                                                    className="w-full bg-primary hover:bg-primary/90"
+                                                    disabled={pending}
+                                                >
+                                                    {pending ? "Loading..." : "GỬI"}
+                                                </Button>
+                                            </Card>
+                                        </form>
+                                    </Form>
 
                                 </div>
                             </div>

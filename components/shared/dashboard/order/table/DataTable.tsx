@@ -65,7 +65,7 @@ export function DataTable<TData extends OrderData, TValue>({
               >
 
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-3 text-center" onClick={() => handleGotoDetail(row.original.id)}>
+                  <TableCell key={cell.id} className="py-3 text-center cursor-pointer" onClick={() => handleGotoDetail(row.original.id)}>
                     {/* <Link href={`/dashboard/order/${row.original.id}`} > */}
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     {/* </Link> */}

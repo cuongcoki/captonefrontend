@@ -12,12 +12,13 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { userskSchema } from "./data/schema";
 import UserBanButton from "@/components/shared/dashboard/users/table/users/user-ban-button";
 import { Employee } from "@/components/shared/dashboard/users/table/users/Column";
 import UserEditButton from "@/components/shared/dashboard/users/table/users/edit-button";
 import { UpdateUser } from "../../form/UsersUpdateForm";
+import { useState } from "react";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -26,8 +27,18 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
+
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleDropdown = () => {
+
+    setIsOpen(!isOpen);
+  };
+
+  const closeDropdown = () => {
+    setIsOpen(false);
+  };
   return (
-    <DropdownMenu modal={false}>
+    <DropdownMenu onOpenChange={toggleDropdown} open={isOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -38,10 +49,9 @@ export function DataTableRowActions<TData>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <UpdateUser userId={row._valuesCache.id} />
-
-        {/* <UserEditButton user={row._valuesCache as Employee} /> */}
-        <UserBanButton user={row.original as Employee} />
+        <UserBanButton setIsOpen={setIsOpen} user={row.original as Employee} />
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+
