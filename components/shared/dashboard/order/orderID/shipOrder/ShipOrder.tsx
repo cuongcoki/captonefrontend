@@ -74,6 +74,8 @@ import { Separator } from "@/components/ui/separator"
 import { FormShipOrder } from "./form/FormShipOrder"
 import { shipOrderApi } from "@/apis/shipOrder.api"
 import { FormUpdateShipOrder } from "./form/FormUpdateShipOrder"
+import ImageIconShipOrder from "./ImageIconShipOrder"
+import Link from "next/link"
 
 const OrderStatus = [
     {
@@ -249,7 +251,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
                     setLoading(false);
                 })
         }
-    }, [orderId,order, valueStatus])
+    }, [orderId, order, valueStatus])
 
     // ** handle render order detail
     const [indexItemShipOrder, setIndexItemShipOrder] = useState<number>(0);
@@ -259,6 +261,8 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
         console.log('data', data)
 
     }
+
+
 
 
 
@@ -313,48 +317,52 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
                                             {item.deliveryMethodDescription}
                                         </TableCell>
                                         <TableCell className="hidden sm:table-cell">
-
-                                            <Dialog>
-                                                <DialogTrigger asChild>
-                                                    {(item.status === 2 || item.status === 3) ? (
-                                                        <span>{item.statusDescription}</span>
-                                                    ) : <Button variant="outline"> {item.statusDescription}</Button>}
-
-                                                </DialogTrigger>
-                                                <DialogContent className="sm:max-w-[425px]">
-                                                    <DialogHeader >
-                                                        <DialogTitle>Đổi trạng thái đơn hàng</DialogTitle>
-                                                    </DialogHeader>
-                                                    <div className="grid gap-4 py-4">
-                                                        <div className="grid grid-cols-4 items-center gap-4">
-                                                            <Label htmlFor="Trạng thái" className="text-right">
-                                                                Trạng thái
-                                                            </Label>
-                                                            <Select
-                                                                defaultValue={String(item.status)}
-                                                                onValueChange={(value) => handleSelectChange(Number(value), item.shipOrderId)}
-                                                            >
-                                                                <SelectTrigger className="w-[200px]">
-                                                                    <SelectValue
-                                                                        placeholder="Hãy chọn loại đơn"
-                                                                        defaultValue={item.status}
-                                                                    />
-                                                                </SelectTrigger>
-                                                                <SelectContent>
-                                                                    {OrderStatus.map((status) => (
-                                                                        <SelectItem key={status.id} value={String(status.id)}>
-                                                                            {status.des}
-                                                                        </SelectItem>
-                                                                    ))}
-                                                                </SelectContent>
-                                                            </Select>
+                                            {(item.status === 2 || item.status === 3) ? (
+                                                <span>{item.statusDescription}</span>
+                                            ) :
+                                                <Dialog>
+                                                    <DialogTrigger asChild>
+                                                        {(item.status === 2 || item.status === 3) ? (
+                                                            <span>{item.statusDescription}</span>
+                                                        ) : <Button variant="outline"> {item.statusDescription}</Button>}
+                                                    </DialogTrigger>
+                                                    <DialogContent className="sm:max-w-[425px]">
+                                                        <DialogHeader >
+                                                            <DialogTitle>Đổi trạng thái đơn hàng</DialogTitle>
+                                                        </DialogHeader>
+                                                        <div className="grid gap-4 py-4">
+                                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                                <Label htmlFor="Trạng thái" className="text-right">
+                                                                    Trạng thái
+                                                                </Label>
+                                                                <Select
+                                                                    defaultValue={String(item.status)}
+                                                                    onValueChange={(value) => handleSelectChange(Number(value), item.shipOrderId)}
+                                                                >
+                                                                    <SelectTrigger className="w-[200px]">
+                                                                        <SelectValue
+                                                                            placeholder="Hãy chọn loại đơn"
+                                                                            defaultValue={item.status}
+                                                                        />
+                                                                    </SelectTrigger>
+                                                                    <SelectContent>
+                                                                        {OrderStatus.map((status) => (
+                                                                            <SelectItem key={status.id} value={String(status.id)}>
+                                                                                {status.des}
+                                                                            </SelectItem>
+                                                                        ))}
+                                                                    </SelectContent>
+                                                                </Select>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <DialogFooter>
-                                                        <Button type="submit" onClick={() => handleSubmitOrderStatus(item.shipOrderId)}>Lưu thay đổi</Button>
-                                                    </DialogFooter>
-                                                </DialogContent>
-                                            </Dialog>
+                                                        <DialogFooter>
+                                                            <Button type="submit" onClick={() => handleSubmitOrderStatus(item.shipOrderId)}>Lưu thay đổi</Button>
+                                                        </DialogFooter>
+                                                    </DialogContent>
+                                                </Dialog>
+                                            }
+
+
                                         </TableCell>
                                         <TableCell className="hidden sm:table-cell">
                                             {(item.status === 2 || item.status === 3) ? (
@@ -374,79 +382,29 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
                     <div className="grid gap-0.5">
                         <CardTitle className="group flex items-center gap-2 text-lg">
                             Giao hàng
-                            <Button
-                                size="icon"
-                                variant="outline"
-                                className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                            >
-                                <Copy className="h-3 w-3" />
-                                <span className="sr-only">Copy Order ID</span>
-                            </Button>
                         </CardTitle>
                         <CardDescription>{`Ngày ${data[indexItemShipOrder]?.shipDate}`}</CardDescription>
-                    </div>
-                    <div className="ml-auto flex items-center gap-1">
-                        <Button size="sm" variant="outline" className="h-8 gap-1">
-                            <Truck className="h-3.5 w-3.5" />
-                            <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
-                                Track Order
-                            </span>
-                        </Button>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button size="icon" variant="outline" className="h-8 w-8">
-                                    <MoreVertical className="h-3.5 w-3.5" />
-                                    <span className="sr-only">More</span>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Chỉnh sửa</DropdownMenuItem>
-                                <DropdownMenuItem>Xuất file</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>Thùng rác</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
                     </div>
                 </CardHeader>
                 <CardContent className="p-6 text-sm">
                     <div className="grid gap-3">
                         <div className="font-semibold">Đơn hàng chi tiết</div>
-                        <ul className="  h-[160px] overflow-auto">
+                        <ul className="  h-[260px] overflow-auto">
                             {data[indexItemShipOrder]?.shipOrderDetailResponses.map((products, index) => (
-                                <li className="" key={index}>
-                                    <span className="text-muted-foreground">
-                                        {products.product?.name} x <span>{products.quantity}</span>
+                                <li className="p-2 shadow-sm hover:bg-gray-100/90 cursor-pointer" key={index}>
+                                    <span className="text-muted-foreground flex justify-between items-center ">
+                                        <span className="w-[50px] h-[50px] shadow-md rounded-md">
+                                            <Link href={`/dashboard/products/product/${products.product?.id}`}> <ImageIconShipOrder dataImage={products.product?.imageResponses} /> </Link>
+                                        </span>
+                                        {products.product?.name}
+                                        <span>x</span>
+                                        <span>{products.quantity}</span>
                                     </span>
                                 </li>
                             ))}
                         </ul>
-
-                        {/* <Separator className="my-2" /> */}
-                        {/* <ul className="grid gap-3">
-                            <li className="flex items-center justify-between">
-                                <span className="text-muted-foreground">Subtotal</span>
-                                <span>$299.00</span>
-                            </li>
-                            <li className="flex items-center justify-between">
-                                <span className="text-muted-foreground">Shipping</span>
-                                <span>$5.00</span>
-                            </li>
-                            <li className="flex items-center justify-between">
-                                <span className="text-muted-foreground">Tax</span>
-                                <span>$25.00</span>
-                            </li>
-                            <li className="flex items-center justify-between font-semibold">
-                                <span className="text-muted-foreground">Total</span>
-                                <span>$329.00</span>
-                            </li>
-                        </ul> */}
                     </div>
                 </CardContent>
-                <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                    <div className="text-xs text-muted-foreground">
-                        Updated <time dateTime="2023-11-23">November 23, 2023</time>
-                    </div>
-                </CardFooter>
             </Card>
         </div >
     );
