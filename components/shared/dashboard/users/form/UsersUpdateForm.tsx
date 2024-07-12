@@ -631,7 +631,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                         </Card>
                       </div>
                       <div className="flex gap-x-5">
-                        <Card>
+                        <Card className="w-[50%]">
                           <CardContent>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {/* address */}
@@ -778,7 +778,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                         </Card>
 
                         {/* tính lương  */}
-                        <Card>
+                        <Card className="w-[50%]">
                           <CardContent className="mt-5 flex flex-col gap-2">
                             {/* salaryByDayRequest */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

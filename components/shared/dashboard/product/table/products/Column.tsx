@@ -107,42 +107,42 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
 
-  {
-    accessorKey: "size",
-    header: ({ column }) => {
-      return <Button variant="ghost">Kích Thước</Button>;
-    },
-    cell: ({ row }) => {
-      let displayText = row.original.size;
+  // {
+  //   accessorKey: "size",
+  //   header: ({ column }) => {
+  //     return <Button variant="ghost">Kích Thước</Button>;
+  //   },
+  //   cell: ({ row }) => {
+  //     let displayText = row.original.size;
 
-      if (displayText.length > 15) {
-        displayText = displayText.slice(0, 15) + "...";
-      }
-      return (
-        <span className="inline-block  px-3 py-1 rounded-md">
-          {displayText}
-        </span>
-      );
-    },
-  },
+  //     if (displayText.length > 15) {
+  //       displayText = displayText.slice(0, 15) + "...";
+  //     }
+  //     return (
+  //       <span className="inline-block  px-3 py-1 rounded-md">
+  //         {displayText}
+  //       </span>
+  //     );
+  //   },
+  // },
 
-  {
-    accessorKey: "description",
-    header: ({ column }) => {
-      return <Button variant="ghost">Mô Tả</Button>;
-    },
-    cell: ({ row }) => {
-      const shortenedDescription = `${row.original.description.slice(
-        0,
-        30
-      )}...`;
-      return (
-        <span className="inline-block  px-3 py-1 rounded-md">
-          {shortenedDescription}
-        </span>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "description",
+  //   header: ({ column }) => {
+  //     return <Button variant="ghost">Mô Tả</Button>;
+  //   },
+  //   cell: ({ row }) => {
+  //     const shortenedDescription = `${row.original.description.slice(
+  //       0,
+  //       30
+  //     )}...`;
+  //     return (
+  //       <span className="inline-block  px-3 py-1 rounded-md">
+  //         {shortenedDescription}
+  //       </span>
+  //     );
+  //   },
+  // },
 
   {
     accessorKey: "isInProcessing",
