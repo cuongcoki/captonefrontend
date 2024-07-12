@@ -55,9 +55,9 @@ import { NoImage } from "@/constants/images"
 import UpdateOrder from "../form/UpdateOrder"
 import { UpdateOrderDetails } from "../form/UpdateOrderDetail"
 import { Badge } from "@/components/ui/badge"
-import { Copy, CreditCard, MoreVertical, Truck } from "lucide-react"
+import { Building2, Copy, CreditCard, MoreVertical, Truck } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
-import {ShipOrder} from "./shipOrder/ShipOrder"
+import { ShipOrder } from "./shipOrder/ShipOrder"
 
 interface OrderId {
     orderId?: string
@@ -174,46 +174,43 @@ export default function OrderIdPage({ orderId }: OrderId) {
         <div className="flex flex-col gap-8">
             <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6">
                 <Card className="sm:col-span-1 md:col-span-10 lg:col-span-7 shadow-sm">
-                    <CardHeader>
-                        <CardTitle>
-                            Công ty chi tiết
+                    <CardHeader >
+                        <CardTitle className="text-primary">
+                            Thông tin Công ty
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="flex flex-col space-y-2">
-
-                            <div className="flex  justify-between border p-2 rounded-lg">
-                                <div className="flex flex-col justify-between">
-                                    <span className="font-medium text-gray-600">Tên công ty:</span>
-                                    <span className="text-gray-800">{data?.company.name}</span>
-                                </div>
-                                <div className="flex flex-col justify-between">
-                                    <span className="font-medium text-gray-600">Tên giám đốc:</span>
-                                    <span className="text-gray-800">{data?.company.directorName}</span>
-                                </div>
-                                <div className="flex flex-col justify-between">
-                                    <span className="font-medium text-gray-600">Số điện thoại:</span>
-                                    <span className=" flex justify-center ">{data?.company.directorPhone}</span>
-                                </div>
-                                <div className="flex flex-col justify-between">
-                                    <span className="font-medium text-gray-600">Email:</span>
-                                    <span className="text-gray-800">{data?.company.email}</span>
-                                </div>
+                        <div className="flex flex-col items-start justify-between gap-6">
+                            <div className="flex items-center gap-4 ">
+                                <Building2 className="h-10 w-10" />
+                                <span className="text-xl font-medium">{data?.company.name}</span>
                             </div>
 
+                            <div className="flex flex-col justify-center gap-4 items-start text-sm xl:flex-row  xl:space-y-0 md:border-t-2 p-2 border-t-0">
+                                <div className=" flex flex-col space-y-1 sm:w-[300px] w-full md:border-r-2 p-2  border-r-0">
+                                    <div className="text-lg font-medium">Địa chỉ công ty</div>
+                                    <div>{data?.company.address}</div>
+                                </div>
 
-                            <div className="flex gap-2">
-                                <span className="font-medium text-gray-600">Địa chỉ: </span>
-                                <span className="text-gray-800">{data?.company.address}</span>
-                            </div>
+                                <div className="flex flex-col space-y-1 md:border-r-2 p-2 border-r-0">
+                                    <div className="text-lg font-medium">Loại công ty</div>
+                                    <div>{data?.company.companyTypeDescription}</div>
+                                </div>
 
-                            <div className="flex gap-2">
-                                <span className="font-medium text-gray-600">Loại công ty:</span>
-                                <span className="text-gray-800">{data?.company.companyType}</span>
-                            </div>
-                            <div className="flex gap-2">
-                                <span className="font-medium text-gray-600">Mô tả loại công ty:</span>
-                                <span className="text-gray-800">{data?.company.companyTypeDescription}</span>
+                                <div className="flex flex-col space-y-1 md:border-r-2 p-2 border-r-0">
+                                    <div className="text-lg font-medium">Tên giám đốc</div>
+                                    <div>{data?.company.directorName}</div>
+                                </div>
+
+                                <div className="flex flex-col space-y-1 md:border-r-2 p-2 border-r-0">
+                                    <div className="text-lg font-medium">Liên hệ</div>
+                                    <div className="">{data?.company.directorPhone}</div>
+                                </div>
+
+                                <div className="flex flex-col space-y-1 p-2">
+                                    <div className="text-lg font-medium">Email</div>
+                                    <div>{data?.company.email}</div>
+                                </div>
                             </div>
                         </div>
                     </CardContent>
@@ -221,8 +218,8 @@ export default function OrderIdPage({ orderId }: OrderId) {
 
                 <Card className="sm:col-span-1 md:col-span-10 lg:col-span-3 shadow-sm">
                     <CardHeader>
-                        <div className="flex justify-between items-center">
-                            <CardTitle>
+                        <div className="flex justify-between items-center ">
+                            <CardTitle className="text-primary">
                                 Đơn hàng chi tiết
                             </CardTitle>
                             <UpdateOrder orderId={data} />
@@ -252,8 +249,8 @@ export default function OrderIdPage({ orderId }: OrderId) {
 
                 <Card className="sm:col-span-1 md:col-span-10 shadow-sm">
                     <CardHeader>
-                        <div className="flex justify-between items-center">
-                            <CardTitle>
+                        <div className="flex justify-between items-center ">
+                            <CardTitle className="text-primary">
                                 Sản phẩm chi tiết
                             </CardTitle>
                             <UpdateOrderDetails orderId={dataId} />
@@ -354,7 +351,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
                         </Tabs>
                     </CardContent>
                 </Card>
-                
+
             </div>
             <ShipOrder orderId={dataId} />
         </div>
@@ -365,3 +362,41 @@ export default function OrderIdPage({ orderId }: OrderId) {
 
 
 
+{/* <div className="flex justify-between items-center gap-8 text-xl">
+
+<div className="flex flex-col gap-5">
+    <div className="flex  justify-between items-center">
+        <span className="font-medium text-gray-600">Tên công ty: </span>
+        <span className="text-gray-800 text-lg">{data?.company.name}</span>
+    </div>
+
+    <div className="flex  justify-between items-center">
+        <span className="font-medium text-gray-600">Địa chỉ: </span>
+        <span className="text-gray-800 text-lg">{data?.company.address}</span>
+    </div>
+
+    <div className="flex  justify-between items-center">
+        <span className="font-medium text-gray-600">Loại công ty: </span>
+        <span className="text-gray-800 text-lg">{data?.company.companyTypeDescription}</span>
+    </div>
+</div>
+
+<div className="flex flex-col gap-5">
+
+    <div className="flex justify-between items-center">
+        <span className="font-medium text-gray-600">Tên giám đốc: </span>
+        <span className="text-gray-800 text-lg">{data?.company.directorName}</span>
+    </div>
+    <div className="flex justify-between items-center">
+        <span className="font-medium text-gray-600">Số điện thoại: </span>
+        <span className=" flex justify-center text-red-500 text-lg">{data?.company.directorPhone}</span>
+    </div>
+    <div className="flex  justify-between items-center">
+        <span className="font-medium text-gray-600">Email: </span>
+        <span className="text-gray-800 text-lg">{data?.company.email}</span>
+    </div>
+</div>
+
+
+
+</div> */}
