@@ -402,7 +402,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
                     <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1000px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
                         <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4">
-                            <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary ">
+                            <div className="p-4 flex items-center justify-between bg-primary ">
                                 <h2 className="text-2xl text-white">Chỉnh sửa sản phẩm đơn hàng</h2>
                                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
                                     <X className="w-4 h-4" />
@@ -604,7 +604,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                                                         <div className="flex  gap-4">
                                                                             <Image
                                                                                 alt="ảnh mẫu"
-                                                                                className="w-[50px] h-[50px] rounded-lg object-contain"
+                                                                                className="w-[50px] h-[50px] rounded-lg object-cover"
                                                                                 width={900}
                                                                                 height={900}
                                                                                 src={
@@ -668,7 +668,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                                                     </TableCell>
 
                                                                     <TableCell className="relative">
-                                                                        <div className="overflow-auto bg-green-200 p-4 w-[200px] h-24 text-justify break-words whitespace-pre-wrap">
+                                                                        <div className="overflow-auto  p-4 w-[200px] h-24 text-justify break-words whitespace-pre-wrap">
                                                                             <Textarea
                                                                                 id="note"
                                                                                 name="note"
@@ -684,7 +684,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                                                                         e.target.value
                                                                                     )
                                                                                 }
-                                                                                className="col-span-3 bg-green-200"
+                                                                                className="col-span-3 border shadow-md"
                                                                             />
                                                                         </div>
                                                                     </TableCell>
@@ -714,7 +714,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                             <Button
                                                 onClick={handleSubmit}
                                                 type="submit"
-                                                className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
+                                                className="w-full bg-primary hover:bg-primary/90"
                                                 disabled={pending}
                                             >
                                                 {pending ? "Loading..." : "GỬI"}

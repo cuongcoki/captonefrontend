@@ -7,8 +7,14 @@ export default function OrderPage() {
 
     return (
         <Card className="w-full h-full">
-            <CardTitle className="p-3 text-2xl text-primary-backgroudPrimary font-medium">Đặt hàng</CardTitle>
-            <RenderTableOrder />
+            <div className="!mb-15">
+                <CardTitle>
+                    <div className="p-3 text-3xl  font-semibold text-[#22c55e] text-center w-full">
+                        QUẢN LÝ ĐẶT HÀNG
+                    </div>
+                </CardTitle>
+                <RenderTableOrder />
+            </div>
         </Card>
     );
 }

@@ -251,7 +251,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
                     <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[700px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
                         <div className="bg-slate-100 flex flex-col space-y-4">
-                            <div className="p-4 flex items-center justify-between bg-primary-backgroudPrimary ">
+                            <div className="p-4 flex items-center justify-between bg-primary ">
                                 <h2 className="text-2xl text-white">Chỉnh sửa đơn hàng</h2>
                                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
                                     <X className="w-4 h-4" />
@@ -287,59 +287,61 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                                             </FormItem>
                                                         )}
                                                     />
-                                                    <FormField
-                                                        control={form.control}
-                                                        name="status"
-                                                        render={({ field }) => (
-                                                            <FormItem className="w-full">
-                                                                <FormLabel className="">
-                                                                    Trạng thái *
-                                                                </FormLabel>
-                                                                <Select
-                                                                    onValueChange={(value) =>
-                                                                        field.onChange(Number(value))
-                                                                    }
-                                                                    defaultValue={String(field.value)}
-                                                                >
+                                                    <div className="md:flex  gap-4 ">
+                                                        <FormField
+                                                            control={form.control}
+                                                            name="status"
+                                                            render={({ field }) => (
+                                                                <FormItem className="w-full">
+                                                                    <FormLabel className="">
+                                                                        Trạng thái *
+                                                                    </FormLabel>
+                                                                    <Select
+                                                                        onValueChange={(value) =>
+                                                                            field.onChange(Number(value))
+                                                                        }
+                                                                        defaultValue={String(field.value)}
+                                                                    >
+                                                                        <FormControl>
+                                                                            <SelectTrigger>
+                                                                                <SelectValue
+                                                                                    placeholder="Chọn trạng thái"
+                                                                                    defaultValue={String(field.value)}
+                                                                                />
+                                                                            </SelectTrigger>
+                                                                        </FormControl>
+                                                                        <SelectContent>
+                                                                            {Object.values(OrderStatus).map((status) => (
+                                                                                <SelectItem key={status.id} value={String(status.id)}>
+                                                                                    {status.des}
+                                                                                </SelectItem>
+                                                                            ))}
+                                                                        </SelectContent>
+                                                                    </Select>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
+                                                        <FormField
+                                                            control={form.control}
+                                                            name="vat"
+                                                            render={({ field }) => (
+                                                                <FormItem className="w-full">
+                                                                    <FormLabel>% Thuế</FormLabel>
                                                                     <FormControl>
-                                                                        <SelectTrigger>
-                                                                            <SelectValue
-                                                                                placeholder="Chọn trạng thái"
-                                                                                defaultValue={String(field.value)}
-                                                                            />
-                                                                        </SelectTrigger>
+                                                                        <Input
+                                                                            type="number"
+                                                                            {...field}
+                                                                            onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                                                            min="0"
+                                                                            max="100000000"
+                                                                        />
                                                                     </FormControl>
-                                                                    <SelectContent>
-                                                                        {Object.values(OrderStatus).map((status) => (
-                                                                            <SelectItem key={status.id} value={String(status.id)}>
-                                                                                {status.des}
-                                                                            </SelectItem>
-                                                                        ))}
-                                                                    </SelectContent>
-                                                                </Select>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
-                                                    <FormField
-                                                        control={form.control}
-                                                        name="vat"
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormLabel>VAT</FormLabel>
-                                                                <FormControl>
-                                                                    <Input
-                                                                        type="number"
-                                                                        {...field}
-                                                                        onChange={(e) => field.onChange(parseFloat(e.target.value))}
-                                                                        min="0"
-                                                                        max="100000000"
-                                                                    />
-                                                                </FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
+                                                    </div>
 
                                                     <div className="md:flex  gap-4 ">
                                                         <FormField
@@ -383,7 +385,6 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                                                 </FormItem>
                                                             )}
                                                         />
-                                                        <Truck />
                                                         <FormField
                                                             control={form.control}
                                                             name="endOrder"
@@ -431,7 +432,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                                     <Card>
                                                         <Button
                                                             type="submit"
-                                                            className="w-full bg-primary-backgroudPrimary hover:bg-primary-backgroudPrimary/90"
+                                                            className="w-full bg-primary hover:bg-primary/90"
                                                             disabled={pending}
                                                         >
                                                             {pending ? "Loading..." : "GỬI"}

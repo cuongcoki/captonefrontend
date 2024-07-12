@@ -18,14 +18,18 @@ import { useContext } from "react";
 
 type Props = {
   user: Employee;
+  setIsOpen?: (isOpen: boolean) => void;
 };
 
-export default function UserBanButton({ user }: Props) {
+export default function UserBanButton({ user, setIsOpen }: Props) {
   const { forceUpdate } = useContext(MyContext);
   const handleClick = () => {
     userApi
       .changeUserStatus(user.id, !user.isActive)
       .then((data) => {
+        if (setIsOpen) {
+          setIsOpen(false); 
+        }
         console.log("changeUserStatus", data);
         forceUpdate();
       })
