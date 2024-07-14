@@ -19,6 +19,7 @@ import { SetUpdateForm } from "../../form/SetUpdateForm";
 import { filesApi } from "@/apis/files.api";
 import { PencilLine } from "lucide-react";
 import { ProductSetStore } from "@/components/shared/dashboard/product-set/product-set-store";
+import HeaderComponent from "@/components/shared/common/header";
 
 export default function SetIDPage() {
   //state
@@ -58,8 +59,13 @@ export default function SetIDPage() {
   // console.log('setProduct', setProduct)
 
   return (
-    <div className="flex flex-col gap-6 justify-center">
-      {/* <header className="">
+    <>
+      <HeaderComponent
+        title="Chi tiết bộ sản phẩm"
+        description="Thông tin chi tiết của bộ sản phẩm"
+      />
+      <div className="flex flex-col gap-6 justify-center">
+        {/* <header className="">
                 <div className="flex items-center gap-4 justify-between">
                     <Link href={'/dashboard/products/set'}>
                         <Button variant="outline" size="icon" className="h-7 w-7">
@@ -75,71 +81,74 @@ export default function SetIDPage() {
                     </div>
                 </div>
             </header> */}
-      <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-        <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-          <Card x-chunk="dashboard-07-chunk-0">
-            <CardHeader>
-              <div className="flex justify-between items-start">
+        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+            <Card x-chunk="dashboard-07-chunk-0">
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <CardTitle className="text-primary">
+                    Thông tin bộ sản phẩm
+                  </CardTitle>
+                  <SetUpdateForm setId={setId.id}>
+                    <PencilLine className="size-6 rounded  hover:bg-gray-200" />
+                  </SetUpdateForm>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-6">
+                  <div className="grid gap-3">
+                    <Label htmlFor="name">Mã Bộ Sản Phẩm</Label>
+                    <div className="border p-2 rounded-md border-gray-100">
+                      {setId?.code}
+                    </div>
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="name">Tên Bộ Sản Phẩm</Label>
+                    <div className="border p-2 rounded-md border-gray-100">
+                      {setId?.name}
+                    </div>
+                  </div>
+                  <div className="grid gap-3">
+                    <Label htmlFor="description">Mô Tả</Label>
+                    <div className="border p-2 rounded-md border-gray-100">
+                      {setId?.description}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <SetProduct setProduct={setProduct} />
+          </div>
+
+          <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+            <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
+              <CardHeader>
                 <CardTitle className="text-primary">
-                  Thông tin bộ sản phẩm
+                  Hình ảnh minh họa
                 </CardTitle>
-                <SetUpdateForm setId={setId.id}>
-                  <PencilLine className="size-6 rounded  hover:bg-gray-200" />
-                </SetUpdateForm>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-6">
-                <div className="grid gap-3">
-                  <Label htmlFor="name">Mã Bộ Sản Phẩm</Label>
-                  <div className="border p-2 rounded-md border-gray-100">
-                    {setId?.code}
-                  </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-2">
+                  {!loading ? (
+                    <Image
+                      alt="Product image"
+                      className="aspect-square w-full rounded-md object-contain"
+                      height={900}
+                      src={linkImg}
+                      width={900}
+                    />
+                  ) : (
+                    <div className="text-center flex flex-col justify-center items-center w-full ">
+                      <span className="loading loading-spinner loading-lg text-primary "></span>
+                    </div>
+                  )}
                 </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="name">Tên Bộ Sản Phẩm</Label>
-                  <div className="border p-2 rounded-md border-gray-100">
-                    {setId?.name}
-                  </div>
-                </div>
-                <div className="grid gap-3">
-                  <Label htmlFor="description">Mô Tả</Label>
-                  <div className="border p-2 rounded-md border-gray-100">
-                    {setId?.description}
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <SetProduct setProduct={setProduct} />
-        </div>
-
-        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-          <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
-            <CardHeader>
-              <CardTitle className="text-primary">Hình ảnh minh họa</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-2">
-                {!loading ? (
-                  <Image
-                    alt="Product image"
-                    className="aspect-square w-full rounded-md object-contain"
-                    height={900}
-                    src={linkImg}
-                    width={900}
-                  />
-                ) : (
-                  <div className="text-center flex flex-col justify-center items-center w-full ">
-                    <span className="loading loading-spinner loading-lg text-primary "></span>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

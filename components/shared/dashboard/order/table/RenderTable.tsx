@@ -1,5 +1,5 @@
-import { Order, columns } from "./Column"
-import { DataTable } from "./DataTable"
+import { Order, columns } from "./Column";
+import { DataTable } from "./DataTable";
 import { useEffect, useState, createContext } from "react";
 import { DataTablePagination } from "./data-table-pagination";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-
 import { ProductSearchParams } from "@/types/product.type";
 import CreateOrder from "../form/CreateOrder";
 import { orderApi } from "@/apis/order.api";
@@ -25,7 +24,7 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => { },
+  forceUpdate: () => {},
 });
 
 const enumStatus = [
@@ -33,31 +32,31 @@ const enumStatus = [
     statusName: "SIGNED",
     description: "Đã nhận đơn hàng",
     id: 0,
-    value: "0"
+    value: "0",
   },
   {
     statusName: "INPROGRESS",
     description: "Đang thực hiện",
     id: 1,
-    value: "1"
+    value: "1",
   },
   {
     statusName: "COMPLETED",
     description: "Đã hoàn thành",
     id: 2,
-    value: "2"
+    value: "2",
   },
   {
     statusName: "CANCELLED",
     description: "Đã hủy",
     id: 3,
-    value: "3"
+    value: "3",
   },
   {
     statusName: "CANCELLED",
     description: "bỏ chọn",
     id: 4,
-    value: " "
+    value: " ",
   },
 ];
 
@@ -75,13 +74,13 @@ export default function RenderTableOrder() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [data, setData] = useState<Order[]>([]);
-  console.log('data', data)
+  console.log("data", data);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [status, setStatus] = useState<string | null>(null);
   const [startOrder, setStartOrder] = useState<Date | null>(null);
   const [endOrder, setEndOrder] = useState<Date | null>(null);
-  const [companyName, setCompanyName] = useState<string>('');
+  const [companyName, setCompanyName] = useState<string>("");
   const [company, setCompany] = useState<Company[]>([]);
 
   const router = useRouter();
@@ -109,24 +108,21 @@ export default function RenderTableOrder() {
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
-        console.error('Error fetching order data:', error);
+        console.error("Error fetching order data:", error);
       } finally {
         setLoading(false);
       }
     };
 
     const fetchDataCompany = () => {
-      companyApi.getCompanyByType(1)
-        .then(({ data }) => {
-          setCompany(data.data);
-        })
-    }
+      companyApi.getCompanyByType(1).then(({ data }) => {
+        setCompany(data.data);
+      });
+    };
 
-    fetchDataCompany()
+    fetchDataCompany();
     fetchDataOrder();
   }, [currentPage, pageSize, companyName, startOrder, endOrder, status, force]);
-
-
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
@@ -160,16 +156,16 @@ export default function RenderTableOrder() {
 
   const formatDate = (date: Date | null) => {
     if (!date) return "";
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-  console.log('startOrder', formatDate(startOrder)),
-    console.log('endOrder', formatDate(endOrder))
+  console.log("startOrder", formatDate(startOrder)),
+    console.log("endOrder", formatDate(endOrder));
 
   return (
-    <div className="px-3 mt-3">
+    <div className=" mt-3">
       <div className="flex flex-col md:flex-row justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
           <MyContext.Provider value={{ forceUpdate }}>
@@ -186,18 +182,17 @@ export default function RenderTableOrder() {
                   value={status || ""}
                   onValueChange={(value) => handleStatusChange(value)}
                 >
-                  <SelectTrigger >
+                  <SelectTrigger>
                     <SelectValue placeholder="Trạng thái" />
                   </SelectTrigger>
-                  <SelectContent >
-                    {
-                      enumStatus.map((item, index) => (
-                        <SelectItem value={item.value} key={index}>{item.description}</SelectItem>
-                      ))
-                    }
+                  <SelectContent>
+                    {enumStatus.map((item, index) => (
+                      <SelectItem value={item.value} key={index}>
+                        {item.description}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
-
               </div>
               <div className="grid grid-cols-2 gap-x-4 ">
                 <DatePicker
@@ -240,6 +235,5 @@ export default function RenderTableOrder() {
         </div>
       </MyContext.Provider>
     </div>
-
   );
 }
