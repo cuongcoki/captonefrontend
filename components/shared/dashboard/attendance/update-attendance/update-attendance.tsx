@@ -378,7 +378,7 @@ export default function UpdateAttendance({
   return (
     <Card className="p-3">
       <div className="text-3xl text-[#22c55e] w-full text-center mb-3 font-semibold mt-3">
-        QUẢN LÝ ĐIỂM DANH
+        ĐIỂM DANH NHÂN VIÊN
       </div>
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap ">
         <Combobox
@@ -433,7 +433,7 @@ export default function UpdateAttendance({
                       }}
                       className="hover:cursor-pointer hover:text-blue-400"
                     >
-                      Chọn hết
+                      <span className="text-primary">Chọn tất cả</span>
                     </div>
                     <div>|</div>
                     <div
@@ -442,7 +442,7 @@ export default function UpdateAttendance({
                       }}
                       className="hover:cursor-pointer hover:text-blue-400"
                     >
-                      Bỏ hết
+                      <span className="text-red-500">Bỏ chọn</span>
                     </div>
                   </div>
                 </div>
@@ -463,7 +463,7 @@ export default function UpdateAttendance({
                       }}
                       className="hover:cursor-pointer hover:text-blue-400"
                     >
-                      Chọn hết
+                      <span className="text-primary">Chọn tất cả</span>
                     </div>
                     <div>|</div>
                     <div
@@ -472,7 +472,7 @@ export default function UpdateAttendance({
                       }}
                       className="hover:cursor-pointer hover:text-blue-400"
                     >
-                      Bỏ hết
+                      <span className="text-red-500">Bỏ chọn</span>
                     </div>
                   </div>
                 </div>
@@ -647,11 +647,10 @@ export default function UpdateAttendance({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${
-                            item.isSalaryByProduct === true
+                          className={`${item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
                               : "bg-white dark:bg-card "
-                          }`}
+                            }`}
                         >
                           Nhấn vào
                         </td>
@@ -661,11 +660,10 @@ export default function UpdateAttendance({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${
-                            item.isSalaryByProduct === true
+                          className={`${item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
                               : "bg-white dark:bg-card"
-                          }`}
+                            }`}
                         >
                           Để tạo
                         </td>
@@ -675,11 +673,10 @@ export default function UpdateAttendance({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${
-                            item.isSalaryByProduct === true
+                          className={`${item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
                               : "bg-white dark:bg-card"
-                          }`}
+                            }`}
                         >
                           Sản phẩm
                         </td>

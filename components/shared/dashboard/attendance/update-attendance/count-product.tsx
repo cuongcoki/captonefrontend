@@ -199,7 +199,7 @@ export default function CountProduct({
               <div>{tableData[index].userName}</div>
             </div>
             <div className="flex space-x-1">
-              <div className="font-bold">ID: </div>
+              <div className="font-bold">CCCD/CMND: </div>
               <div>{tableData[index].userID}</div>
             </div>
           </DialogDescription>

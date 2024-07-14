@@ -7,12 +7,15 @@ type Props = {
   searchParams: UserSearchParams;
 };
 
+const titleStyleInline ={
+  borderBottom: '1px solid'
+}
 export default function UsersPage({ searchParams }: Props) {
   return (
     <Card>
       <div className="!mb-15">
         <CardTitle>
-          <div className="p-3 text-3xl  font-semibold text-[#22c55e] text-center w-full">
+          <div className="p-3 text-3xl font-semibold text-[#22c55e] text-center w-full border-" style={titleStyleInline}>
             QUẢN LÝ NHÂN VIÊN
           </div>
         </CardTitle>

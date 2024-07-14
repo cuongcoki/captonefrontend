@@ -81,7 +81,7 @@ export default function SetIDPage() {
             <CardHeader>
               <div className="flex justify-between items-start">
                 <CardTitle className="text-primary">
-                  Bộ sản phẩm chi tiết
+                  Thông tin bộ sản phẩm
                 </CardTitle>
                 <SetUpdateForm setId={setId.id}>
                   <PencilLine className="size-6 rounded  hover:bg-gray-200" />
@@ -118,7 +118,7 @@ export default function SetIDPage() {
         <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
           <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
             <CardHeader>
-              <CardTitle className="text-primary">Ảnh Bộ Sản Phẩm</CardTitle>
+              <CardTitle className="text-primary">Hình ảnh minh họa</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid gap-2">

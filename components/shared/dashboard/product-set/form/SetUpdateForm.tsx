@@ -511,7 +511,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         <Card>
                           <CardHeader>
                             <CardTitle className="text-2xl text-primary">
-                              Chi tiết bộ sản phẩm
+                              Thông tin bộ sản phẩm
                             </CardTitle>
                           </CardHeader>
                           <CardContent className="flex flex-col gap-5">
@@ -565,7 +565,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         >
                           <CardHeader>
                             <CardTitle className="text-lg text-primary">
-                              Ảnh Bộ Sản Phẩm
+                              Hình ảnh minh họa
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
@@ -605,7 +605,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                       <Card>
                         <CardHeader className="font-semibold text-2xl">
                           <span className="text-primary">
-                            Thông tin sản phẩm trong bộ
+                            Danh sách sản phẩm trong bộ
                           </span>
                         </CardHeader>
                         <CardContent className="overflow-auto">
@@ -665,7 +665,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                   handleDeleteProducts(product.productId)
                                 }
                               >-
-                                <PackageMinus className="h-4 w-4"/>
+                                <PackageMinus className="h-4 w-4" />
                               </Button>
                             </div>
                           ))}
@@ -703,7 +703,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                         </TableHead>
                                         <TableHead>Tên</TableHead>
                                         <TableHead>Mã Code</TableHead>
-                                        <TableHead className="text-right">
+                                        <TableHead className="text-left">
                                           Thêm
                                         </TableHead>
                                       </TableRow>
@@ -768,7 +768,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                           height={900}
                                           src={
                                             product?.imageUrl ===
-                                            "Image_not_found"
+                                              "Image_not_found"
                                               ? NoImage
                                               : product?.imageUrl
                                           }

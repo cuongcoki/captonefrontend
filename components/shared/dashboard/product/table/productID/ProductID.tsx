@@ -245,7 +245,7 @@ export default function ProductIDPage() {
                 <div className="">
                   <span
                     className={`w-[40%] px-2 py-2 rounded-full ${productId?.isInProcessing
-                      ? "bg-primary"
+                      ? "bg-primary text-white"
                       : "bg-yellow-200 text-black"
                       }`}
                   >
@@ -261,7 +261,7 @@ export default function ProductIDPage() {
 
         <Card className="shadow-sm">
           <CardHeader>
-            <CardTitle className="text-primary">Hình ảnh sản phẩm</CardTitle>
+            <CardTitle className="text-primary">Hình ảnh</CardTitle>
           </CardHeader>
           <CardContent>
             <ImageDisplayID images={productId.imageResponses} />

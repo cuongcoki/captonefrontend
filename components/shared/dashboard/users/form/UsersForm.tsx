@@ -517,7 +517,7 @@ export const UsersForm = () => {
                       </div>
                       <div className="flex gap-x-5">
                         <Card className="w-[50%]">
-                          <CardContent className="mt-5">
+                          <CardContent className="mt-5 flex flex-col gap-2">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {/* address */}
                               <FormField
@@ -526,7 +526,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Địa chỉ cư trú *
                                       </FormLabel>
                                       <FormControl>
@@ -545,7 +545,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Số điện thoại *
                                       </FormLabel>
                                       <FormControl>
@@ -566,7 +566,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Cơ sở nào *
                                       </FormLabel>
                                       <Select
@@ -604,7 +604,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Vai trò *
                                       </FormLabel>
                                       <FormControl>
@@ -713,7 +713,7 @@ export const UsersForm = () => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -797,7 +797,7 @@ export const UsersForm = () => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -818,10 +818,10 @@ export const UsersForm = () => {
                                           selected={
                                             field.value
                                               ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                field.value,
+                                                "dd/MM/yyyy",
+                                                new Date()
+                                              )
                                               : undefined
                                           }
                                           onDayClick={(date: any) =>
