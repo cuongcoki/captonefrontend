@@ -19,7 +19,7 @@ import { useWindowWidth } from "@react-hook/window-size";
 import { ModeToggle } from "@/components/shared/common/mode-toggle";
 
 type Props = {};
-export default function BottomNavbar({}: Props) {
+export default function BottomNavbar({ }: Props) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   const onlyWidth = useWindowWidth();
@@ -50,7 +50,7 @@ export default function BottomNavbar({}: Props) {
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
               {
-                title: "Trang chủ",
+                title: "Thống kê",
                 href: "/dashboard/home",
                 icon: LayoutDashboard,
                 variant: "colorCompany",
@@ -99,7 +99,7 @@ export default function BottomNavbar({}: Props) {
                 icon: Building,
                 variant: "ghost",
               },
-           
+
             ]}
           />
         </div>
