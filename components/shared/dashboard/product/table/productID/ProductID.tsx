@@ -114,29 +114,29 @@ export default function ProductIDPage() {
       <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
         <Card className="shadow-sm">
           <CardHeader>
-            <div className="flex justify-between items-start">
+            <div className="flex justify-between items-start text-primary">
               <div>
-                <CardTitle className="text-primary">
-                  Chi tiết sản phẩm
-                </CardTitle>
+                <CardTitle>Thông Tin</CardTitle>
+                <span className="text-xs font-normal leading-snug text-muted-foreground">Thông tin chi tiết của sản phẩm.</span>
               </div>
-              <ProductUpdate product={productId}>
-                <PencilLine className="rounded hover:bg-gray-200" />
-              </ProductUpdate>
+              <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
+                <ProductUpdate product={productId}>
+                  <PencilLine/>
+                </ProductUpdate>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-6">
+            <div className="grid gap-3">
               <Label className="" htmlFor="name">
                 <div>Mã Sản Phẩm</div>
               </Label>
-              <div className="grid grid-cols-10 ">
+              <div className="grid grid-cols-2 ">
                 <div className="col-span-6 border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden truncate">
                   {productId?.code}
                 </div>
-
-
               </div>
+
               <div className="grid gap-3">
                 <Label htmlFor="name">Tên Sản Phẩm</Label>
                 <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden truncate">
@@ -170,16 +170,19 @@ export default function ProductIDPage() {
           </CardContent>
         </Card>
         <Card className="shadow-sm gd-1">
-          <CardHeader>
+          <CardHeader className="text-primary">
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle className="text-primary">
-                  Giai đoạn sản phẩm
+                <CardTitle >
+                  Giai Đoạn
                 </CardTitle>
+                <span className="text-xs font-normal leading-snug text-muted-foreground">Thông tin các giai đoạn của sản phẩm.</span>
               </div>
+              <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
               <ProductUpdate product={productId}>
-                <PencilLine className="rounded hover:bg-gray-200" />
+                <PencilLine/>
               </ProductUpdate>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
@@ -233,7 +236,8 @@ export default function ProductIDPage() {
       <div className="grid gap-8 ">
         <Card className="shadow-sm">
           <CardHeader>
-            <CardTitle className="text-primary">Trạng thái sản phẩm</CardTitle>
+            <CardTitle className="text-primary">Trạng Thái</CardTitle>
+            <span className="text-xs font-normal leading-snug text-muted-foreground">Trạng thái hiện tại của sản phẩm.</span>
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 col-span-4 mx-auto">
@@ -241,7 +245,7 @@ export default function ProductIDPage() {
                 className="flex gap-x-3 items-center"
                 htmlFor="status"
               >
-                <div className="">Trạng Thái</div>
+                <div className="">Trạng Thái:</div>
                 <div className="">
                   <span
                     className={`w-[40%] px-2 py-2 rounded-full ${productId?.isInProcessing
@@ -261,7 +265,8 @@ export default function ProductIDPage() {
 
         <Card className="shadow-sm">
           <CardHeader>
-            <CardTitle className="text-primary">Hình ảnh</CardTitle>
+            <CardTitle className="text-primary">Hình Ảnh</CardTitle>
+            <span className="text-xs font-normal leading-snug text-muted-foreground">Hình ảnh minh họa của sản phẩm.</span>
           </CardHeader>
           <CardContent>
             <ImageDisplayID images={productId.imageResponses} />

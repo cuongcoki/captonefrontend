@@ -287,7 +287,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     handleSearch();
   }, [searchTerm]);
 
-  // ** các hàm để thêm sản phẩm  và số lượng vào bộ sản phẩm
+  // ** các hàm để thêm sản phẩm và số lượng vào bộ sản phẩm
 
   // console.log('getDetailsProUpdate', getDetailsProUpdate)
   const [getDetailsPro, setGetDetailsPro] = useState<any[]>([]);
@@ -492,10 +492,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-          <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2  max-w-[900px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
-            <div className="bg-slate-100  flex flex-col ">
-              <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
-                <h2 className="text-2xl text-white">Chỉnh sửa bộ sản phẩm</h2>
+          <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[900px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+            <div className="bg-white flex flex-col rounded-md">
+              <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
+                <h2 className="text-2xl text-white">Chỉnh Sửa Thông Tin Bộ Sản Phẩm</h2>
                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
                   <X className="w-4 h-4 dark:text-white" />
                 </Button>
@@ -511,7 +511,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         <Card>
                           <CardHeader>
                             <CardTitle className="text-2xl text-primary">
-                              Thông tin bộ sản phẩm
+                              Thông Tin
                             </CardTitle>
                           </CardHeader>
                           <CardContent className="flex flex-col gap-5">
@@ -564,8 +564,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                           x-chunk="dashboard-07-chunk-4"
                         >
                           <CardHeader>
-                            <CardTitle className="text-lg text-primary">
-                              Hình ảnh minh họa
+                            <CardTitle className="text-2xl text-primary">
+                              Hình Ảnh
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
@@ -603,10 +603,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                     </div>
                     <div>
                       <Card>
-                        <CardHeader className="font-semibold text-2xl">
-                          <span className="text-primary">
-                            Danh sách sản phẩm trong bộ
-                          </span>
+                        <CardHeader>
+                          <CardTitle className="text-2xl text-primary">Danh Sách Sản Phẩm</CardTitle>
                         </CardHeader>
                         <CardContent className="overflow-auto">
                           {getDetailsProUpdate.map((product, index) => (
@@ -628,11 +626,11 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                 )}
                                 <div className="font-medium dark:text-white">
                                   <div>
-                                    <b>Tên: </b>
+                                    <b>Tên Sản Phẩm: </b>
                                     {limitLength(product?.product.name, 50)}
                                   </div>
                                   <div className="text-sm text-gray-500 dark:text-gray-400">
-                                    <b>Code: </b>
+                                    <b>Mã: </b>
                                     {limitLength(product?.product.code, 50)}
                                   </div>
                                   <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -677,7 +675,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         <Card>
                           <CardHeader>
                             <CardTitle className="text-2xl text-primary">
-                              Thêm sản phẩm vào bộ
+                              Thêm Sản Phẩm Vào Bộ
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
@@ -699,10 +697,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                     <TableHeader>
                                       <TableRow>
                                         <TableHead className="w-[100px]">
-                                          Ảnh
+                                          Hình Ảnh
                                         </TableHead>
-                                        <TableHead>Tên</TableHead>
-                                        <TableHead>Mã Code</TableHead>
+                                        <TableHead>Tên Sản Phẩm</TableHead>
+                                        <TableHead>Mã Sản Phẩm</TableHead>
                                         <TableHead className="text-left">
                                           Thêm
                                         </TableHead>
@@ -749,10 +747,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                               ""
                             )}
 
-                            <div className="md:col-span-1  md:mt-0">
+                            <div className="md:col-span-1 md:mt-0">
                               <Card className="mt-4">
                                 <CardHeader className="font-semibold text-xl">
-                                  <span>Thông tin sản phẩm đã thêm</span>
+                                  <span>Danh sách sản phẩm thêm vào bộ</span>
                                 </CardHeader>
                                 <CardContent className="overflow-auto">
                                   {getDetailsPro.map((product, index) => (

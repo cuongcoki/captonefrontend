@@ -115,7 +115,8 @@ export default function SetProduct({ setProduct }: SetProductProps) {
   return (
     <Card x-chunk="dashboard-07-chunk-1" className="h-max">
       <CardHeader>
-        <CardTitle className="text-primary">Danh sách sản phẩm</CardTitle>
+        <CardTitle className="text-primary">Danh Sách Sản Phẩm</CardTitle>
+        <span className="text-xs font-normal leading-snug text-muted-foreground">Danh sách các sản phẩm có trong bộ sản phẩm.</span>
       </CardHeader>
       <CardContent>
         <Table>
