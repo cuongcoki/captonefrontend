@@ -384,14 +384,14 @@ export const SetForm = () => {
                   <X className="w-4 h-4 dark:text-white" />
                 </Button>
               </div>
-              <div className="grid gap-4 p-4 overflow-y-auto h-[700px] bg-background">
+              <div className="grid gap-4 p-4 overflow-y-auto h-[700px]">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)}>
                     <div className="grid gap-4  lg:grid-cols-5 lg:gap-8">
                       <Card className="items-start gap-4 lg:col-span-3 lg:gap-8">
                         <CardHeader>
-                          <CardTitle className="text-lg">
-                            Chi tiết bộ sản phẩm
+                          <CardTitle className="font-semibold tracking-tight text-2xl text-primary">
+                            Thông tin bộ sản phẩm
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -403,7 +403,7 @@ export const SetForm = () => {
                               name="code"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center text-primary ">
+                                  <FormLabel className="flex items-center">
                                     Mã Sản Phẩm
                                   </FormLabel>
                                   <FormControl>
@@ -420,7 +420,7 @@ export const SetForm = () => {
                               name="name"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
+                                  <FormLabel className="flex items-center">
                                     Tên Bộ Sản Phẩm
                                   </FormLabel>
                                   <FormControl>
@@ -436,7 +436,7 @@ export const SetForm = () => {
                               name="description"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
+                                  <FormLabel className="flex items-center">
                                     Mô Tả
                                   </FormLabel>
                                   <FormControl>
@@ -493,7 +493,7 @@ export const SetForm = () => {
                       <div className="grid auto-rows-max items-start gap-4 lg:col-span-5 lg:gap-8">
                         <Card>
                           <CardHeader>
-                            <CardTitle className="text-lg">
+                            <CardTitle className="font-semibold tracking-tight text-2xl text-primary">
                               Chi tiết sản phẩm trong bộ
                             </CardTitle>
                           </CardHeader>
@@ -515,12 +515,12 @@ export const SetForm = () => {
                                   <Table>
                                     <TableHeader>
                                       <TableRow>
-                                        <TableHead className="w-[100px]">
+                                        <TableHead className="w-[100px] text-center">
                                           Ảnh
                                         </TableHead>
                                         <TableHead>Tên Sản Phẩm</TableHead>
                                         <TableHead>Mã Sản Phẩm</TableHead>
-                                        <TableHead className="text-right">
+                                        <TableHead className="text-left">
                                           Thêm
                                         </TableHead>
                                       </TableRow>
@@ -597,7 +597,7 @@ export const SetForm = () => {
                                             {limitLength(product.name, 50)}
                                           </div>
                                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            <b>Code: </b>
+                                            <b>Mã: </b>
                                             {limitLength(product.code, 50)}
                                           </div>
                                           <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -611,7 +611,7 @@ export const SetForm = () => {
                                         </div>
                                       </div>
                                       <input
-                                        className="col-span-2 w-16 text-center outline-none"
+                                        className="col-span-2 w-16 text-center outline-none border"
                                         type="number"
                                         value={
                                           productsRequest.find(

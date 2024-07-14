@@ -53,7 +53,7 @@ export default function SideNavbar({}: Props) {
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
               {
-                title: "Trang chủ",
+                title: "Thống kê",
                 href: "/dashboard/home",
                 icon: LayoutDashboard,
                 variant: "colorCompany",

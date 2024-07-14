@@ -60,7 +60,7 @@ export function BreadcrumbComponent() {
             case `/dashboard/products/product/${params.id}`:
                 return "Chi tiết sản phẩm";
             case `/dashboard/products/set/${params.id}`:
-                return "Chi tiết bộ sản phẩm";
+                return "Thông tin bộ";
             default:
                 return defaultTitle;
         }

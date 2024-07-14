@@ -9,15 +9,11 @@ type Props = {
 
 export default function UsersPage({ searchParams }: Props) {
   return (
-    <Card>
-      <div className="!mb-15">
-        <CardTitle>
-          <div className="p-3 text-3xl  font-semibold text-[#22c55e] text-center w-full">
-            QUẢN LÝ NHÂN VIÊN
-          </div>
-        </CardTitle>
+    <div className="!mb-15">
+      
+      {/* <Card> */}
         <RenderTableUsers searchParams={searchParams} />
-      </div>
-    </Card>
+      {/* </Card> */}
+    </div>
   );
 }
