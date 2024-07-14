@@ -8,7 +8,7 @@ export default function page({ searchParams }: ReportParams) {
   searchParams.ReportType = searchParams.ReportType || "";
   return (
     <div className="min-h-[100vh] max-h-max">
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm ">
+      <div className="">
         <ReportTable searchParams={searchParams} />
       </div>
     </div>

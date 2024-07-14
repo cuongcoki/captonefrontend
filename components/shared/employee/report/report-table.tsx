@@ -7,6 +7,7 @@ import { reportApi } from "@/apis/report.api";
 import { ReportStore } from "@/components/shared/employee/report/report-store";
 import { ReportAdd } from "@/components/shared/employee/report/report-add";
 import { Button } from "@/components/ui/button";
+import HeaderComponent from "@/components/shared/common/header";
 
 const ColorOfTypeStatus: { [key: number]: string } = {
   0: "text-gray-500",
@@ -43,10 +44,11 @@ export default function ReportTable({ searchParams }: ReportParams) {
       });
   }, [params, force, setTableData]);
   return (
-    <div className="p-2 ">
-      <div className="text-3xl text-[#22c55e] w-full text-center font-semibold mt-3 mb-5">
-        DANH SÁCH ĐƠN BÁO CÁO
-      </div>
+    <div className="">
+      <HeaderComponent
+        title="Danh Sách Đơn Khiếu Nại"
+        description="Danh sách đơn khiếu nại đã gửi."
+      />
       <div className="mb-5 mt-2 grid grid-cols-12 space-y-1 grid-rows-2 xl:space-y-0 xl:grid-rows-1">
         {/* <Input
           className="col-span-11 xl:col-span-6 xl:row-start-1"

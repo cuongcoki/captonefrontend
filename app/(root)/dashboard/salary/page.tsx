@@ -12,7 +12,7 @@ export default function page({ searchParams }: SearchSalaryParams) {
 
   return (
     <div className="min-h-[100vh] max-h-max">
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm ">
+      <div className="">
         <SalaryTable searchParams={searchParams} />
       </div>
     </div>
