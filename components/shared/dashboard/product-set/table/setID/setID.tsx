@@ -81,42 +81,47 @@ export default function SetIDPage() {
                     </div>
                 </div>
             </header> */}
-        <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-          <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-            <Card x-chunk="dashboard-07-chunk-0">
-              <CardHeader>
-                <div className="flex justify-between items-start">
+      <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+        <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+          <Card x-chunk="dashboard-07-chunk-0">
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div>
                   <CardTitle className="text-primary">
-                    Thông tin bộ sản phẩm
+                    Thông Tin
                   </CardTitle>
+                  <span className="text-xs font-normal leading-snug text-muted-foreground">Thông tin cơ bản của bộ sản phẩm.</span>
+                </div>
+                <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
                   <SetUpdateForm setId={setId.id}>
-                    <PencilLine className="size-6 rounded  hover:bg-gray-200" />
+                    <PencilLine />
                   </SetUpdateForm>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-6">
-                  <div className="grid gap-3">
-                    <Label htmlFor="name">Mã Bộ Sản Phẩm</Label>
-                    <div className="border p-2 rounded-md border-gray-100">
-                      {setId?.code}
-                    </div>
-                  </div>
-                  <div className="grid gap-3">
-                    <Label htmlFor="name">Tên Bộ Sản Phẩm</Label>
-                    <div className="border p-2 rounded-md border-gray-100">
-                      {setId?.name}
-                    </div>
-                  </div>
-                  <div className="grid gap-3">
-                    <Label htmlFor="description">Mô Tả</Label>
-                    <div className="border p-2 rounded-md border-gray-100">
-                      {setId?.description}
-                    </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-6">
+                <div className="grid gap-3">
+                  <Label htmlFor="name">Mã Bộ Sản Phẩm</Label>
+                  <div className="border p-2 rounded-md border-gray-100">
+                    {setId?.code}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="grid gap-3">
+                  <Label htmlFor="name">Tên Bộ Sản Phẩm</Label>
+                  <div className="border p-2 rounded-md border-gray-100">
+                    {setId?.name}
+                  </div>
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="description">Mô Tả</Label>
+                  <div className="border p-2 rounded-md border-gray-100">
+                    {setId?.description}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
             <SetProduct setProduct={setProduct} />
           </div>
@@ -125,8 +130,9 @@ export default function SetIDPage() {
             <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
               <CardHeader>
                 <CardTitle className="text-primary">
-                  Hình ảnh minh họa
+                  Hình Ảnh
                 </CardTitle>
+              <span className="text-xs font-normal leading-snug text-muted-foreground">Hình ảnh minh họa của bộ sản phẩm.</span>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-2">

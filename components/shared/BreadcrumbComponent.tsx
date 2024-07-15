@@ -71,7 +71,7 @@ export function BreadcrumbComponent() {
       case `/dashboard/order/${params.id}`:
         return "Chi tiết đơn hàng";
       case `/dashboard/products/product/${params.id}`:
-        return "Chi tiết sản phẩm";
+        return "Thông tin sản phẩm";
       case `/dashboard/products/set/${params.id}`:
         return "Thông tin bộ";
       case `/dashboard/salary/detail/${params.id}`:
