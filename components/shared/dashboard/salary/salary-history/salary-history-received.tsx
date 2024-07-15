@@ -26,7 +26,7 @@ export default function SalaryHistoryReceived() {
   return (
     <Card className="overflow-hidden">
       <CardHeader>
-        <CardTitle>Lịch sử nhận lương</CardTitle>
+        <CardTitle className="text-primary">Lịch sử nhận lương</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
@@ -58,7 +58,8 @@ export default function SalaryHistoryReceived() {
       </CardContent>
       <CardFooter className="flex flex-row items-center px-6 py-3 mb-2">
         <div className="text-sm text-muted-foreground">
-          Lương còn lại:<span className="font-bold"> 7.000.000</span>
+          Lương còn lại:
+          <span className="font-bold text-primary"> 7.000.000</span>
         </div>
         <Pagination className="ml-auto mr-0 w-auto">
           <PaginationContent>

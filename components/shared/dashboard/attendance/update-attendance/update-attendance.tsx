@@ -31,6 +31,7 @@ import { usePathname, useRouter } from "next/navigation";
 import CountProduct from "@/components/shared/dashboard/attendance/update-attendance/count-product";
 import { filesApi } from "@/apis/files.api";
 import { companyApi } from "@/apis/company.api";
+import HeaderComponent from "@/components/shared/common/header";
 
 const comboboxData: ComboboxDataType[] = [
   {
@@ -376,10 +377,11 @@ export default function UpdateAttendance({
     console.log("tableData", tableData);
   }, [tableData]);
   return (
-    <Card className="p-3">
-      <div className="text-3xl text-[#22c55e] w-full text-center mb-3 font-semibold mt-3">
-        ĐIỂM DANH NHÂN VIÊN
-      </div>
+    <div>
+      <HeaderComponent
+        title="Điểm danh nhân viên"
+        description="Cập nhật điểm danh nhân viên"
+      />
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap ">
         <Combobox
           title="Vui lòng chọn cơ sở"
@@ -590,7 +592,10 @@ export default function UpdateAttendance({
                                   updateOverTime(index, event.target.value);
                                 }}
                                 step={0.5}
-                                disabled={item.isAttendance === false}
+                                disabled={
+                                  item.isAttendance === false ||
+                                  item.isSalaryByProduct === true
+                                }
                               />
                               <div>giờ</div>
                             </div>
@@ -647,10 +652,11 @@ export default function UpdateAttendance({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
+                          className={`${
+                            item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
                               : "bg-white dark:bg-card "
-                            }`}
+                          }`}
                         >
                           Nhấn vào
                         </td>
@@ -660,10 +666,11 @@ export default function UpdateAttendance({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
+                          className={`${
+                            item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
                               : "bg-white dark:bg-card"
-                            }`}
+                          }`}
                         >
                           Để tạo
                         </td>
@@ -673,10 +680,11 @@ export default function UpdateAttendance({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
+                          className={`${
+                            item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
                               : "bg-white dark:bg-card"
-                            }`}
+                          }`}
                         >
                           Sản phẩm
                         </td>
@@ -693,7 +701,10 @@ export default function UpdateAttendance({
                             updateOverTime(index, event.target.value);
                           }}
                           step={0.5}
-                          disabled={item.isAttendance === false}
+                          disabled={
+                            item.isAttendance === false ||
+                            item.isSalaryByProduct === true
+                          }
                         />
                         <div>giờ</div>
                       </div>
@@ -735,6 +746,6 @@ export default function UpdateAttendance({
           </Button>
         )}
       </div>
-    </Card>
+    </div>
   );
 }

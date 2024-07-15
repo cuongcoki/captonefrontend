@@ -13,7 +13,7 @@ export default async function page({ searchParams }: ReportManagerParams) {
 
   return (
     <div className="min-h-[100vh] max-h-max">
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm ">
+      <div className="">
         <ReportManagerTable searchParams={searchParams} />
       </div>
     </div>

@@ -13,6 +13,7 @@ import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
 import { SalaryType, SearchSalaryParams } from "@/types/salary.type";
 import Image from "next/image";
 import { companyApi } from "@/apis/company.api";
+import HeaderComponent from "@/components/shared/common/header";
 const fakeApi = ({ searchParams }: SearchSalaryParams) => {
   return new Promise<{ data: { data: SalaryType[]; totalPages: number } }>(
     (resolve) => {
@@ -137,9 +138,10 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
 
   return (
     <div className="p-2 ">
-      <div className="text-3xl text-[#22c55e] w-full text-center font-semibold mt-3 mb-5">
-        Lương tháng {params.month} năm {params.year}
-      </div>
+      <HeaderComponent
+        title="Danh sách lương"
+        description={`Danh sách lương nhân viên của tháng ${params.month} năm ${params.year}.`}
+      />
       <div className="mb-5 mt-2 grid grid-cols-12 space-y-1 grid-rows-2 xl:space-y-0 xl:grid-rows-1">
         <Input
           className="col-span-11 xl:col-span-6 xl:row-start-1"

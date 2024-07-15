@@ -127,7 +127,7 @@ export default function SideNavbar({}: Props) {
                 variant: "ghost",
               },
               {
-                title: "Đơn báo cáo",
+                title: "Đơn khiếu nại",
                 href: "/employee/report",
                 icon: MessageSquareWarning,
                 variant: "ghost",

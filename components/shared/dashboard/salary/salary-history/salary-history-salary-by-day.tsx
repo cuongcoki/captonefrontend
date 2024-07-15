@@ -57,7 +57,7 @@ export default function SalaryHistorySalaryByDay({ id }: { id: string }) {
   return (
     <Card className="overflow-hidden">
       <CardHeader>
-        <CardTitle>Lịch sử lương</CardTitle>
+        <CardTitle className="text-primary">Lịch sử lương</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
