@@ -16,8 +16,8 @@ export default function Page({ searchParams }: Props) {
   return (
     <div className="h-max">
       <HeaderComponent
-        title="Quản lý vật liệu"
-        description="Danh sách vật liệu trong công ty."
+        title="Danh sách nguyên vật liệu"
+        description="Danh sách các vật liệu của công ty."
       />
       <DataTableForMaterial
         columns={columnsForMaterial}

@@ -34,6 +34,7 @@ import ImageDisplayID from "./ImageDisplayID";
 import ProductUpdate from "@/components/shared/dashboard/product/table/productID/product-update";
 import { ProductStore } from "@/components/shared/dashboard/product/product-store";
 import HeaderComponent from "@/components/shared/common/header";
+import TitleComponent from "@/components/shared/common/Title";
 
 export interface ProductData {
   code: string;
@@ -121,10 +122,10 @@ export default function ProductIDPage() {
           <Card className="shadow-sm">
             <CardHeader>
               <div className="flex justify-between items-start text-primary">
-                <div>
-                  <CardTitle>Thông Tin</CardTitle>
-                  <span className="text-xs font-normal leading-snug text-muted-foreground">Thông tin chi tiết của sản phẩm.</span>
-                </div>
+                <TitleComponent
+                  title="Thông Tin"
+                  description="Thông tin của sản phẩm."
+                />
                 <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
                   <ProductUpdate product={productId}>
                     <PencilLine />
@@ -168,7 +169,7 @@ export default function ProductIDPage() {
                 </div>
                 <div className="grid gap-3">
                   <Label htmlFor="description">Mô Tả</Label>
-                  <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
+                  <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words min-w-full overflow-hidden">
                     {productId?.description}
                   </div>
                 </div>
@@ -254,8 +255,8 @@ export default function ProductIDPage() {
                   <div className="">
                     <span
                       className={`w-[40%] px-2 py-2 rounded-full ${productId?.isInProcessing
-                          ? "bg-primary text-white"
-                          : "bg-yellow-200 text-black"
+                        ? "bg-primary text-white"
+                        : "bg-yellow-200 text-black"
                         }`}
                     >
                       {productId?.isInProcessing ? "Đang xử lý" : "Chưa xử lý"}

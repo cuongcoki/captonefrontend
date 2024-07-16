@@ -65,7 +65,7 @@ import { z } from "zod";
 import { format, parse } from "date-fns";
 
 // ** import ICON
-import { CalendarIcon, PenLine, Plus, Truck, X } from "lucide-react";
+import { CalendarIcon, PencilLine, PenLine, Plus, Truck, X } from "lucide-react";
 import { ChevronDown, Minus, PackagePlus, Pencil, Search } from "lucide-react";
 
 // ** import TYPE & SCHEMA
@@ -114,23 +114,23 @@ interface orderIds {
 // Define Status Enum
 const OrderStatus = [
     {
-        id: 1,
-        des: "chưa giải quyết",
+        id: 0,
+        des: "Đã nhận đơn hàng",
         name: "PENDING"
     },
     {
-        id: 2,
-        des: "xử lý",
+        id: 1,
+        des: "Đang thực hiện",
         name: "PROCESSING"
     },
     {
-        id: 3,
-        des: "hoàn thành",
+        id: 2,
+        des: "Đã hoàn thành",
         name: "COMPLETED"
     },
     {
-        id: 4,
-        des: "đã hủy bỏ",
+        id: 3,
+        des: "Đã hủy đơn hàng",
         name: "CANCELED"
     }
 ];
@@ -244,35 +244,37 @@ export default function UpdateOrder({ orderId }: OrderId) {
 
     return (
         <Dialog.Root open={open} onOpenChange={handleOnDialog}>
-            <Dialog.Trigger className="rounded p-2 hover:bg-gray-200">
-                <PenLine />
+            <Dialog.Trigger>
+                <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
+                    <PenLine />
+                </div>
             </Dialog.Trigger>
             <Dialog.Portal>
                 <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
                     <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[700px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-                        <div className="bg-slate-100 flex flex-col space-y-4">
-                            <div className="p-4 flex items-center justify-between bg-primary ">
-                                <h2 className="text-2xl text-white">Chỉnh sửa đơn hàng</h2>
+                        <div className="flex flex-col space-y-4 rounded-md bg-white">
+                            <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
+                                <h2 className="text-2xl text-white">Chỉnh sửa sản phẩm đơn hàng</h2>
                                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
                                     <X className="w-4 h-4" />
                                 </Button>
                             </div>
-                            <div className="  p-4 overflow-y-auto">
+                            <div className=" p-4 overflow-y-auto">
                                 <Form {...form}>
-                                    <form onSubmit={form.handleSubmit(onSubmit)}  >
+                                    <form onSubmit={form.handleSubmit(onSubmit)} >
                                         <Card>
-                                            <CardContent className="flex  gap-6 mt-6">
+                                            <CardContent className="flex gap-6 mt-6">
                                                 <div className="flex flex-col gap-6 w-full">
                                                     <FormField
                                                         control={form.control}
                                                         name="companyId"
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel className="">Cơ sở nào *</FormLabel>
+                                                                <FormLabel className="text-primary">Công ty đặt hàng *</FormLabel>
                                                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                                     <FormControl>
                                                                         <SelectTrigger>
-                                                                            <SelectValue placeholder="Hãy chọn cơ sở" defaultValue={field.value} />
+                                                                            <SelectValue placeholder="Hãy chọn công ty" defaultValue={field.value} />
                                                                         </SelectTrigger>
                                                                     </FormControl>
                                                                     <SelectContent>
@@ -287,13 +289,13 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                                             </FormItem>
                                                         )}
                                                     />
-                                                    <div className="md:flex  gap-4 ">
+                                                    <div className="md:flex gap-4 ">
                                                         <FormField
                                                             control={form.control}
                                                             name="status"
                                                             render={({ field }) => (
                                                                 <FormItem className="w-full">
-                                                                    <FormLabel className="">
+                                                                    <FormLabel className="text-primary">
                                                                         Trạng thái *
                                                                     </FormLabel>
                                                                     <Select
@@ -327,14 +329,14 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                                             name="vat"
                                                             render={({ field }) => (
                                                                 <FormItem className="w-full">
-                                                                    <FormLabel>% Thuế</FormLabel>
+                                                                    <FormLabel className="text-primary">% Thuế</FormLabel>
                                                                     <FormControl>
                                                                         <Input
                                                                             type="number"
                                                                             {...field}
-                                                                            onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                                                                            onChange={(e) => field.onChange(parseInt(e.target.value))}
                                                                             min="0"
-                                                                            max="100000000"
+                                                                            max="10"
                                                                         />
                                                                     </FormControl>
                                                                     <FormMessage />
@@ -343,13 +345,13 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                                         />
                                                     </div>
 
-                                                    <div className="md:flex  gap-4 ">
+                                                    <div className="md:flex gap-4 ">
                                                         <FormField
                                                             control={form.control}
                                                             name="startOrder"
                                                             render={({ field }) => (
                                                                 <FormItem className="flex flex-col">
-                                                                    <FormLabel className="flex items-center">Ngày đặt hàng *</FormLabel>
+                                                                    <FormLabel className="flex items-center text-primary">Ngày bắt đầu *</FormLabel>
                                                                     <Popover modal={true}>
                                                                         <PopoverTrigger asChild>
                                                                             <FormControl>
@@ -375,7 +377,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                                                                 selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
                                                                                 onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
                                                                                 // disabled={(date) =>
-                                                                                //     date > new Date() || date < new Date("1900-01-01")
+                                                                                //   date > new Date() || date < new Date("1900-01-01")
                                                                                 // }
                                                                                 initialFocus
                                                                             />
@@ -390,7 +392,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                                             name="endOrder"
                                                             render={({ field }) => (
                                                                 <FormItem className="flex flex-col">
-                                                                    <FormLabel className="flex items-center ">Ngày Giao hàng *</FormLabel>
+                                                                    <FormLabel className="flex items-center text-primary">Ngày kết thúc *</FormLabel>
                                                                     <Popover modal={true}>
                                                                         <PopoverTrigger asChild>
                                                                             <FormControl>
@@ -416,7 +418,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                                                                 selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
                                                                                 onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
                                                                                 // disabled={(date) =>
-                                                                                //     date > new Date() || date < new Date("1900-01-01")
+                                                                                //   date > new Date() || date < new Date("1900-01-01")
                                                                                 // }
                                                                                 initialFocus
                                                                             />

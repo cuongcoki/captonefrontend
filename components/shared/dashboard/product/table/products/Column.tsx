@@ -53,33 +53,14 @@ export const columns: ColumnDef<Product>[] = [
   },
 
   // {
-  //   accessorKey: "id",
-  //   header: ({ column }) => (
-  //     <Button variant="ghost">
-  //       Mã sản phẩm
-  //     </Button>
-  //   ),
-  //   cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+  // accessorKey: "id",
+  // header: ({ column }) => (
+  //   <Button variant="ghost">
+  //   Mã sản phẩm
+  //   </Button>
+  // ),
+  // cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
   // },
-
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return <Button variant="ghost">Tên Sản Phẩm</Button>;
-    },
-    cell: ({ row }) => {
-      let displayText = row.original.name;
-
-      if (displayText.length > 20) {
-        displayText = displayText.slice(0, 20) + "...";
-      }
-      return (
-        <span className="inline-block   px-3 py-1 rounded-md">
-          {displayText}
-        </span>
-      );
-    },
-  },
 
   {
     accessorKey: "code",
@@ -89,8 +70,45 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const shortenedCode = row.original.code.slice(0, 10);
       return (
-        <span className="inline-block px-3 py-1 rounded-md">
+        <span className="inline-block px-3 py-1 rounded-md w-full text-left">
           {shortenedCode}
+        </span>
+      );
+    },
+  },
+
+  {
+    accessorKey: "name",
+    header: ({ column }) => {
+      return <Button variant="ghost" className="w-full text-left">Tên Sản Phẩm</Button>;
+    },
+    cell: ({ row }) => {
+      let displayText = row.original.name;
+
+      if (displayText.length > 20) {
+        displayText = displayText.slice(0, 20) + "...";
+      }
+      return (
+        <span className="inline-block px-3 py-1 rounded-md w-full text-left">
+          {displayText}
+        </span>
+      );
+    },
+  },
+
+  {
+    accessorKey: "description",
+    header: ({ column }) => {
+      return <Button variant="ghost">Mô Tả</Button>;
+    },
+    cell: ({ row }) => {
+      const shortenedDescription = `${row.original.description.slice(
+        0,
+        30
+      )}...`;
+      return (
+        <span className="inline-block  px-3 py-1 rounded-md w-full text-left">
+          {shortenedDescription}
         </span>
       );
     },
@@ -103,46 +121,35 @@ export const columns: ColumnDef<Product>[] = [
     },
     cell: ({ row }) => {
       const formattedPrice = Number(row.original.price).toLocaleString("vi-VN");
-      return `${formattedPrice}`;
+      return (
+        <span className="inline-block px-3 py-1 rounded-md w-full text-right">
+          {formattedPrice}
+        </span>
+      );
     },
   },
 
-  // {
-  //   accessorKey: "size",
-  //   header: ({ column }) => {
-  //     return <Button variant="ghost">Kích Thước</Button>;
-  //   },
-  //   cell: ({ row }) => {
-  //     let displayText = row.original.size;
 
-  //     if (displayText.length > 15) {
-  //       displayText = displayText.slice(0, 15) + "...";
-  //     }
-  //     return (
-  //       <span className="inline-block  px-3 py-1 rounded-md">
-  //         {displayText}
-  //       </span>
-  //     );
-  //   },
-  // },
 
   // {
-  //   accessorKey: "description",
-  //   header: ({ column }) => {
-  //     return <Button variant="ghost">Mô Tả</Button>;
-  //   },
-  //   cell: ({ row }) => {
-  //     const shortenedDescription = `${row.original.description.slice(
-  //       0,
-  //       30
-  //     )}...`;
-  //     return (
-  //       <span className="inline-block  px-3 py-1 rounded-md">
-  //         {shortenedDescription}
-  //       </span>
-  //     );
-  //   },
+  // accessorKey: "size",
+  // header: ({ column }) => {
+  //   return <Button variant="ghost">Kích Thước</Button>;
   // },
+  // cell: ({ row }) => {
+  //   let displayText = row.original.size;
+
+  //   if (displayText.length > 15) {
+  //   displayText = displayText.slice(0, 15) + "...";
+  //   }
+  //   return (
+  //   <span className="inline-block  px-3 py-1 rounded-md">
+  //   {displayText}
+  //   </span>
+  //   );
+  // },
+  // },
+
 
   {
     accessorKey: "isInProcessing",
@@ -158,11 +165,10 @@ export const columns: ColumnDef<Product>[] = [
 
       return (
         <span
-          className={`${
-            isInProcessing.value === true
-              ? "p-2 text-primary dark:bg-white"
-              : "text-red-500 dark:bg-white"
-          }`}
+          className={`${isInProcessing.value === true
+            ? "p-2 text-primary dark:bg-white"
+            : "p-2 text-red-500 dark:bg-white"
+            } w-full text-left`}
         >
           {isInProcessing.label}
         </span>

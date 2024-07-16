@@ -101,23 +101,23 @@ type Company = {
 // Define Status Enum
 const OrderStatus = [
     {
-        id: 1,
-        des: "chưa giải quyết",
+        id: 0,
+        des: "Đã nhận đơn hàng",
         name: "PENDING"
     },
     {
-        id: 2,
-        des: "xử lý",
+        id: 1,
+        des: "Đang thực hiện",
         name: "PROCESSING"
     },
     {
-        id: 3,
-        des: "hoàn thành",
+        id: 2,
+        des: "Đã hoàn thành",
         name: "COMPLETED"
     },
     {
-        id: 4,
-        des: "đã hủy bỏ",
+        id: 3,
+        des: "Đã hủy đơn hàng",
         name: "CANCELED"
     }
 ];
@@ -219,7 +219,7 @@ export default function CreateOrder() {
 
 
 
-    //  ========================================================= các hàm để tìm kiếm sp và thêm  ========================================================= 
+    // ========================================================= các hàm để tìm kiếm sp và thêm ========================================================= 
 
 
 
@@ -316,7 +316,7 @@ export default function CreateOrder() {
 
 
 
-    //  ========================================================= các hàm để thêm sản phẩm  và số lượng vào bộ sản phẩm  ========================================================= 
+    // ========================================================= các hàm để thêm sản phẩm và số lượng vào bộ sản phẩm ========================================================= 
 
     const [getDetailsPro, setGetDetailsPro] = useState<any[]>([]);
     const [productsRequest, setProductsRequest] = useState<
@@ -452,17 +452,17 @@ export default function CreateOrder() {
                 </Dialog.Trigger>
                 <Dialog.Portal>
                     <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-                        <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1200px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-                            <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4">
+                        <Dialog.Content className="w-full fixed z-50 left-1/2 top-1/2 max-w-[1200px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+                            <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                                     <h2 className="text-2xl text-white">Thêm đơn hàng mới</h2>
                                     <Button variant="outline" size="icon" onClick={handleOffDialog}>
                                         <X className="w-4 h-4" />
                                     </Button>
                                 </div>
-                                <div className="grid  p-4 overflow-y-auto h-[650px] gap-4">
+                                <div className="grid p-4 overflow-y-auto h-[650px] gap-4">
 
-                                    <div className="grid gap-4  lg:grid-cols-5 lg:gap-8">
+                                    <div className="grid gap-4 lg:grid-cols-5 lg:gap-8">
                                         <div className="grid auto-rows-max items-start gap-4 lg:col-span-5 lg:gap-8">
                                             <Card>
                                                 <CardHeader>
@@ -476,7 +476,7 @@ export default function CreateOrder() {
                                                             <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
                                                             <DropdownMenu>
                                                                 <DropdownMenuTrigger asChild>
-                                                                    <ChevronDown className="mr-2 h-4 w-4  text-primary-backgroudPrimary" />
+                                                                    <ChevronDown className="mr-2 h-4 w-4 text-primary-backgroudPrimary" />
                                                                 </DropdownMenuTrigger>
                                                                 <DropdownMenuContent align="start" >
                                                                     <DropdownMenuItem onClick={handleCheckProduct}>Sản phẩm</DropdownMenuItem>
@@ -574,7 +574,7 @@ export default function CreateOrder() {
                                                                         <CardHeader className="font-semibold text-xl">
                                                                             <span>Thông tin Bộ sản phẩm</span>
                                                                         </CardHeader>
-                                                                        <CardContent className=" md:w-full overflow-auto">
+                                                                        <CardContent className="md:w-full overflow-auto">
                                                                             <Table>
                                                                                 <TableHeader>
                                                                                     <TableRow>
@@ -636,7 +636,7 @@ export default function CreateOrder() {
                                                             <CardHeader className="font-semibold text-xl">
                                                                 <span>Thông tin sản phẩm đã thêm</span>
                                                             </CardHeader>
-                                                            <CardContent className=" overflow-auto md:w-full">
+                                                            <CardContent className="overflow-auto md:w-full">
                                                                 <Table className="overflow-x-auto">
                                                                     <TableHeader>
                                                                         <TableRow>
@@ -653,7 +653,7 @@ export default function CreateOrder() {
                                                                         {getDetailsPro.map((product, index) => (
                                                                             <TableRow key={index}>
                                                                                 <TableCell className="font-medium w-[20%]">
-                                                                                    <div className="flex  gap-4">
+                                                                                    <div className="flex gap-4">
                                                                                         <Image
                                                                                             alt="ảnh mẫu"
                                                                                             className="w-[50px] h-[50px] rounded-lg object-contain"
@@ -780,7 +780,7 @@ export default function CreateOrder() {
                                                         </CardTitle>
                                                     </CardHeader>
 
-                                                    <CardContent className="flex  gap-6">
+                                                    <CardContent className="flex gap-6">
 
                                                         <div className="flex flex-col gap-6 w-full">
                                                             <FormField
@@ -807,7 +807,7 @@ export default function CreateOrder() {
                                                                     </FormItem>
                                                                 )}
                                                             />
-                                                            <div className="  flex w-full gap-6">
+                                                            <div className="flex w-full gap-6">
                                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                                     <FormField
                                                                         control={form.control}
@@ -899,7 +899,7 @@ export default function CreateOrder() {
                                                                                             selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
                                                                                             onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
                                                                                             // disabled={(date) =>
-                                                                                            //     date > new Date() || date < new Date("1900-01-01")
+                                                                                            //   date > new Date() || date < new Date("1900-01-01")
                                                                                             // }
                                                                                             initialFocus
                                                                                         />
@@ -941,7 +941,7 @@ export default function CreateOrder() {
                                                                                             selected={field.value ? parse(field.value, "dd/MM/yyyy", new Date()) : undefined}
                                                                                             onSelect={(date: any) => field.onChange(format(date, "dd/MM/yyyy"))}
                                                                                             // disabled={(date) =>
-                                                                                            //     date > new Date() || date < new Date("1900-01-01")
+                                                                                            //   date > new Date() || date < new Date("1900-01-01")
                                                                                             // }
                                                                                             initialFocus
                                                                                         />

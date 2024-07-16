@@ -380,7 +380,7 @@ export default function UpdateAttendance({
     <div>
       <HeaderComponent
         title="Điểm danh nhân viên"
-        description="Cập nhật điểm danh nhân viên"
+        description="Điểm danh nhân viên."
       />
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap ">
         <Combobox

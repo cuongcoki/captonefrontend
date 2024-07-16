@@ -52,7 +52,7 @@ export function DataTable<TData, TValue>({
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className="py-3 text-center">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
               </TableRow>
