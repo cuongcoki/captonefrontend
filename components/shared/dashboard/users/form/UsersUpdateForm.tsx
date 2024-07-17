@@ -138,8 +138,12 @@ type User = {
 
 export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [fetchTrigger, setFetchTrigger] = useState<number>(0);
+
   const handleOffDialog = () => {
     setOpen(false);
+    setFetchTrigger(prev => prev + 1);
+
   };
   const handleOnDialog = () => {
     setOpen(true);
@@ -311,7 +315,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
     if (userId) {
       fetchDataUserId();
     }
-  }, [userId]);
+  }, [userId,fetchTrigger]);
   // console.log('imageRequests', imageRequests)
   // console.log('userData', user)
 
@@ -630,10 +634,10 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                           </CardContent>
                         </Card>
                       </div>
-                      <div className="flex gap-x-5">
-                        <Card className="w-[50%]">
-                          <CardContent className="mt-5 flex flex-col gap-2">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex gap-x-5 ">
+                        <Card>
+                          <CardContent className="mt-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                               {/* address */}
                               <FormField
                                 control={form.control}

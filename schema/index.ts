@@ -67,7 +67,13 @@ export const ProductSchema = z.object({
       },
       { message: "Hai ký tự đầu tiên phải là chữ cái và phần còn lại là số." }
     ),
-  price: z.coerce
+  priceFinished: z.coerce
+    .number({ message: "Giá thành phải là số" })
+    .min(1, { message: "Giá thành là bắt buộc." }),
+  pricePhase1: z.coerce
+    .number({ message: "Giá thành phải là số" })
+    .min(1, { message: "Giá thành là bắt buộc." }),
+  pricePhase2: z.coerce
     .number({ message: "Giá thành phải là số" })
     .min(1, { message: "Giá thành là bắt buộc." }),
   size: z.string().min(1, { message: "Kích thước là bắt buộc." }),

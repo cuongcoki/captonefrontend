@@ -55,7 +55,7 @@ const AuthProvider = ({ children }: Props) => {
         try {
           const response = await authService.refreshToken()
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data.data
-
+          console.log("Authssseiver ========== ",response.data.data)
           authService.setLocalStorageWhenLogin({
             user: JSON.parse(window.localStorage.getItem(authConfig.userData) || '{}'),
             accessToken: newAccessToken,

@@ -1,6 +1,8 @@
 export type ProductType = {
   code: string;
-  price: number;
+  priceFinished: number;
+  pricePhase1: number;
+  pricePhase2: number;
   size: string;
   description: string;
   name: string;
@@ -24,7 +26,9 @@ export type ProductUpdateType = {
   }[];
   isInProcessing: boolean;
   name: string;
-  price: number;
+  priceFinished: number;
+  pricePhase1: number;
+  pricePhase2: number;
   size: string;
 }
 
