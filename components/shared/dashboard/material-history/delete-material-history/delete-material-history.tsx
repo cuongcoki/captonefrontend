@@ -45,14 +45,14 @@ export function DeleteMaterialHistory({ id }: { id: string }) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Hủy</AlertDialogCancel>
           <AlertDialogAction
             onClick={async (e) => {
               e.preventDefault();
               await handleDelete();
             }}
           >
-            Continue
+            Đồng ý
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
