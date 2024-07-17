@@ -54,7 +54,9 @@ export const ProductForm = () => {
     resolver: zodResolver(ProductSchema),
     defaultValues: {
       code: "",
-      price: 1,
+      priceFinished: 0,
+      pricePhase1: 0,
+      pricePhase2: 0,
       size: "",
       description: "",
       name: "",
@@ -217,7 +219,9 @@ export const ProductForm = () => {
       if (imageRequests && nameImage) {
         const requestBody = {
           code: data.code.trim(),
-          price: data.price,
+          priceFinished: data.priceFinished,
+          pricePhase1: data.pricePhase1,
+          pricePhase2: data.pricePhase2,
           size: data.size.trim(),
           description: data.description.trim(),
           name: data.name.trim(),
@@ -228,7 +232,7 @@ export const ProductForm = () => {
           })),
         };
 
-        console.log("requestBody", requestBody);
+        console.log("=====requestBody Product Form =====", requestBody);
 
         const response = await productApi.createProduct(requestBody);
         if (response.data.isSuccess) {
@@ -247,16 +251,18 @@ export const ProductForm = () => {
     } catch (error: any) {
       // Handle errors from form submission or API calls
       if (error.response && error.response.data && error.response.data.error) {
-        if (
-          error.response.data.error.ImageRequests &&
-          error.response.data.error.Code
-        ) {
-          toast.error(error.response.data.error.ImageRequests);
-          toast.error(error.response.data.error.Code);
-        } else if (error.response.data.error.Code) {
-          toast.error(error.response.data.error.Code);
-        } else {
-          toast.error(error.response.data.error.ImageRequests);
+        const errors = error.response.data.error;
+
+        if (errors.ImageRequests) {
+          toast.error(errors.ImageRequests);
+        }
+
+        if (errors.PriceFinished) {
+          toast.error(errors.PriceFinished);
+        }
+
+        if (errors.Code) {
+          toast.error(errors.Code);
         }
       } else {
         console.error("Error submitting form:", error);
@@ -265,9 +271,23 @@ export const ProductForm = () => {
       setLoading(false);
     }
   };
+  const formatCurrency = (amount:any) => {
+    if (!amount) return "";
+  
+    // Remove all non-numeric characters except the first decimal point
+    amount = amount.replace(/[^\d.]/g, "");
+  
+    // Split the integer and decimal parts
+    let [integerPart, decimalPart] = amount.split(".");
+  
+    // Format the integer part with commas
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  
+    // Combine the integer and decimal parts
+    return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+  };
 
-  // console.log('imageRequests', imageRequests)
-
+  
   const { pending } = useFormStatus();
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>
@@ -296,9 +316,9 @@ export const ProductForm = () => {
                         Thông tin sản phẩm
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="grid md:grid-cols-2 grid-cols-1 justify-center gap-6">
+                    <CardContent className="grid md:grid-cols-2 grid-cols-1 justify-center gap-6 ">
                       <Card className=" relative border-none shadow-none">
-                        <div>
+                        <div className="h-[300px] md:h-full">
                           {/* nếu không có ảnh nào thì hiện input này */}
                           {imageRequests.length < 1 && (
                             <div style={{ width: "100%", height: "100%" }}>
@@ -361,87 +381,155 @@ export const ProductForm = () => {
                       <form onSubmit={form.handleSubmit(onSubmit)}>
                         {/* Phần nhập dữ liệu thông tin */}
                         <div className="w-full flex flex-col gap-4">
-                          {/* code */}
-                          <FormField
-                            control={form.control}
-                            name="code"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="flex items-center text-primary">
-                                  Mã Sản Phẩm
-                                </FormLabel>
-                                <FormControl>
-                                  <Input type="text" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          {/* name */}
-                          <FormField
-                            control={form.control}
-                            name="name"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="flex items-center text-primary">
-                                  Tên Sản Phẩm
-                                </FormLabel>
-                                <FormControl>
-                                  <Input type="text" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          {/* price */}
-                          <FormField
-                            control={form.control}
-                            name="price"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="flex items-center text-primary">
-                                  Giá Thành
-                                </FormLabel>
-                                <FormControl>
-                                  <Input type="number" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          {/* size */}
-                          <FormField
-                            control={form.control}
-                            name="size"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="flex items-center text-primary">
-                                  Kích Thước
-                                </FormLabel>
-                                <FormControl>
-                                  <Input type="text" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          {/* description */}
-                          <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="flex items-center text-primary">
-                                  Mô Tả
-                                </FormLabel>
-                                <FormControl>
-                                  <Textarea {...field} className="h-[120px]" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
+                          <div className="w-full flex flex-col gap-4">
+                            {/* code */}
+                            <FormField
+                              control={form.control}
+                              name="code"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center text-primary">
+                                    Mã Sản Phẩm
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input type="text" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            {/* name */}
+                            <FormField
+                              control={form.control}
+                              name="name"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center text-primary">
+                                    Tên Sản Phẩm
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input type="text" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            {/* size */}
+                            <FormField
+                              control={form.control}
+                              name="size"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center text-primary">
+                                    Kích Thước
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input type="text" {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            {/* description */}
+                            <FormField
+                              control={form.control}
+                              name="description"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center text-primary">
+                                    Mô Tả
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Textarea {...field} className="h-[120px]" />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          <div className="md:flex flex-row gap-4">
+                            {/* price */}
+                            <FormField
+                              control={form.control}
+                              name="pricePhase1"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center text-primary">
+                                    Giá giai đoạn 1
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input type="text" inputMode="numeric" 
+                                      {...field}
+                                      value={formatCurrency(field.value)}
+                                      onChange={(e) => {
+                                        const rawValue =
+                                          e.target.value.replace(
+                                            /[^\d.]/g,
+                                            ""
+                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                        field.onChange(rawValue);
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            {/* price */}
+                            <FormField
+                              control={form.control}
+                              name="pricePhase2"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center text-primary">
+                                    Giá giai đoạn 2
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input type="text" inputMode="numeric" 
+                                      {...field}
+                                      value={formatCurrency(field.value)} 
+                                      onChange={(e) => {
+                                        const rawValue =
+                                          e.target.value.replace(
+                                            /[^\d.]/g,
+                                            ""
+                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                        field.onChange(rawValue);
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            {/* priceFinished */}
+                            <FormField
+                              control={form.control}
+                              name="priceFinished"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="flex items-center text-primary">
+                                    Giá hoàn thiện
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input type="text" inputMode="numeric" 
+                                      {...field}
+                                      value={formatCurrency(field.value)} 
+                                      onChange={(e) => {
+                                        const rawValue =
+                                          e.target.value.replace(
+                                            /[^\d.]/g,
+                                            ""
+                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                        field.onChange(rawValue);
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
                           {/* <Separator className="h-1" /> */}
                           <Button
                             type="submit"

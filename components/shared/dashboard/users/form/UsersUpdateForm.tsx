@@ -138,8 +138,12 @@ type User = {
 
 export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [fetchTrigger, setFetchTrigger] = useState<number>(0);
+
   const handleOffDialog = () => {
     setOpen(false);
+    setFetchTrigger(prev => prev + 1);
+
   };
   const handleOnDialog = () => {
     setOpen(true);
@@ -311,7 +315,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
     if (userId) {
       fetchDataUserId();
     }
-  }, [userId]);
+  }, [userId,fetchTrigger]);
   // console.log('imageRequests', imageRequests)
   // console.log('userData', user)
 
@@ -630,10 +634,10 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                           </CardContent>
                         </Card>
                       </div>
-                      <div className="flex gap-x-5">
+                      <div className="flex gap-x-5 ">
                         <Card>
-                          <CardContent>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <CardContent className="mt-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                               {/* address */}
                               <FormField
                                 control={form.control}
@@ -827,7 +831,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -911,7 +915,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
