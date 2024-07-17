@@ -31,6 +31,7 @@ import { usePathname, useRouter } from "next/navigation";
 import CountProduct from "@/components/shared/dashboard/attendance/update-attendance/count-product";
 import { filesApi } from "@/apis/files.api";
 import { companyApi } from "@/apis/company.api";
+import HeaderComponent from "@/components/shared/common/header";
 
 const comboboxData: ComboboxDataType[] = [
   {
@@ -376,10 +377,11 @@ export default function UpdateAttendance({
     console.log("tableData", tableData);
   }, [tableData]);
   return (
-    <Card className="p-3">
-      <div className="text-3xl text-[#22c55e] w-full text-center mb-3 font-semibold mt-3">
-        QUẢN LÝ ĐIỂM DANH
-      </div>
+    <div>
+      <HeaderComponent
+        title="Điểm danh nhân viên"
+        description="Cập nhật điểm danh nhân viên"
+      />
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap ">
         <Combobox
           title="Vui lòng chọn cơ sở"
@@ -433,7 +435,7 @@ export default function UpdateAttendance({
                       }}
                       className="hover:cursor-pointer hover:text-blue-400"
                     >
-                      Chọn hết
+                      <span className="text-primary">Chọn tất cả</span>
                     </div>
                     <div>|</div>
                     <div
@@ -442,7 +444,7 @@ export default function UpdateAttendance({
                       }}
                       className="hover:cursor-pointer hover:text-blue-400"
                     >
-                      Bỏ hết
+                      <span className="text-red-500">Bỏ chọn</span>
                     </div>
                   </div>
                 </div>
@@ -463,7 +465,7 @@ export default function UpdateAttendance({
                       }}
                       className="hover:cursor-pointer hover:text-blue-400"
                     >
-                      Chọn hết
+                      <span className="text-primary">Chọn tất cả</span>
                     </div>
                     <div>|</div>
                     <div
@@ -472,7 +474,7 @@ export default function UpdateAttendance({
                       }}
                       className="hover:cursor-pointer hover:text-blue-400"
                     >
-                      Bỏ hết
+                      <span className="text-red-500">Bỏ chọn</span>
                     </div>
                   </div>
                 </div>
@@ -590,7 +592,10 @@ export default function UpdateAttendance({
                                   updateOverTime(index, event.target.value);
                                 }}
                                 step={0.5}
-                                disabled={item.isAttendance === false}
+                                disabled={
+                                  item.isAttendance === false ||
+                                  item.isSalaryByProduct === true
+                                }
                               />
                               <div>giờ</div>
                             </div>
@@ -696,7 +701,10 @@ export default function UpdateAttendance({
                             updateOverTime(index, event.target.value);
                           }}
                           step={0.5}
-                          disabled={item.isAttendance === false}
+                          disabled={
+                            item.isAttendance === false ||
+                            item.isSalaryByProduct === true
+                          }
                         />
                         <div>giờ</div>
                       </div>
@@ -738,6 +746,6 @@ export default function UpdateAttendance({
           </Button>
         )}
       </div>
-    </Card>
+    </div>
   );
 }

@@ -70,7 +70,7 @@ export default function RenderTableProduct() {
   console.log("data", data);
 
   return (
-    <div className="px-3 ">
+    <div className="">
       <MyContext.Provider value={{ forceUpdate }}>
         <div className="flex items-center justify-between  mb-4">
           <Input

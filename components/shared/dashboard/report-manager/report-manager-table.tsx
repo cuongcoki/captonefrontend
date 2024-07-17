@@ -18,6 +18,7 @@ import {
 import { companyApi } from "@/apis/company.api";
 import { set } from "date-fns";
 import { ReportManagerUpdate } from "@/components/shared/dashboard/report-manager/report-manager-update";
+import HeaderComponent from "@/components/shared/common/header";
 
 const ColorOfTypeStatus: { [key: number]: string } = {
   0: "text-gray-500",
@@ -119,10 +120,11 @@ export default function ReportManagerTable({
     buildUrlParams,
   ]);
   return (
-    <div className="p-3">
-      <div className="text-3xl text-[#22c55e] w-full text-center font-semibold mt-3 mb-5">
-        DANH SÁCH ĐƠN BÁO CÁO
-      </div>
+    <div className="">
+      <HeaderComponent
+        title="Danh Sách Đơn Khiếu Nại"
+        description="Danh sách đơn khiếu nại đã gửi."
+      />
       <div className="my-5 grid grid-cols-10 space-x-5">
         {user && user.roleDescription === "MAIN_ADMIN" && (
           <div className="col-span-2">

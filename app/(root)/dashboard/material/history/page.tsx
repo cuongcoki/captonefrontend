@@ -1,3 +1,4 @@
+import HeaderComponent from "@/components/shared/common/header";
 import { columnsForMaterialHistory } from "@/components/shared/dashboard/material-history/table/colums";
 import { DataTableForMaterialHistory } from "@/components/shared/dashboard/material-history/table/data-table";
 import { Card } from "@/components/ui/card";
@@ -15,12 +16,16 @@ export default async function page({ searchParams }: Props) {
   searchParams.to = searchParams.to || "";
   return (
     <>
-      <Card className="p-2">
+      <div className="p-2">
+        <HeaderComponent
+          title="Lịch Sử Nhập Nguyên Vật Liệu"
+          description="Danh sách lịch sử nhập nguyên vật liệu trong công ty."
+        />
         <DataTableForMaterialHistory
           columns={columnsForMaterialHistory}
           searchParamsProp={searchParams}
         />
-      </Card>
+      </div>
     </>
   );
 }

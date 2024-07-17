@@ -111,12 +111,6 @@ const enumRole = [
 
 export const UsersForm = () => {
   const [open, setOpen] = useState<boolean>(false);
-  const handleOffDialog = () => {
-    setOpen(false);
-  };
-  const handleOnDialog = () => {
-    setOpen(true);
-  };
 
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -138,7 +132,7 @@ export const UsersForm = () => {
       firstName: "",
       lastName: "",
       dob: "",
-      gender: "",
+      gender: "Male",
       address: "",
       phone: "",
       password: "",
@@ -157,7 +151,13 @@ export const UsersForm = () => {
       },
     },
   });
-
+  const handleOffDialog = () => {
+    setOpen(false);
+    form.reset();
+  };
+  const handleOnDialog = () => {
+    setOpen(true);
+  };
   // ** các hàm để sử lý đăng ảnh
 
   const generateRandomString = (length: number = 5) => {
@@ -516,8 +516,8 @@ export const UsersForm = () => {
                         </Card>
                       </div>
                       <div className="flex gap-x-5">
-                        <Card>
-                          <CardContent className="mt-5">
+                        <Card className="w-[50%]">
+                          <CardContent className="mt-5 flex flex-col gap-2">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {/* address */}
                               <FormField
@@ -526,7 +526,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Địa chỉ cư trú *
                                       </FormLabel>
                                       <FormControl>
@@ -545,7 +545,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Số điện thoại *
                                       </FormLabel>
                                       <FormControl>
@@ -566,7 +566,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Cơ sở nào *
                                       </FormLabel>
                                       <Select
@@ -604,7 +604,7 @@ export const UsersForm = () => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Vai trò *
                                       </FormLabel>
                                       <FormControl>
@@ -664,7 +664,7 @@ export const UsersForm = () => {
                         </Card>
 
                         {/* tính lương  */}
-                        <Card>
+                        <Card className="w-[50%]">
                           <CardContent className="mt-5 flex flex-col gap-2">
                             {/* salaryByDayRequest */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -713,7 +713,7 @@ export const UsersForm = () => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -797,7 +797,7 @@ export const UsersForm = () => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -818,10 +818,10 @@ export const UsersForm = () => {
                                           selected={
                                             field.value
                                               ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                field.value,
+                                                "dd/MM/yyyy",
+                                                new Date()
+                                              )
                                               : undefined
                                           }
                                           onDayClick={(date: any) =>

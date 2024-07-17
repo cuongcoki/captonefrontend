@@ -171,8 +171,8 @@ export const columns: ColumnDef<Employee>[] = [
 
       return (
         <span
-          className={`p-2 rounded-full ${
-            active.value ? "bg-secondary " : "bg-secondary"
+          className={`p-2 ${
+            active.value ? "text-primary" : "text-red-500"
           }`}
         >
           {active.label}

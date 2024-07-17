@@ -54,12 +54,12 @@ export function DataTableRowActions<TData extends { id: string }>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <ProductUpdate product={productId}>
-          <div className="w-full hover:bg-gray-200 dark:hover:bg-black/90 relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+          <div className="w-full hover:bg-gray-200 dark:hover:bg-black/90 relative flex cursor-default select-none justify-center items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
             Chỉnh sửa
           </div>
         </ProductUpdate>
         <Link
-          className="w-full hover:bg-gray-200 dark:hover:bg-black/90 relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+          className="w-full hover:bg-gray-200 dark:hover:bg-black/90 relative flex cursor-default select-none items-center justify-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
           href={`/dashboard/products/product/${row.original.id}`}
         >
           Chi tiết

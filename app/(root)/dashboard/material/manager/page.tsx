@@ -1,5 +1,6 @@
 "use client";
 import { materialApi } from "@/apis/material.api";
+import HeaderComponent from "@/components/shared/common/header";
 import { columnsForMaterial } from "@/components/shared/dashboard/material/table/colums";
 import { DataTableForMaterial } from "@/components/shared/dashboard/material/table/data-table";
 import { Card, CardTitle } from "@/components/ui/card";
@@ -13,12 +14,16 @@ type Props = {
 export default function Page({ searchParams }: Props) {
   console.log("searchParams", searchParams.pageIndex);
   return (
-    <Card className="p-2 h-max">
+    <div className="h-max">
+      <HeaderComponent
+        title="Quản lý vật liệu"
+        description="Danh sách vật liệu trong công ty."
+      />
       <DataTableForMaterial
         columns={columnsForMaterial}
         pageIndexProp={searchParams.pageIndex}
         searchTermProp={searchParams.searchTerm}
       />
-    </Card>
+    </div>
   );
 }

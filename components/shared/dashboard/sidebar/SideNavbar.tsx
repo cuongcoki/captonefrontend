@@ -17,6 +17,7 @@ import {
   MessageSquareMore,
   Truck,
   LogOut,
+  Coins,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -32,7 +33,6 @@ import Link from "next/link";
 
 type Props = {};
 export default function SideNavbar({ }: Props) {
-  // ** state
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   // ** hooks
@@ -88,7 +88,7 @@ export default function SideNavbar({ }: Props) {
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
               {
-                title: "Trang chủ",
+                title: "Thống kê",
                 href: "/dashboard/home",
                 icon: LayoutDashboard,
                 variant: "colorCompany",
@@ -168,7 +168,7 @@ export default function SideNavbar({ }: Props) {
                 variant: "ghost",
               },
               {
-                title: "Đơn báo cáo",
+                title: "Đơn khiếu nại",
                 href: "/employee/report",
                 icon: MessageSquareWarning,
                 variant: "ghost",
@@ -177,6 +177,12 @@ export default function SideNavbar({ }: Props) {
                 title: "Khiếu nại",
                 href: "/dashboard/report-manager",
                 icon: MessageSquareMore,
+                variant: "ghost",
+              },
+              {
+                title: "Lương",
+                href: "/dashboard/salary",
+                icon: Coins,
                 variant: "ghost",
               },
             ]}
