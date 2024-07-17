@@ -122,8 +122,8 @@ export default function ReportManagerTable({
   return (
     <div className="">
       <HeaderComponent
-        title="Danh Sách Đơn Khiếu Nại"
-        description="Danh sách đơn khiếu nại đã gửi."
+        title="Danh sách đơn khiếu nại"
+        description="Danh sách đơn khiếu nại từ nhân viên công ty."
       />
       <div className="my-5 grid grid-cols-10 space-x-5">
         {user && user.roleDescription === "MAIN_ADMIN" && (

@@ -34,6 +34,7 @@ import ImageDisplayID from "./ImageDisplayID";
 import ProductUpdate from "@/components/shared/dashboard/product/table/productID/product-update";
 import { ProductStore } from "@/components/shared/dashboard/product/product-store";
 import HeaderComponent from "@/components/shared/common/header";
+import TitleComponent from "@/components/shared/common/Title";
 
 export interface ProductData {
   code: string;
@@ -130,10 +131,10 @@ export default function ProductIDPage() {
           <Card className="shadow-sm">
             <CardHeader>
               <div className="flex justify-between items-start text-primary">
-                <div>
-                  <CardTitle>Thông Tin</CardTitle>
-                  <span className="text-xs font-normal leading-snug text-muted-foreground">Thông tin chi tiết của sản phẩm.</span>
-                </div>
+                <TitleComponent
+                  title="Thông Tin"
+                  description="Thông tin của sản phẩm."
+                />
                 <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
                   <ProductUpdate product={productId}>
                     <PencilLine />
@@ -158,85 +159,79 @@ export default function ProductIDPage() {
                     {productId?.name}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 space-x-4 truncate">
-                  <Label className="" htmlFor="name">
-                    Giá Thành
-                  </Label>
+                <div className="grid gap-3">
                   <Label className="" htmlFor="name">
                     Kích Thước
                   </Label>
-                </div>
-                <div className="grid grid-cols-2 gap-x-4">
-                  <div className=" border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden truncate">
-                    {`${Number(productId?.price).toLocaleString("vi-VN")} `}
+                  <div className=" border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
+                    {productId?.size}
                   </div>
-
-                <div className=" border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                  {productId?.size}
+                </div>
+                <div className="grid gap-3">
+                  <Label htmlFor="description">Mô Tả</Label>
+                  <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
+                    {productId?.description}
+                  </div>
                 </div>
               </div>
-              <div className="grid gap-3">
-                <Label htmlFor="description">Mô Tả</Label>
-                <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                  {productId?.description}
+            </CardContent>
+          </Card>
+          <Card className="shadow-sm gd-1">
+            <CardHeader className="text-primary">
+              <div className="flex justify-between items-start">
+                <div>
+                  <CardTitle >
+                    Giai Đoạn
+                  </CardTitle>
+                  <span className="text-xs font-normal leading-snug text-muted-foreground">Thông tin các giai đoạn của sản phẩm.</span>
+                </div>
+                <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
+                  <ProductUpdate product={productId}>
+                    <PencilLine />
+                  </ProductUpdate>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm gd-1">
-          <CardHeader>
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle className="text-primary">
-                  Giai đoạn sản phẩm
-                </CardTitle>
-              </div>
-              <ProductUpdate product={productId}>
-                <PencilLine className="rounded hover:bg-gray-200" />
-              </ProductUpdate>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Tên</TableHead>
-                  <TableHead>Mô tả</TableHead>
-                  <TableHead>Giá tiền</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {
-                  productId?.productPhaseSalaries?.map((item:any) => (
-                    <TableRow key={item.phaseId}>
-                      <TableCell className="font-semibold">
-                       {item?.phaseName}
-                      </TableCell>
-                      <TableCell className="max-w-[300px] overflow-hidden truncate">
-                        {item?.phaseDescription}
-                      </TableCell>
-                      <TableCell>
-                        <Label htmlFor="price-1" className="sr-only">
-                          Price
-                        </Label>
-                        <div className="border px-3 py-2 rounded-md">
-                          {item?.salaryPerProduct} VNĐ
-                        </div>
-                      </TableCell>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Tên</TableHead>
+                    <TableHead>Mô tả</TableHead>
+                    <TableHead>Giá tiền</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {
+                    productId?.productPhaseSalaries?.map((item: any) => (
+                      <TableRow key={item.phaseId}>
+                        <TableCell className="font-semibold">
+                          {item?.phaseName}
+                        </TableCell>
+                        <TableCell className="max-w-[300px] overflow-hidden truncate">
+                          {item?.phaseDescription}
+                        </TableCell>
+                        <TableCell>
+                          <Label htmlFor="price-1" className="sr-only">
+                            Price
+                          </Label>
+                          <div className="border px-3 py-2 rounded-md">
+                            {item?.salaryPerProduct} VNĐ
+                          </div>
+                        </TableCell>
 
-                    </TableRow>
-                  ))
-                }
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
+                      </TableRow>
+                    ))
+                  }
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
 
 
 
 
-      </div>
+        </div>
 
         <div className="grid gap-8 ">
           <Card className="shadow-sm">
@@ -253,8 +248,8 @@ export default function ProductIDPage() {
                   <div className="">
                     <span
                       className={`w-[40%] px-2 py-2 rounded-full ${productId?.isInProcessing
-                          ? "bg-primary text-white"
-                          : "bg-yellow-200 text-black"
+                        ? "bg-primary text-white"
+                        : "bg-yellow-200 text-black"
                         }`}
                     >
                       {productId?.isInProcessing ? "Đang xử lý" : "Chưa xử lý"}
@@ -275,7 +270,7 @@ export default function ProductIDPage() {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </div >
     </>
   );
 }

@@ -48,13 +48,13 @@ const enumStatus = [
   },
   {
     statusName: "CANCELLED",
-    description: "Đã hủy",
+    description: "Đã hủy đơn hàng",
     id: 3,
     value: "3",
   },
   {
     statusName: "CANCELLED",
-    description: "bỏ chọn",
+    description: "Bỏ chọn",
     id: 4,
     value: " ",
   },

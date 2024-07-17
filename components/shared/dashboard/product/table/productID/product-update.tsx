@@ -37,7 +37,7 @@ export default function ProductUpdate({
             <div className="bg-slate-100  flex flex-col ">
               <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
                 <h2 className="text-2xl text-white">
-                  Chỉnh sửa thông tin sản phẩm
+                  Chỉnh Sửa Thông Tin Sản Phẩm
                 </h2>
                 <Button variant="outline" size="icon">
                   <X

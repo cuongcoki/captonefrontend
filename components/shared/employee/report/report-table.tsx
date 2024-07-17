@@ -46,8 +46,8 @@ export default function ReportTable({ searchParams }: ReportParams) {
   return (
     <div className="">
       <HeaderComponent
-        title="Danh Sách Đơn Khiếu Nại"
-        description="Danh sách đơn khiếu nại đã gửi."
+        title="Đơn khiếu nại"
+        description="Thông tin trạng thái xử lý đơn khiếu nại."
       />
       <div className="mb-5 mt-2 grid grid-cols-12 space-y-1 grid-rows-2 xl:space-y-0 xl:grid-rows-1">
         {/* <Input

@@ -18,8 +18,8 @@ export default async function page({ searchParams }: Props) {
     <>
       <div className="p-2">
         <HeaderComponent
-          title="Lịch Sử Nhập Nguyên Vật Liệu"
-          description="Danh sách lịch sử nhập nguyên vật liệu trong công ty."
+          title="Lịch sử nhập nguyên vật liệu"
+          description="Lịch sử nhập nguyên vật liệu của công ty."
         />
         <DataTableForMaterialHistory
           columns={columnsForMaterialHistory}
