@@ -60,8 +60,17 @@ interface ProductData {
   }[];
   isInProcessing: boolean;
   name: string;
-  price: number;
+  priceFinished: number;
+  pricePhase1: number;
+  pricePhase2: number;
   size: string;
+  productPhaseSalaries: productPhaseSalaries[];
+}
+interface productPhaseSalaries {
+  phaseDescription: string;
+  phaseId: string;
+  phaseName: string;
+  salaryPerProduct: number;
 }
 
 interface ProductID {
@@ -133,7 +142,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     defaultValues: {
       id: productId?.id || "",
       code: productId?.code || "",
-      price: productId?.price || 0,
+      priceFinished: productId?.productPhaseSalaries.find(item => item.phaseName === "PH_003")?.salaryPerProduct || 0,
+      pricePhase2: productId?.productPhaseSalaries.find(item => item.phaseName === "PH_002")?.salaryPerProduct || 0,
+      pricePhase1: productId?.productPhaseSalaries.find(item => item.phaseName === "PH_001")?.salaryPerProduct || 0,
       size: productId?.size || "",
       description: productId?.description || "",
       name: productId?.name || "",
@@ -144,13 +155,14 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
 
   const [imageUrls, setImageUrls] = useState<any>([]);
   const [nameImage, setNameImage] = useState<string[]>([]);
-  const [imageAddRequests, setImageAddRequests] = useState<
-    {
-      imageUrl: string;
-      isBluePrint: boolean;
-      isMainImage: boolean;
-    }[]
-  >([]);
+  // const [imageAddRequests, setImageAddRequests] = useState<
+  //   {
+  //     imageUrl: string;
+  //     isBluePrint: boolean;
+  //     isMainImage: boolean;
+  //   }[]
+  // >([]);
+  const [imageAddRequests, setImageAddRequests] = useState<any[]>([]);
 
   const generateRandomString = (length: number = 5) => {
     const characters =
@@ -239,10 +251,16 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const handleDeleteImage = (index: number, imageID: string) => {
     if (imageID !== undefined) {
       setRemoveImageIds((prevRemoveImageIds) => {
+        // Kiểm tra xem imageID đã tồn tại trong mảng chưa
         const newRemoveImageIds = prevRemoveImageIds
-          ? [...prevRemoveImageIds, imageID]
+          ? prevRemoveImageIds.includes(imageID)
+            ? prevRemoveImageIds
+            : [...prevRemoveImageIds, imageID]
           : [imageID];
         return newRemoveImageIds.length > 0 ? newRemoveImageIds : null;
+      });
+      setImageAddRequests((prevImageRequests) => {
+        return prevImageRequests.filter((id) => id.id !== imageID);
       });
     }
 
@@ -253,15 +271,28 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       prevImageUrls.filter((_: any, i: any) => i !== index)
     );
   };
-  // console.log("removeImageIds", removeImageIds);
+
+  const handleDeleteImageUpdate = (id: string) => {
+    if (id !== undefined) {
+      setRemoveImageIds((prevRemoveImageIds) => {
+        const newRemoveImageIds = prevRemoveImageIds
+          ? [...prevRemoveImageIds, id]
+          : [id];
+        return newRemoveImageIds.length > 0 ? newRemoveImageIds : null;
+      });
+    }
+  }
+  console.log("removeImageIds", removeImageIds);
   console.log("imageAddRequests", imageAddRequests)
   console.log("imageRequests", imageRequests)
   console.log("imageRequestsUpdate", imageRequestsUpdate)
   const [saveUpdateImage, setSaveUpdateImage] = useState<any[]>([]);
-  console.log("saveUpdateImage",saveUpdateImage)
+  console.log("saveUpdateImage", saveUpdateImage)
   // Handle toggling blueprint flag for an image
-  const handleToggleBluePrint = (imageUrl: string, index: number) => {
-    console.log('imageUrl=', imageUrl)
+  const handleToggleBluePrint = (imageUrl: string, id: string) => {
+    // console.log('imageUrl=', imageUrl)
+    console.log('id', id)
+    console.log('image=====', imageRequestsUpdate)
     setImageRequests((prevImageRequests) =>
       prevImageRequests.map((req) =>
         req.imageUrl === imageUrl ? { ...req, isBluePrint: !req.isBluePrint } : req
@@ -273,28 +304,45 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       )
     );
 
-    if (imageRequestsUpdate.map((item, index) => index === index)) {
-      setImageRequestsUpdate((prevImageRequests) =>
-        prevImageRequests.map((req, i) =>
-          i === index ? { ...req, isBluePrint: !req.isBluePrint } : req
-        )
-      );
-      setSaveUpdateImage((prevSaveUpdateImage) => {
-        const updatedSaveUpdateImage = [...prevSaveUpdateImage];
-        updatedSaveUpdateImage[index] = {
-          ...imageRequestsUpdate[index],
-          isBluePrint: !imageRequestsUpdate[index]?.isBluePrint,
-        };
-        return updatedSaveUpdateImage;
+    setImageRequestsUpdate((prevImageRequests) =>
+      prevImageRequests.map((req) =>
+        req.id === id ? { ...req, isBluePrint: !req.isBluePrint } : req
+      )
+    );
+
+    const updatedImage = imageRequestsUpdate.find(item => item.id === id);
+    if (updatedImage) {
+      handleDeleteImageUpdate(id);
+      setImageAddRequests((prevSaveUpdateImage) => {
+        const existingIndex = prevSaveUpdateImage.findIndex(item => item.id === id);
+        if (existingIndex !== -1) {
+          // Update existing entry
+          const updatedSaveUpdateImage = [...prevSaveUpdateImage];
+          updatedSaveUpdateImage[existingIndex] = {
+            ...updatedSaveUpdateImage[existingIndex],
+            isBluePrint: !updatedSaveUpdateImage[existingIndex].isBluePrint
+          };
+          return updatedSaveUpdateImage;
+        } else {
+          // Add new entry
+          return [
+            ...prevSaveUpdateImage,
+            {
+              id: updatedImage.id,
+              imageUrl: updatedImage.imageUrl,
+              isBluePrint: !updatedImage.isBluePrint,
+              isMainImage: updatedImage.isMainImage
+            }
+          ];
+        }
       });
     }
 
-    
 
   };
 
   // Handle toggling main image flag for an image
-  const handleToggleMainImage = (imageUrl: string) => {
+  const handleToggleMainImage = (imageUrl: string, id: string) => {
     console.log('imageUrl=', imageUrl)
     setImageRequests((prevImageRequests) =>
       prevImageRequests.map((req) =>
@@ -307,6 +355,39 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       )
     );
 
+    setImageRequestsUpdate((prevImageRequests) =>
+      prevImageRequests.map((req) =>
+        req.id === id ? { ...req, isMainImage: !req.isMainImage } : req
+      )
+    );
+
+    const updatedImage = imageRequestsUpdate.find(item => item.id === id);
+    if (updatedImage) {
+      handleDeleteImageUpdate(id);
+      setSaveUpdateImage((prevSaveUpdateImage) => {
+        const existingIndex = prevSaveUpdateImage.findIndex(item => item.id === id);
+        if (existingIndex !== -1) {
+          // Update existing entry
+          const updatedSaveUpdateImage = [...prevSaveUpdateImage];
+          updatedSaveUpdateImage[existingIndex] = {
+            ...updatedSaveUpdateImage[existingIndex],
+            isMainImage: !updatedSaveUpdateImage[existingIndex].isMainImage
+          };
+          return updatedSaveUpdateImage;
+        } else {
+          // Add new entry
+          return [
+            ...prevSaveUpdateImage,
+            {
+              id: updatedImage.id,
+              imageUrl: updatedImage.imageUrl,
+              isBluePrint: updatedImage.isBluePrint,
+              isMainImage: !updatedImage.isMainImage
+            }
+          ];
+        }
+      });
+    }
   };
 
   const handlePostImage = async () => {
@@ -344,13 +425,13 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     // }
     setLoading(true);
     setIsSubmitting(true);
-    if (saveUpdateImage.length > 0) {
-      // Push saveUpdateImage into imageAddRequests array
-      setImageAddRequests((prevImageAddRequests) => [
-        ...prevImageAddRequests,
-        ...saveUpdateImage,
-      ]);
-    }
+    // if (saveUpdateImage.length > 0) {
+    //   // Push saveUpdateImage into imageAddRequests array
+    //   setImageAddRequests((prevImageAddRequests) => [
+    //     ...prevImageAddRequests,
+    //     ...saveUpdateImage,
+    //   ]);
+    // }
     console.log(imageAddRequests)
     try {
       await handlePostImage();
@@ -358,13 +439,15 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       const requestBody = {
         id: formData.id,
         code: formData.code.trim(),
-        price: formData.price,
+        priceFinished: formData.priceFinished,
+        pricePhase1: formData.pricePhase1,
+        pricePhase2: formData.pricePhase2,
         size: formData.size.trim(),
         description: formData.description.trim(),
         name: formData.name.trim(),
         isInProcessing: formData.isInProcessing,
         addImagesRequest: imageAddRequests.map((image, index) => ({
-          imageUrl: nameImage[index],
+          imageUrl: image.changedFileName ? image.changedFileName : image.imageUrl,
           isBluePrint: image.isBluePrint,
           isMainImage: image.isMainImage,
         })),
@@ -372,42 +455,43 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       };
       console.log("============requestBody", requestBody);
 
-      productApi
-        .updateProduct(requestBody, formData.id)
-        .then(({ data }) => {
-          toast.success(data.message);
-          ForceRender();
-        })
-        .catch((error) => {
-          console.error("Error updating product:", error);
-        });
+      // productApi
+      //   .updateProduct(requestBody, formData.id)
+      //   .then(({ data }) => {
+      //     toast.success(data.message);
+      //     ForceRender();
+      //   })
+      //   .catch((error) => {
+      //     console.error("Error updating product:", error);
+      //   });
 
-        try {
-          const response = await productApi.updateProduct(
-            requestBody,
-            formData.id
+      try {
+        const response = await productApi.updateProduct(
+          requestBody,
+          formData.id
+        );
+
+        toast.success(response.data.message); // Assuming your API returns a message field in the response
+        console.log("Update Successful:", response);
+      } catch (error: any) {
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.message
+        ) {
+          // Xử lý lỗi từ server
+          toast.error(`Update error: ${error.response.data.message}`);
+        } else if (error.request) {
+          // Xử lý lỗi khi không có phản hồi từ server
+          toast.error(
+            "No response from server while updating. Please try again later."
           );
-          toast.success(response.data.message); // Assuming your API returns a message field in the response
-          console.log("Update Successful:", response);
-        } catch (error: any) {
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.message
-          ) {
-            // Xử lý lỗi từ server
-            toast.error(`Update error: ${error.response.data.message}`);
-          } else if (error.request) {
-            // Xử lý lỗi khi không có phản hồi từ server
-            toast.error(
-              "No response from server while updating. Please try again later."
-            );
-          } else {
-            // Xử lý các lỗi khác
-            toast.error(`Unexpected error during update: ${error.message}`);
-          }
-          throw error; // Re-throw the error to stop further execution
+        } else {
+          // Xử lý các lỗi khác
+          toast.error(`Unexpected error during update: ${error.message}`);
         }
+        throw error; // Re-throw the error to stop further execution
+      }
     } catch (error: any) {
       console.error("Error updating product:", error);
     } finally {
@@ -418,6 +502,24 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
 
   useEffect(() => { }, [removeImageIds]);
 
+  const formatCurrency = (amount: any) => {
+    if (!amount) return "";
+    let valueString = amount.toString();
+
+    // Remove all non-numeric characters, including dots
+    valueString = valueString.replace(/\D/g, "");
+
+    // Reverse the string to handle grouping from the end
+    let reversed = valueString.split("").reverse().join("");
+
+    // Add dots every 3 characters
+    let formattedReversed = reversed.match(/.{1,3}/g).join(".");
+
+    // Reverse back to original order
+    let formatted = formattedReversed.split("").reverse().join("");
+
+    return formatted;
+  };
   return (
     <Form {...form}>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 rounded-xl">
@@ -426,109 +528,176 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
             <CardContent>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="w-full flex flex-col gap-4">
-                  {/* Code */}
-                  <FormField
-                    control={form.control}
-                    name="code"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center text-primary">
-                          Mã Sản Phẩm *
-                        </FormLabel>
-                        <Input type="text" {...field} />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {/* Name */}
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center text-primary">
-                          Tên Sản Phẩm *
-                        </FormLabel>
-                        <Input type="text" {...field} />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {/* Price */}
-                  <FormField
-                    control={form.control}
-                    name="price"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center text-primary">
-                          Giá Thành *
-                        </FormLabel>
-                        <Input type="number" {...field} />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="w-full flex flex-col gap-4">
+                    {/* Code */}
+                    <FormField
+                      control={form.control}
+                      name="code"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center text-primary">
+                            Mã Sản Phẩm *
+                          </FormLabel>
+                          <Input type="text" {...field} />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* Name */}
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center text-primary">
+                            Tên Sản Phẩm *
+                          </FormLabel>
+                          <Input type="text" {...field} />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* Size */}
+                    <FormField
+                      control={form.control}
+                      name="size"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center text-primary">
+                            Kích Thước *
+                          </FormLabel>
+                          <Input type="text" {...field} />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                  {/* Size */}
-                  <FormField
-                    control={form.control}
-                    name="size"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center text-primary">
-                          Kích Thước *
-                        </FormLabel>
-                        <Input type="text" {...field} />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                    {/* IsProse */}
+                    <FormField
+                      control={form.control}
+                      name="isInProcessing"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-primary">
+                            Trạng Thái *
+                          </FormLabel>
+                          <Select
+                            onValueChange={(value) =>
+                              field.onChange(value === "true")
+                            }
+                            value={
+                              field.value !== undefined
+                                ? String(field.value)
+                                : undefined
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Trạng thái" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="true">Đang xử lý</SelectItem>
+                              <SelectItem value="false">Chưa xử lý</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {/* Description */}
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center text-primary">
+                            Mô Tả
+                          </FormLabel>
+                          <Textarea {...field} />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-                  {/* IsProse */}
-                  <FormField
-                    control={form.control}
-                    name="isInProcessing"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-primary">
-                          Trạng Thái *
-                        </FormLabel>
-                        <Select
-                          onValueChange={(value) =>
-                            field.onChange(value === "true")
-                          }
-                          value={
-                            field.value !== undefined
-                              ? String(field.value)
-                              : undefined
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Trạng thái" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="true">Đang xử lý</SelectItem>
-                            <SelectItem value="false">Chưa xử lý</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  {/* Description */}
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center text-primary">
-                          Mô Tả
-                        </FormLabel>
-                        <Textarea {...field} />
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="md:flex flex-row gap-4">
+                    {/* Price */}
+                    <FormField
+                      control={form.control}
+                      name="pricePhase1"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center text-primary">
+                            Giá giai đoạn 1 *
+                          </FormLabel>
+                          <Input type="text" inputMode="numeric" pattern="\d*"
+                            {...field}
+                            value={formatCurrency(field.value)}
+                            onChange={(e) => {
+                              const rawValue =
+                                e.target.value.replace(
+                                  /[^\d.]/g,
+                                  ""
+                                ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                              field.onChange(rawValue);
+                            }}
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Price */}
+                    <FormField
+                      control={form.control}
+                      name="pricePhase2"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center text-primary">
+                            Giá giai đoạn 2 *
+                          </FormLabel>
+                          <Input type="text" inputMode="numeric" pattern="\d*"
+                            {...field}
+                            value={formatCurrency(field.value)}
+                            onChange={(e) => {
+                              const rawValue =
+                                e.target.value.replace(
+                                  /[^\d.]/g,
+                                  ""
+                                ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                              field.onChange(rawValue);
+                            }}
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* Price */}
+                    <FormField
+                      control={form.control}
+                      name="priceFinished"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center text-primary">
+                            Giá hoàn thiện *
+                          </FormLabel>
+                          <Input type="text" inputMode="numeric" pattern="\d*"
+                            {...field}
+                            value={formatCurrency(field.value)} // Hiển thị lương đã format
+                            onChange={(e) => {
+                              const rawValue =
+                                e.target.value.replace(
+                                  /[^\d.]/g,
+                                  ""
+                                ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                              field.onChange(rawValue);
+                            }}
+                          />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
                   {/* Submit button */}
                   <Button
@@ -627,7 +796,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                                         className="data-[state=checked]:bg-primary"
                                         id={`isBluePrint-${index}`}
                                         checked={image.isBluePrint}
-                                        onCheckedChange={() => handleToggleBluePrint(image.imageUrl, index)}
+                                        onCheckedChange={() => handleToggleBluePrint(image.imageUrl, image?.id)}
                                       />
                                     </div>
                                     <div className="flex justify-between items-center">
@@ -638,7 +807,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                                         className="data-[state=checked]:bg-primary"
                                         id={`isMainImage-${index}`}
                                         checked={image.isMainImage}
-                                        onCheckedChange={() => handleToggleMainImage(image.imageUrl)}
+                                        onCheckedChange={() => handleToggleMainImage(image.imageUrl, image?.id)}
                                       />
                                     </div>
                                   </div>

@@ -151,9 +151,12 @@ type Company = {
 export default function UpdateOrder({ orderId }: OrderId) {
     //state
     const [open, setOpen] = useState<boolean>(false);
+    const [fetchTrigger, setFetchTrigger] = useState<number>(0);
 
     const handleOffDialog = () => {
         setOpen(false);
+        setFetchTrigger(prev => prev + 1);
+
     };
     const handleOnDialog = () => {
         setOpen(true);
@@ -209,7 +212,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                 vat: orderId.vat,
             });
         }
-    }, [orderId, currentPage, pageSize, searchTermAll, form])
+    }, [orderId, currentPage, pageSize, searchTermAll, form, fetchTrigger])
 
 
 

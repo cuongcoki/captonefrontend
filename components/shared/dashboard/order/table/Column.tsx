@@ -35,13 +35,15 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "company.name",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" className="">
+        <Button variant="ghost" className=" ">
           Tên Công Ty
         </Button>
       )
     },
-    cell: ({row}) => {
-      return `${limitLength(row.original.company.name,40)}`;
+    cell: ({ row }) => {
+      return <span className="flex justify-center ">
+      {limitLength(row.original.company.name, 30)}
+      </span>;
     },
   },
 

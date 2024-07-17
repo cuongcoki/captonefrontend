@@ -90,9 +90,12 @@ interface SetProduct {
 
 export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   // console.log('setId',setId)
+  const [fetchTrigger, setFetchTrigger] = useState<number>(0);
+
   const [open, setOpen] = useState<boolean>(false);
   const handleOffDialog = () => {
     setOpen(false);
+    setFetchTrigger(prev => prev + 1);
   };
   const handleOnDialog = () => {
     setOpen(true);
@@ -235,7 +238,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     };
 
     fetchDataProductId();
-  }, [setId]);
+  }, [setId,fetchTrigger]);
   // console.log('setProductId', setProductId)
 
   // useForm hook for managing form state and validation

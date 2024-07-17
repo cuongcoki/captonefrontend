@@ -110,9 +110,12 @@ interface setOrderResponses {
 export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     //state
     const [open, setOpen] = useState<boolean>(false);
+    const [fetchTrigger, setFetchTrigger] = useState<number>(0);
 
     const handleOffDialog = () => {
         setOpen(false);
+        setFetchTrigger(prev => prev + 1);
+
     };
     const handleOnDialog = () => {
         setOpen(true);
@@ -276,7 +279,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         setGetDetailsPro(combinedRequestsPro)
 
 
-    }, [orderId])
+    }, [orderId,fetchTrigger])
 
     // console.log('getDetailsProgetDetailsPro=========', getDetailsPro)
     const [getDetailsProUpdate, setGetDetailsProUpdate] = useState<any[]>([]);

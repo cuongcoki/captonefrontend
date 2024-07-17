@@ -80,4 +80,19 @@ export const productApi = {
     axiosClient.get(
       `${endPointConstant.BASE_URL}/products/search?search=${searchTerm}`
     ),
+
+  allMaterial: (
+    PageIndex?: any,
+    PageSize?: any,
+    searchTerm?: string
+  ) => {
+    const requestBody = {  searchTerm, PageIndex, PageSize };
+    const cacheId = createCacheId("all-products", requestBody);
+    cacheIds.add(cacheId);
+    console.log("Added cacheId:", cacheId);
+    return axiosClient.get(`${endPointConstant.BASE_URL}/material`, {
+      params: requestBody,
+      id: cacheId,
+    });
+  },
 };

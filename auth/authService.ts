@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken'
 import axios from 'axios'
 import { UsersType } from '@/types/userTypes'
 import { endPointConstant } from '@/constants/endpoint'
+import { jwtDecode } from 'jwt-decode'
 
 // ** Types
 export type LoginPayload = {
@@ -19,21 +20,22 @@ export type LoginPayload = {
 export const authService = {
   refreshToken: async () => {
     const apiUrl = `${endPointConstant.BASE_URL}/auth/refresh-token`
-    const payload = jwt.decode(localStorage.getItem(jwtConfig.storageTokenKeyName) || '') as any
-
+    const storedToken = window.localStorage.getItem(jwtConfig.storageTokenKeyName)
+    const payload:any = jwtDecode(storedToken || '') 
+    console.log("Pyloadđ ====== ===",payload)
     const refreshTokenApi = axios.create({
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem(jwtConfig.onTokenExpiration)}`
       }
     })
     const data = {
-      token: payload?.UserID,
+      userId: payload?.UserID,
       refreshToken: localStorage.getItem(jwtConfig.onTokenExpiration)
     }
 
     try {
       const response = await refreshTokenApi.post(apiUrl, data)
+      console.log("response=====response=====response",response.data)
       return response
     } catch (err: any) {
       console.error('Error refreshing token:', err.response ? err.response.data : err)

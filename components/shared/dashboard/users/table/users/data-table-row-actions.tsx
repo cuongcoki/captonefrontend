@@ -38,7 +38,7 @@ export function DataTableRowActions<TData>({
     setIsOpen(false);
   };
   return (
-    <DropdownMenu onOpenChange={toggleDropdown} open={isOpen}>
+    <DropdownMenu modal={false} onOpenChange={toggleDropdown} open={isOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
