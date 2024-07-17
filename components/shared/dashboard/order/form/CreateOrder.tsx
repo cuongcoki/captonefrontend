@@ -455,7 +455,7 @@ export default function CreateOrder() {
                         <Dialog.Content className="w-full fixed z-50 left-1/2 top-1/2 max-w-[1200px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
                             <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
-                                    <h2 className="text-2xl text-white">Thêm đơn hàng mới</h2>
+                                    <h2 className="text-2xl text-white">Tạo Đơn Hàng</h2>
                                     <Button variant="outline" size="icon" onClick={handleOffDialog}>
                                         <X className="w-4 h-4" />
                                     </Button>

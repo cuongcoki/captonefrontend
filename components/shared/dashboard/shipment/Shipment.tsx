@@ -2,18 +2,18 @@
 
 import { CardTitle, Card } from "@/components/ui/card";
 import RenderTableShipment from "./table/RenderTable";
+import HeaderComponent from "../../common/header";
 
 export default function Shipment() {
     return (
-        <Card className="w-full h-full">
+        <>
             <div className="!mb-15">
-                <CardTitle>
-                    <div className="p-3 text-3xl  font-semibold text-[#22c55e] text-center w-full">
-                        QUẢN LÝ VẬN CHUYỂN
-                    </div>
-                </CardTitle>
+                <HeaderComponent
+                    title="Đơn vận chuyển"
+                    description="Danh sách đơn vận chuyển từ công ty và công ty hợp tác."
+                />
                 <RenderTableShipment />
             </div>
-        </Card>
+        </>
     );
 }

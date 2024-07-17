@@ -70,7 +70,7 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const shortenedCode = row.original.code.slice(0, 10);
       return (
-        <span className="inline-block px-3 py-1 rounded-md w-full text-left">
+        <span className="inline-block px-3 py-1 rounded-md">
           {shortenedCode}
         </span>
       );
@@ -80,7 +80,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
-      return <Button variant="ghost" className="w-full text-left">Tên Sản Phẩm</Button>;
+      return <Button variant="ghost" className="">Tên Sản Phẩm</Button>;
     },
     cell: ({ row }) => {
       let displayText = row.original.name;
@@ -89,7 +89,7 @@ export const columns: ColumnDef<Product>[] = [
         displayText = displayText.slice(0, 20) + "...";
       }
       return (
-        <span className="inline-block px-3 py-1 rounded-md w-full text-left">
+        <span className="inline-block px-3 py-1 rounded-md ">
           {displayText}
         </span>
       );
@@ -107,7 +107,7 @@ export const columns: ColumnDef<Product>[] = [
         30
       )}...`;
       return (
-        <span className="inline-block  px-3 py-1 rounded-md w-full text-left">
+        <span className="inline-block  px-3 py-1 rounded-md ">
           {shortenedDescription}
         </span>
       );
@@ -122,7 +122,7 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const formattedPrice = Number(row.original.price).toLocaleString("vi-VN");
       return (
-        <span className="inline-block px-3 py-1 rounded-md w-full text-right">
+        <span className="inline-block px-3 py-1 rounded-md">
           {formattedPrice}
         </span>
       );
@@ -168,7 +168,7 @@ export const columns: ColumnDef<Product>[] = [
           className={`${isInProcessing.value === true
             ? "p-2 text-primary dark:bg-white"
             : "p-2 text-red-500 dark:bg-white"
-            } w-full text-left`}
+            } `}
         >
           {isInProcessing.label}
         </span>

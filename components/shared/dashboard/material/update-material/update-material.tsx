@@ -25,7 +25,7 @@ export default function UpdateMaterial({
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className=" max-w-[340px] md:max-w-[700px] dark:bg-[#1c1917]">
           <DialogHeader>
-            <DialogTitle>Cập nhật nguyên liệu</DialogTitle>
+            <DialogTitle className="text-primary">Cập Nhật Nguyên Vật Liệu</DialogTitle>
           </DialogHeader>
           <DialogDescription></DialogDescription>
           <UpdateMaterialForm id={id} />

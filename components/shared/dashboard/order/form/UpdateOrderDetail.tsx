@@ -279,7 +279,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         setGetDetailsPro(combinedRequestsPro)
 
 
-    }, [orderId,fetchTrigger])
+    }, [orderId, fetchTrigger])
 
     // console.log('getDetailsProgetDetailsPro=========', getDetailsPro)
     const [getDetailsProUpdate, setGetDetailsProUpdate] = useState<any[]>([]);

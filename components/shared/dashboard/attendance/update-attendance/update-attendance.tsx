@@ -428,7 +428,7 @@ export default function UpdateAttendance({
               <th className="dark:bg-[#1c1917] dark:text-primary" rowSpan={2}>
                 <div className="flex flex-col items-center dark:text-primary">
                   <div>Lương theo SP</div>
-                  <div className="flex text-sm font-light">
+                  <div className="flex text-sm font-light w-full justify-around">
                     <div
                       onClick={() => {
                         checkAllSalaryByProduct(true);
@@ -458,7 +458,7 @@ export default function UpdateAttendance({
               <th className="dark:bg-[#1c1917] dark:text-primary" rowSpan={2}>
                 <div className="flex flex-col items-center">
                   <div>Điểm danh</div>
-                  <div className="flex text-sm font-light">
+                  <div className="flex text-sm font-light w-full justify-around">
                     <div
                       onClick={() => {
                         checkAllAttendance(true);
