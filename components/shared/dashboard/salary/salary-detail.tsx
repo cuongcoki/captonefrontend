@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -19,8 +19,6 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { Badge } from "@/components/ui/badge";
-
 import SalaryHistoryReceived from "@/components/shared/dashboard/salary/salary-history/salary-history-received";
 import SalaryHistorySalaryByDay from "@/components/shared/dashboard/salary/salary-history/salary-history-salary-by-day";
 import SalaryHistorySalaryByOverTime from "@/components/shared/dashboard/salary/salary-history/salary-history-salary-by-overtime";
@@ -31,8 +29,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SalaryDetailParams } from "@/types/salary.type";
+import { SalaryDetailParams, SalaryDetailType } from "@/types/salary.type";
 import HeaderComponent from "@/components/shared/common/header";
+import { salaryApi } from "@/apis/salary.api";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 const dataNow = new Date();
 const yearNow = dataNow.getFullYear();
 const listYear = [yearNow, yearNow - 1, yearNow - 2, yearNow - 3];
@@ -58,6 +59,58 @@ export default function SalaryDetail({
   SearchParams: SalaryDetailParams;
 }) {
   const [params, setParams] = React.useState<SalaryDetailParams>(SearchParams);
+  const [data, setData] = React.useState<SalaryDetailType>({
+    accountBalance: 0,
+    month: 1,
+    productWorkingResponses: [],
+    totalSalaryProduct: 0,
+    totalWorkingDays: 0,
+    totalWorkingHours: 0,
+    year: 0,
+  });
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    salaryApi
+      .getSalaryDetail({
+        userId: id,
+        month: params.month,
+        year: params.year,
+      })
+      .then((res) => {
+        setData(res.data.data);
+        console.log("SALARY DETAIL API RESPONSE", res.data);
+        router.push(`${pathname}?year=${params.year}&month=${params.month}`);
+      })
+      .catch((e) => {
+        console.log("SALARY DETAIL API ERROR", e);
+        setData({
+          accountBalance: 0,
+          month: 1,
+          productWorkingResponses: [],
+          totalSalaryProduct: 0,
+          totalWorkingDays: 0,
+          totalWorkingHours: 0,
+          year: 0,
+        });
+      });
+  }, [params, id, router, pathname]);
+
+  const formatCurrency = (value: any) => {
+    if (!value) return "";
+    let valueString = value.toString();
+    // Remove all non-numeric characters, including dots
+    valueString = valueString.replace(/\D/g, "");
+    // Reverse the string to handle grouping from the end
+    let reversed = valueString.split("").reverse().join("");
+    // Add dots every 3 characters
+    let formattedReversed = reversed.match(/.{1,3}/g).join(".");
+    // Reverse back to original order
+    let formatted = formattedReversed.split("").reverse().join("");
+    return formatted;
+  };
   return (
     <>
       <HeaderComponent
@@ -71,7 +124,10 @@ export default function SalaryDetail({
               <CardHeader className="pb-3">
                 <CardDescription>Lương khả dụng</CardDescription>
                 <CardTitle className="text-4xl text-primary">
-                  5.500.000 VNĐ
+                  {data.accountBalance === 0
+                    ? 0
+                    : formatCurrency(data.accountBalance)}{" "}
+                  VNĐ
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -83,7 +139,9 @@ export default function SalaryDetail({
             <Card x-chunk="dashboard-05-chunk-1">
               <CardHeader className="pb-2">
                 <CardDescription>Tông số công</CardDescription>
-                <CardTitle className="text-4xl text-primary">129</CardTitle>
+                <CardTitle className="text-4xl text-primary">
+                  {data.totalWorkingDays}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-muted-foreground">
@@ -95,7 +153,9 @@ export default function SalaryDetail({
             <Card x-chunk="dashboard-05-chunk-2">
               <CardHeader className="pb-2">
                 <CardDescription>Thời gian tăng ca</CardDescription>
-                <CardTitle className="text-4xl text-primary">123 h</CardTitle>
+                <CardTitle className="text-4xl text-primary">
+                  {data.totalWorkingHours} h
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-muted-foreground">
@@ -172,7 +232,12 @@ export default function SalaryDetail({
                     <div>Số lượng sản phẩm tạo ra trong tháng 7 năm 2024</div>
                     <div className="ml-auto">
                       Tổng lương sản phẩm:{" "}
-                      <span className="font-bold text-primary">8.300.000</span>
+                      <span className="font-bold text-primary">
+                        {data.totalSalaryProduct === 0
+                          ? 0
+                          : formatCurrency(data.totalSalaryProduct)}{" "}
+                        VNĐ
+                      </span>
                     </div>
                   </div>
                 </CardHeader>
@@ -180,161 +245,63 @@ export default function SalaryDetail({
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Ảnh</TableHead>
                         <TableHead className="hidden sm:table-cell">
-                          Tên sản phẩm
+                          Ảnh
                         </TableHead>
-                        <TableHead className="hidden sm:table-cell">
-                          Số lượng
+                        <TableHead className="">Tên sản phẩm</TableHead>
+                        <TableHead className="">Số lượng</TableHead>
+                        <TableHead className="">Lương</TableHead>
+                        <TableHead className="text-right hidden sm:table-cell">
+                          Tổng
                         </TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Giai đoạn
-                        </TableHead>
-                        <TableHead className="text-right">Lương</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      <TableRow className="bg-accent">
-                        <TableCell>
-                          <div className="font-medium">Liam Johnson</div>
-                          <div className="hidden text-sm text-muted-foreground md:inline">
-                            liam@example.com
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          Sale
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <Badge className="text-xs" variant="secondary">
-                            Fulfilled
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-06-23
-                        </TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>
-                          <div className="font-medium">Olivia Smith</div>
-                          <div className="hidden text-sm text-muted-foreground md:inline">
-                            olivia@example.com
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          Refund
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <Badge className="text-xs" variant="outline">
-                            Declined
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-06-24
-                        </TableCell>
-                        <TableCell className="text-right">$150.00</TableCell>
-                      </TableRow>
+                      {data.productWorkingResponses.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center">
+                            Không có dữ liệu nào
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        data.productWorkingResponses.map((item) => (
+                          <TableRow
+                            key={item.productId}
+                            className="hover:bg-accent"
+                          >
+                            <TableCell className="hidden sm:table-cell">
+                              <div className="bg-gray-400 size-10">
+                                <Image
+                                  src={item.productImage}
+                                  alt={item.productName}
+                                  width={100}
+                                  height={100}
+                                />
+                              </div>
+                            </TableCell>
+                            <TableCell className="">
+                              {item.productName}
+                            </TableCell>
+                            <TableCell className="">
+                              {item.quantity}
+                              {/* <Badge
+                              className="text-xs"
+                              variant="secondary"
+                            ></Badge> */}
+                            </TableCell>
 
-                      <TableRow>
-                        <TableCell>
-                          <div className="font-medium">Noah Williams</div>
-                          <div className="hidden text-sm text-muted-foreground md:inline">
-                            noah@example.com
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          Subscription
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <Badge className="text-xs" variant="secondary">
-                            Fulfilled
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-06-25
-                        </TableCell>
-                        <TableCell className="text-right">$350.00</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>
-                          <div className="font-medium">Emma Brown</div>
-                          <div className="hidden text-sm text-muted-foreground md:inline">
-                            emma@example.com
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          Sale
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <Badge className="text-xs" variant="secondary">
-                            Fulfilled
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-06-26
-                        </TableCell>
-                        <TableCell className="text-right">$450.00</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>
-                          <div className="font-medium">Liam Johnson</div>
-                          <div className="hidden text-sm text-muted-foreground md:inline">
-                            liam@example.com
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          Sale
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <Badge className="text-xs" variant="secondary">
-                            Fulfilled
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-06-23
-                        </TableCell>
-                        <TableCell className="text-right">$250.00</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>
-                          <div className="font-medium">Olivia Smith</div>
-                          <div className="hidden text-sm text-muted-foreground md:inline">
-                            olivia@example.com
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          Refund
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <Badge className="text-xs" variant="outline">
-                            Declined
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-06-24
-                        </TableCell>
-                        <TableCell className="text-right">$150.00</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell>
-                          <div className="font-medium">Emma Brown</div>
-                          <div className="hidden text-sm text-muted-foreground md:inline">
-                            emma@example.com
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          Sale
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <Badge className="text-xs" variant="secondary">
-                            Fulfilled
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-06-26
-                        </TableCell>
-                        <TableCell className="text-right">$450.00</TableCell>
-                      </TableRow>
+                            <TableCell className="">
+                              {formatCurrency(item.salaryPerProduct)} VNĐ
+                            </TableCell>
+                            <TableCell className="text-right hidden sm:table-cell">
+                              {formatCurrency(
+                                item.salaryPerProduct * item.quantity
+                              )}{" "}
+                              VNĐ
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
                     </TableBody>
                   </Table>
                 </CardContent>
