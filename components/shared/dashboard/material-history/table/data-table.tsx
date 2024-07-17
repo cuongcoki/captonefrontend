@@ -35,6 +35,7 @@ import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-f
 import "./material-history.css";
 import toast from "react-hot-toast";
 import { ComboboxDemo } from "@/components/shared/common/combobox/combobox_demo";
+import HeaderComponent from "@/components/shared/common/header";
 
 type MaterialHistoryContextType = {
   ForceRender: () => void;
@@ -161,9 +162,6 @@ export function DataTableForMaterialHistory<TData, TValue>({
 
   return (
     <div>
-      <div className="text-3xl text-[#22c55e] w-full text-center mb-3 font-semibold">
-        LỊCH SỬ NHẬP NGUYÊN VẬT LIỆU
-      </div>
       <div className="py-4 grid grid-row-3 md:grid-cols-2 xl:grid-cols-3">
         <Input
           placeholder="Tìm theo tên vật liệu..."

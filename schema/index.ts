@@ -148,9 +148,9 @@ export const UsersSchema = z.object({
       },
       { message: "Mật khẩu phải chứa ít nhất một ký tự đặc biệt" }
     ),
-  roleId: z.string().min(1, { message: "roleId là bắt buộc" }),
+  roleId: z.string().min(1, { message: "Vui lòng chọn vai trò" }),
   isActive: z.boolean(),
-  companyId: z.string().min(1, { message: "Vui lòng chọn công ty" }),
+  companyId: z.string().min(1, { message: "Vui lòng chọn cơ sở" }),
   id: z.string().refine(
     (id) => {
       const idPattern = /^(?:\d{9}|\d{12})$/;
@@ -191,15 +191,15 @@ export const UsersUpdateSchema = z.object({
     { message: "Số điện thoại phải đúng 10 chữ số" }
   ),
 
-  roleId: z.number().min(1, { message: "roleId là bắt buộc" }),
+  roleId: z.number().min(1, { message: "Vui lòng chọn vai trò" }),
   isActive: z.boolean(),
-  facility: z.string().min(1, { message: "Công ty là bắt buộc" }),
+  facility: z.string().min(1, { message: "Vui lòng chọn cơ sở" }),
   id: z.string().refine(
     (id) => {
       const idPattern = /^(?:\d{9}|\d{12})$/;
       return idPattern.test(id);
     },
-    { message: "phải đúng 9 chữ số là CMND và 12 chữ số là CCCD" }
+    { message: "Phải đúng 9 chữ số là CMND và 12 chữ số là CCCD" }
   ),
   salaryByDay: z.coerce
     .number({ message: "Lương phải là số" })

@@ -1,14 +1,16 @@
 "use client";
 import { CardTitle, Card } from "@/components/ui/card";
 import RenderTableSet from "./table/sets/RenderTable";
+import HeaderComponent from "@/components/shared/common/header";
 
 export default function SetPage() {
   return (
-    <Card className="">
-      <CardTitle className="text-3xl text-[#22c55e] w-full text-center mb-3 font-semibold mt-5">
-        DANH SÁCH BỘ SẢN PHẨM
-      </CardTitle>
+    <div className="!mb-15">
+      <HeaderComponent
+        title="Danh Sách Bộ Sản Phẩm"
+        description="Danh sách bộ sản phẩm của công ty."
+      />
       <RenderTableSet />
-    </Card>
+    </div>
   );
 }

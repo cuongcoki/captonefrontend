@@ -31,7 +31,7 @@ import ImageDisplayID from "./ImageDisplayID";
 import ImageDisplay from "./ImageDisplay";
 import { Textarea } from "@/components/ui/textarea";
 import { filesApi } from "@/apis/files.api";
-import {IconImage} from "./IconImage";
+import { IconImage } from "./IconImage";
 
 interface ImageResponse {
   id: string;
@@ -115,13 +115,14 @@ export default function SetProduct({ setProduct }: SetProductProps) {
   return (
     <Card x-chunk="dashboard-07-chunk-1" className="h-max">
       <CardHeader>
-        <CardTitle className="text-primary">Chi tiết sản phẩm</CardTitle>
+        <CardTitle className="text-primary">Danh Sách Sản Phẩm</CardTitle>
+        <span className="text-xs font-normal leading-snug text-muted-foreground">Danh sách các sản phẩm có trong bộ sản phẩm.</span>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Ảnh Sản Phẩm</TableHead>
+              <TableHead>Hình Ảnh</TableHead>
               <TableHead>Mã Sản Phẩm</TableHead>
               <TableHead>Tên Sản Phẩm</TableHead>
               <TableHead>Số lượng</TableHead>
@@ -131,9 +132,9 @@ export default function SetProduct({ setProduct }: SetProductProps) {
             {setProduct.map((pro, index) => (
               <TableRow key={index} onClick={() => handleOpenDialog(pro)}>
                 <TableCell className="font-semibold">
-                    <div className="w-[50px] h-[50px] rounded-lg shadow-md">
-                      <IconImage pro={pro.product.imageResponses} />
-                    </div>
+                  <div className="w-[50px] h-[50px] rounded-lg shadow-md">
+                    <IconImage pro={pro.product.imageResponses} />
+                  </div>
                 </TableCell>
                 <TableCell className="font-semibold">
                   {limitLength(pro.product.code, 50)}
@@ -151,7 +152,7 @@ export default function SetProduct({ setProduct }: SetProductProps) {
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogContent className="max-w-[1100px]  ">
             <DialogTitle className="visible">
-              {/* Chi tiết bộ sản phẩm */}
+              {/* Thông tin bộ sản phẩm */}
             </DialogTitle>
 
             <div className=" w-full min-w-[90%] md:min-w-[70%] bg-white p-2 rounded-lg dark:bg-card">

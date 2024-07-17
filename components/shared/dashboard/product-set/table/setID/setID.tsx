@@ -19,6 +19,7 @@ import { SetUpdateForm } from "../../form/SetUpdateForm";
 import { filesApi } from "@/apis/files.api";
 import { PencilLine } from "lucide-react";
 import { ProductSetStore } from "@/components/shared/dashboard/product-set/product-set-store";
+import HeaderComponent from "@/components/shared/common/header";
 
 export default function SetIDPage() {
   //state
@@ -58,8 +59,13 @@ export default function SetIDPage() {
   // console.log('setProduct', setProduct)
 
   return (
-    <div className="flex flex-col gap-6 justify-center">
-      {/* <header className="">
+    <>
+      <HeaderComponent
+        title="Chi tiết bộ sản phẩm"
+        description="Thông tin chi tiết của bộ sản phẩm"
+      />
+      <div className="flex flex-col gap-6 justify-center">
+        {/* <header className="">
                 <div className="flex items-center gap-4 justify-between">
                     <Link href={'/dashboard/products/set'}>
                         <Button variant="outline" size="icon" className="h-7 w-7">
@@ -80,12 +86,17 @@ export default function SetIDPage() {
           <Card x-chunk="dashboard-07-chunk-0">
             <CardHeader>
               <div className="flex justify-between items-start">
-                <CardTitle className="text-primary">
-                  Bộ sản phẩm chi tiết
-                </CardTitle>
-                <SetUpdateForm setId={setId.id}>
-                  <PencilLine className="size-6 rounded  hover:bg-gray-200" />
-                </SetUpdateForm>
+                <div>
+                  <CardTitle className="text-primary">
+                    Thông Tin
+                  </CardTitle>
+                  <span className="text-xs font-normal leading-snug text-muted-foreground">Thông tin cơ bản của bộ sản phẩm.</span>
+                </div>
+                <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
+                  <SetUpdateForm setId={setId.id}>
+                    <PencilLine />
+                  </SetUpdateForm>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
@@ -112,34 +123,38 @@ export default function SetIDPage() {
             </CardContent>
           </Card>
 
-          <SetProduct setProduct={setProduct} />
-        </div>
+            <SetProduct setProduct={setProduct} />
+          </div>
 
-        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-          <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
-            <CardHeader>
-              <CardTitle className="text-primary">Ảnh Bộ Sản Phẩm</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-2">
-                {!loading ? (
-                  <Image
-                    alt="Product image"
-                    className="aspect-square w-full rounded-md object-contain"
-                    height={900}
-                    src={linkImg}
-                    width={900}
-                  />
-                ) : (
-                  <div className="text-center flex flex-col justify-center items-center w-full ">
-                    <span className="loading loading-spinner loading-lg text-primary "></span>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+            <Card className="overflow-hidden" x-chunk="dashboard-07-chunk-4">
+              <CardHeader>
+                <CardTitle className="text-primary">
+                  Hình Ảnh
+                </CardTitle>
+              <span className="text-xs font-normal leading-snug text-muted-foreground">Hình ảnh minh họa của bộ sản phẩm.</span>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-2">
+                  {!loading ? (
+                    <Image
+                      alt="Product image"
+                      className="aspect-square w-full rounded-md object-contain"
+                      height={900}
+                      src={linkImg}
+                      width={900}
+                    />
+                  ) : (
+                    <div className="text-center flex flex-col justify-center items-center w-full ">
+                      <span className="loading loading-spinner loading-lg text-primary "></span>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

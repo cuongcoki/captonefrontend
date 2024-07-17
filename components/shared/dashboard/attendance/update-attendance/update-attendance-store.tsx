@@ -63,6 +63,9 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
       set((state) => {
         const newData = [...state.tableData];
         newData[index].isSalaryByProduct = value;
+        if (value === true) {
+          newData[index].hourOverTime = "0";
+        }
         return { tableData: newData };
       });
     },

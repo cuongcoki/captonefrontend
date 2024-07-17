@@ -205,7 +205,7 @@ export const SetForm = () => {
     handleSearch();
   }, [searchTerm]);
 
-  //  ========================================================= các hàm để thêm sản phẩm  và số lượng vào bộ sản phẩm  =========================================================
+  // ========================================================= các hàm để thêm sản phẩm và số lượng vào bộ sản phẩm =========================================================
 
   const [getDetailsPro, setGetDetailsPro] = useState<any[]>([]);
   const [productsRequest, setProductsRequest] = useState<
@@ -376,22 +376,22 @@ export const SetForm = () => {
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-          <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
-            <div className="bg-slate-100  flex flex-col ">
-              <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
-                <h2 className="text-2xl text-white">Thêm sản phẩm</h2>
+          <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2 max-w-[1100px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+            <div className="bg-white flex flex-col">
+              <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
+                <h2 className="text-2xl text-white">Tạo Bộ Sản Phẩm Mới</h2>
                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
                   <X className="w-4 h-4 dark:text-white" />
                 </Button>
               </div>
-              <div className="grid gap-4 p-4 overflow-y-auto h-[700px] bg-background">
+              <div className="grid gap-4 p-4 overflow-y-auto h-[700px]">
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <div className="grid gap-4  lg:grid-cols-5 lg:gap-8">
+                    <div className="grid gap-4 lg:grid-cols-5 lg:gap-8">
                       <Card className="items-start gap-4 lg:col-span-3 lg:gap-8">
                         <CardHeader>
-                          <CardTitle className="text-lg">
-                            Chi tiết bộ sản phẩm
+                          <CardTitle className="font-semibold tracking-tight text-2xl text-primary">
+                            Thông Tin
                           </CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -403,7 +403,7 @@ export const SetForm = () => {
                               name="code"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center text-primary ">
+                                  <FormLabel className="flex items-center">
                                     Mã Sản Phẩm
                                   </FormLabel>
                                   <FormControl>
@@ -420,7 +420,7 @@ export const SetForm = () => {
                               name="name"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
+                                  <FormLabel className="flex items-center">
                                     Tên Bộ Sản Phẩm
                                   </FormLabel>
                                   <FormControl>
@@ -436,7 +436,7 @@ export const SetForm = () => {
                               name="description"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
+                                  <FormLabel className="flex items-center">
                                     Mô Tả
                                   </FormLabel>
                                   <FormControl>
@@ -450,8 +450,8 @@ export const SetForm = () => {
                         </CardContent>
                       </Card>
 
-                      <Card className="w-full h-full  lg:col-span-2">
-                        <CardContent className=" w-full h-full  relative pt-6">
+                      <Card className="w-full h-full lg:col-span-2">
+                        <CardContent className=" w-full h-full relative pt-6">
                           {/* nếu không có ảnh nào thì hiện input này */}
                           {imageRequests === null && (
                             <div style={{ width: "100%", height: "100%" }}>
@@ -493,8 +493,8 @@ export const SetForm = () => {
                       <div className="grid auto-rows-max items-start gap-4 lg:col-span-5 lg:gap-8">
                         <Card>
                           <CardHeader>
-                            <CardTitle className="text-lg">
-                              Chi tiết sản phẩm trong bộ
+                            <CardTitle className="font-semibold tracking-tight text-2xl text-primary">
+                              Thêm Sản Phẩm Vào Bộ
                             </CardTitle>
                           </CardHeader>
                           <CardContent>
@@ -515,12 +515,12 @@ export const SetForm = () => {
                                   <Table>
                                     <TableHeader>
                                       <TableRow>
-                                        <TableHead className="w-[100px]">
-                                          Ảnh
+                                        <TableHead className="w-[100px] text-center">
+                                          Hình Ảnh
                                         </TableHead>
                                         <TableHead>Tên Sản Phẩm</TableHead>
                                         <TableHead>Mã Sản Phẩm</TableHead>
-                                        <TableHead className="text-right">
+                                        <TableHead className="text-left">
                                           Thêm
                                         </TableHead>
                                       </TableRow>
@@ -566,7 +566,7 @@ export const SetForm = () => {
                               ""
                             )}
 
-                            <div className="md:col-span-1  md:mt-0">
+                            <div className="md:col-span-1 md:mt-0">
                               <Card className="mt-4">
                                 <CardHeader className="font-semibold text-xl">
                                   <span>Thông tin sản phẩm đã thêm</span>
@@ -585,7 +585,7 @@ export const SetForm = () => {
                                           height={900}
                                           src={
                                             product?.imageUrl ===
-                                            "Image_not_found"
+                                              "Image_not_found"
                                               ? NoImage
                                               : product?.imageUrl
                                           }
@@ -597,7 +597,7 @@ export const SetForm = () => {
                                             {limitLength(product.name, 50)}
                                           </div>
                                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            <b>Code: </b>
+                                            <b>Mã: </b>
                                             {limitLength(product.code, 50)}
                                           </div>
                                           <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -611,7 +611,7 @@ export const SetForm = () => {
                                         </div>
                                       </div>
                                       <input
-                                        className="col-span-2 w-16 text-center outline-none"
+                                        className="col-span-2 w-16 text-center outline-none border"
                                         type="number"
                                         value={
                                           productsRequest.find(

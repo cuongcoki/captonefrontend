@@ -515,7 +515,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                     return (
                                       <FormItem>
                                         <FormLabel className="text-primary">
-                                          Họ Nhân Viên *
+                                          Họ nhân viên *
                                         </FormLabel>
                                         <FormControl>
                                           <Input type="text" {...field} />
@@ -645,7 +645,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Địa chỉ cư trú *
                                       </FormLabel>
                                       <FormControl>
@@ -664,7 +664,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Số điện thoại *
                                       </FormLabel>
                                       <FormControl>
@@ -684,7 +684,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Cơ sở nào *
                                       </FormLabel>
                                       <Select
@@ -722,7 +722,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                 render={({ field }) => {
                                   return (
                                     <FormItem>
-                                      <FormLabel className="text-primary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Vai trò *
                                       </FormLabel>
                                       <FormControl>
@@ -782,7 +782,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                         </Card>
 
                         {/* tính lương  */}
-                        <Card>
+                        <Card className="w-[50%]">
                           <CardContent className="mt-5 flex flex-col gap-2">
                             {/* salaryByDayRequest */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

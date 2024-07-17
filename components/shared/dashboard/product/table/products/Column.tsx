@@ -89,7 +89,7 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const shortenedCode = row.original.code.slice(0, 10);
       return (
-        <span className="inline-block   px-3 py-1 rounded-md">
+        <span className="inline-block px-3 py-1 rounded-md">
           {shortenedCode}
         </span>
       );
@@ -107,42 +107,42 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
 
-  {
-    accessorKey: "size",
-    header: ({ column }) => {
-      return <Button variant="ghost">Kích Thước</Button>;
-    },
-    cell: ({ row }) => {
-      let displayText = row.original.size;
+  // {
+  //   accessorKey: "size",
+  //   header: ({ column }) => {
+  //     return <Button variant="ghost">Kích Thước</Button>;
+  //   },
+  //   cell: ({ row }) => {
+  //     let displayText = row.original.size;
 
-      if (displayText.length > 15) {
-        displayText = displayText.slice(0, 15) + "...";
-      }
-      return (
-        <span className="inline-block  px-3 py-1 rounded-md">
-          {displayText}
-        </span>
-      );
-    },
-  },
+  //     if (displayText.length > 15) {
+  //       displayText = displayText.slice(0, 15) + "...";
+  //     }
+  //     return (
+  //       <span className="inline-block  px-3 py-1 rounded-md">
+  //         {displayText}
+  //       </span>
+  //     );
+  //   },
+  // },
 
-  {
-    accessorKey: "description",
-    header: ({ column }) => {
-      return <Button variant="ghost">Mô Tả</Button>;
-    },
-    cell: ({ row }) => {
-      const shortenedDescription = `${row.original.description.slice(
-        0,
-        30
-      )}...`;
-      return (
-        <span className="inline-block  px-3 py-1 rounded-md">
-          {shortenedDescription}
-        </span>
-      );
-    },
-  },
+  // {
+  //   accessorKey: "description",
+  //   header: ({ column }) => {
+  //     return <Button variant="ghost">Mô Tả</Button>;
+  //   },
+  //   cell: ({ row }) => {
+  //     const shortenedDescription = `${row.original.description.slice(
+  //       0,
+  //       30
+  //     )}...`;
+  //     return (
+  //       <span className="inline-block  px-3 py-1 rounded-md">
+  //         {shortenedDescription}
+  //       </span>
+  //     );
+  //   },
+  // },
 
   {
     accessorKey: "isInProcessing",
@@ -160,9 +160,9 @@ export const columns: ColumnDef<Product>[] = [
         <span
           className={`${
             isInProcessing.value === true
-              ? "p-2 rounded-xl text-black bg-secondary border dark:bg-white"
-              : "bg-secondary text-black dark:bg-white"
-          } border px-2 py-1 rounded-full`}
+              ? "p-2 text-primary dark:bg-white"
+              : "text-red-500 dark:bg-white"
+          }`}
         >
           {isInProcessing.label}
         </span>
