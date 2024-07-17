@@ -24,6 +24,12 @@ export type Order = {
   startOrder:string,
   endOrder:string,
 }
+const limitLength = (text: any, maxLength: any) => {
+  if (text.length > maxLength) {
+    return `${text.slice(0, maxLength)}...`;
+  }
+  return text;
+};
 
 export const columns: ColumnDef<Order>[] = [
 
@@ -33,10 +39,15 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: "company.name",
     header: ({ column }) => {
       return (
-        <Button variant="ghost" className="">
+        <Button variant="ghost" className=" ">
           Tên Công Ty
         </Button>
       )
+    },
+    cell: ({ row }) => {
+      return <span className="flex justify-center ">
+      {limitLength(row.original.company.name, 30)}
+      </span>;
     },
   },
 
