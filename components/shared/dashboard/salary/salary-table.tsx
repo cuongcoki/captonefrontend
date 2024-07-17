@@ -12,42 +12,10 @@ import {
 import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
 import { SalaryType, SearchSalaryParams } from "@/types/salary.type";
 import Image from "next/image";
-import { companyApi } from "@/apis/company.api";
 import HeaderComponent from "@/components/shared/common/header";
-const fakeApi = ({ searchParams }: SearchSalaryParams) => {
-  return new Promise<{ data: { data: SalaryType[]; totalPages: number } }>(
-    (resolve) => {
-      setTimeout(() => {
-        const data = {
-          data: [
-            {
-              salaryId: "12345",
-              userId: "123456789012",
-              fullName: "John Doe",
-              avatar:
-                "https://top10tphcm.com/wp-content/uploads/2023/02/gai-dep-nhat-viet-nam-6.jpg",
-              companyId: "c1",
-              companyName: "Company A",
-              salary: 5000,
-            },
-            {
-              salaryId: "2",
-              userId: "u2",
-              fullName: "Jane Smith",
-              avatar:
-                "https://hoanghamobile.com/tin-tuc/wp-content/uploads/2024/04/anh-con-gai-1-1.jpg",
-              companyId: "c2",
-              companyName: "Company B",
-              salary: 6000,
-            },
-          ],
-          totalPages: 1,
-        };
-        resolve({ data });
-      }, 100); // Delay for 1 second to simulate network request
-    }
-  );
-};
+import { salaryApi } from "@/apis/salary.api";
+import { Button } from "@/components/ui/button";
+
 const dataNow = new Date();
 const yearNow = dataNow.getFullYear();
 const listYear = [yearNow, yearNow - 1, yearNow - 2, yearNow - 3];
@@ -67,8 +35,7 @@ const listMonth = [
 ];
 
 export default function SalaryTable({ searchParams }: SearchSalaryParams) {
-  const { tableData, setTableData, companyData, setCompanyData } =
-    salaryStore();
+  const { tableData, setTableData } = salaryStore();
   const [params, setParams] = useState(searchParams);
   const pathname = usePathname();
   const router = useRouter();
@@ -94,47 +61,28 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
   };
 
   useEffect(() => {
-    let companyId = "";
-    const fetchGetCompanies = async () => {
-      if (companyData.length > 0) return;
-      try {
-        const res = await companyApi.getCompanyByType(0);
-        setCompanyData(res.data.data);
-        if (companyId == "") {
-          companyId = res.data.data[0].id;
-          setParams((prev) => {
-            return { ...prev, companyId: companyId };
-          });
-        }
-        console.log("COMPANIES", res.data.data);
-      } catch (e) {
-        console.log("ERROR IN GET COMPANIES", e);
-      }
-    };
     const fetchGetSalarys = async () => {
-      await fetchGetCompanies();
       try {
-        const { data } = await fakeApi({
-          searchParams: {
-            year: params.year,
-            month: params.month,
-            companyId: params.companyId ? params.companyId : companyId,
-            name: params.name,
-          },
+        const { data } = await salaryApi.getSalaries({
+          fullName: params.name,
+          month: Number(params.month),
+          year: Number(params.year),
+          PageIndex: Number(params.pageIndex),
+          PageSize: 10,
         });
-        console.log("Salary From API", data.data);
-        // setTotalPage(data.totalPages);
-        setTableData(data.data);
+        console.log("Salary From API", data.data.data);
+        setTotalPage(data.data.totalPages);
+        setTableData(data.data.data);
       } catch (error) {
         console.log("Error", error);
       } finally {
         router.push(
-          `${pathname}?name=${params.name}&year=${params.year}&month=${params.month}&companyId=${params.companyId}`
+          `${pathname}?name=${params.name}&year=${params.year}&month=${params.month}&pageIndex=${params.pageIndex}`
         );
       }
     };
     fetchGetSalarys();
-  }, [params, pathname, router, setTableData, companyData, setCompanyData]);
+  }, [params, pathname, router, setTableData]);
 
   return (
     <div className="p-2 ">
@@ -212,7 +160,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
             </SelectContent>
           </Select>
         </div>
-        <div className="col-span-6 row-start-2 xl:row-start-1 xl:row-span-2 xl:col-start-11 xl:col-span-2 md:ml-2">
+        {/* <div className="col-span-6 row-start-2 xl:row-start-1 xl:row-span-2 xl:col-start-11 xl:col-span-2 md:ml-2">
           <Select
             value={params.companyId}
             onValueChange={(value) => {
@@ -239,7 +187,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </div> */}
       </div>
       <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
         <div className="flex flex-col">
@@ -265,7 +213,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
                         scope="col"
                         className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
                       >
-                        Cơ sở
+                        Lương tháng
                       </th>
                       <th
                         scope="col"
@@ -276,38 +224,49 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 ">
-                    {tableData.map((item, index) => (
-                      <tr
-                        key={item.salaryId}
-                        onClick={() => {
-                          router.push(
-                            `/dashboard/salary/detail/${item.userId}`
-                          );
-                        }}
-                        className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer "
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
-                          <div className="w-24 h-32 bg-gray-400">
-                            <Image
-                              src={item.avatar}
-                              alt={item.fullName}
-                              width={300}
-                              height={400}
-                              className="object-cover w-full h-full"
-                            />
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                          {item.fullName}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                          {item.companyName}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                          {formatCurrency(item.salary)}
+                    {tableData.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan={4}
+                          className="text-center py-4 dark:text-white"
+                        >
+                          Không có dữ liệu
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      tableData.map((item, index) => (
+                        <tr
+                          key={item.id}
+                          onClick={() => {
+                            router.push(
+                              `/dashboard/salary/detail/${item.userId}?year=${params.year}&month=${params.month}`
+                            );
+                          }}
+                          className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer "
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
+                            <div className="w-24 h-32 bg-gray-400">
+                              <Image
+                                src={item.avatar}
+                                alt={item.fullName}
+                                width={300}
+                                height={400}
+                                className="object-cover w-full h-full"
+                              />
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                            {item.fullName}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                            {formatCurrency(item.salary)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                            {item.companyName}
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -315,7 +274,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
           </div>
         </div>
       </div>
-      {/* <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
+      <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
         <Button
           variant="outline"
           size="sm"
@@ -340,7 +299,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
         >
           Next
         </Button>
-      </div> */}
+      </div>
     </div>
   );
 }

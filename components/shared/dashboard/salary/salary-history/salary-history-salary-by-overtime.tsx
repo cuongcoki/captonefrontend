@@ -44,7 +44,7 @@ export default function SalaryHistorySalaryByOverTime({ id }: { id: string }) {
   };
   useEffect(() => {
     salaryApi
-      .getHistorySalaryByDay({
+      .getHistorySalaryOverTime({
         pageIndex: index,
         pageSize: 4,
         userId: id,
