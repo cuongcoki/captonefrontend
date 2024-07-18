@@ -74,8 +74,8 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
   return (
     <div>
       <HeaderComponent
-        title="Quản lý công ty"
-        description="Danh sách công ty trong hệ thống."
+        title="Danh sách công ty"
+        description="Danh sách các công ty đặt mua hàng - công ty hợp tác."
       />
       <div className="mb-5 mt-2 grid grid-cols-12 space-y-1 grid-rows-2 xl:space-y-0 xl:grid-rows-1">
         <Input

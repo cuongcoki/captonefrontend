@@ -27,7 +27,7 @@ export default function AddNewMeterialHistory() {
           <div className="relative bg-white dark:bg-[#1c1917] p-4 rounded min-w-[425px] mx-2 shadow-lg">
             <div className="flex justify-between items-center mb-3">
               <h2 className="text-2xl text-[#22c55e] w-full text-center">
-                Nhập nguyên liệu
+                Nhập Nguyên Vật Liệu Mới
               </h2>
               <button
                 onClick={closeDialog}

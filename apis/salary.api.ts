@@ -3,8 +3,11 @@ import { endPointConstant } from "@/constants/endpoint";
 import {
   GetHistorySalaryParams,
   GetHistorySalaryResponse,
+  GetSalariesParams,
+  GetSalariesResponse,
+  GetSalaryDetailParams,
 } from "@/types/salary.type";
-import { get } from "http";
+import { get, request } from "http";
 
 export const salaryApi = {
   getHistorySalaryByDay: (requestParams: GetHistorySalaryParams) => {
@@ -15,6 +18,19 @@ export const salaryApi = {
   getHistorySalaryOverTime: (requestParams: GetHistorySalaryParams) => {
     return axiosClient.get<GetHistorySalaryResponse>(
       `${endPointConstant.BASE_URL}/salary-histories/salaryOverTime/${requestParams.userId}?pageIndex=${requestParams.pageIndex}&pageSize=${requestParams.pageSize}`
+    );
+  },
+  getSalaries: (requestParams: GetSalariesParams) => {
+    return axiosClient.get<GetSalariesResponse>(
+      `${endPointConstant.BASE_URL}/monthly-employee-salaries`,
+      {
+        params: requestParams,
+      }
+    );
+  },
+  getSalaryDetail: (requestParams: GetSalaryDetailParams) => {
+    return axiosClient.get(
+      `${endPointConstant.BASE_URL}/monthly-employee-salaries/${requestParams.userId}/${requestParams.month}/${requestParams.year}`
     );
   },
 };

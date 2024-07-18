@@ -7,8 +7,8 @@ export default function ProductPage() {
   return (
     <div>
       <HeaderComponent
-        title="Danh Sách Sản Phẩm"
-        description="Danh sách sản phẩm của công ty."
+        title="Danh sách sản phẩm"
+        description="Danh sách tất cả sản phẩm có trong công ty."
       />
       <RenderTableProduct />
     </div>
