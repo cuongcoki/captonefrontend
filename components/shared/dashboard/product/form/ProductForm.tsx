@@ -271,23 +271,14 @@ export const ProductForm = () => {
       setLoading(false);
     }
   };
-  const formatCurrency = (amount: any) => {
-    if (!amount) return "";
-
-    // Remove all non-numeric characters except the first decimal point
-    amount = amount.replace(/[^\d.]/g, "");
-
-    // Split the integer and decimal parts
-    let [integerPart, decimalPart] = amount.split(".");
-
-    // Format the integer part with commas
-    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
-    // Combine the integer and decimal parts
-    return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
+  const formatCurrency = (value:any) => {
+    if (!value) return '';
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
-
-
+  const parseCurrency = (value:any) => {
+    return value.replace(/,/g, '');
+  };
+  
   const { pending } = useFormStatus();
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>
@@ -306,7 +297,6 @@ export const ProductForm = () => {
               </div>
               <div className="grid gap-4 p-4 overflow-y-auto h-[650px] dark:bg-card">
                 <Form {...form}>
-                  <Toaster />
 
                   {/* Phần đăng hình ảnh */}
 
@@ -461,14 +451,7 @@ export const ProductForm = () => {
                                     <Input type="text" inputMode="numeric"
                                       {...field}
                                       value={formatCurrency(field.value)}
-                                      onChange={(e) => {
-                                        const rawValue =
-                                          e.target.value.replace(
-                                            /[^\d.]/g,
-                                            ""
-                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                                        field.onChange(rawValue);
-                                      }}
+                                      onChange={(e) => field.onChange(parseCurrency(e.target.value))}
                                     />
                                   </FormControl>
                                   <FormMessage />
