@@ -502,23 +502,12 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
 
   useEffect(() => { }, [removeImageIds]);
 
-  const formatCurrency = (amount: any) => {
-    if (!amount) return "";
-    let valueString = amount.toString();
-
-    // Remove all non-numeric characters, including dots
-    valueString = valueString.replace(/\D/g, "");
-
-    // Reverse the string to handle grouping from the end
-    let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
-    let formattedReversed = reversed.match(/.{1,3}/g).join(".");
-
-    // Reverse back to original order
-    let formatted = formattedReversed.split("").reverse().join("");
-
-    return formatted;
+  const formatCurrency = (value: any) => {
+    if (!value) return '';
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+  const parseCurrency = (value: any) => {
+    return value.replace(/,/g, '');
   };
   return (
     <Form {...form}>
@@ -629,17 +618,10 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                           <FormLabel className="flex items-center text-primary">
                             Giá giai đoạn 1 *
                           </FormLabel>
-                          <Input type="text" inputMode="numeric" pattern="\d*"
+                          <Input type="text" inputMode="numeric" 
                             {...field}
                             value={formatCurrency(field.value)}
-                            onChange={(e) => {
-                              const rawValue =
-                                e.target.value.replace(
-                                  /[^\d.]/g,
-                                  ""
-                                ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                              field.onChange(rawValue);
-                            }}
+                            onChange={(e) => field.onChange(parseCurrency(e.target.value))}
                           />
                           <FormMessage />
                         </FormItem>
@@ -655,17 +637,10 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                           <FormLabel className="flex items-center text-primary">
                             Giá giai đoạn 2 *
                           </FormLabel>
-                          <Input type="text" inputMode="numeric" pattern="\d*"
+                          <Input type="text" inputMode="numeric" 
                             {...field}
                             value={formatCurrency(field.value)}
-                            onChange={(e) => {
-                              const rawValue =
-                                e.target.value.replace(
-                                  /[^\d.]/g,
-                                  ""
-                                ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                              field.onChange(rawValue);
-                            }}
+                            onChange={(e) => field.onChange(parseCurrency(e.target.value))}
                           />
                           <FormMessage />
                         </FormItem>
@@ -681,17 +656,10 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                           <FormLabel className="flex items-center text-primary">
                             Giá hoàn thiện *
                           </FormLabel>
-                          <Input type="text" inputMode="numeric" pattern="\d*"
+                          <Input type="text" inputMode="numeric"
                             {...field}
-                            value={formatCurrency(field.value)} // Hiển thị lương đã format
-                            onChange={(e) => {
-                              const rawValue =
-                                e.target.value.replace(
-                                  /[^\d.]/g,
-                                  ""
-                                ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                              field.onChange(rawValue);
-                            }}
+                            value={formatCurrency(field.value)}
+                            onChange={(e) => field.onChange(parseCurrency(e.target.value))}
                           />
                           <FormMessage />
                         </FormItem>

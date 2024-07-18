@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import storage from "./storage";
-
+import { redirect } from 'next/navigation'
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -18,7 +18,7 @@ export const CheckPermissionEnter = (dataPer: any) => {
       console.log("User has permission to enter.");
     } else {
       console.log("User does not have permission to enter.");
-      window.location.href = "/401";
+      window.location.href = "/not-found";
     }
   } else {
     console.warn(
@@ -26,6 +26,22 @@ export const CheckPermissionEnter = (dataPer: any) => {
     );
   }
 };
+
+export const CheckLogin = () => {
+  if (typeof storage !== "undefined" && typeof window !== "undefined") {
+    const token = storage.getProfile();
+    if(token === null){
+      window.location.href = "/sign-in";
+    }else{
+      redirect('/dashboard/home')
+    }
+   
+  } else {
+    console.warn(
+      "đã đăng nhập"
+    );
+  }
+}
 
 export function formatDate(inputDate: string): string {
   const parts = inputDate.split("-");
