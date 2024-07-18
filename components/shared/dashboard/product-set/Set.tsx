@@ -7,8 +7,8 @@ export default function SetPage() {
   return (
     <div className="!mb-15">
       <HeaderComponent
-        title="Danh Sách Bộ Sản Phẩm"
-        description="Danh sách bộ sản phẩm của công ty."
+        title="Danh sách bộ sản phẩm"
+        description="Danh sách tất cả bộ sản phẩm có trong công ty."
       />
       <RenderTableSet />
     </div>

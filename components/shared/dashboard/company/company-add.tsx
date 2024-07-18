@@ -82,7 +82,7 @@ export function CompanyAdd() {
       <DialogContent className="sm:max-w-[40vw] dark:bg-[#1c1917]">
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3">
-            Thêm mới công ty
+            Thêm Công Ty Đặt Mua - Hợp Tác
           </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
@@ -96,8 +96,8 @@ export function CompanyAdd() {
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-left">
-                          Tên công ty*
+                        <Label htmlFor="name" className="text-primary">
+                          Tên công ty *
                         </Label>
                         <Input
                           id="name"
@@ -119,8 +119,8 @@ export function CompanyAdd() {
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="address" className="text-left">
-                          Địa chỉ*
+                        <Label htmlFor="address" className="text-primary">
+                          Địa chỉ *
                         </Label>
                         <Input
                           id="address"
@@ -142,8 +142,8 @@ export function CompanyAdd() {
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="directorName" className="text-left">
-                          Tên giám đốc*
+                        <Label htmlFor="directorName" className="text-primary">
+                          Tên giám đốc *
                         </Label>
                         <Input
                           id="directorName"
@@ -165,8 +165,8 @@ export function CompanyAdd() {
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="directorPhone" className="text-left">
-                          Số điện thoại*
+                        <Label htmlFor="directorPhone" className="text-primary">
+                          Số điện thoại *
                         </Label>
                         <Input
                           id="directorPhone"
@@ -188,7 +188,7 @@ export function CompanyAdd() {
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="email" className="text-left">
+                        <Label htmlFor="email" className="text-primary">
                           Email
                         </Label>
                         <Input
@@ -210,8 +210,8 @@ export function CompanyAdd() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="companyType" className="text-left">
-                        Loại công ty*
+                      <Label htmlFor="companyType" className="text-primary">
+                        Loại công ty *
                       </Label>
                       <div className="col-span-3">
                         <Select

@@ -290,7 +290,7 @@ export const ProductForm = () => {
           <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
             <div className="bg-slate-100  flex flex-col ">
               <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
-                <h2 className="text-2xl text-white">Thêm sản phẩm</h2>
+                <h2 className="text-2xl text-white">Thêm Sản Phẩm</h2>
                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
                   <X className="w-4 h-4 dark:text-white" />
                 </Button>
@@ -379,7 +379,7 @@ export const ProductForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center text-primary">
-                                    Mã Sản Phẩm
+                                    Mã Sản Phẩm *
                                   </FormLabel>
                                   <FormControl>
                                     <Input type="text" {...field} />
@@ -395,7 +395,7 @@ export const ProductForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center text-primary">
-                                    Tên Sản Phẩm
+                                    Tên Sản Phẩm *
                                   </FormLabel>
                                   <FormControl>
                                     <Input type="text" {...field} />
@@ -411,7 +411,7 @@ export const ProductForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center text-primary">
-                                    Kích Thước
+                                    Kích Thước *
                                   </FormLabel>
                                   <FormControl>
                                     <Input type="text" {...field} />
@@ -445,10 +445,10 @@ export const ProductForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center text-primary">
-                                    Giá giai đoạn 1
+                                    Giá giai đoạn 1 *
                                   </FormLabel>
                                   <FormControl>
-                                    <Input type="text" inputMode="numeric" 
+                                    <Input type="text" inputMode="numeric"
                                       {...field}
                                       value={formatCurrency(field.value)}
                                       onChange={(e) => field.onChange(parseCurrency(e.target.value))}
@@ -465,12 +465,12 @@ export const ProductForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center text-primary">
-                                    Giá giai đoạn 2
+                                    Giá giai đoạn 2 *
                                   </FormLabel>
                                   <FormControl>
-                                    <Input type="text" inputMode="numeric" 
+                                    <Input type="text" inputMode="numeric"
                                       {...field}
-                                      value={formatCurrency(field.value)} 
+                                      value={formatCurrency(field.value)}
                                       onChange={(e) => {
                                         const rawValue =
                                           e.target.value.replace(
@@ -492,12 +492,12 @@ export const ProductForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center text-primary">
-                                    Giá hoàn thiện
+                                    Giá hoàn thiện *
                                   </FormLabel>
                                   <FormControl>
-                                    <Input type="text" inputMode="numeric" 
+                                    <Input type="text" inputMode="numeric"
                                       {...field}
-                                      value={formatCurrency(field.value)} 
+                                      value={formatCurrency(field.value)}
                                       onChange={(e) => {
                                         const rawValue =
                                           e.target.value.replace(

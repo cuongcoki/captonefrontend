@@ -684,7 +684,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                           <CardContent>
                             <div className="flex items-center my-4">
                               <Input
-                                placeholder="Mã code, tên sản phẩm ..."
+                                placeholder="Tìm kiếm mã - tên sản phẩm ..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className=""

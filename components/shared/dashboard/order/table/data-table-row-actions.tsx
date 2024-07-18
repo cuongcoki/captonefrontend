@@ -26,10 +26,9 @@ export function DataTableRowActions<TData extends {id:string}>({
 }: DataTableRowActionsProps<TData>) {
 
   return (
-    <div className="flex  items-center justify-center gap-2">
+    <div className="flex items-center justify-center gap-2">
     {/* <SetUpdateForm setId={row.original.id} /> */}
     <Link href={`/dashboard/order/${row.original.id}`} className="rounded p-2 hover:bg-gray-200"><ScanEye className="h-5 w-5" /></Link>
   </div>
-
   )
 }

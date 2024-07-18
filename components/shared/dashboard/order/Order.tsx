@@ -10,7 +10,7 @@ export default function OrderPage() {
       <div className="!mb-15">
         <HeaderComponent
           title="Quản lý đơn hàng"
-          description="Danh sách đơn hàng trong công ty."
+          description="Danh sách các đơn hàng được đặt từ khách hàng của công ty."
         />
         <RenderTableOrder />
       </div>
