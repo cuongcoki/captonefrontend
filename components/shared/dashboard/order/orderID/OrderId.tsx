@@ -169,7 +169,14 @@ export default function OrderIdPage({ orderId }: OrderId) {
         fetchDataOrderId();
     }, [data, dataId, params.id])
 
-
+    const [checkStatus, setCheckStatus] = useState<boolean>(false);
+    useEffect(() => {
+        if (data?.status === 2 || data?.status === 3) {
+          setCheckStatus(false);
+        } else {
+          setCheckStatus(true);
+        }
+      }, [data?.status]);
     return (
         <div className="flex flex-col gap-8">
             <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6">
@@ -222,7 +229,8 @@ export default function OrderIdPage({ orderId }: OrderId) {
                             <CardTitle className="text-primary">
                                 Đơn hàng chi tiết
                             </CardTitle>
-                            <UpdateOrder orderId={data} />
+
+                            {checkStatus ? (<UpdateOrder orderId={data} />) : ""}
                         </div>
                     </CardHeader>
                     <CardContent>
@@ -253,7 +261,8 @@ export default function OrderIdPage({ orderId }: OrderId) {
                             <CardTitle className="text-primary">
                                 Sản phẩm chi tiết
                             </CardTitle>
-                            <UpdateOrderDetails orderId={dataId} />
+
+                            {checkStatus ? (<UpdateOrderDetails orderId={dataId} />) : ""}
                         </div>
                     </CardHeader>
                     <CardContent >
@@ -353,7 +362,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
                 </Card>
 
             </div>
-            <ShipOrder orderId={dataId} />
+            <ShipOrder orderId={dataId} checkStatus ={checkStatus} />
         </div>
 
     );

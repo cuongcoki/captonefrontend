@@ -151,6 +151,7 @@ interface imageResponses {
 
 interface OrderId {
     orderId?: any;
+    checkStatus: boolean;
 }
 
 
@@ -205,7 +206,7 @@ interface ShipOrder {
 
 
 
-export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
+export const ShipOrder: React.FC<OrderId> = ({ orderId,checkStatus }) => {
     // ** state
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState<ShipOrder[]>([]);
@@ -270,8 +271,9 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
     // ** console 
     // console.log('orderId', orderId)
     // console.log('order', order)
-    console.log('data', data)
+    // console.log('data', data)
     // console.log('vvvvvv', valueStatus)
+    // console.log("checkStatus",checkStatus)
 
     return (
         <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6">
@@ -281,7 +283,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
                         <CardTitle>
                             Vận chuyển đơn hàng
                         </CardTitle>
-                        <FormShipOrder orderId={orderId} />
+                        {checkStatus ? (<FormShipOrder orderId={orderId} />) : ""}
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -317,7 +319,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
                                             {item.deliveryMethodDescription}
                                         </TableCell>
                                         <TableCell className="hidden sm:table-cell">
-                                            {(item.status === 2 || item.status === 3) ? (
+                                            {(item.status === 2 || item.status === 3 || checkStatus === false) ? (
                                                 <span>{item.statusDescription}</span>
                                             ) :
                                                 <Dialog>
@@ -362,10 +364,9 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId }) => {
                                                 </Dialog>
                                             }
 
-
                                         </TableCell>
                                         <TableCell className="hidden sm:table-cell">
-                                            {(item.status === 2 || item.status === 3) ? (
+                                            {(item.status === 2 || item.status === 3 || checkStatus === false) ? (
                                                 null
                                             ) : <FormUpdateShipOrder orderId={orderId} shipOrderId={item} />}
                                         </TableCell>
