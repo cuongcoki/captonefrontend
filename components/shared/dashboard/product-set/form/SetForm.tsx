@@ -404,7 +404,7 @@ export const SetForm = () => {
                               render={({ field }) => (
                                 <FormItem>
                                   <FormLabel className="flex items-center">
-                                    Mã Sản Phẩm
+                                    Mã Bộ Sản Phẩm
                                   </FormLabel>
                                   <FormControl>
                                     <Input type="text" {...field} />
@@ -585,7 +585,7 @@ export const SetForm = () => {
                                           height={900}
                                           src={
                                             product?.imageUrl ===
-                                              "Image_not_found"
+                                            "Image_not_found"
                                               ? NoImage
                                               : product?.imageUrl
                                           }

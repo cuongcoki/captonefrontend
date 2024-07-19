@@ -142,8 +142,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
 
   const handleOffDialog = () => {
     setOpen(false);
-    setFetchTrigger(prev => prev + 1);
-
+    setFetchTrigger((prev) => prev + 1);
   };
   const handleOnDialog = () => {
     setOpen(true);
@@ -315,7 +314,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
     if (userId) {
       fetchDataUserId();
     }
-  }, [userId,fetchTrigger]);
+  }, [userId, fetchTrigger]);
   // console.log('imageRequests', imageRequests)
   // console.log('userData', user)
 
@@ -334,13 +333,14 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       salaryHistoryResponse: {
         salaryByDayResponses: {
           salary:
-            user?.salaryHistoryResponse?.salaryByDayResponses?.salary || 0,
+            user?.salaryHistoryResponse?.salaryByDayResponses?.salary || "",
           startDate:
             user?.salaryHistoryResponse?.salaryByDayResponses?.startDate || "",
         },
         salaryByOverTimeResponses: {
           salary:
-            user?.salaryHistoryResponse?.salaryByOverTimeResponses?.salary || 0,
+            user?.salaryHistoryResponse?.salaryByOverTimeResponses?.salary ||
+            "",
           startDate:
             user?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate ||
             "",
@@ -361,18 +361,23 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
     return format(parsedDate, "dd/MM/yyyy");
   };
 
-  const formatCurrency = (value: any) => {
+  const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
 
     // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
 
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+
+    if (valueString === "") return "0";
+
     // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
 
     // Add dots every 3 characters
-    let formattedReversed = reversed.match(/.{1,3}/g).join(".");
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
 
     // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
@@ -383,7 +388,12 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   const onSubmit = async (data: z.infer<typeof UpdateUserForm>) => {
     // Format startDate của salaryByDayRequest
     const formattedSalaryByDayRequest = {
-      salary: data.salaryHistoryResponse.salaryByDayResponses.salary,
+      salary: Number(
+        data.salaryHistoryResponse.salaryByDayResponses.salary.replace(
+          /\./g,
+          ""
+        )
+      ),
       startDate: formatDateData(
         data.salaryHistoryResponse.salaryByDayResponses.startDate
       ),
@@ -391,7 +401,12 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
 
     // Format startDate của salaryOverTimeRequest
     const formattedSalaryOverTimeRequest = {
-      salary: data.salaryHistoryResponse.salaryByOverTimeResponses.salary,
+      salary: Number(
+        data.salaryHistoryResponse.salaryByOverTimeResponses.salary.replace(
+          /\./,
+          ""
+        )
+      ),
       startDate: formatDateData(
         data.salaryHistoryResponse.salaryByOverTimeResponses.startDate
       ),
@@ -636,7 +651,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                       </div>
                       <div className="flex gap-x-5 ">
                         <Card>
-                          <CardContent className="mt-3">
+                          <CardContent className="mt-5">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                               {/* address */}
                               <FormField
@@ -831,7 +846,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                              "text-muted-foreground"
+                                                "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -915,7 +930,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                              "text-muted-foreground"
+                                                "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (

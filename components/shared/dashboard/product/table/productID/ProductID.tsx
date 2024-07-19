@@ -75,17 +75,30 @@ export default function ProductIDPage() {
   const [productId, setProductId] = useState<any>([]);
   const [open1, setOpen1] = useState<boolean>(false);
   const { force } = ProductStore();
-  console.log('====productId', productId);
-  const formatCurrency = (amount: any) => {
-    // Định dạng số theo tiêu chuẩn 'vi-VN'
-    const formattedAmount = new Intl.NumberFormat("vi-VN", {
-      minimumFractionDigits: 0,
-    }).format(amount);
+  console.log("====productId", productId);
+  const formatCurrency = (value: any): string => {
+    if (!value) return "";
+    let valueString = value.toString();
 
-    // Thay đổi dấu chấm thành dấu phẩy
-    return formattedAmount.replace(/\./g, ",");
+    // Remove all non-numeric characters, including dots
+    valueString = valueString.replace(/\D/g, "");
+
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+
+    if (valueString === "") return "0";
+
+    // Reverse the string to handle grouping from the end
+    let reversed = valueString.split("").reverse().join("");
+
+    // Add dots every 3 characters
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+
+    // Reverse back to original order
+    let formatted = formattedReversed.split("").reverse().join("");
+
+    return formatted;
   };
-
   useEffect(() => {
     console.log("PRODUCT ID RENDER ");
     const fetchDataProductId = () => {
@@ -180,10 +193,10 @@ export default function ProductIDPage() {
             <CardHeader className="text-primary">
               <div className="flex justify-between items-start">
                 <div>
-                  <CardTitle >
-                    Giai Đoạn
-                  </CardTitle>
-                  <span className="text-xs font-normal leading-snug text-muted-foreground">Thông tin các giai đoạn của sản phẩm.</span>
+                  <CardTitle>Giai Đoạn</CardTitle>
+                  <span className="text-xs font-normal leading-snug text-muted-foreground">
+                    Thông tin các giai đoạn của sản phẩm.
+                  </span>
                 </div>
                 <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
                   <ProductUpdate product={productId}>
@@ -202,44 +215,37 @@ export default function ProductIDPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {
-                    productId?.productPhaseSalaries?.map((item: any) => (
-                      <TableRow key={item.phaseId}>
-                        <TableCell className="font-semibold">
-                          {item?.phaseName}
-                        </TableCell>
-                        <TableCell className="max-w-[300px] overflow-hidden truncate">
-                          {item?.phaseDescription}
-                        </TableCell>
-                        <TableCell>
-                          <Label htmlFor="price-1" className="sr-only">
-                            Price
-                          </Label>
-                          <div className="border px-3 py-2 rounded-md">
-                            {item?.salaryPerProduct} VNĐ
-                          </div>
-                        </TableCell>
-
-                      </TableRow>
-                    ))
-                  }
+                  {productId?.productPhaseSalaries?.map((item: any) => (
+                    <TableRow key={item.phaseId}>
+                      <TableCell className="font-semibold">
+                        {item?.phaseName}
+                      </TableCell>
+                      <TableCell className="max-w-[300px] overflow-hidden truncate">
+                        {item?.phaseDescription}
+                      </TableCell>
+                      <TableCell>
+                        <Label htmlFor="price-1" className="sr-only">
+                          Price
+                        </Label>
+                        <div className="border px-3 py-2 rounded-md">
+                          {item?.salaryPerProduct} VNĐ
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </CardContent>
           </Card>
-
-
-
-
         </div>
 
         <div className="grid gap-8 ">
           <Card className="shadow-sm">
             <CardHeader>
-              <CardTitle className="text-primary">
-                Trạng Thái
-              </CardTitle>
-              <span className="text-xs font-normal leading-snug text-muted-foreground">Trạng thái hiện tại của sản phẩm.</span>
+              <CardTitle className="text-primary">Trạng Thái</CardTitle>
+              <span className="text-xs font-normal leading-snug text-muted-foreground">
+                Trạng thái hiện tại của sản phẩm.
+              </span>
             </CardHeader>
             <CardContent>
               <div className="grid gap-3 col-span-4 mx-auto">
@@ -247,10 +253,11 @@ export default function ProductIDPage() {
                   <div className="">Trạng Thái:</div>
                   <div className="">
                     <span
-                      className={`w-[40%] px-2 py-2 rounded-full ${productId?.isInProcessing
-                        ? "bg-primary text-white"
-                        : "bg-yellow-200 text-black"
-                        }`}
+                      className={`w-[40%] px-2 py-2 rounded-full ${
+                        productId?.isInProcessing
+                          ? "bg-primary text-white"
+                          : "bg-yellow-200 text-black"
+                      }`}
                     >
                       {productId?.isInProcessing ? "Đang xử lý" : "Chưa xử lý"}
                     </span>
@@ -263,14 +270,16 @@ export default function ProductIDPage() {
           <Card className="shadow-sm">
             <CardHeader>
               <CardTitle className="text-primary">Hình Ảnh</CardTitle>
-              <span className="text-xs font-normal leading-snug text-muted-foreground">Hình ảnh minh họa của sản phẩm.</span>
+              <span className="text-xs font-normal leading-snug text-muted-foreground">
+                Hình ảnh minh họa của sản phẩm.
+              </span>
             </CardHeader>
             <CardContent>
               <ImageDisplayID images={productId.imageResponses} />
             </CardContent>
           </Card>
         </div>
-      </div >
+      </div>
     </>
   );
 }

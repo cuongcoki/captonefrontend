@@ -142,11 +142,11 @@ export const UsersForm = () => {
       id: "",
       avatar: "", // Nếu bạn muốn có giá trị mặc định cho avatar
       salaryByDayRequest: {
-        salary: 0,
+        salary: "",
         startDate: "",
       },
       salaryOverTimeRequest: {
-        salary: 0,
+        salary: "",
         startDate: "",
       },
     },
@@ -256,8 +256,14 @@ export const UsersForm = () => {
         isActive: data.isActive,
         companyId: data.companyId,
         id: data.id,
-        salaryByDayRequest: data.salaryByDayRequest,
-        salaryOverTimeRequest: data.salaryOverTimeRequest,
+        salaryByDayRequest: {
+          salary: Number(data.salaryByDayRequest.salary.replace(/\./g, "")),
+          startDate: data.salaryByDayRequest.startDate,
+        },
+        salaryOverTimeRequest: {
+          salary: Number(data.salaryOverTimeRequest.salary.replace(/\./g, "")),
+          startDate: data.salaryOverTimeRequest.startDate,
+        },
         avatar: avatar,
       };
 
@@ -288,17 +294,23 @@ export const UsersForm = () => {
     });
   };
 
-  const formatCurrency = (value: any) => {
+  const formatCurrency = (value: any): string => {
     if (!value) return "";
+    let valueString = value.toString();
 
     // Remove all non-numeric characters, including dots
-    value = value.replace(/\D/g, "");
+    valueString = valueString.replace(/\D/g, "");
+
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+
+    if (valueString === "") return "0";
 
     // Reverse the string to handle grouping from the end
-    let reversed = value.split("").reverse().join("");
+    let reversed = valueString.split("").reverse().join("");
 
     // Add dots every 3 characters
-    let formattedReversed = reversed.match(/.{1,3}/g).join(".");
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
 
     // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
@@ -713,7 +725,7 @@ export const UsersForm = () => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                              "text-muted-foreground"
+                                                "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -797,7 +809,7 @@ export const UsersForm = () => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                              "text-muted-foreground"
+                                                "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -818,10 +830,10 @@ export const UsersForm = () => {
                                           selected={
                                             field.value
                                               ? parse(
-                                                field.value,
-                                                "dd/MM/yyyy",
-                                                new Date()
-                                              )
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
                                               : undefined
                                           }
                                           onDayClick={(date: any) =>
