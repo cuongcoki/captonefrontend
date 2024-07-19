@@ -1,5 +1,5 @@
-import { Shipment, columns } from "./Column"
-import { DataTable } from "./DataTable"
+import { Shipment, columns } from "./Column";
+import { DataTable } from "./DataTable";
 import { useEffect, useState, createContext } from "react";
 import { DataTablePagination } from "./data-table-pagination";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-
 import toast from "react-hot-toast";
 import { shipmentApi } from "@/apis/shipment.api";
 import CreateShipment from "../form/CreateShipment";
@@ -21,7 +20,7 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => { },
+  forceUpdate: () => {},
 });
 
 const enumStatus = [
@@ -29,44 +28,43 @@ const enumStatus = [
     statusName: "SIGNED",
     description: "Đang đợi giao",
     id: 0,
-    value: "0"
+    value: "0",
   },
   {
     statusName: "INPROGRESS",
     description: "Đang thực hiện",
     id: 1,
-    value: "1"
+    value: "1",
   },
   {
     statusName: "COMPLETED",
     description: "Đã hoàn thành",
     id: 2,
-    value: "2"
+    value: "2",
   },
   {
     statusName: "CANCELLED",
     description: "Đã hủy",
     id: 3,
-    value: "3"
+    value: "3",
   },
- 
 ];
 
 export default function RenderTableShipment() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [data, setData] = useState<Shipment[]>([]);
-  console.log('data Shipment', data)
+  console.log("data Shipment", data);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [status, setStatus] = useState<string | null>("0");
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const router = useRouter();
   const pathname = usePathname();
   const [force, setForce] = useState<number>(1);
 
   const forceUpdate = () => setForce((prev) => prev + 1);
- 
+
   useEffect(() => {
     const fetchDataShipment = async () => {
       setLoading(true);
@@ -75,24 +73,21 @@ export default function RenderTableShipment() {
           currentPage,
           pageSize,
           status,
-          searchTerm,
+          searchTerm
         );
         setData(response.data.data.data);
+        console.log("DATA SHIPMENT", response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
-        console.error('Error fetching order data:', error);
+        console.error("Error fetching order data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-
-
     fetchDataShipment();
-  }, [currentPage, pageSize, searchTerm , status, force]);
-
-
+  }, [currentPage, pageSize, searchTerm, status, force]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
@@ -105,8 +100,6 @@ export default function RenderTableShipment() {
     params.set("page", "1");
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
-
-
 
   return (
     <div className="px-3 mt-3">
@@ -126,20 +119,18 @@ export default function RenderTableShipment() {
                   value={status || ""}
                   onValueChange={(value) => handleStatusChange(value)}
                 >
-                  <SelectTrigger >
+                  <SelectTrigger>
                     <SelectValue placeholder="Trạng thái" />
                   </SelectTrigger>
-                  <SelectContent >
-                    {
-                      enumStatus.map((item, index) => (
-                        <SelectItem value={item.value} key={item.id}>{item.description}</SelectItem>
-                      ))
-                    }
+                  <SelectContent>
+                    {enumStatus.map((item, index) => (
+                      <SelectItem value={item.value} key={item.id}>
+                        {item.description}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
-
               </div>
-        
             </div>
           </MyContext.Provider>
         </div>
@@ -147,7 +138,7 @@ export default function RenderTableShipment() {
         <MyContext.Provider value={{ forceUpdate }}>
           <div className="flex items-center justify-end">
             <div className="flex items-center space-x-2">
-             <CreateShipment />
+              <CreateShipment />
             </div>
           </div>
         </MyContext.Provider>
@@ -164,6 +155,5 @@ export default function RenderTableShipment() {
         </div>
       </MyContext.Provider>
     </div>
-
   );
 }

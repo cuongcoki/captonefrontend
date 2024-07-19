@@ -70,6 +70,7 @@ export default function CountProduct({
         })
         .catch((error) => {
           if (error.response.data.status === 404) {
+            setSearchData(null);
           }
         });
     } else {
@@ -215,7 +216,7 @@ export default function CountProduct({
             />
             {searchData && (
               <ul
-                className="hide-scrollbar"
+                className="hide-scrollbar "
                 style={{
                   position: "absolute",
                   top: "100%",

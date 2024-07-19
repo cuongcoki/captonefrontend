@@ -15,7 +15,7 @@ export default async function page({ searchParams }: Props) {
   const slot = day.getHours() < 12 ? "1" : day.getHours() < 18 ? "2" : "3";
   searchParams.slot = searchParams.slot || slot;
   searchParams.warehouse = searchParams.warehouse || "";
-  console.log("searchParams", searchParams);
+  // console.log("searchParams", searchParams);
 
   return (
     <div className="">

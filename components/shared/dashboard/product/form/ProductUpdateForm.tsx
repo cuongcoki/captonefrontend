@@ -47,7 +47,6 @@ import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
-
 interface ProductData {
   code: string;
   description: string;
@@ -80,7 +79,7 @@ interface ProductID {
 export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const [loading, setLoading] = useState(false);
   const { ForceRender } = ProductStore();
-  console.log('productId', productId)
+  console.log("productId", productId);
   const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(
     undefined
   );
@@ -90,7 +89,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   useEffect(() => {
     const fetchUpdatedProduct = async () => {
       if (productId) {
-        setImageRequestsUpdate(productId.imageResponses)
+        setImageRequestsUpdate(productId.imageResponses);
         try {
           const updatedData = await Promise.all(
             productId.imageResponses.map(async (image) => {
@@ -142,9 +141,18 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     defaultValues: {
       id: productId?.id || "",
       code: productId?.code || "",
-      priceFinished: productId?.productPhaseSalaries.find(item => item.phaseName === "PH_003")?.salaryPerProduct || 0,
-      pricePhase2: productId?.productPhaseSalaries.find(item => item.phaseName === "PH_002")?.salaryPerProduct || 0,
-      pricePhase1: productId?.productPhaseSalaries.find(item => item.phaseName === "PH_001")?.salaryPerProduct || 0,
+      priceFinished:
+        productId?.productPhaseSalaries
+          .find((item) => item.phaseName === "PH_003")
+          ?.salaryPerProduct.toString() || "",
+      pricePhase2:
+        productId?.productPhaseSalaries
+          .find((item) => item.phaseName === "PH_002")
+          ?.salaryPerProduct.toString() || "",
+      pricePhase1:
+        productId?.productPhaseSalaries
+          .find((item) => item.phaseName === "PH_001")
+          ?.salaryPerProduct.toString() || "",
       size: productId?.size || "",
       description: productId?.description || "",
       name: productId?.name || "",
@@ -281,26 +289,30 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
         return newRemoveImageIds.length > 0 ? newRemoveImageIds : null;
       });
     }
-  }
+  };
   console.log("removeImageIds", removeImageIds);
-  console.log("imageAddRequests", imageAddRequests)
-  console.log("imageRequests", imageRequests)
-  console.log("imageRequestsUpdate", imageRequestsUpdate)
+  console.log("imageAddRequests", imageAddRequests);
+  console.log("imageRequests", imageRequests);
+  console.log("imageRequestsUpdate", imageRequestsUpdate);
   const [saveUpdateImage, setSaveUpdateImage] = useState<any[]>([]);
-  console.log("saveUpdateImage", saveUpdateImage)
+  console.log("saveUpdateImage", saveUpdateImage);
   // Handle toggling blueprint flag for an image
   const handleToggleBluePrint = (imageUrl: string, id: string) => {
     // console.log('imageUrl=', imageUrl)
-    console.log('id', id)
-    console.log('image=====', imageRequestsUpdate)
+    console.log("id", id);
+    console.log("image=====", imageRequestsUpdate);
     setImageRequests((prevImageRequests) =>
       prevImageRequests.map((req) =>
-        req.imageUrl === imageUrl ? { ...req, isBluePrint: !req.isBluePrint } : req
+        req.imageUrl === imageUrl
+          ? { ...req, isBluePrint: !req.isBluePrint }
+          : req
       )
     );
     setImageAddRequests((prevImageRequests) =>
       prevImageRequests.map((req) =>
-        req.imageUrl === imageUrl ? { ...req, isBluePrint: !req.isBluePrint } : req
+        req.imageUrl === imageUrl
+          ? { ...req, isBluePrint: !req.isBluePrint }
+          : req
       )
     );
 
@@ -310,17 +322,19 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       )
     );
 
-    const updatedImage = imageRequestsUpdate.find(item => item.id === id);
+    const updatedImage = imageRequestsUpdate.find((item) => item.id === id);
     if (updatedImage) {
       handleDeleteImageUpdate(id);
       setImageAddRequests((prevSaveUpdateImage) => {
-        const existingIndex = prevSaveUpdateImage.findIndex(item => item.id === id);
+        const existingIndex = prevSaveUpdateImage.findIndex(
+          (item) => item.id === id
+        );
         if (existingIndex !== -1) {
           // Update existing entry
           const updatedSaveUpdateImage = [...prevSaveUpdateImage];
           updatedSaveUpdateImage[existingIndex] = {
             ...updatedSaveUpdateImage[existingIndex],
-            isBluePrint: !updatedSaveUpdateImage[existingIndex].isBluePrint
+            isBluePrint: !updatedSaveUpdateImage[existingIndex].isBluePrint,
           };
           return updatedSaveUpdateImage;
         } else {
@@ -331,19 +345,17 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
               id: updatedImage.id,
               imageUrl: updatedImage.imageUrl,
               isBluePrint: !updatedImage.isBluePrint,
-              isMainImage: updatedImage.isMainImage
-            }
+              isMainImage: updatedImage.isMainImage,
+            },
           ];
         }
       });
     }
-
-
   };
 
   // Handle toggling main image flag for an image
   const handleToggleMainImage = (imageUrl: string, id: string) => {
-    console.log('imageUrl=', imageUrl)
+    console.log("imageUrl=", imageUrl);
     setImageRequests((prevImageRequests) =>
       prevImageRequests.map((req) =>
         req.imageUrl ? { ...req, isMainImage: !req.isMainImage } : req
@@ -361,17 +373,19 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       )
     );
 
-    const updatedImage = imageRequestsUpdate.find(item => item.id === id);
+    const updatedImage = imageRequestsUpdate.find((item) => item.id === id);
     if (updatedImage) {
       handleDeleteImageUpdate(id);
       setSaveUpdateImage((prevSaveUpdateImage) => {
-        const existingIndex = prevSaveUpdateImage.findIndex(item => item.id === id);
+        const existingIndex = prevSaveUpdateImage.findIndex(
+          (item) => item.id === id
+        );
         if (existingIndex !== -1) {
           // Update existing entry
           const updatedSaveUpdateImage = [...prevSaveUpdateImage];
           updatedSaveUpdateImage[existingIndex] = {
             ...updatedSaveUpdateImage[existingIndex],
-            isMainImage: !updatedSaveUpdateImage[existingIndex].isMainImage
+            isMainImage: !updatedSaveUpdateImage[existingIndex].isMainImage,
           };
           return updatedSaveUpdateImage;
         } else {
@@ -382,8 +396,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
               id: updatedImage.id,
               imageUrl: updatedImage.imageUrl,
               isBluePrint: updatedImage.isBluePrint,
-              isMainImage: !updatedImage.isMainImage
-            }
+              isMainImage: !updatedImage.isMainImage,
+            },
           ];
         }
       });
@@ -432,22 +446,24 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     //     ...saveUpdateImage,
     //   ]);
     // }
-    console.log(imageAddRequests)
+    console.log(imageAddRequests);
     try {
       await handlePostImage();
 
       const requestBody = {
         id: formData.id,
         code: formData.code.trim(),
-        priceFinished: formData.priceFinished,
-        pricePhase1: formData.pricePhase1,
-        pricePhase2: formData.pricePhase2,
+        priceFinished: Number(formData.priceFinished.replace(/\./g, "")),
+        pricePhase1: Number(formData.pricePhase1.replace(/\./g, "")),
+        pricePhase2: Number(formData.pricePhase2.replace(/\./g, "")),
         size: formData.size.trim(),
         description: formData.description.trim(),
         name: formData.name.trim(),
         isInProcessing: formData.isInProcessing,
         addImagesRequest: imageAddRequests.map((image, index) => ({
-          imageUrl: image.changedFileName ? image.changedFileName : image.imageUrl,
+          imageUrl: image.changedFileName
+            ? image.changedFileName
+            : image.imageUrl,
           isBluePrint: image.isBluePrint,
           isMainImage: image.isMainImage,
         })),
@@ -470,7 +486,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
           requestBody,
           formData.id
         );
-
+        ForceRender();
         toast.success(response.data.message); // Assuming your API returns a message field in the response
         console.log("Update Successful:", response);
       } catch (error: any) {
@@ -500,14 +516,34 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     }
   };
 
-  useEffect(() => { }, [removeImageIds]);
+  useEffect(() => {}, [removeImageIds]);
 
-  const formatCurrency = (value: any) => {
-    if (!value) return '';
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const formatCurrency = (value: any): string => {
+    if (!value) return "";
+    let valueString = value.toString();
+
+    // Remove all non-numeric characters, including dots
+    valueString = valueString.replace(/\D/g, "");
+
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+
+    if (valueString === "") return "0";
+
+    // Reverse the string to handle grouping from the end
+    let reversed = valueString.split("").reverse().join("");
+
+    // Add dots every 3 characters
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+
+    // Reverse back to original order
+    let formatted = formattedReversed.split("").reverse().join("");
+
+    return formatted;
   };
+
   const parseCurrency = (value: any) => {
-    return value.replace(/,/g, '');
+    return value.replace(/,/g, "");
   };
   return (
     <Form {...form}>
@@ -618,10 +654,14 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                           <FormLabel className="flex items-center text-primary">
                             Giá giai đoạn 1 *
                           </FormLabel>
-                          <Input type="text" inputMode="numeric" 
+                          <Input
+                            type="text"
+                            inputMode="numeric"
                             {...field}
                             value={formatCurrency(field.value)}
-                            onChange={(e) => field.onChange(parseCurrency(e.target.value))}
+                            onChange={(e) =>
+                              field.onChange(parseCurrency(e.target.value))
+                            }
                           />
                           <FormMessage />
                         </FormItem>
@@ -637,10 +677,14 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                           <FormLabel className="flex items-center text-primary">
                             Giá giai đoạn 2 *
                           </FormLabel>
-                          <Input type="text" inputMode="numeric" 
+                          <Input
+                            type="text"
+                            inputMode="numeric"
                             {...field}
                             value={formatCurrency(field.value)}
-                            onChange={(e) => field.onChange(parseCurrency(e.target.value))}
+                            onChange={(e) =>
+                              field.onChange(parseCurrency(e.target.value))
+                            }
                           />
                           <FormMessage />
                         </FormItem>
@@ -656,10 +700,14 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                           <FormLabel className="flex items-center text-primary">
                             Giá hoàn thiện *
                           </FormLabel>
-                          <Input type="text" inputMode="numeric"
+                          <Input
+                            type="text"
+                            inputMode="numeric"
                             {...field}
                             value={formatCurrency(field.value)}
-                            onChange={(e) => field.onChange(parseCurrency(e.target.value))}
+                            onChange={(e) =>
+                              field.onChange(parseCurrency(e.target.value))
+                            }
                           />
                           <FormMessage />
                         </FormItem>
@@ -747,10 +795,15 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                                   className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5"
                                 />
                               </HoverCardTrigger>
-                              <HoverCardContent align="start" className="w-full">
+                              <HoverCardContent
+                                align="start"
+                                className="w-full"
+                              >
                                 <div className="grid gap-4">
                                   <div className="space-y-2">
-                                    <h4 className="font-medium leading-none">Loại ảnh</h4>
+                                    <h4 className="font-medium leading-none">
+                                      Loại ảnh
+                                    </h4>
                                     <p className="text-sm text-muted-foreground">
                                       Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
                                     </p>
@@ -764,7 +817,12 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                                         className="data-[state=checked]:bg-primary"
                                         id={`isBluePrint-${index}`}
                                         checked={image.isBluePrint}
-                                        onCheckedChange={() => handleToggleBluePrint(image.imageUrl, image?.id)}
+                                        onCheckedChange={() =>
+                                          handleToggleBluePrint(
+                                            image.imageUrl,
+                                            image?.id
+                                          )
+                                        }
                                       />
                                     </div>
                                     <div className="flex justify-between items-center">
@@ -775,7 +833,12 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                                         className="data-[state=checked]:bg-primary"
                                         id={`isMainImage-${index}`}
                                         checked={image.isMainImage}
-                                        onCheckedChange={() => handleToggleMainImage(image.imageUrl, image?.id)}
+                                        onCheckedChange={() =>
+                                          handleToggleMainImage(
+                                            image.imageUrl,
+                                            image?.id
+                                          )
+                                        }
                                       />
                                     </div>
                                   </div>

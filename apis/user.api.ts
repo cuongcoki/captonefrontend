@@ -52,9 +52,9 @@ type userUpdateType = {
   dob: string;
   gender: string;
   companyId: string;
-  avatar:string;
-  salaryByDayRequest:SalaryByDayRequest;
-  salaryOverTimeRequest:salaryOverTimeRequest;
+  avatar: string;
+  salaryByDayRequest: SalaryByDayRequest;
+  salaryOverTimeRequest: salaryOverTimeRequest;
 };
 
 type changePasswordBody = {
