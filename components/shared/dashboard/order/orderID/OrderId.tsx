@@ -53,6 +53,8 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, Copy, CreditCard, MoreVertical, Truck } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { ShipOrder } from "./shipOrder/ShipOrder";
+import TitleComponent from "@/components/shared/common/Title";
+import HeaderComponent from "@/components/shared/common/header";
 
 interface OrderId {
   orderId?: string;

@@ -76,6 +76,7 @@ import { shipOrderApi } from "@/apis/shipOrder.api"
 import { FormUpdateShipOrder } from "./form/FormUpdateShipOrder"
 import ImageIconShipOrder from "./ImageIconShipOrder"
 import Link from "next/link"
+import TitleComponent from "@/components/shared/common/Title"
 
 const OrderStatus = [
     {
@@ -280,9 +281,10 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId,checkStatus }) => {
             <Card className="sm:col-span-1 md:col-span-10 lg:col-span-7 shadow-sm">
                 <CardHeader>
                     <div className="flex justify-between items-center">
-                        <CardTitle>
-                            Vận chuyển đơn hàng
-                        </CardTitle>
+                        <TitleComponent
+                            title="Vận chuyên đơn hàng"
+                            description="Danh sách các đơn hàng vận chuyển."
+                        />
                         {checkStatus ? (<FormShipOrder orderId={orderId} />) : ""}
                     </div>
                 </CardHeader>
@@ -290,7 +292,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId,checkStatus }) => {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>Tên</TableHead>
+                                <TableHead>Nhân viên vận chuyển</TableHead>
                                 <TableHead className="hidden md:table-cell">
                                     Ngày giao
                                 </TableHead>
