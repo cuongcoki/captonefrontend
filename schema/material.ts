@@ -25,7 +25,7 @@ const importAtSchema = z.string().min(1, "Vui lòng chọn ngày nhập"); // Ch
 export const materialSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Tên sản phẩm không được để trống"),
-  unit: z.string(),
+  unit: z.string().min(1, "Đơn vị không được để trống"),
   image: z.string().nullable(),
   description: z.string(),
   quantityPerUnit: z
@@ -59,7 +59,7 @@ export type materialType = z.infer<typeof materialSchema>;
 export const AddMaterialSchema = z.object({
   name: z.string().min(1, "Tên sản phẩm không được để trống"),
   description: z.string(),
-  unit: z.string(),
+  unit: z.string().min(1, "Đơn vị không được để trống"),
   quantityPerUnit: z
     .string()
     .min(1, "Số lượng từng đơn vị không được để trống")

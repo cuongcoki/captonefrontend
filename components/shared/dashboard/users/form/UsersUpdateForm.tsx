@@ -441,6 +441,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       const response = await userApi.userUpdate(formattedData);
       console.log("Response data:", response.data);
       forceUpdate();
+      setOpen(false);
       toast.success("Cập nhật thành công!");
       // setOpen(false);
     } catch (error) {
@@ -651,7 +652,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                       </div>
                       <div className="flex gap-x-5 ">
                         <Card>
-                          <CardContent className="mt-5">
+                          <CardContent className="mt-5 space-y-2">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                               {/* address */}
                               <FormField

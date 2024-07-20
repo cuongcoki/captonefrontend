@@ -70,6 +70,7 @@ type ProductWorkingResponses = {
 export type SalaryDetailType = {
   month: number;
   year: number;
+  salary: number;
   accountBalance: number;
   totalWorkingDays: number;
   totalWorkingHours: number;
@@ -78,3 +79,25 @@ export type SalaryDetailType = {
 };
 
 export type GetSalaryDetailResponse = SuccessResponse<SalaryDetailType>;
+
+export type PaySalaryBody = {
+  userId: string;
+  salary: number;
+  note: string;
+};
+
+export type GetPaidSalariesParams = {
+  UserId: string;
+  PageIndex: number;
+  PageSize: number;
+};
+
+export type SalaryHistoryType = {
+  id: string;
+  userId: string;
+  salary: number;
+  note: string;
+  createdAt: string;
+};
+
+export type GetPaidSalariesResponse = SearchResponse<SalaryHistoryType[]>;
