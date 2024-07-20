@@ -205,6 +205,12 @@ export default function OrderIdPage({ orderId }: OrderId) {
     return formatted;
   };
 
+  const formatDate = (date: string) => {
+    const data = date?.split("-");
+    if (!data) return "";
+    return `${data[2]}/${data[1]}/${data[0]}`;
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6">
@@ -221,28 +227,28 @@ export default function OrderIdPage({ orderId }: OrderId) {
                 </span>
               </div>
 
-              <div className="flex flex-col justify-center gap-4 items-start text-sm xl:flex-row  xl:space-y-0 md:border-t-2 p-2 border-t-0">
-                <div className=" flex flex-col space-y-1 sm:w-[300px] w-full md:border-r-2 p-2  border-r-0">
+              <div className="divide-x-2 divide-gray-300 grid grid-cols-6 gap-4 items-start text-sm xl:flex-row  xl:space-y-0 md:border-t-2 p-2 border-t-0">
+                <div className="col-span-2 flex flex-col space-y-1 sm:w-[300px] w-full p-2  h-full">
                   <div className="text-lg font-medium">Địa chỉ công ty</div>
                   <div>{data?.company.address}</div>
                 </div>
 
-                <div className="flex flex-col space-y-1 md:border-r-2 p-2 border-r-0">
+                <div className="flex flex-col space-y-1 p-2 h-full">
                   <div className="text-lg font-medium">Loại công ty</div>
                   <div>{data?.company.companyTypeDescription}</div>
                 </div>
 
-                <div className="flex flex-col space-y-1 md:border-r-2 p-2 border-r-0">
+                <div className="flex flex-col space-y-1 p-2 h-full">
                   <div className="text-lg font-medium">Tên giám đốc</div>
                   <div>{data?.company.directorName}</div>
                 </div>
 
-                <div className="flex flex-col space-y-1 md:border-r-2 p-2 border-r-0">
+                <div className="flex flex-col space-y-1 p-2 h-full">
                   <div className="text-lg font-medium">Liên hệ</div>
                   <div className="">{data?.company.directorPhone}</div>
                 </div>
 
-                <div className="flex flex-col space-y-1 p-2">
+                <div className="flex flex-col space-y-1 p-2 h-full">
                   <div className="text-lg font-medium">Email</div>
                   <div>{data?.company.email}</div>
                 </div>
@@ -269,17 +275,21 @@ export default function OrderIdPage({ orderId }: OrderId) {
               </div>
               <div className="flex justify-between">
                 <span className="font-medium text-gray-600">Ngày bắt đầu:</span>
-                <span className="text-gray-800">{data?.startOrder}</span>
+                <span className="text-gray-800">
+                  {formatDate(data?.startOrder as string)}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="font-medium text-gray-600">
                   Ngày kết thúc:
                 </span>
-                <span className="text-gray-800">{data?.endOrder}</span>
+                <span className="text-gray-800">
+                  {formatDate(data?.endOrder as string)}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="font-medium text-gray-600">VAT:</span>
-                <span className="text-gray-800">{data?.vat}</span>
+                <span className="text-gray-800">{data?.vat}%</span>
               </div>
             </div>
           </CardContent>
