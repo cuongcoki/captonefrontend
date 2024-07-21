@@ -287,22 +287,22 @@ export const columns: ColumnDef<Shipment>[] = [
       );
     },
     cell: ({ row }) => {
-      const [valueStatus, setValueStatus] = useState<any>(0);
+      // const [valueStatus, setValueStatus] = useState<any>(0);
 
-      const handleSelectChange = (value: any, id: string) => {
-        console.log('value', value)
-        setValueStatus(value)
-      };
-      const handleSubmitOrderStatus = () => {
-        console.log('value',row.original.id,valueStatus)
+      // const handleSelectChange = (value: any, id: string) => {
+      //   console.log('value', value)
+      //   setValueStatus(value)
+      // };
+      // const handleSubmitOrderStatus = () => {
+      //   console.log('value',row.original.id,valueStatus)
       
-        shipmentApi.changeStatus(row.original.id,valueStatus)
-          .then(({ data }) => {
-            setValueStatus(0);
-            console.log("data", data)
-            toast.success(data.message)
-          })
-      }
+      //   shipmentApi.changeStatus(row.original.id,valueStatus)
+      //     .then(({ data }) => {
+      //       setValueStatus(0);
+      //       console.log("data", data)
+      //       toast.success(data.message)
+      //     })
+      // }
       return <span className="flex justify-center ">
         <AlertDialog>
           <AlertDialogTrigger>{limitLength(row.original.statusDescription, 30)}</AlertDialogTrigger>
@@ -310,7 +310,7 @@ export const columns: ColumnDef<Shipment>[] = [
             <AlertDialogHeader>
               <AlertDialogTitle>Đổi trạng thái đơn hàng</AlertDialogTitle>
               <AlertDialogDescription>
-                <Select
+                {/* <Select
                   defaultValue={String(row.original.status)}
                   onValueChange={(value) => handleSelectChange(Number(value), row.original.id)}
                 >
@@ -327,12 +327,12 @@ export const columns: ColumnDef<Shipment>[] = [
                       </SelectItem>
                     ))}
                   </SelectContent>
-                </Select>
+                </Select> */}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Bỏ</AlertDialogCancel>
-              <AlertDialogAction onClick={handleSubmitOrderStatus}>Tiếp tục</AlertDialogAction>
+              {/* <AlertDialogCancel>Bỏ</AlertDialogCancel>
+              <AlertDialogAction onClick={handleSubmitOrderStatus}>Tiếp tục</AlertDialogAction> */}
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
