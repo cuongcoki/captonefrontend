@@ -116,7 +116,7 @@ export const SetForm = () => {
       const newFile = new File([file], changedFileName, { type: file.type });
       setImageUrls(newFile);
       setNameImage(changedFileName);
-      console.log("imageUrls", imageUrls);
+      // console.log("imageUrls", imageUrls);
     }
   };
 
@@ -184,7 +184,7 @@ export const SetForm = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   // console.log('searchTerm', searchTerm)
-  console.log("searchResults", searchResults);
+  // console.log("searchResults", searchResults);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -214,7 +214,7 @@ export const SetForm = () => {
       quantity: number;
     }[]
   >([]);
-  console.log("getDetailsProgetDetailsPro=========", getDetailsPro);
+
   const [getDetailsProUpdate, setGetDetailsProUpdate] = useState<any[]>([]);
 
   const [updateProducts, setUpdateProducts] = useState<
@@ -223,8 +223,7 @@ export const SetForm = () => {
       quantity: number;
     }[]
   >([]);
-  console.log("productsRequest", productsRequest);
-
+ 
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any) => {
     console.warn("product", product.id);
@@ -290,7 +289,6 @@ export const SetForm = () => {
     );
     setUpdateProducts(updatedUpdateProducts);
 
-    toast.success("Đã xóa sản phẩm khỏi danh sách");
   };
 
   // ** hàm thay đổi số lượng khỏi danh sách sản phẩm
@@ -331,7 +329,9 @@ export const SetForm = () => {
 
     try {
       await handlePostImage();
-
+      if(nameImage === ""){
+        toast.error("Hãy chọn 1 ảnh cho bộ sản phẩm")
+      }
       if (nameImage) {
         // Thực hiện các hành động khi nameImage có giá trị
         const requestBody = {
@@ -348,7 +348,10 @@ export const SetForm = () => {
           setTimeout(() => {
             forceUpdate();
             setOpen(false);
-            // window.location.href = '/dashboard/product';
+            form.reset();
+            setProductsRequest([])
+            setGetDetailsPro([]);
+            setUpdateProducts([])
           }, 2000);
         } else {
           toast.error(response.data.message);
@@ -358,7 +361,17 @@ export const SetForm = () => {
         // Xử lý khi nameImage không có giá trị
         toast.error("Vui lòng chọn ảnh bộ");
       }
-    } catch (error) {
+    } catch (error:any) {
+      if (error.response && error.response.data && error.response.data.error) {
+        const errors = error.response.data.error;
+
+        if (errors.Description) {
+          toast.error(errors.Description);
+        }
+
+      } else {
+        console.error("Error submitting form:", error);
+      }
       console.error("Error creating product:", error);
     } finally {
       setLoading(false);
@@ -370,6 +383,9 @@ export const SetForm = () => {
     }
     return text;
   };
+
+  // console.log("productsRequest", productsRequest);
+  // console.log("getDetailsProgetDetailsPro=========", getDetailsPro);
 
   const { pending } = useFormStatus();
   return (
@@ -580,7 +596,7 @@ export const SetForm = () => {
                                   {getDetailsPro.map((product, index) => (
                                     <div
                                       className="grid grid-cols-10 items-center py-4"
-                                      key={index}
+                                      key={product.id}
                                     >
                                       <div className="col-span-7 flex gap-4">
                                         <Image

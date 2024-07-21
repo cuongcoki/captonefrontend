@@ -20,6 +20,16 @@ import {
   Coins,
   Warehouse,
 } from "lucide-react";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Command } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
 import { ModeToggle } from "@/components/shared/common/mode-toggle";
@@ -30,6 +40,7 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import { CardContent } from "../home/DashbroadComponents/Cards/Card";
 import Link from "next/link";
+import CommandDemo from "../Command";
 
 type Props = {};
 export default function SideNavbar({}: Props) {
@@ -198,10 +209,31 @@ export default function SideNavbar({}: Props) {
         {!mobileWidth && (
           <>
             {isCollapsed ? (
-              <div className="ml-2.5 w-[30px]">
-                <div className="avatar rounded-full min-h-8 min-w-8 bg-blue-500 text-white font-[700] flex items-center justify-center">
-                  <p>TDC</p>
-                </div>
+              <div className="mb-3 ml-2.5 w-[30px]">
+                <Command className="ml-2.5 focus:ring-2 focus:ring-blue-500">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <Settings />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      <DropdownMenuLabel>
+                        <Button>
+                          <Link href={`/profile/${user.user?.id}`}>
+                            Trang cá nhân
+                          </Link>
+                        </Button>
+                      </DropdownMenuLabel>
+                      <DropdownMenuItem onClick={handleLogout}>
+                        <Button onClick={handleLogout}>
+                          <LogOut className="mr-1" /> đăng xuất
+                        </Button>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <ModeToggle />
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </Command>
               </div>
             ) : (
               <CardContent className="m-1 mb-3  w-[170px]">
