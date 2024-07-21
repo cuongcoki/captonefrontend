@@ -293,6 +293,9 @@ export const SetForm = () => {
 
   // ** hàm thay đổi số lượng khỏi danh sách sản phẩm
   const handleChange = (productId: string, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      return;
+    }
     const existingProductIndex = productsRequest.findIndex(
       (product) => product.productId === productId
     );
@@ -356,7 +359,7 @@ export const SetForm = () => {
         // Xử lý response
       } else {
         // Xử lý khi nameImage không có giá trị
-        toast.error("imageUrl (nameImage) is not valid");
+        toast.error("Vui lòng chọn ảnh bộ");
       }
     } catch (error:any) {
       if (error.response && error.response.data && error.response.data.error) {
@@ -419,8 +422,8 @@ export const SetForm = () => {
                               name="code"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center">
-                                    Mã Sản Phẩm
+                                  <FormLabel className="flex items-center text-primary">
+                                    Mã Bộ Sản Phẩm
                                   </FormLabel>
                                   <FormControl>
                                     <Input type="text" {...field} />
@@ -436,7 +439,7 @@ export const SetForm = () => {
                               name="name"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center">
+                                  <FormLabel className="flex items-center text-primary">
                                     Tên Bộ Sản Phẩm
                                   </FormLabel>
                                   <FormControl>
@@ -452,7 +455,7 @@ export const SetForm = () => {
                               name="description"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="flex items-center">
+                                  <FormLabel className="flex items-center text-primary">
                                     Mô Tả
                                   </FormLabel>
                                   <FormControl>
@@ -518,7 +521,9 @@ export const SetForm = () => {
                               <Input
                                 placeholder="Tìm kiếm mã - tên sản phẩm ..."
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onChange={(e) => {
+                                  setSearchTerm(e.target.value);
+                                }}
                                 className=""
                               />
                             </div>
@@ -601,7 +606,7 @@ export const SetForm = () => {
                                           height={900}
                                           src={
                                             product?.imageUrl ===
-                                              "Image_not_found"
+                                            "Image_not_found"
                                               ? NoImage
                                               : product?.imageUrl
                                           }

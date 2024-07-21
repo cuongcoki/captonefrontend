@@ -9,16 +9,6 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -70,6 +60,7 @@ export default function ProfilePage() {
   const [userId, setUserId] = useState<any>([]);
   const [currentPassword, setCurrentPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
   // ** hooks
   const user = useAuth();
@@ -137,9 +128,10 @@ export default function ProfilePage() {
     return true;
   }
   const handleChangePassword = () => {
-    console.log("userId", userId.id);
-    console.log("currentPassword", currentPassword);
-    console.log("newPassword", newPassword);
+    if (newPassword !== confirmPassword) {
+      toast.error("Mật khẩu xác nhận không khớp");
+      return;
+    }
     if (currentPassword === "" || newPassword === "") {
       toast.error("Vui lòng nhập đầy đủ thông tin");
       return;
@@ -166,13 +158,70 @@ export default function ProfilePage() {
         toast.error("Đổi mật khẩu thất bại");
       });
   };
+
+  const handleChangeActive = () => {
+    userApi
+      .changeUserStatus(userId.id, !userId.isActive)
+      .then((res) => {
+        console.log("res", res);
+        toast.success("Thay đổi trạng thái thành công");
+        setUserId({
+          ...userId,
+          isActive: !userId.isActive,
+        });
+      })
+      .catch((e) => {
+        console.error("Error changing user status:", e);
+        toast.error("Thay đổi trạng thái thất bại");
+      });
+  };
+
+  const handleChangeRole = (roleIdChange: string) => {
+    userApi
+      .userUpdate({
+        id: userId.id,
+        avatar: userId.avatar,
+        roleId: Number(roleIdChange),
+        address: userId.address,
+        companyId: userId.companyId,
+        dob: formatDate(userId.dob),
+        firstName: userId.firstName,
+        gender: userId.gender,
+        lastName: userId.lastName,
+        phone: userId.phone,
+        salaryByDayRequest: {
+          salary: userId.salaryHistoryResponse.salaryByDayResponses.salary,
+          startDate: formatDate(
+            userId.salaryHistoryResponse.salaryByDayResponses.startDate
+          ),
+        },
+        salaryOverTimeRequest: {
+          salary: userId.salaryHistoryResponse.salaryByOverTimeResponses.salary,
+          startDate: formatDate(
+            userId.salaryHistoryResponse.salaryByOverTimeResponses.startDate
+          ),
+        },
+      })
+      .then((res) => {
+        toast.success("Thay đổi vai trò thành công");
+        setUserId({
+          ...userId,
+          roleId: Number(roleIdChange),
+        });
+      })
+      .catch((e) => {
+        console.error("Error changing user role:", e);
+        toast.error("Thay đổi vai trò thất bại");
+      });
+  };
+
   return (
     <div className="flex flex-col gap-6 justify-center">
       <header className=" flex justify-between">
         {/* Card User  */}
         <div className=" relative w-full max-w-2xl flex flex-col items-start space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6 px-4 py-8 border-2 border-dashed border-primary-backgroudPrimary dark:border-gray-400 shadow-lg rounded-lg">
           <span className="absolute text-xs font-medium top-0 left-0 rounded-br-lg rounded-tl-lg px-2 py-1 bg-primary-100 dark:bg-gray-900 dark:text-gray-300 border-primary-backgroudPrimary dark:border-gray-400 border-b-2 border-r-2 border-dashed ">
-            nhân viên
+            {Role.find((role) => role.value === userId.roleId)?.label}
           </span>
 
           <div className="w-full flex justify-center sm:justify-start sm:w-auto">
@@ -181,7 +230,7 @@ export default function ProfilePage() {
               width={80}
               height={80}
               className="object-cover w-20 h-20 mt-3 mr-3 rounded-full"
-              src="https://lh3.googleusercontent.com/a/AEdFTp70cvwI5eevfcr4LonOEX5gB2rzx7JnudOcnYbS1qU=s96-c"
+              src={avatar}
             />
           </div>
 
@@ -215,27 +264,39 @@ export default function ProfilePage() {
                   </TabsList>
                   <TabsContent value="status">
                     <div className="grid gap-3">
-                      <Select>
+                      <Select
+                        value={userId.isActive?.toString()}
+                        onValueChange={handleChangeActive}
+                      >
                         <SelectTrigger id="status" aria-label="Select status">
                           <SelectValue placeholder="Chọn trạng thái" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="draft">Draft</SelectItem>
-                          <SelectItem value="published">Active</SelectItem>
-                          <SelectItem value="archived">Archived</SelectItem>
+                          <SelectItem value="true">Đang làm </SelectItem>
+                          <SelectItem value="false">Đã nghỉ</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </TabsContent>
                   <TabsContent value="role">
-                    <Select>
+                    <Select
+                      value={userId.roleId?.toString()}
+                      onValueChange={(value) => {
+                        handleChangeRole(value);
+                      }}
+                    >
                       <SelectTrigger id="role" aria-label="Select role">
                         <SelectValue placeholder="Chọn vai trò" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="published">Active</SelectItem>
-                        <SelectItem value="archived">Archived</SelectItem>
+                        {Role.map((role) => (
+                          <SelectItem
+                            key={role.value}
+                            value={role.value.toString()}
+                          >
+                            {role.label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </TabsContent>
@@ -405,6 +466,18 @@ export default function ProfilePage() {
                   }}
                 />
                 <div id="error" className="text-destructive"></div>
+              </div>
+              <div className="space-y-1">
+                <Label htmlFor="confirm">Nhập lại mật khẩu mới</Label>
+                <Input
+                  id="confirm"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                  }}
+                />
+                <div id="errorConfirm" className="text-destructive"></div>
               </div>
             </CardContent>
             <CardFooter>

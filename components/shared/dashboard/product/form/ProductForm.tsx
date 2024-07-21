@@ -54,9 +54,9 @@ export const ProductForm = () => {
     resolver: zodResolver(ProductSchema),
     defaultValues: {
       code: "",
-      priceFinished: 0,
-      pricePhase1: 0,
-      pricePhase2: 0,
+      priceFinished: "",
+      pricePhase1: "",
+      pricePhase2: "",
       size: "",
       description: "",
       name: "",
@@ -219,9 +219,9 @@ export const ProductForm = () => {
       if (imageRequests && nameImage) {
         const requestBody = {
           code: data.code.trim(),
-          priceFinished: data.priceFinished,
-          pricePhase1: data.pricePhase1,
-          pricePhase2: data.pricePhase2,
+          priceFinished: Number(data.priceFinished.replace(/\./g, "")),
+          pricePhase1: Number(data.pricePhase1.replace(/\./g, "")),
+          pricePhase2: Number(data.pricePhase2.replace(/\./g, "")),
           size: data.size.trim(),
           description: data.description.trim(),
           name: data.name.trim(),
@@ -271,14 +271,35 @@ export const ProductForm = () => {
       setLoading(false);
     }
   };
-  const formatCurrency = (value:any) => {
-    if (!value) return '';
-    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+  const formatCurrency = (value: any): string => {
+    if (!value) return "";
+    let valueString = value.toString();
+
+    // Remove all non-numeric characters, including dots
+    valueString = valueString.replace(/\D/g, "");
+
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+
+    if (valueString === "") return "0";
+
+    // Reverse the string to handle grouping from the end
+    let reversed = valueString.split("").reverse().join("");
+
+    // Add dots every 3 characters
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+
+    // Reverse back to original order
+    let formatted = formattedReversed.split("").reverse().join("");
+
+    return formatted;
   };
-  const parseCurrency = (value:any) => {
-    return value.replace(/,/g, '');
+
+  const parseCurrency = (value: any) => {
+    return value.replace(/,/g, "");
   };
-  
+
   const { pending } = useFormStatus();
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>
@@ -297,7 +318,6 @@ export const ProductForm = () => {
               </div>
               <div className="grid gap-4 p-4 overflow-y-auto h-[650px] dark:bg-card">
                 <Form {...form}>
-
                   {/* Phần đăng hình ảnh */}
 
                   <Card>
@@ -430,7 +450,10 @@ export const ProductForm = () => {
                                     Mô Tả
                                   </FormLabel>
                                   <FormControl>
-                                    <Textarea {...field} className="h-[120px]" />
+                                    <Textarea
+                                      {...field}
+                                      className="h-[120px]"
+                                    />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -448,10 +471,16 @@ export const ProductForm = () => {
                                     Giá giai đoạn 1 *
                                   </FormLabel>
                                   <FormControl>
-                                    <Input type="text" inputMode="numeric"
+                                    <Input
+                                      type="text"
+                                      inputMode="numeric"
                                       {...field}
                                       value={formatCurrency(field.value)}
-                                      onChange={(e) => field.onChange(parseCurrency(e.target.value))}
+                                      onChange={(e) =>
+                                        field.onChange(
+                                          parseCurrency(e.target.value)
+                                        )
+                                      }
                                     />
                                   </FormControl>
                                   <FormMessage />
@@ -468,15 +497,16 @@ export const ProductForm = () => {
                                     Giá giai đoạn 2 *
                                   </FormLabel>
                                   <FormControl>
-                                    <Input type="text" inputMode="numeric"
+                                    <Input
+                                      type="text"
+                                      inputMode="numeric"
                                       {...field}
                                       value={formatCurrency(field.value)}
                                       onChange={(e) => {
-                                        const rawValue =
-                                          e.target.value.replace(
-                                            /[^\d.]/g,
-                                            ""
-                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                        const rawValue = e.target.value.replace(
+                                          /[^\d.]/g,
+                                          ""
+                                        ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
                                         field.onChange(rawValue);
                                       }}
                                     />
@@ -495,15 +525,16 @@ export const ProductForm = () => {
                                     Giá hoàn thiện *
                                   </FormLabel>
                                   <FormControl>
-                                    <Input type="text" inputMode="numeric"
+                                    <Input
+                                      type="text"
+                                      inputMode="numeric"
                                       {...field}
                                       value={formatCurrency(field.value)}
                                       onChange={(e) => {
-                                        const rawValue =
-                                          e.target.value.replace(
-                                            /[^\d.]/g,
-                                            ""
-                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                        const rawValue = e.target.value.replace(
+                                          /[^\d.]/g,
+                                          ""
+                                        ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
                                         field.onChange(rawValue);
                                       }}
                                     />
