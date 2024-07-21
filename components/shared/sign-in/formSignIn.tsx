@@ -47,45 +47,20 @@ export default function FormSignIn() {
       .login({ id, password })
       .then(({ data }) => {
         console.log("DATA", data);
-        if (data.isSuccess) {
           const { user, accessToken, refreshToken } = data.data;
           auth.login(user, rememberMe, accessToken, refreshToken);
           console.log(data);
           toast.success(data.message);
           router.push("/dashboard/home");
-        } else {
-          if (data?.message?.includes("id is incorrect")) {
-            form.setError("id", {
-              type: "manual",
-              message: data?.message,
-            });
-          } else if (data?.message?.includes("Password is incorrect")) {
-            form.setError("password", {
-              type: "manual",
-              message: data?.message,
-            });
-          } else {
-            // Handle other errors
-          }
-        }
       })
-      .catch((err) => {
-        // Handle catch error
-        console.log("ERROR", err);
-        toast.error(
-          "Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin đăng nhập!"
-        );
-        // console.error(err.response.data.message);
-        // toast.error(err.response.data.message);
+      .catch((error) => {
+        console.log(error.data)
+        toast.error('Sai tài khoản khoắc là mật khẩu')
       })
       .finally(() => {
         setLoading(false);
       });
-    // window.addEventListener("beforeunload", function (e) {
-    //   e.returnValue = false; // Chrome requires returnValue to be set.
-    //   return false; // Standard-compliant browsers.
-    // });
-    // console.log(data);
+
   };
 
   return (

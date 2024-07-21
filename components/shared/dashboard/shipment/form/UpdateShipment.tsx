@@ -79,7 +79,7 @@ import toast from "react-hot-toast"
 // ** import Components
 import { NoImage } from "@/constants/images"
 import { Badge } from "@/components/ui/badge"
-import { CalendarIcon, Check, CirclePlus, CircleX, MoreVertical, Plus, Truck, X } from "lucide-react"
+import { CalendarIcon, Check, CirclePlus, CircleX, MoreVertical, PencilLine, Plus, Truck, X } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { shipmentApi } from "@/apis/shipment.api"
 import { format, parse, parseISO } from 'date-fns';
@@ -97,6 +97,7 @@ import { filesApi } from "@/apis/files.api"
 import ImageIconShipmentForm from "./ImageIconShipmentForm"
 import { phaseApi } from "@/apis/phase.api"
 import { materialApi } from "@/apis/material.api";
+import { Phase, Product, Company, Employee, Material, ShipmentDetailRequest, shipmentID, ImageResponse, Detail } from "@/types/shipment.type"
 import ImageIconMaterial from "./ImageIconMaterial"
 
 const enumCompany = [
@@ -139,99 +140,20 @@ const ProductPhaseType = [
     },
 ]
 
-type Company = {
-    id: string;
-    name: string;
-    address: string;
-    directorName: string;
-    directorPhone: string;
-    email: string;
-    companyType: any;
-    companyTypeDescription: string;
-};
-
-export type Employee = {
-    id: string;
-    firstName: string;
-    lastName: string;
-    dob: string;
-    gender: string;
-    address: string;
-    phone: string;
-    roleId: number;
-    isActive: boolean;
-    companyId: string;
-    avatar: string;
-    companyName: string;
-};
-
-export type Product = {
-    id: string;
-    name: string;
-    code: string;
-    price: number;
-    size: string;
-    description: string;
-    isInProcessing: boolean;
-    imageResponses: Array<{
-        id: string;
-        imageUrl: string;
-        isBluePrint: boolean;
-        isMainImage: boolean;
-    }>;
-};
-
-export type ShipmentDetailRequest = {
-    itemId: string;
-    phaseId: string;
-    quantity: number;
-    kindOfShip: number;
-    productPhaseType: number;
-};
-
-export type Shipment = {
-    fromId: string;
-    toId: string;
-    shipperId: string;
-    shipDate: string;
-    shipmentDetailRequests: ShipmentDetailRequest[];
-};
-
-export type Phase = {
-    id: string;
-    name: string;
-    description: string;
-};
-
-export type PhasesResponse = {
-    data: Phase[];
-};
-interface ImageResponse {
-    id: string;
-    imageUrl: string;
-    isBluePrint: boolean;
-    isMainImage: boolean;
-}
-export type Material = {
-    id: string
-    name: string;
-    description: string;
-    unit: string;
-    quantityPerUnit: number;
-    image: string;
-    quantityInStock: number;
+interface ShipmentIDProps {
+    shipmentIDDes: string;
 }
 
-export default function CreateShipment() {
+export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
     //state 
     const [loading, setLoading] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
 
     //state ** company
     const [company, setCompany] = useState<Company[]>([]);
-    const [companyType, setCompanyType] = useState<number>(0);
+    const [companyType, setCompanyType] = useState<number | undefined>();
     const [company1, setCompany1] = useState<Company[]>([]);
-    const [companyType1, setCompanyType1] = useState<number>(0);
+    const [companyType1, setCompanyType1] = useState<number | undefined>();
 
     // ** state user
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -260,10 +182,12 @@ export default function CreateShipment() {
     const [pageSizeM, setPageSizeM] = useState<number>(20);
     const [isInProcessingM, setIsInProcessingM] = useState<boolean>(true);
     const [dataM, setDataM] = useState<Material[]>([]);
-    console.log("dataM", dataM);
     // ** state Shipment
     const [shipmentDetailRequests, setShipmentDetailRequests] = useState<ShipmentDetailRequest[]>([]);
     const [productDetail, setProductDetail] = useState<any[]>([]);
+    // ** state ShipmentID
+    const [dataSID, setDataSID] = useState<shipmentID>();
+
     // Hàm thêm sản phẩm
     const handleAddProducts = (imgProducts: string, itemId: string, itemKind: number) => {
         console.log("mainImage", imgProducts)
@@ -325,7 +249,83 @@ export default function CreateShipment() {
     const handleStatusChange1 = (value: number) => {
         setCompanyType1(value);
     };
-    //call data material
+    // ** form
+    const form = useForm({
+        resolver: zodResolver(ShipmentSchema),
+        defaultValues: {
+            fromId: "",
+            toId: "",
+            shipperId: "",
+            shipDate: "",
+        },
+    });
+    const { reset } = form;
+
+    // call data shipmentID
+    useEffect(() => {
+        const fetchDataShipID = async () => {
+            setLoading(true);
+            try {
+                const { data } = await shipmentApi.getShipmentID(shipmentIDDes);
+                const orderData = data.data;
+
+                // Tạo promises để lấy ảnh
+                const imagePromises = orderData.details.map(async (detail: Detail) => {
+                    if (detail.material) {
+                        // Gọi API để lấy ảnh cho material
+                        const response = await filesApi.getFile(detail.material.image);
+                        detail.material = response.data.image; // Cập nhật URL ảnh cho material
+                    } else if (detail.product && detail.product.imageResponses.length > 0) {
+                        // Gọi API để lấy ảnh cho product
+                        const imagePromises = detail.product.imageResponses.map(async (imageResponse: ImageResponse) => {
+                            const response = await filesApi.getFile(imageResponse.imageUrl);
+                            return { ...imageResponse, imageUrl: response.data.data }; // Cập nhật URL ảnh cho product
+                        });
+                        detail.product.imageResponses = await Promise.all(imagePromises);
+                    }
+                    return detail;
+                });
+
+                // Chờ tất cả promises hoàn thành
+                orderData.details = await Promise.all(imagePromises);
+
+                setDataSID(orderData);
+            } catch (error) {
+                // toast.error("Không tìm thấy đơn hàng");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (shipmentIDDes) {
+            reset({
+                toId: dataSID?.to?.id,
+                fromId: dataSID?.from?.id,
+                shipperId: dataSID?.shipper.id,
+                shipDate: dataSID?.shipDate,
+            });
+            if (dataSID?.details) {
+                setShipmentDetailRequests(dataSID.details.map(detail => ({
+                    itemId: detail.product?.id || '',
+                    phaseId: detail.phase?.id || '',
+                    quantity: detail.quantity || 0,
+                    kindOfShip: detail.productPhaseType || 0,
+                    productPhaseType: detail.productPhaseType || 0,
+                })));
+                setProductDetail(dataSID.details.map(detail => ({
+                    itemId: detail.product?.id || '',
+                    phaseId: detail.phase?.id || '',
+                    quantity: detail.quantity || 0,
+                    kindOfShip: detail.productPhaseType || 0,
+                    productPhaseType: detail.productPhaseType || 0,
+                    imgProducts: detail.product?.imageResponses?.find(image => image.isMainImage)?.imageUrl || {}
+                })));
+            }
+        }
+        fetchDataShipID();
+    }, [dataSID, reset])
+
+    // call data material
     useEffect(() => {
         const fetchDataMaterial = async () => {
             setLoading(true);
@@ -388,21 +388,29 @@ export default function CreateShipment() {
     // call data company
     useEffect(() => {
         const fetchDataCompany = () => {
-            companyApi.getCompanyByType(companyType)
+            shipmentApi.getAllCompanyByType(companyType, 1, 20)
                 .then(({ data }) => {
-                    setCompany(data.data);
+                    console.log("========", data.data)
+                    setCompany(data.data.data);
                 })
-        }
+                .catch(error => {
+                    console.error('Error fetching companies:', error);
+                });
+        };
         const fetchDataCompany1 = () => {
-            companyApi.getCompanyByType(companyType1)
-                .then(({ data }) => {
-                    setCompany1(data.data);
-                })
+            shipmentApi.getAllCompanyByType(setCompanyType1, 1, 20)
+            .then(({ data }) => {
+                console.log("========", data.data)
+                setCompany1(data.data.data);
+            })
+            .catch(error => {
+                console.error('Error fetching companies:', error);
+            });
         }
         fetchDataCompany1();
         fetchDataCompany()
     }, [company, companyType, company1, companyType1]);
-
+    // console.log('company=====',company)
     // call data employyee
     useEffect(() => {
         const fetchData = async () => {
@@ -486,16 +494,7 @@ export default function CreateShipment() {
 
         fetchDataProduct();
     }, [currentPageP, pageSizeP, searchTerm, isInProcessing]);
-    // ** form
-    const form = useForm({
-        resolver: zodResolver(ShipmentSchema),
-        defaultValues: {
-            fromId: "",
-            toId: "",
-            shipperId: "",
-            shipDate: "",
-        },
-    });
+
     // call gủi form
     const onSubmit = (data: z.infer<typeof ShipmentSchema>) => {
         console.log('data', data)
@@ -538,7 +537,7 @@ export default function CreateShipment() {
                     </div>
                 ));
                 hasError = true;
-            } else if (!request.phaseId) {
+            } else if (!request.phaseId && request.kindOfShip === 0) {
                 console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
                 toast.custom((t) => (
                     <div
@@ -608,6 +607,7 @@ export default function CreateShipment() {
 
         // Gọi hàm kiểm tra
         const requestBody = {
+            shipmentId: shipmentIDDes,
             fromId: data.fromId,
             toId: data.toId,
             shipperId: data.shipperId,
@@ -617,7 +617,7 @@ export default function CreateShipment() {
 
         console.log("requestBodyCreateShipment=====", requestBody);
         setLoading(true)
-        shipmentApi.createShipment(requestBody)
+        shipmentApi.updateShipment(requestBody, shipmentIDDes)
             .then(({ data }) => {
                 console.log("data", data)
                 if (data.isSuccess) {
@@ -639,7 +639,6 @@ export default function CreateShipment() {
                 setLoading(false)
             })
 
-
     };
 
     const limitLength = (text: any, maxLength: any) => {
@@ -652,20 +651,22 @@ export default function CreateShipment() {
     const materialType = 1;
     //consolo.log
     // console.log("dataP", dataP)
+    // console.log("dataM", dataM);
     console.log("shipmentDetailRequests", shipmentDetailRequests)
-
+    console.log("productDetail", productDetail)
+    console.log("dataShipID", dataSID);
     return (
         <>
             <Dialog.Root open={open} onOpenChange={handleOnDialog}>
                 <Dialog.Trigger className="rounded p-2 hover:bg-[#2bff7e] bg-[#24d369] ">
-                    <Plus />
+                    <PencilLine />
                 </Dialog.Trigger>
                 <Dialog.Portal>
                     <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
                         <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[800px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
                             <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
-                                    <h2 className="text-2xl text-white">Tạo đơn vận chuyển</h2>
+                                    <h2 className="text-2xl text-white">Chỉnh sửa vận chuyển</h2>
                                     <Button variant="outline" size="icon" onClick={handleOffDialog}>
                                         <X className="w-4 h-4" />
                                     </Button>
