@@ -18,6 +18,7 @@ import {
   Truck,
   LogOut,
   Coins,
+  Warehouse,
 } from "lucide-react";
 
 import {
@@ -27,10 +28,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  Command,
-} from "@/components/ui/command"
+} from "@/components/ui/dropdown-menu";
+import { Command } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
 import { ModeToggle } from "@/components/shared/common/mode-toggle";
@@ -43,9 +42,8 @@ import { CardContent } from "../home/DashbroadComponents/Cards/Card";
 import Link from "next/link";
 import CommandDemo from "../Command";
 
-
 type Props = {};
-export default function SideNavbar({ }: Props) {
+export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   // ** hooks
@@ -62,7 +60,6 @@ export default function SideNavbar({ }: Props) {
   useEffect(() => {
     setIsClient(true);
   }, []);
-
 
   const handleLogout = () => {
     setLoading(true);
@@ -100,12 +97,12 @@ export default function SideNavbar({ }: Props) {
           <Nav
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
-              {
-                title: "Thống kê",
-                href: "/dashboard/home",
-                icon: LayoutDashboard,
-                variant: "colorCompany",
-              },
+              // {
+              //   title: "Thống kê",
+              //   href: "/dashboard/home",
+              //   icon: LayoutDashboard,
+              //   variant: "colorCompany",
+              // },
               {
                 title: "Nhân Viên",
                 href: "/dashboard/user",
@@ -198,42 +195,59 @@ export default function SideNavbar({ }: Props) {
                 icon: Coins,
                 variant: "ghost",
               },
+              {
+                title: "Kho",
+                href: "/dashboard/product-phase",
+                icon: Warehouse,
+                variant: "ghost",
+              },
             ]}
           />
         </div>
       ) : null}
       <div className="absolute bottom-0 w-full">
-
         {!mobileWidth && (
           <>
-            {isCollapsed ?
-              (<div className="mb-3 ml-2.5 w-[30px]">
+            {isCollapsed ? (
+              <div className="mb-3 ml-2.5 w-[30px]">
                 <Command className="ml-2.5 focus:ring-2 focus:ring-blue-500">
                   <DropdownMenu>
-                    <DropdownMenuTrigger >
+                    <DropdownMenuTrigger>
                       <Settings />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" >
-                      <DropdownMenuLabel><Button ><Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link></Button></DropdownMenuLabel>
-                      <DropdownMenuItem onClick={handleLogout}><Button onClick={handleLogout}><LogOut className="mr-1" /> đăng xuất</Button>
+                    <DropdownMenuContent align="start">
+                      <DropdownMenuLabel>
+                        <Button>
+                          <Link href={`/profile/${user.user?.id}`}>
+                            Trang cá nhân
+                          </Link>
+                        </Button>
+                      </DropdownMenuLabel>
+                      <DropdownMenuItem onClick={handleLogout}>
+                        <Button onClick={handleLogout}>
+                          <LogOut className="mr-1" /> đăng xuất
+                        </Button>
                       </DropdownMenuItem>
-                      <DropdownMenuItem ><ModeToggle /></DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <ModeToggle />
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </Command>
-              </div>) :
-              (
-                <CardContent className="m-1 mb-3  w-[170px]">
-                  <Button ><Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link></Button>
-                  <Button onClick={handleLogout}><LogOut className="mr-1" /> đăng xuất</Button>
-                  <ModeToggle />
-                </CardContent>
-
-              )
-            }
+              </div>
+            ) : (
+              <CardContent className="m-1 mb-3  w-[170px]">
+                <Button>
+                  <Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link>
+                </Button>
+                <Button onClick={handleLogout}>
+                  <LogOut className="mr-1" /> đăng xuất
+                </Button>
+                <ModeToggle />
+              </CardContent>
+            )}
           </>
         )}
-
       </div>
     </div>
   );
