@@ -22,6 +22,7 @@ import { filesApi } from "@/apis/files.api";
 
 export default function AddNewMeterialForm() {
   const [materialImage, setMaterialImage] = useState<any>("");
+  const [loading, setLoading] = useState(false);
   const { forceUpdate } = useContext(MyContext);
   const ChangeImage = (file: any) => {
     setMaterialImage(file);

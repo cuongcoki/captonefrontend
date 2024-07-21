@@ -400,7 +400,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       (item) => item.productId !== productID
     );
     setGetDetailsProUpdate(updateProUpdate);
-    toast.success("Đã xóa sản phẩm khỏi danh sách");
+    // toast.success("Đã xóa sản phẩm khỏi danh sách");
   };
 
   const handleMinusProducts = (productId: string) => {
@@ -472,6 +472,11 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       .then((res) => {
         console.log("Update Successful:", res);
         toast.success(res.data.message);
+        form.reset();
+        setGetDetailsPro([]);
+        setProductsRequest([]);
+        setGetDetailsProUpdate([]);
+        setUpdateProducts([]);
         ForceRender();
         setOpen(false);
       })
@@ -486,7 +491,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     }
     return text;
   };
-  console.log("getDetailsProUpdate", getDetailsProUpdate);
+  // console.log("getDetailsProUpdate", getDetailsProUpdate);
   const { pending } = useFormStatus();
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>

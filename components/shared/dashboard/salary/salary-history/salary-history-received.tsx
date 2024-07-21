@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -7,6 +7,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import {
   Pagination,
   PaginationContent,
@@ -20,111 +31,86 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Input } from "@/components/ui/input";
-export default function SalaryHistoryReceived() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [salary, setSalary] = useState("");
-  const error = useRef<any>(null);
-  error.current.hidden = true;
 
-  const handlePay = async () => {};
-  const formatCurrency = (value: any) => {
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { salaryApi } from "@/apis/salary.api";
+import { SalaryHistoryType } from "@/types/salary.type";
+import toast from "react-hot-toast";
+import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
+import { format } from "date-fns";
+export default function SalaryHistoryReceived({ id }: { id: string }) {
+  const [salaryHistory, setSalaryHistory] = useState<SalaryHistoryType[]>([]);
+  const { force, forceRender, setSalaryAvailiable, salaryAvailiable } =
+    salaryStore();
+  const [index, setIndex] = React.useState(1);
+  const [totalPage, setTotalPage] = React.useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [salaryHistoryDelete, setSalaryHistoryDelete] =
+    useState<SalaryHistoryType>({
+      id: "",
+      salary: 0,
+      createdAt: "",
+      note: "",
+      userId: "",
+    });
+  useEffect(() => {
+    salaryApi
+      .getPaidSalaries({
+        UserId: id,
+        PageIndex: 1,
+        PageSize: 10,
+      })
+      .then((res) => {
+        setSalaryHistory(res.data.data.data);
+        setTotalPage(res.data.data.totalPages);
+        console.log("Lich Su nhan luong", res.data.data.data);
+      })
+      .catch((e) => {
+        console.log({ e });
+      });
+  }, [id, force]);
+
+  const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
+
     // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
+
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+
+    if (valueString === "") return "0";
+
     // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
+
     // Add dots every 3 characters
-    let formattedReversed = reversed.match(/.{1,3}/g).join(".");
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+
     // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
+
     return formatted;
+  };
+
+  const handleDelete = async () => {
+    try {
+      await salaryApi.deletePaidSalary(salaryHistoryDelete.id);
+      setSalaryAvailiable(salaryAvailiable + salaryHistoryDelete.salary);
+      forceRender();
+      toast.success("Xoá lịch sử nhận lương thành công");
+      setIsOpen(false);
+    } catch (error) {
+      toast.error("Xoá lịch sử nhận lương thất bại");
+    }
+    setIsOpen(false);
   };
 
   return (
     <>
-      <Card className="overflow-hidden">
-        <CardHeader>
-          <CardTitle className="text-primary">Trả lương</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Input
-            placeholder="Vui lòng nhập lương muốn trả"
-            value={formatCurrency(salary)}
-            onChange={(e) => {
-              if (e.target.value !== "") {
-                console.log("Input change");
-                error.current.hidden = true;
-              }
-              setSalary(e.target.value);
-            }}
-          />
-          <div className="text-destructive text-sm mt-1 ml-2 " ref={error}>
-            Bạn chưa nhập số tiền muốn trả
-          </div>
-          <div className="flex mt-4 items-center">
-            <div className="text-sm text-muted-foreground">
-              Lương còn lại:
-              <span className="font-bold text-primary"> 7.000.000</span>
-            </div>
-            <div className="w-max ml-auto">
-              <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    className="bg-primary"
-                    onClick={(e) => {
-                      if (salary === "") {
-                        e.preventDefault();
-                        error.current.hidden = false;
-                        return;
-                      }
-                    }}
-                  >
-                    Trả lương
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Bạn có chắc chắn muốn trả {formatCurrency(salary)} VNĐ cho
-                      nhân viên này?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Hành động này không thể hoàn tác. Dữ liệu này sẽ không
-                      thay đổi được
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Hủy</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={async (e) => {
-                        e.preventDefault();
-                        await handlePay();
-                      }}
-                    >
-                      Đồng ý
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
       <Card className="overflow-hidden">
         <CardHeader>
           <CardTitle className="text-primary">Lịch sử nhận lương</CardTitle>
@@ -135,39 +121,89 @@ export default function SalaryHistoryReceived() {
               <TableRow>
                 <TableHead>Thời gian</TableHead>
                 <TableHead>Lương </TableHead>
+                <TableHead> </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell>2023-06-23</TableCell>
-                <TableCell>10.000.000</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>2023-06-24</TableCell>
-                <TableCell>10.000.000</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>2023-06-25</TableCell>
-                <TableCell>10.000.000</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>2023-06-26</TableCell>
-                <TableCell>10.000.000</TableCell>
-              </TableRow>
+              {salaryHistory.length > 0 ? (
+                salaryHistory.map((item, index) => {
+                  return (
+                    <TableRow key={index}>
+                      <TableCell>
+                        {format(item.createdAt, "dd/MM/yyyy")}
+                      </TableCell>
+                      <TableCell>{formatCurrency(item.salary)}</TableCell>
+                      <TableCell>
+                        <Trash2
+                          className="hover:cursor-pointer"
+                          onClick={() => {
+                            setIsOpen(true);
+                            setSalaryHistoryDelete(item);
+                          }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell className="text-center" colSpan={3}>
+                    Không có dữ liệu
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
+          <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+            <AlertDialogTrigger asChild></AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Bạn có chắc chắn muốn xoá lịch sử nhận lương này?
+                </AlertDialogTitle>
+
+                <AlertDialogDescription>
+                  Hành động này không thể hoàn tác. Dữ liệu này sẽ không thay
+                  đổi được
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Hủy</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await handleDelete();
+                  }}
+                >
+                  Đồng ý
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </CardContent>
         <CardFooter className="flex flex-row items-center px-6">
           <Pagination className="ml-auto mr-0 w-auto">
             <PaginationContent>
               <PaginationItem>
-                <Button size="icon" variant="outline" className="h-6 w-6">
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="h-6 w-6"
+                  disabled={index === 1}
+                  onClick={() => setIndex(index - 1)}
+                >
                   <ChevronLeft className="size-5" />
                   <span className="sr-only">Previous Order</span>
                 </Button>
               </PaginationItem>
               <PaginationItem>
-                <Button size="icon" variant="outline" className="h-6 w-6">
+                <Button
+                  size="icon"
+                  variant="outline"
+                  className="h-6 w-6"
+                  disabled={index >= totalPage}
+                  onClick={() => setIndex(index + 1)}
+                >
                   <ChevronRight className="size-5" />
                   <span className="sr-only">Next Order</span>
                 </Button>

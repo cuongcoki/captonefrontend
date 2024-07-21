@@ -34,6 +34,8 @@ import HeaderComponent from "@/components/shared/common/header";
 import { salaryApi } from "@/apis/salary.api";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import SalaryPay from "@/components/shared/dashboard/salary/salary-pay";
+import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
 const dataNow = new Date();
 const yearNow = dataNow.getFullYear();
 const listYear = [yearNow, yearNow - 1, yearNow - 2, yearNow - 3];
@@ -58,6 +60,7 @@ export default function SalaryDetail({
   id: string;
   SearchParams: SalaryDetailParams;
 }) {
+  const { setSalaryAvailiable } = salaryStore();
   const [params, setParams] = React.useState<SalaryDetailParams>(SearchParams);
   const [data, setData] = React.useState<SalaryDetailType>({
     accountBalance: 0,
@@ -67,6 +70,7 @@ export default function SalaryDetail({
     totalWorkingDays: 0,
     totalWorkingHours: 0,
     year: 0,
+    salary: 0,
   });
 
   const router = useRouter();
@@ -81,6 +85,7 @@ export default function SalaryDetail({
       })
       .then((res) => {
         setData(res.data.data);
+        setSalaryAvailiable(res.data.data.accountBalance);
         console.log("SALARY DETAIL API RESPONSE", res.data);
         router.push(`${pathname}?year=${params.year}&month=${params.month}`);
       })
@@ -94,21 +99,32 @@ export default function SalaryDetail({
           totalWorkingDays: 0,
           totalWorkingHours: 0,
           year: 0,
+          salary: 0,
         });
       });
-  }, [params, id, router, pathname]);
+  }, [params, id, router, pathname, setSalaryAvailiable]);
 
-  const formatCurrency = (value: any) => {
+  const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
+
     // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
+
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+
+    if (valueString === "") return "0";
+
     // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
+
     // Add dots every 3 characters
-    let formattedReversed = reversed.match(/.{1,3}/g).join(".");
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+
     // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
+
     return formatted;
   };
   return (
@@ -124,10 +140,7 @@ export default function SalaryDetail({
               <CardHeader className="pb-3">
                 <CardDescription>Lương khả dụng</CardDescription>
                 <CardTitle className="text-4xl text-primary">
-                  {data.accountBalance === 0
-                    ? 0
-                    : formatCurrency(data.accountBalance)}{" "}
-                  VNĐ
+                  {data.salary === 0 ? 0 : formatCurrency(data.salary)} VNĐ
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -310,7 +323,8 @@ export default function SalaryDetail({
           </Tabs>
         </div>
         <div className="space-y-10">
-          <SalaryHistoryReceived />
+          <SalaryPay id={id} />
+          <SalaryHistoryReceived id={id} />
           <Tabs defaultValue="salary">
             <TabsList className="bg-gray-200 text-sm dark:bg-primary">
               <TabsTrigger value="salary" className="text-white">

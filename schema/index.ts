@@ -68,49 +68,47 @@ export const ProductSchema = z.object({
       { message: "Hai ký tự đầu tiên phải là chữ cái và phần còn lại là số." }
     ),
   priceFinished: z.coerce
-    .number({ message: "Giá thành phải là số" })
+    .string()
     .min(1, { message: "Giá thành là bắt buộc." }),
-  pricePhase1: z.coerce
-    .number({ message: "Giá thành phải là số" })
-    .min(1, { message: "Giá thành là bắt buộc." }),
-  pricePhase2: z.coerce
-    .number({ message: "Giá thành phải là số" })
-    .min(1, { message: "Giá thành là bắt buộc." }),
+  pricePhase1: z.coerce.string().min(1, { message: "Giá thành là bắt buộc." }),
+  pricePhase2: z.coerce.string().min(1, { message: "Giá thành là bắt buộc." }),
   size: z.string().min(1, { message: "Kích thước là bắt buộc." }),
   description: z.string(),
 });
 
 const salaryRequestSchema = z.object({
-  salary: z.coerce
-    .number({ message: "Lương phải là số" })
-    .min(1, { message: "Vui lòng nhập lương" }),
-  startDate: z.string().refine(
-    (dateStr) => {
-      // Parse the date string
-      const parsedDate = parse(dateStr, "dd/MM/yyyy", new Date());
+  salary: z.coerce.string().min(1, { message: "Vui lòng nhập lương" }),
+  startDate: z
+    .string()
+    .min(1, { message: "Vui lòng nhập ngày bắt đầu" })
+    .refine(
+      (dateStr) => {
+        // Parse the date string
+        const parsedDate = parse(dateStr, "dd/MM/yyyy", new Date());
 
-      // Check if the parsed date is before or equal to the current date
-      const now = new Date();
-      return isBefore(parsedDate, now) || isEqual(parsedDate, now);
-    },
-    { message: "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày hiện tại" }
-  ),
+        // Check if the parsed date is before or equal to the current date
+        const now = new Date();
+        return isBefore(parsedDate, now) || isEqual(parsedDate, now);
+      },
+      { message: "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày hiện tại" }
+    ),
 });
 const salaryRequestSchemaForUpdate = z.object({
-  salary: z.coerce
-    .number({ message: "Lương phải là số" })
-    .min(1, { message: "Vui lòng nhập lương" }),
-  startDate: z.string().refine(
-    (dateStr) => {
-      // Parse the date string
-      const parsedDate = parse(dateStr, "yyyy-MM-dd", new Date());
+  salary: z.coerce.string().min(1, { message: "Vui lòng nhập lương" }),
+  startDate: z
+    .string()
+    .min(1, { message: "Vui lòng nhập ngày bắt đầu" })
+    .refine(
+      (dateStr) => {
+        // Parse the date string
+        const parsedDate = parse(dateStr, "yyyy-MM-dd", new Date());
 
-      // Check if the parsed date is before or equal to the current date
-      const now = new Date();
-      return isBefore(parsedDate, now) || isEqual(parsedDate, now);
-    },
-    { message: "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày hiện tại" }
-  ),
+        // Check if the parsed date is before or equal to the current date
+        const now = new Date();
+        return isBefore(parsedDate, now) || isEqual(parsedDate, now);
+      },
+      { message: "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày hiện tại" }
+    ),
 });
 
 export const UsersSchema = z.object({

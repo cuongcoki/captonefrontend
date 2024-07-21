@@ -70,6 +70,7 @@ export default function CountProduct({
         })
         .catch((error) => {
           if (error.response.data.status === 404) {
+            setSearchData(null);
           }
         });
     } else {
@@ -215,7 +216,7 @@ export default function CountProduct({
             />
             {searchData && (
               <ul
-                className="hide-scrollbar"
+                className="hide-scrollbar search-product rounded-b-md rounded-t-md shadow-md"
                 style={{
                   position: "absolute",
                   top: "100%",
@@ -231,15 +232,21 @@ export default function CountProduct({
                   margin: 0,
                 }}
               >
-                {searchData.data.data.map((item) => (
+                {searchData.data.data.map((item, index) => (
                   <li
                     key={item.id}
-                    style={{ padding: "8px", borderBottom: "1px solid #ddd" }}
-                    className="hover:bg-gray-100 cursor-pointer dark:bg-black dark:hover:bg-[#4c4c4c]"
+                    className={`hover:bg-gray-100 cursor-pointer dark:bg-black dark:hover:bg-[#4c4c4c] ${
+                      index === 1 ? "rounded-t-md" : ""
+                    } ${
+                      index === searchData.data.data.length - 1
+                        ? "rounded-b-md"
+                        : ""
+                    }`}
                     onClick={async () => {
                       await AddNewProductForUser(item);
                       setSearchInput("");
                     }}
+                    style={{ padding: "8px", borderBottom: "1px solid #ddd" }}
                   >
                     {`[${item.code}]:${item.name}`}
                   </li>
@@ -247,7 +254,7 @@ export default function CountProduct({
               </ul>
             )}
             {searchInput !== "" && !searchData && (
-              <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 z-1000 p-2 dark:bg-black">
+              <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 z-1000 p-2 dark:bg-black rounded-b-md rounded-t-md">
                 No data found
               </div>
             )}
