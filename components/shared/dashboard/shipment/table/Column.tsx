@@ -9,7 +9,24 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import { Truck } from "lucide-react"
-import {ShipmentID} from "../shipmentID/ShipmentID"
+import { ShipmentID } from "../shipmentID/ShipmentID"
+import { UpdateShipment } from "../form/UpdateShipment"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { useState } from "react"
+import { shipmentApi } from "@/apis/shipment.api"
+import toast from "react-hot-toast"
+
 export type Shipment = {
   from: {
     id: string;
@@ -44,6 +61,28 @@ const limitLength = (text: any, maxLength: any) => {
   }
   return text;
 };
+const OrderStatus = [
+  {
+    id: 0,
+    des: "Đang đợi giao",
+    name: "PENDING"
+  },
+  {
+    id: 1,
+    des: "Đang thực hiện",
+    name: "PROCESSING"
+  },
+  {
+    id: 2,
+    des: "Đã hoàn thành",
+    name: "PROCESSING"
+  },
+  {
+    id: 3,
+    des: "Đã hủy",
+    name: "PROCESSING"
+  },
+];
 
 export const columns: ColumnDef<Shipment>[] = [
 
@@ -157,11 +196,62 @@ export const columns: ColumnDef<Shipment>[] = [
       )
     },
     cell: ({ row }) => {
+      const [valueStatus, setValueStatus] = useState<any>(0);
+
+      const handleSelectChange = (value: any, id: string) => {
+        console.log('value', value)
+        setValueStatus(value)
+      };
+      const handleSubmitOrderStatus = () => {
+        console.log('value',row.original.id,valueStatus)
+      
+        shipmentApi.changeStatus(row.original.id,valueStatus)
+          .then(({ data }) => {
+            setValueStatus(0);
+            console.log("data", data)
+            toast.success(data.message)
+          })
+      }
       return <span className="flex justify-center ">
-        {limitLength(row.original.statusDescription, 30)}
+        <AlertDialog>
+          <AlertDialogTrigger>{limitLength(row.original.statusDescription, 30)}</AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Đổi trạng thái đơn hàng</AlertDialogTitle>
+              <AlertDialogDescription>
+                <Select
+                  defaultValue={String(row.original.status)}
+                  onValueChange={(value) => handleSelectChange(Number(value), row.original.id)}
+                >
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue
+                      placeholder="Hãy chọn loại đơn"
+                      defaultValue={row.original.status}
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {OrderStatus.map((status) => (
+                      <SelectItem key={status.id} value={String(status.id)}>
+                        {status.des}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Bỏ</AlertDialogCancel>
+              <AlertDialogAction onClick={handleSubmitOrderStatus}>Tiếp tục</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </span>;
     },
   },
 
+  {
+    id: "actions",
+    cell: ({ row }) => <UpdateShipment shipmentIDDes={row.original.id} />,
+  },
 
 ]

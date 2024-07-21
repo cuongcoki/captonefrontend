@@ -38,6 +38,7 @@ const LinkBread = [
   { title: "Đơn báo cáo", href: "/employee/report", variant: "ghost" },
   { title: "Khiếu nại", href: "/dashboard/report-manager", variant: "ghost" },
   { title: "Lương", href: "/dashboard/salary", variant: "ghost" },
+  { title: "Đơn vận chuyển", href: "/dashboard/shipment", variant: "ghost" },
 ];
 
 const findTitle = (href: any) => {
@@ -85,7 +86,7 @@ export function BreadcrumbComponent() {
     <Breadcrumb className="pb-4">
       <BreadcrumbList>
         {breadcrumbs.map((breadcrumb, index) => {
-          const isLast = index === breadcrumbs.length - 1;
+          const isLast = index === breadcrumbs.length -1 ;
           const customTitle = getCustomTitle(breadcrumb.href, breadcrumb.title);
 
           return isLast ? (

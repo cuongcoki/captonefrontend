@@ -19,6 +19,15 @@ export type Shipment = {
   shipmentDetailRequests: ShipmentDetailRequest[];
 };
 
+export type ShipmentId = {
+  shipmentId: string,
+  fromId: string;
+  toId: string;
+  shipperId: string;
+  shipDate: string;
+  shipmentDetailRequests: ShipmentDetailRequest[];
+};
+
 export const shipmentApi = {
   getShipments: (
     PageIndex?: number,
@@ -42,5 +51,17 @@ export const shipmentApi = {
   createShipment: (data: Shipment) =>
     axiosClient.post(`${endPointConstant.BASE_URL}/shipments`, data),
 
+  updateShipment: (data: ShipmentId, id: string) =>
+    axiosClient.put(`${endPointConstant.BASE_URL}/shipments/${id}`, data),
+
+  getAllCompanyByType: (companyType?: any, pageIndex?: number, pageSize?: number) =>
+    axiosClient.get(`${endPointConstant.BASE_URL}/companies?CompanyType=${companyType}&PageIndex=${pageIndex}&PageSize=${pageSize}`),
+
+  changeStatus: (shipmentId:string, status:number) => {
+    return axiosClient.patch(`/shipments/${shipmentId}/status`, {
+        shipmentId,
+        status
+    });
+}
 }
 
