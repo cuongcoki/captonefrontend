@@ -18,6 +18,7 @@ import {
   Truck,
   LogOut,
   Coins,
+  Warehouse,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
@@ -30,9 +31,8 @@ import Image from "next/image";
 import { CardContent } from "../home/DashbroadComponents/Cards/Card";
 import Link from "next/link";
 
-
 type Props = {};
-export default function SideNavbar({ }: Props) {
+export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   // ** hooks
@@ -49,7 +49,6 @@ export default function SideNavbar({ }: Props) {
   useEffect(() => {
     setIsClient(true);
   }, []);
-
 
   const handleLogout = () => {
     setLoading(true);
@@ -87,12 +86,12 @@ export default function SideNavbar({ }: Props) {
           <Nav
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
-              {
-                title: "Thống kê",
-                href: "/dashboard/home",
-                icon: LayoutDashboard,
-                variant: "colorCompany",
-              },
+              // {
+              //   title: "Thống kê",
+              //   href: "/dashboard/home",
+              //   icon: LayoutDashboard,
+              //   variant: "colorCompany",
+              // },
               {
                 title: "Nhân Viên",
                 href: "/dashboard/user",
@@ -185,32 +184,38 @@ export default function SideNavbar({ }: Props) {
                 icon: Coins,
                 variant: "ghost",
               },
+              {
+                title: "Kho",
+                href: "/dashboard/product-phase",
+                icon: Warehouse,
+                variant: "ghost",
+              },
             ]}
           />
         </div>
       ) : null}
       <div className="absolute bottom-0 w-full">
-
         {!mobileWidth && (
           <>
-            {isCollapsed ?
-              (<div className="ml-2.5 w-[30px]">
+            {isCollapsed ? (
+              <div className="ml-2.5 w-[30px]">
                 <div className="avatar rounded-full min-h-8 min-w-8 bg-blue-500 text-white font-[700] flex items-center justify-center">
                   <p>TDC</p>
                 </div>
-              </div>) :
-              (
-                <CardContent className="m-1 mb-3  w-[170px]">
-                  <Button ><Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link></Button>
-                  <Button onClick={handleLogout}><LogOut  className="mr-1"/> đăng xuất</Button>
-                  <ModeToggle />
-                </CardContent>
-            
-              )
-            }
+              </div>
+            ) : (
+              <CardContent className="m-1 mb-3  w-[170px]">
+                <Button>
+                  <Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link>
+                </Button>
+                <Button onClick={handleLogout}>
+                  <LogOut className="mr-1" /> đăng xuất
+                </Button>
+                <ModeToggle />
+              </CardContent>
+            )}
           </>
         )}
-
       </div>
     </div>
   );
