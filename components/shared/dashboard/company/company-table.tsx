@@ -8,6 +8,14 @@ import { CompanyParams, CompanyResponse } from "@/types/company.type";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -16,6 +24,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import HeaderComponent from "@/components/shared/common/header";
+import { Card } from "@/components/ui/card";
 type CompanyContextType = {
   ForceRender: () => void;
 };
@@ -121,66 +130,47 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
           </CompanyContext.Provider>
         </div>
       </div>
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="flex flex-col">
-          <div className="-m-1.5 overflow-x-auto">
-            <div className="p-1.5 min-w-full inline-block align-middle">
-              <div className="overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Tên công ty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Địa chỉ
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Email
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Loại công ty
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 ">
-                    {tableData.map((company, index) => (
-                      <CompanyUpdate index={index} key={company.id}>
-                        <tr className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer ">
-                          <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-white ">
-                            {company.name}
-                          </td>
-                          <td className="px-6 py-4 wtext-sm text-gray-800 dark:text-white">
-                            {company.address}
-                          </td>
-                          <td className="px-6 py-4  text-sm text-gray-800 dark:text-white">
-                            {company.email}
-                          </td>
-                          <td className="px-6 py-4  text-sm text-gray-800 dark:text-white">
-                            {company.companyTypeDescription}
-                          </td>
-                        </tr>
-                      </CompanyUpdate>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Card>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Tên công ty</TableHead>
+              <TableHead>Địa chỉ</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Loại công ty</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {tableData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center">
+                  Không có dữ liệu
+                </TableCell>
+              </TableRow>
+            ) : (
+              tableData.map((company, index) => (
+                <CompanyUpdate index={index} key={company.id}>
+                  <TableRow className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer">
+                    <TableCell className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-white">
+                      {company.name}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-800 dark:text-white">
+                      {company.address}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-800 dark:text-white">
+                      {company.email}
+                    </TableCell>
+                    <TableCell className="px-6 py-4 text-sm text-gray-800 dark:text-white">
+                      {company.companyTypeDescription}
+                    </TableCell>
+                  </TableRow>
+                </CompanyUpdate>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </Card>
       <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
         <Button
           variant="outline"

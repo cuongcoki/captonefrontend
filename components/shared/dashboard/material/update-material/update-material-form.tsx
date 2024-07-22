@@ -310,7 +310,12 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
           />
         </div>
         <DialogFooter>
-          <Button className="mt-3" type="submit" onClick={formSubmit}>
+          <Button
+            className="mt-3"
+            type="submit"
+            onClick={formSubmit}
+            disabled={loading}
+          >
             {loading ? "Đang xử lý" : "Lưu thay đổi"}
           </Button>
         </DialogFooter>

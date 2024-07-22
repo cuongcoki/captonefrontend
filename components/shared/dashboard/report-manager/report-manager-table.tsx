@@ -1,7 +1,14 @@
 "use client";
 import React, { useCallback, useEffect, useState } from "react";
 import "./report-manager-table.css";
-import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { ReportManagerParams } from "@/types/report.type";
 import { reportApi } from "@/apis/report.api";
 import { Button } from "@/components/ui/button";
@@ -19,6 +26,7 @@ import { companyApi } from "@/apis/company.api";
 import { set } from "date-fns";
 import { ReportManagerUpdate } from "@/components/shared/dashboard/report-manager/report-manager-update";
 import HeaderComponent from "@/components/shared/common/header";
+import { Card } from "@/components/ui/card";
 
 const ColorOfTypeStatus: { [key: number]: string } = {
   0: "text-gray-500",
@@ -129,9 +137,9 @@ export default function ReportManagerTable({
         title="Danh sách đơn khiếu nại"
         description="Danh sách đơn khiếu nại từ nhân viên công ty."
       />
-      <div className="my-5 grid grid-cols-10 space-x-5">
+      <div className="my-5 grid gap-2 xl:grid-cols-6">
         {user && user.roleDescription === "MAIN_ADMIN" && (
-          <div className="col-span-2">
+          <div className="col-span-2 xl:col-span-1 xl:row-start-1">
             <Select
               value={params.CompanyId}
               onValueChange={(value) => {
@@ -158,7 +166,7 @@ export default function ReportManagerTable({
             </Select>
           </div>
         )}
-        <div className="col-span-2">
+        <div className="row-start-2 xl:row-start-1">
           <Select
             value={params.ReportType}
             onValueChange={(value) => {
@@ -192,7 +200,7 @@ export default function ReportManagerTable({
             </SelectContent>
           </Select>
         </div>
-        <div className="col-span-2">
+        <div className="row-start-2 xl:row-start-1">
           <Select
             value={params.Status}
             onValueChange={(value) => {
@@ -224,113 +232,79 @@ export default function ReportManagerTable({
             </SelectContent>
           </Select>
         </div>
-        {/* <div className="row-start-2 col-start-9 md:col-start-11 xl:row-start-1 xl:col-start-12">
-          <ReportManagerAdd />
-        </div> */}
       </div>
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="flex flex-col">
-          <div className="-m-1.5 overflow-x-auto">
-            <div className="p-1.5 min-w-full inline-block align-middle">
-              <div className="overflow-hidden">
-                <table className=" min-w-full divide-y divide-gray-200">
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Nhân viên
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Loại Đơn
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white "
-                      >
-                        Nội dung
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Ngày Tạo
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Phản Hồi
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Trạng thái
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 ">
-                    {tableData.map((report, index) => (
-                      <ReportManagerUpdate key={report.id} index={index}>
-                        <tr className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer ">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
-                            <div className="mx-auto text-center">
-                              {report.fullName}
-                            </div>
-                            <div className="w-32 h-44 bg-gray-300">
-                              <Image
-                                src={report.avatar}
-                                alt="avatar"
-                                width={320}
-                                height={440}
-                                className="object-cover h-full w-full"
-                              />
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
-                            <div className="mx-auto text-center">
-                              {report.reportTypeDescription}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white ">
-                            <div className="mx-auto whitespace-normal break-words w-64 ">
-                              {report.description}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                            <div className="mx-auto text-center">
-                              {formatDate(report.createdDate)}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                            <div className="mx-auto whitespace-normal break-words w-64">
-                              {report.replyMessage}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                            <div
-                              className={`mx-auto text-center ${
-                                ColorOfTypeStatus[report.status]
-                              }`}
-                            >
-                              {report.statusDesscription}
-                            </div>
-                          </td>
-                        </tr>
-                      </ReportManagerUpdate>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Card>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nhân viên</TableHead>
+              <TableHead>Loại Đơn</TableHead>
+              <TableHead>Nội dung</TableHead>
+              <TableHead>Ngày Tạo</TableHead>
+              <TableHead>Phản Hồi</TableHead>
+              <TableHead>Trạng thái</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {tableData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center">
+                  Không có dữ liệu
+                </TableCell>
+              </TableRow>
+            ) : (
+              tableData.map((report, index) => (
+                <TableRow key={report.id}>
+                  <TableCell>
+                    <div className="text-center">
+                      {report.fullName}
+                      <div className="w-32 h-44 bg-gray-300">
+                        <Image
+                          src={report.avatar}
+                          alt="avatar"
+                          width={320}
+                          height={440}
+                          className="object-cover h-full w-full"
+                        />
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-center">
+                      {report.reportTypeDescription}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="whitespace-normal break-words w-64 mx-auto">
+                      {report.description}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="text-center">
+                      {formatDate(report.createdDate)}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="whitespace-normal break-words w-64 mx-auto">
+                      {report.replyMessage}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div
+                      className={`text-center ${
+                        ColorOfTypeStatus[report.status]
+                      }`}
+                    >
+                      {report.statusDesscription}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </Card>
       <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
         <Button
           variant="outline"
