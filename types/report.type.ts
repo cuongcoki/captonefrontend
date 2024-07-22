@@ -33,6 +33,7 @@ export type GetReportsBody = {
 
 export type ReportType = {
   id: string;
+  avatar: string;
   userId: string;
   fullName: string;
   description: string;
