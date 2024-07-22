@@ -12,7 +12,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { userskSchema } from "./data/schema";
 import UserBanButton from "@/components/shared/dashboard/users/table/users/user-ban-button";
 import { Employee } from "@/components/shared/dashboard/users/table/users/Column";
@@ -27,10 +27,8 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => {
-
     setIsOpen(!isOpen);
   };
 
@@ -47,11 +45,10 @@ export function DataTableRowActions<TData>({
           <DotsHorizontalIcon className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
+      <DropdownMenuContent align="end" className="w-[160px] ">
         <UpdateUser userId={row._valuesCache.id} />
         <UserBanButton setIsOpen={setIsOpen} user={row.original as Employee} />
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
-

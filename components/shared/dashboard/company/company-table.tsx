@@ -159,16 +159,16 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
                     {tableData.map((company, index) => (
                       <CompanyUpdate index={index} key={company.id}>
                         <tr className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer ">
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
+                          <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-white ">
                             {company.name}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                          <td className="px-6 py-4 wtext-sm text-gray-800 dark:text-white">
                             {company.address}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                          <td className="px-6 py-4  text-sm text-gray-800 dark:text-white">
                             {company.email}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                          <td className="px-6 py-4  text-sm text-gray-800 dark:text-white">
                             {company.companyTypeDescription}
                           </td>
                         </tr>

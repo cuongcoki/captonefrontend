@@ -119,6 +119,10 @@ export default function ReportManagerTable({
     setCompanyData,
     buildUrlParams,
   ]);
+  const formatDate = (date: string) => {
+    const data = date.split("-");
+    return `${data[2]}/${data[1]}/${data[0]}`;
+  };
   return (
     <div className="">
       <HeaderComponent
@@ -279,12 +283,13 @@ export default function ReportManagerTable({
                               {report.fullName}
                             </div>
                             <div className="w-32 h-44 bg-gray-300">
-                              {/* <Image
-                              src={}
-                              alt="avatar"
-                              width={100}
-                              height={100}
-                            /> */}
+                              <Image
+                                src={report.avatar}
+                                alt="avatar"
+                                width={320}
+                                height={440}
+                                className="object-cover h-full w-full"
+                              />
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
@@ -299,7 +304,7 @@ export default function ReportManagerTable({
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
                             <div className="mx-auto text-center">
-                              {report.createdDate}
+                              {formatDate(report.createdDate)}
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
