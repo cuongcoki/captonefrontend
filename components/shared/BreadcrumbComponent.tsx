@@ -77,6 +77,8 @@ export function BreadcrumbComponent() {
         return "Thông tin bộ";
       case `/dashboard/salary/detail/${params.id}`:
         return "Chi tiết lương";
+      case `/dashboard/product-phase`:
+        return "Kho";
       default:
         return defaultTitle;
     }
@@ -86,7 +88,7 @@ export function BreadcrumbComponent() {
     <Breadcrumb className="pb-4">
       <BreadcrumbList>
         {breadcrumbs.map((breadcrumb, index) => {
-          const isLast = index === breadcrumbs.length -1 ;
+          const isLast = index === breadcrumbs.length - 1;
           const customTitle = getCustomTitle(breadcrumb.href, breadcrumb.title);
 
           return isLast ? (

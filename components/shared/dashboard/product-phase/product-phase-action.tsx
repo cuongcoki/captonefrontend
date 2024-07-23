@@ -29,9 +29,7 @@ export default function ProductPhaseAction({ index }: { index: number }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <ProductPhaseChangeQuantityType index={index} />
-          {tableData[index].phaseName == "PH_002" && (
-            <ProductPhaseChangePhase index={index} />
-          )}
+          <ProductPhaseChangePhase index={index} />
         </DropdownMenuContent>
       </DropdownMenu>
     </>
