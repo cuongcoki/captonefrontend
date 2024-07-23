@@ -100,10 +100,18 @@ export default function ProductPhaseChangeQuantityType({
                   <SelectValue placeholder="Loại hạng sẽ chuyển" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="0">Bình thường</SelectItem>
-                  <SelectItem value="1">Lỗi bên thứ 3</SelectItem>
-                  <SelectItem value="2">Lỗi bên mình</SelectItem>
-                  <SelectItem value="3">Hỏng</SelectItem>
+                  <SelectItem className="hover:bg-gray-200" value="0">
+                    Bình thường
+                  </SelectItem>
+                  <SelectItem className="hover:bg-gray-200" value="1">
+                    Lỗi bên thứ 3
+                  </SelectItem>
+                  <SelectItem className="hover:bg-gray-200" value="2">
+                    Lỗi bên mình
+                  </SelectItem>
+                  <SelectItem className="hover:bg-gray-200" value="3">
+                    Hỏng
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <div className="text-sm ml-1 text-primary" hidden={from == ""}>
@@ -119,10 +127,18 @@ export default function ProductPhaseChangeQuantityType({
                   <SelectValue placeholder="Loại hạng được chuyển" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="0">Bình thường</SelectItem>
-                  <SelectItem value="1">Lỗi bên thứ 3</SelectItem>
-                  <SelectItem value="2">Lỗi bên mình</SelectItem>
-                  <SelectItem value="3">Hỏng</SelectItem>
+                  <SelectItem className="hover:bg-gray-200" value="0">
+                    Bình thường
+                  </SelectItem>
+                  <SelectItem className="hover:bg-gray-200" value="1">
+                    Lỗi bên thứ 3
+                  </SelectItem>
+                  <SelectItem className="hover:bg-gray-200" value="2">
+                    Lỗi bên mình
+                  </SelectItem>
+                  <SelectItem className="hover:bg-gray-200" value="3">
+                    Hỏng
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <div className="text-sm ml-1 text-primary" hidden={to == ""}>
@@ -131,6 +147,7 @@ export default function ProductPhaseChangeQuantityType({
             </div>
           </div>
           <div className="grid grid-flow-col gap-x-5">
+            <div className="flex justify-center items-center">Số lượng</div>
             <Input
               value={quantity}
               type="number"
@@ -142,7 +159,7 @@ export default function ProductPhaseChangeQuantityType({
                 }
                 setQuantity(parseInt(value));
               }}
-              className="w-[350px]"
+              className="w-[250px]"
               placeholder="Nhập số lượng muốn đổi"
             />
             <Button onClick={handleChange} disabled={loading}>

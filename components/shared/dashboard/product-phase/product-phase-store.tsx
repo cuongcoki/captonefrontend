@@ -1,4 +1,5 @@
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
+import { PhaseType } from "@/types/attendance.type";
 import {
   ProductPhaseQuantityType,
   ProductPhaseType,
@@ -18,6 +19,8 @@ type ProductPhaseStore = {
   ) => void;
   force: number;
   ForceRender: () => void;
+  phaseData: PhaseType[];
+  setPhaseData: (data: PhaseType[]) => void;
 };
 
 export const productPhaseStore = create<ProductPhaseStore>((set, get) => ({
@@ -58,6 +61,8 @@ export const productPhaseStore = create<ProductPhaseStore>((set, get) => ({
   setCompanyData: (data) => set({ companyData: data }),
   force: 0,
   ForceRender: () => {
-    set({ force: get().force + 1 });
+    set((prev) => ({ force: prev.force + 1 }));
   },
+  phaseData: [],
+  setPhaseData: (data) => set({ phaseData: data }),
 }));
