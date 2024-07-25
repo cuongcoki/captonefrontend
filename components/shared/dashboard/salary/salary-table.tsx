@@ -41,27 +41,26 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
   const router = useRouter();
   const [totalPage, setTotalPage] = useState(0);
 
-  const formatCurrency = (value: any): string => {
-    if (!value) return "";
+  const formatCurrencyWithNegative = (value: any): string => {
+    if (value === null || value === undefined) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
+    // Check if the value is negative
+    const isNegative = valueString[0] === "-";
+    // Remove all non-numeric characters, except the minus sign if it is the first character
     valueString = valueString.replace(/\D/g, "");
-
     // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
     // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
     // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
     // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
+    // Add the negative sign back if it was originally negative
+    if (isNegative) {
+      formatted = "-" + formatted;
+    }
     return formatted;
   };
 
@@ -249,7 +248,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
                           }}
                           className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer "
                         >
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
+                          <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-white">
                             <div className="w-24 h-32 bg-gray-400">
                               <Image
                                 src={item.avatar}
@@ -260,14 +259,14 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
                               />
                             </div>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-white">
                             {item.fullName}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                            {formatCurrency(item.salary)}
+                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-white">
+                            {formatCurrencyWithNegative(item.salary)}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                            {item.companyName}
+                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-white">
+                            {formatCurrencyWithNegative(item.accountBalance)}
                           </td>
                         </tr>
                       ))

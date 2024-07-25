@@ -36,7 +36,8 @@ export type SearchProductPhaseResponse = SearchResponse<ProductPhaseType[]>;
 
 export type ChangePhaseBody = {
   productId: string;
-  phaseId: string;
+  phaseIdFrom: string;
+  phaseIdTo: string;
   companyId: string;
   quantity: number;
 };

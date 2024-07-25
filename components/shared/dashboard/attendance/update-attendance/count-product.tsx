@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import "./count-product.css";
 import {
   Dialog,
@@ -28,19 +28,13 @@ export default function CountProduct({
   children: React.ReactNode;
 }) {
   const { tableData, setTableDataIndex } = useUpdateAttendanceStore();
-  // const UserData = tableData[index];
   const [userData, setUserData] = useState(tableData[index]);
-  const [productValue, setProductValue] = useState<string>("");
-  const [phaseValue, setPhaseValue] = useState<string>("");
-  // const { listProduct, listPhase } = useAttendanceStore();
-  const [listProduct, setListProduct] = useState(
-    useAttendanceStore().listProduct
-  );
-  const [listPhase, setListPhase] = useState(useAttendanceStore().listPhase);
+  const userDataRef = useRef(userData);
+
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
+  const [isSearch, setIsSearch] = useState(false);
 
-  const [dataProduct, setDataProduct] = useState<ComboboxDataType[]>([]);
   const [dataPhase, setDataPhase] = useState<ComboboxDataType[]>([]);
 
   const [searchInput, setSearchInput] = useState<string>("");
@@ -49,34 +43,44 @@ export default function CountProduct({
   );
 
   useEffect(() => {
+    userDataRef.current = userData;
+  }, [userData]);
+
+  useEffect(() => {
     if (searchInput) {
+      const timestamp = new Date().getTime(); // Cache-busting
       attendanceApi
         .getALlProduct({
           SearchTerm: searchInput,
           IsInProcessing: true,
           pageIndex: 1,
           pageSize: 10,
+          timestamp: timestamp,
         })
         .then(({ data }) => {
           console.log("Search Data: ", data);
           const setProduct = new Set<string>();
-          userData.products.forEach((product) => {
+          userDataRef.current.products.forEach((product) => {
             setProduct.add(product.productID);
           });
-          data.data.data = data.data.data.filter(
+          const search = { ...data };
+          search.data.data = data.data.data.filter(
             (product) => !setProduct.has(product.id)
           );
-          setSearchData(data);
+          setSearchData(search);
         })
         .catch((error) => {
           if (error.response.data.status === 404) {
             setSearchData(null);
           }
+        })
+        .finally(() => {
+          setIsSearch(false);
         });
     } else {
       setSearchData(null); // Clear search data when input is empty
     }
-  }, [searchInput, userData]);
+  }, [searchInput]);
 
   // GET PHASE DATA
   useEffect(() => {
@@ -107,6 +111,8 @@ export default function CountProduct({
       }
     };
     const imageP = await getImage(product.imageResponses[0]?.imageUrl || "");
+    // setSearchData(null);
+    setSearchInput("");
     setUserData((prev) => {
       return {
         ...prev,
@@ -180,15 +186,7 @@ export default function CountProduct({
 
   return (
     <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
-      <DialogTrigger asChild>
-        {/* <div
-          className="hover:bg-slate-100 pl-8 relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
-          id="updateProduct"
-        >
-          Cập nhật sản phẩm tạo ra
-        </div> */}
-        {children}
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[825px] dark:bg-[#1c1917]">
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3">
@@ -210,6 +208,7 @@ export default function CountProduct({
             <Input
               value={searchInput}
               onChange={(event) => {
+                setIsSearch(true);
                 setSearchInput(event.target.value);
               }}
               placeholder="Nhập tên hoặc mã sản phẩm ..."
@@ -253,7 +252,7 @@ export default function CountProduct({
                 ))}
               </ul>
             )}
-            {searchInput !== "" && !searchData && (
+            {searchInput !== "" && !searchData && !isSearch && (
               <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 z-1000 p-2 dark:bg-black rounded-b-md rounded-t-md">
                 No data found
               </div>

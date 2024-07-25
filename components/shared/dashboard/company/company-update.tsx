@@ -219,44 +219,55 @@ export default function CompanyUpdate({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="companyType"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="companyType" className="text-left">
-                        Loại công ty*
-                      </Label>
-                      <div className="col-span-3">
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Chọn loại công ty" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem className="hover:bg-gray-100" value="0">
-                              Nhà xưởng
-                            </SelectItem>
-                            <SelectItem className="hover:bg-gray-100" value="1">
-                              Công ty mua đặt hàng
-                            </SelectItem>
-                            <SelectItem className="hover:bg-gray-100" value="2">
-                              Công ty hợp tác sản xuất
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
+              {tableData[index].companyType !== 0 && (
+                <FormField
+                  control={form.control}
+                  name="companyType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="companyType" className="text-left">
+                          Loại công ty*
+                        </Label>
+                        <div className="col-span-3">
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Chọn loại công ty" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem
+                                className="hover:bg-gray-100"
+                                value="0"
+                              >
+                                Nhà xưởng
+                              </SelectItem>
+                              <SelectItem
+                                className="hover:bg-gray-100"
+                                value="1"
+                              >
+                                Công ty mua đặt hàng
+                              </SelectItem>
+                              <SelectItem
+                                className="hover:bg-gray-100"
+                                value="2"
+                              >
+                                Công ty hợp tác sản xuất
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
-                    </div>
-                    <FormDescription></FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </div>
             <DialogFooter>
               <Button className="mt-3" type="submit">

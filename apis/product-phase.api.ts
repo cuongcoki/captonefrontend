@@ -14,6 +14,7 @@ const listCacheId = new Set<string>();
 export const productPhaseApi = {
   searchProductPhase: (requestParams: SearchProductPhaseParams) => {
     const cacheId = createCacheId("searchProductPhase", requestParams);
+    listCacheId.add(cacheId);
     return axiosClient.get<SearchProductPhaseResponse>(
       `${endPointConstant.BASE_URL}/productphase`,
       {
