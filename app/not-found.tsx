@@ -1,14 +1,24 @@
+"use client"
 import { Facebook, Youtube } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { LogoIcon } from '@/constants/images/index.js'
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 export default function Custom404() {
+  const user= useAuth();
+  const router = useRouter();
   const cnfpOptions = {
     colorlib_404_customizer_page_heading: "chúng tôi xin lỗi, trang bạn tìm không thấy !!!",
-    colorlib_404_customizer_button_text: "Đi đến trang chủ",
+    colorlib_404_customizer_button_text: "Đi đến trang cá nhân",
     colorlib_404_customizer_button_text1: "Liên hệ với chúng tôi",
     colorlib_404_customizer_social_facebook: "https://facebook.com",
   };
+
+  const handleRedictProfile=()=>{
+    router.push(`/profile/${user.user?.id}`)
+  }
+
 
   return (
     <div className="relative h-screen bg-gray-800 text-white flex items-center justify-center">
@@ -26,9 +36,9 @@ export default function Custom404() {
         <h2 className="text-xl font-bold uppercase mt-5 mb-4 text-primary-backgroudPrimary">
           {cnfpOptions.colorlib_404_customizer_page_heading}
         </h2>
-        <Link href="/dashboard/home" className="inline-block font-bold uppercase bg-primary-backgroudPrimary text-white rounded-full py-3 px-6 m-2 transition-opacity duration-200 hover:opacity-90 border-2 border-primary-backgroudPrimary">
+        <span  className="inline-block font-bold uppercase bg-primary-backgroudPrimary text-white rounded-full py-3 px-6 m-2 transition-opacity duration-200 hover:opacity-90 border-2 border-primary-backgroudPrimary" onClick={handleRedictProfile}>
           {cnfpOptions.colorlib_404_customizer_button_text}
-        </Link>
+        </span>
         <Link href={"/"} className="inline-block font-bold uppercase border-2 border-primary-backgroudPrimary text-primary-backgroudPrimary rounded-full py-3 px-6 m-2 transition-opacity duration-200 hover:opacity-90 hover:opacity-90">
           {cnfpOptions.colorlib_404_customizer_button_text1}
         </Link>

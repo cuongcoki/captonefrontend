@@ -30,8 +30,9 @@ export const CheckPermissionEnter = (dataPer: any) => {
 export const CheckLogin = () => {
   if (typeof storage !== "undefined" && typeof window !== "undefined") {
     const token = storage.getProfile();
+
     if(token !== null){
-      redirect('/dashboard/home')
+      redirect(`/profile/${token.id}`)
     }
    
   } else {

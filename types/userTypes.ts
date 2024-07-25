@@ -5,7 +5,6 @@ export type UsersType = {
   id: string;
   firstName: string;
   lastName: string;
-  role: string;
   dob: string;
   address: string;
   gender: string;
@@ -14,6 +13,8 @@ export type UsersType = {
   updatedAt: string;
   salaryByDay: string;
   accessToken: string;
+  roleId:number;
+  roleDescription:string;
 };
 
 export type UserSearchParams = {
