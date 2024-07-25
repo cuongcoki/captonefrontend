@@ -51,7 +51,7 @@ export default function FormSignIn() {
           auth.login(user, rememberMe, accessToken, refreshToken);
           console.log(data);
           toast.success(data.message);
-          router.push("/dashboard/home");
+          router.push(`/profile/${data.data.user.id}`);
       })
       .catch((error) => {
         console.log(error.data)

@@ -36,6 +36,7 @@ interface NavProps {
     hrefCon?: any[];
     icon: LucideIcon;
     variant: "colorCompany" | "ghost";
+    checkRoll: { id: number }[];
   }[];
 }
 
@@ -46,7 +47,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
   const user = useAuth();
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  useEffect(() => {}, [params]);
+  useEffect(() => { }, [params]);
   // console.log("sidebarrrrrrrrrrrrrrrrrrrr", params)
   // console.log("pathnamepathname", pathname)
   const handleLogout = () => {
@@ -111,8 +112,14 @@ export function Nav({ links, isCollapsed }: NavProps) {
       pathname.includes(`${link.href1}/${params.id}`)
     );
   };
-  useEffect(() => {}, [checkActiveLink]);
+  useEffect(() => { }, [checkActiveLink]);
 
+  // console.log("user", user.user?.roleId);
+  const userRoleId = user.user?.roleId;
+
+  const checkAccess = (checkRoll: { id: number }[]) => {
+    return checkRoll.some(item => item.id === userRoleId);
+  };
   return (
     <TooltipProvider>
       {/* logo */}
@@ -146,32 +153,32 @@ export function Nav({ links, isCollapsed }: NavProps) {
         className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2"
       >
         <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
-          {links.map((link, index) =>
-            isCollapsed ? (
+          {links.map((link, index) => {
+            // Check if the link should be rendered based on user role
+            if (!checkAccess(link.checkRoll)) {
+              return null; // Không render liên kết nếu không có quyền truy cập
+            }
+
+            return isCollapsed ? (
               <Tooltip key={index} delayDuration={0}>
                 <TooltipTrigger asChild>
                   <Link
                     href={link.href}
                     className={cn(
                       buttonVariants({
-                        variant: checkActiveLink(link)
-                          ? "colorCompany"
-                          : "ghost",
+                        variant: checkActiveLink(link) ? "colorCompany" : "ghost",
                         size: "icon",
                       }),
                       "h-9 w-9",
                       link.variant === "colorCompany" &&
-                        "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                      "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                     )}
                   >
                     <link.icon className="h-4 w-4" />
                     <span className="sr-only">{link.title}</span>
                   </Link>
                 </TooltipTrigger>
-                <TooltipContent
-                  side="right"
-                  className="flex items-center gap-4"
-                >
+                <TooltipContent side="right" className="flex items-center gap-4">
                   {link.hrefCon ? (
                     <ul
                       role="menu"
@@ -181,16 +188,12 @@ export function Nav({ links, isCollapsed }: NavProps) {
                       {link.hrefCon.map((linkCon, index) => (
                         <li
                           key={index}
-                          className={`${
-                            pathname === linkCon.href
+                          className={`${pathname === linkCon.href
                               ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
                               : "text-gray-700"
-                          } p-1 text-sm hover:bg-gray-100`}
+                            } p-1 text-sm hover:bg-gray-100`}
                         >
-                          <Link
-                            href={linkCon.href}
-                            className="flex items-center gap-2"
-                          >
+                          <Link href={linkCon.href} className="flex items-center gap-2">
                             {linkCon.title}
                           </Link>
                         </li>
@@ -211,7 +214,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                       size: "sm",
                     }),
                     link.variant === "colorCompany" &&
-                      "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
+                    "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                     "justify-start"
                   )}
                 >
@@ -240,11 +243,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         <li key={item.id}>
                           <Link
                             href={item.href}
-                            className={`${
-                              pathname === item.href
+                            className={`${pathname === item.href
                                 ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
                                 : "text-gray-700"
-                            } block px-4 py-2 text-sm hover:bg-gray-100`}
+                              } block px-4 py-2 text-sm hover:bg-gray-100`}
                             onClick={() => closeDropdown("")}
                           >
                             {item.title}
@@ -255,8 +257,8 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   </div>
                 )}
               </div>
-            )
-          )}
+            );
+          })}
         </nav>
       </div>
       {/* data bottombar */}

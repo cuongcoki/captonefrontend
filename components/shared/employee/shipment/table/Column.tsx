@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/hover-card"
 import { Truck } from "lucide-react"
 import { ShipmentID } from "../shipmentID/ShipmentID"
-import { UpdateShipment } from "../form/UpdateShipment"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   AlertDialog,
@@ -26,7 +25,7 @@ import {
 import { useState } from "react"
 import { shipmentApi } from "@/apis/shipment.api"
 import toast from "react-hot-toast"
-import { ChangeStatusShipment } from "../form/ChangeStatusShipment";
+import { ChangeStatusShipmentShipper } from "../form/ChangeStatusShipment";
 import { error } from "console";
 
 export type Shipment = {
@@ -289,59 +288,9 @@ export const columns: ColumnDef<Shipment>[] = [
       );
     },
     cell: ({ row }) => <span>
-      <ChangeStatusShipment shipmentID={row.original} />
+      <ChangeStatusShipmentShipper shipmentID={row.original} />
       {/* {limitLength(row.original.statusDescription, 30)} */}
     </span>,
-  },
-
-  {
-    accessorKey: "id",
-    header: ({ column }) => {
-      return (
-        <Button variant="ghost" className=" ">
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const handleAcceptShipment = () => {
-        console.log(row.original.id);
-        shipmentApi.isAcceptedShipment(row.original.id, true)
-          .then(({ data }) => {
-            // console.log("data", data)
-            toast.success(data.message)
-          }).catch(error => {
-            // console.log(error)
-            toast.error(error.response.data.message)
-          })
-      }
-
-      return (
-        <span>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button className="bg-yellow-500 hover:bg-yellow-500/80">Xác nhận</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có hoàn toàn chắc chắn không?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Bạn sẽ không thể chỉnh sửa hay bất kỳ thao tác gì cho đơn hàng này nữa, bạn chắc chắn chứ
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleAcceptShipment}>Xác nhận</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </span>
-      )
-    },
-  },
-
-  {
-    id: "actions",
-    cell: ({ row }) => <UpdateShipment shipmentIDDes={row.original.id} />,
   },
 
 ]

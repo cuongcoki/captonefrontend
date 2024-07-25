@@ -28,6 +28,11 @@ export type ShipmentId = {
   shipmentDetailRequests: ShipmentDetailRequest[];
 };
 
+interface updateStatusShipment {
+  shipmentId: string,
+  status: number
+}
+
 export const shipmentApi = {
   getShipments: (
     PageIndex?: number,
@@ -57,11 +62,32 @@ export const shipmentApi = {
   getAllCompanyByType: (companyType?: any, pageIndex?: number, pageSize?: number) =>
     axiosClient.get(`${endPointConstant.BASE_URL}/companies?CompanyType=${companyType}&PageIndex=${pageIndex}&PageSize=${pageSize}`),
 
-  changeStatus: (shipmentId:string, status:number) => {
-    return axiosClient.patch(`/shipments/${shipmentId}/status`, {
-        shipmentId,
-        status
-    });
-}
+  changeStatus: (id: string, data: updateStatusShipment) =>
+    axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/status`, data),
+
+  isAcceptedShipment: (id: string, isAccepted: boolean) =>
+    axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/accept/${isAccepted}`),
+
+  changeStatusByShipper: (id: string, data: updateStatusShipment) =>
+    axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/shipper/change-status`, data),
+
+  getByShipper:(
+    PageIndex?: number,
+    PageSize?: number,
+    Status?: string | null,
+    SearchTerm?: string
+  ) =>{
+    let url = `${endPointConstant.BASE_URL}/shipments/get-by-shipper?`;
+    if (PageIndex !== undefined) url += `PageIndex=${PageIndex}&`;
+    if (PageSize !== undefined) url += `PageSize=${PageSize}&`;
+    if (Status) url += `Status=${Status}&`;
+    if (SearchTerm) url += `SearchTerm=${SearchTerm}&`;
+    // Remove trailing '&' or '?' if no parameters were added
+    url = url.slice(-1) === '&' || url.slice(-1) === '?' ? url.slice(0, -1) : url;
+    return axiosClient.get(url);
+  },
+
+  getByShipperID: (id: string) =>
+    axiosClient.get(`${endPointConstant.BASE_URL}/shipments/${id}/get-by-shipper`),
 }
 
