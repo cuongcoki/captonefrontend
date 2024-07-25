@@ -30,12 +30,13 @@ import {
 } from "@/components/ui/select";
 import { CompanyAddSchemaType, companyAddSchema } from "@/schema/company";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 export function CompanyAdd() {
   const { ForceRender } = useContext(CompanyContext);
+  const [isOpen, setIsOpen] = useState(false);
 
   const form = useForm<CompanyAddSchemaType>({
     resolver: zodResolver(companyAddSchema),
@@ -64,6 +65,7 @@ export function CompanyAdd() {
       .then(() => {
         toast.success("Tạo công ty thành công");
         ForceRender();
+        setIsOpen(false);
         form.reset();
       })
       .catch((error) => {
@@ -73,7 +75,7 @@ export function CompanyAdd() {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="default" className="bg-[#22c55e]">
           Thêm mới

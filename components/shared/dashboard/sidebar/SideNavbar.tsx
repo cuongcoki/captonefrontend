@@ -18,6 +18,7 @@ import {
   Truck,
   LogOut,
   Coins,
+  Warehouse,
 } from "lucide-react";
 
 import {
@@ -27,10 +28,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  Command,
-} from "@/components/ui/command"
+} from "@/components/ui/dropdown-menu";
+import { Command } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
 import { ModeToggle } from "@/components/shared/common/mode-toggle";
@@ -43,9 +42,8 @@ import { CardContent } from "../home/DashbroadComponents/Cards/Card";
 import Link from "next/link";
 import CommandDemo from "../Command";
 
-
 type Props = {};
-export default function SideNavbar({ }: Props) {
+export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   // ** hooks
@@ -62,7 +60,6 @@ export default function SideNavbar({ }: Props) {
   useEffect(() => {
     setIsClient(true);
   }, []);
-
 
   const handleLogout = () => {
     setLoading(true);
@@ -100,29 +97,32 @@ export default function SideNavbar({ }: Props) {
           <Nav
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
-              {
-                title: "Thống kê",
-                href: "/dashboard/home",
-                icon: LayoutDashboard,
-                variant: "colorCompany",
-              },
+              // {
+              //   title: "Thống kê",
+              //   href: "/dashboard/home",
+              //   icon: LayoutDashboard,
+              //   variant: "colorCompany",
+              // },
               {
                 title: "Nhân Viên",
                 href: "/dashboard/user",
                 icon: UserRound,
                 variant: "ghost",
+                checkRoll: [{id:1}],
               },
               {
                 title: "Đơn đặt hàng",
                 href: "/dashboard/order",
                 icon: ShoppingCart,
                 variant: "ghost",
+                checkRoll: [{id:1}],
               },
               {
                 title: "Đơn vận chuyển",
                 href: "/dashboard/shipment",
                 icon: Truck,
                 variant: "ghost",
+                checkRoll: [{id:1}],
               },
               {
                 title: "Sản phẩm",
@@ -142,6 +142,7 @@ export default function SideNavbar({ }: Props) {
                 ],
                 icon: PackageSearch,
                 variant: "ghost",
+                checkRoll: [{id:1}],
               },
               {
                 title: "Vật liệu",
@@ -161,79 +162,111 @@ export default function SideNavbar({ }: Props) {
                 ],
                 icon: InspectionPanel,
                 variant: "ghost",
+                checkRoll: [{id:1}],
               },
               {
                 title: "Điểm danh",
                 href: "/dashboard/attendance/update-attendance",
                 icon: CalendarSearch,
                 variant: "ghost",
+                checkRoll: [{id:1}],
               },
               {
                 title: "Xem điểm danh",
                 href: "/employee/view-attendance",
                 icon: UserRound,
                 variant: "ghost",
+                checkRoll: [{id:3},{id:4},{id:5}],
               },
               {
                 title: "Công ty",
                 href: "/dashboard/company",
                 icon: Building,
                 variant: "ghost",
+                checkRoll: [{id:1}],
               },
               {
                 title: "Đơn khiếu nại",
                 href: "/employee/report",
                 icon: MessageSquareWarning,
                 variant: "ghost",
+                checkRoll:[{id:3},{id:4},{id:5}],
+              },
+              {
+                title: "Đơn vận chuyển",
+                href: "/employee/shipment",
+                icon: Truck,
+                variant: "ghost",
+                checkRoll:[{id:4}],
               },
               {
                 title: "Khiếu nại",
                 href: "/dashboard/report-manager",
                 icon: MessageSquareMore,
                 variant: "ghost",
+                checkRoll: [{id:1}],
               },
               {
                 title: "Lương",
                 href: "/dashboard/salary",
                 icon: Coins,
                 variant: "ghost",
+                checkRoll: [{id:1}],
+              },
+              {
+                title: "Kho",
+                href: "/dashboard/product-phase",
+                icon: Warehouse,
+                variant: "ghost",
+                checkRoll: [{id:1}],
               },
             ]}
           />
         </div>
       ) : null}
       <div className="absolute bottom-0 w-full">
-
         {!mobileWidth && (
           <>
-            {isCollapsed ?
-              (<div className="mb-3 ml-2.5 w-[30px]">
+            {isCollapsed ? (
+              <div className="mb-3 ml-2.5 w-[30px]">
                 <Command className="ml-2.5 focus:ring-2 focus:ring-blue-500">
                   <DropdownMenu>
-                    <DropdownMenuTrigger >
+                    <DropdownMenuTrigger>
                       <Settings />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" >
-                      <DropdownMenuLabel><Button ><Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link></Button></DropdownMenuLabel>
-                      <DropdownMenuItem onClick={handleLogout}><Button onClick={handleLogout}><LogOut className="mr-1" /> đăng xuất</Button>
+                    <DropdownMenuContent align="start">
+                      <DropdownMenuLabel>
+                        <Button>
+                          <Link href={`/profile/${user.user?.id}`}>
+                            Trang cá nhân
+                          </Link>
+                        </Button>
+                      </DropdownMenuLabel>
+                      <DropdownMenuItem onClick={handleLogout}>
+                        <Button onClick={handleLogout}>
+                          <LogOut className="mr-1" /> đăng xuất
+                        </Button>
                       </DropdownMenuItem>
-                      <DropdownMenuItem ><ModeToggle /></DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <ModeToggle />
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </Command>
-              </div>) :
-              (
-                <CardContent className="m-1 mb-3  w-[170px]">
-                  <Button ><Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link></Button>
-                  <Button onClick={handleLogout}><LogOut className="mr-1" /> đăng xuất</Button>
-                  <ModeToggle />
-                </CardContent>
-
-              )
-            }
+              </div>
+            ) : (
+              <CardContent className="m-1 mb-3  w-[170px]">
+                <Button>
+                  <Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link>
+                </Button>
+                <Button onClick={handleLogout}>
+                  <LogOut className="mr-1" /> đăng xuất
+                </Button>
+                <ModeToggle />
+              </CardContent>
+            )}
           </>
         )}
-
       </div>
     </div>
   );

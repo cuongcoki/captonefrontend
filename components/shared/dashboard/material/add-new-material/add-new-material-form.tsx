@@ -92,6 +92,7 @@ export default function AddNewMeterialForm() {
   const labelForImage = dropArea?.querySelector("#labelForIamge");
 
   const onSubmit = async (data: AddMaterialType) => {
+    setLoading(true);
     const file = (await handleUploadPhoto(materialImage)) as File;
     data.image = file?.name || " ";
     // console.log("Material Image", materialImage);
@@ -115,6 +116,9 @@ export default function AddNewMeterialForm() {
       .catch((err) => {
         toast.error("Thêm vật liệu thất bại");
         console.log("Error in Add Material: ", err);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -249,8 +253,8 @@ export default function AddNewMeterialForm() {
           />
         </div>
         <DialogFooter>
-          <Button className="mt-3" type="submit">
-            Tạo mới
+          <Button className="mt-3" type="submit" disabled={loading}>
+            {!loading ? "Tạo mới" : "Đang xử lý"}
           </Button>
         </DialogFooter>
       </form>

@@ -30,6 +30,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
   const [materialImage, setMaterialImage] = useState<any>("");
   const { forceUpdate } = useContext(MyContext);
   const [imageLink, setImageLink] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   const fillImage = (fileURL: string) => {
     const iamgeLabel = document.querySelector(".label_image") as HTMLElement;
@@ -145,6 +146,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
   const onSubmit = (data: materialType) => {};
 
   const formSubmit = async () => {
+    setLoading(true);
     console.log("DATA", form.getValues());
     const file = (await handleUploadPhoto(materialImage)) as File;
     if (file !== null && file !== undefined) {
@@ -166,6 +168,9 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       .catch((error) => {
         console.log("ERROR IN UPDATE MATERIAL", error);
         toast.error(error.response.data.message);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -306,7 +311,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
         </div>
         <DialogFooter>
           <Button className="mt-3" type="submit" onClick={formSubmit}>
-            Lưu thay đổi
+            {loading ? "Đang xử lý" : "Lưu thay đổi"}
           </Button>
         </DialogFooter>
       </form>

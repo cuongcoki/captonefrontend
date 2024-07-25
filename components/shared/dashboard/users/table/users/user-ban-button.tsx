@@ -28,7 +28,7 @@ export default function UserBanButton({ user, setIsOpen }: Props) {
       .changeUserStatus(user.id, !user.isActive)
       .then((data) => {
         if (setIsOpen) {
-          setIsOpen(false); 
+          setIsOpen(false);
         }
         console.log("changeUserStatus", data);
         forceUpdate();
@@ -43,7 +43,7 @@ export default function UserBanButton({ user, setIsOpen }: Props) {
       <AlertDialogTrigger className="w-full">
         <Button
           variant={"outline"}
-          className="border-none w-full flex items-start"
+          className="border-none w-full flex items-start justify-start"
         >
           {user.isActive ? "Nghỉ việc" : "Làm lại"}
         </Button>

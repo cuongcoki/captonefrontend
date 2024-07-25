@@ -64,11 +64,13 @@ export function BreadcrumbComponent() {
       case "/dashboard/material":
         return "Vật liệu";
       case "/dashboard":
-        return "";
+        return "Quản Lý";
       case "/dashboard/attendance":
         return "bảng điểm danh";
       case "/employee":
         return "Nhân viên";
+        case "/employee/shipment":
+          return "Đơn vận chuyển";
       case `/dashboard/order/${params.id}`:
         return "Chi tiết đơn hàng";
       case `/dashboard/products/product/${params.id}`:

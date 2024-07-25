@@ -457,7 +457,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       <Dialog.Trigger className="w-full">
         <Button
           variant="outline"
-          className="border-none w-full flex items-center justify-center "
+          className="border-none w-full flex items-center justify-start "
           onClick={handleOnDialog}
         >
           Chỉnh sửa

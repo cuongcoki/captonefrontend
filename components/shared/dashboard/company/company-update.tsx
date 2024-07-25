@@ -239,6 +239,9 @@ export default function CompanyUpdate({
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
+                            <SelectItem className="hover:bg-gray-100" value="0">
+                              Nhà xưởng
+                            </SelectItem>
                             <SelectItem className="hover:bg-gray-100" value="1">
                               Công ty mua đặt hàng
                             </SelectItem>
