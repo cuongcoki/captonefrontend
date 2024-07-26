@@ -1,0 +1,32 @@
+.count-product-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.count-product-table th,
+.count-product-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.count-product-table th {
+  background-color: #f2f2f2;
+}
+
+.count-product-table th[colspan] {
+  text-align: center;
+}
+
+.hide-scrollbar {
+  overflow-y: auto;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* WebKit (Chrome, Safari) */
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}

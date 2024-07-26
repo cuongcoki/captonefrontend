@@ -15,6 +15,8 @@ export type UsersType = {
   accessToken: string;
   roleId:number;
   roleDescription:string;
+  companyId:string;
+  companyName:string;
 };
 
 export type UserSearchParams = {
