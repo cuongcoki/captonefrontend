@@ -1,13 +1,21 @@
 "use client";
 import React, { useEffect } from "react";
 import "./report-table.css";
-import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { GetReportsResponse, ReportParams } from "@/types/report.type";
 import { reportApi } from "@/apis/report.api";
 import { ReportStore } from "@/components/shared/employee/report/report-store";
 import { ReportAdd } from "@/components/shared/employee/report/report-add";
 import { Button } from "@/components/ui/button";
 import HeaderComponent from "@/components/shared/common/header";
+import { Card } from "@/components/ui/card";
 
 const ColorOfTypeStatus: { [key: number]: string } = {
   0: "text-gray-500",
@@ -50,131 +58,70 @@ export default function ReportTable({ searchParams }: ReportParams) {
         description="Thông tin trạng thái xử lý đơn khiếu nại."
       />
       <div className="mb-5 mt-2 grid grid-cols-12 space-y-1 grid-rows-2 xl:space-y-0 xl:grid-rows-1">
-        {/* <Input
-          className="col-span-11 xl:col-span-6 xl:row-start-1"
-          placeholder="Tìm kiếm công ty"
-          value={params.name}
-          onChange={(event) => {
-            setParams((prev) => {
-              return {
-                ...prev,
-                name: event.target.value,
-              };
-            });
-          }}
-        /> */}
-        {/* <div className="col-span-6 row-start-2 xl:row-start-1 xl:row-span-2 xl:col-start-7 xl:col-span-2 md:ml-2">
-          <Select
-            value={params.companyType}
-            onValueChange={handleChangeCompanyType}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Chọn loại công ty" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem className="hover:bg-gray-100" value="0">
-                Nhà xưởng
-              </SelectItem>
-              <SelectItem className="hover:bg-gray-100" value="1">
-                Công ty mua đặt hàng
-              </SelectItem>
-              <SelectItem className="hover:bg-gray-100" value="2">
-                Công ty hợp tác sản xuất
-              </SelectItem>
-              <SelectItem className="hover:bg-gray-100" value="-1">
-                Bỏ chọn
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div> */}
         <div className="row-start-2 col-start-9 md:col-start-11 xl:row-start-1 xl:col-start-12">
           <ReportAdd />
         </div>
       </div>
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="flex flex-col">
-          <div className="-m-1.5 overflow-x-auto">
-            <div className="p-1.5 min-w-full inline-block align-middle">
-              <div className="overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Loại Đơn
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white "
-                      >
-                        Nội dung
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Ngày Tạo
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Phản Hồi
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Trạng thái
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 ">
-                    {tableData.map((report, index) => (
-                      <tr
-                        key={report.id}
-                        className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer "
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
-                          <div className="mx-auto text-center">
-                            {report.reportTypeDescription}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white ">
-                          <div className="mx-auto whitespace-normal break-words w-72 ">
-                            {report.description}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                          <div className="mx-auto text-center">
-                            {report.createdDate}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                          <div className="mx-auto whitespace-normal break-words w-72">
-                            {report.replyMessage}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                          <div
-                            className={`mx-auto text-center ${
-                              ColorOfTypeStatus[report.status]
-                            }`}
-                          >
-                            {report.statusDesscription}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Card>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Loại Đơn</TableHead>
+              <TableHead>Nội dung</TableHead>
+              <TableHead>Ngày Tạo</TableHead>
+              <TableHead>Phản Hồi</TableHead>
+              <TableHead>Trạng thái</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {tableData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center">
+                  Không có dữ liệu
+                </TableCell>
+              </TableRow>
+            ) : (
+              tableData.map((report, index) => (
+                <TableRow
+                  key={report.id}
+                  className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer"
+                >
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-white">
+                    <div className="mx-auto text-center">
+                      {report.reportTypeDescription}
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                    <div className="mx-auto whitespace-normal break-words w-72">
+                      {report.description}
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                    <div className="mx-auto text-center">
+                      {report.createdDate}
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                    <div className="mx-auto whitespace-normal break-words w-72">
+                      {report.replyMessage}
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
+                    <div
+                      className={`mx-auto text-center ${
+                        ColorOfTypeStatus[report.status]
+                      }`}
+                    >
+                      {report.statusDesscription}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </Card>
       <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
         <Button
           variant="outline"

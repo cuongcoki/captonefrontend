@@ -23,6 +23,7 @@ export type SalaryType = {
   companyId: string;
   companyName: string;
   salary: number;
+  accountBalance: number;
 };
 
 export type SearchSalaryResponse = {};

@@ -285,7 +285,19 @@ export const UsersForm = () => {
         })
         .catch((err) => {
           console.log(err.response);
-          toast.error(err.response.data.message);
+          if (err.response && err.response.data && err.response.data.error) {
+            const errors = err.response.data.error;
+            if (errors.Id) {
+              toast.error(errors.Id);
+            }
+
+            if (errors.Phone) {
+              toast.error(errors.Phone);
+            }
+
+          } else {
+            console.error("Tạo tài khoản không thành công");
+          }
         })
         .finally(() => {
           setLoading(false);
@@ -725,7 +737,7 @@ export const UsersForm = () => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -809,7 +821,7 @@ export const UsersForm = () => {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -830,10 +842,10 @@ export const UsersForm = () => {
                                           selected={
                                             field.value
                                               ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                field.value,
+                                                "dd/MM/yyyy",
+                                                new Date()
+                                              )
                                               : undefined
                                           }
                                           onDayClick={(date: any) =>

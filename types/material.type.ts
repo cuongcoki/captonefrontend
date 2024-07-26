@@ -3,4 +3,5 @@ export type searchMaterial = {
   IsInProcessing: boolean;
   pageIndex: number;
   pageSize: number;
+  timestamp?: number;
 };

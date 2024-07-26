@@ -31,22 +31,39 @@ import { Combobox } from "@/components/shared/common/combobox/combobox";
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import { Input } from "@/components/ui/input";
 import ProductPhaseAction from "@/components/shared/dashboard/product-phase/product-phase-action";
+import { attendanceApi } from "@/apis/attendance.api";
+import HeaderComponent from "@/components/shared/common/header";
 
 export default function ProductPhaseTable({
   searchParams,
 }: {
   searchParams: SearchProductPhaseParams;
 }) {
-  const { tableData, setTableData, companyData, setCompanyData, force } =
-    productPhaseStore();
+  const {
+    tableData,
+    setTableData,
+    companyData,
+    setCompanyData,
+    force,
+    setPhaseData,
+  } = productPhaseStore();
   const [params, setParams] =
     React.useState<SearchProductPhaseParams>(searchParams);
   const [loading, setLoading] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const pathname = usePathname();
   const router = useRouter();
-  const [company, setCompany] = useState<string>("");
-  const [phase, setPhase] = useState<string>("");
+
+  useEffect(() => {
+    attendanceApi
+      .getAllPhase()
+      .then((res) => {
+        setPhaseData(res.data.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [setPhaseData]);
 
   useEffect(() => {
     let firtCompany: CompanyResponse;
@@ -122,6 +139,10 @@ export default function ProductPhaseTable({
 
   return (
     <>
+      <HeaderComponent
+        title="Quản lý kho"
+        description={`Quản lý các giai đoạn của từng sản phẩm.`}
+      />
       <div className="mb-3 grid grid-cols-10">
         <div className="col-span-2">
           <Combobox

@@ -67,10 +67,6 @@ export function BreadcrumbComponent() {
         return "Quản Lý";
       case "/dashboard/attendance":
         return "bảng điểm danh";
-      case "/employee":
-        return "Nhân viên";
-        case "/employee/shipment":
-          return "Đơn vận chuyển";
       case `/dashboard/order/${params.id}`:
         return "Chi tiết đơn hàng";
       case `/dashboard/products/product/${params.id}`:
@@ -79,6 +75,28 @@ export function BreadcrumbComponent() {
         return "Thông tin bộ";
       case `/dashboard/salary/detail/${params.id}`:
         return "Chi tiết lương";
+      case `/dashboard/product-phase`:
+        return "Kho";
+      // nhân viên
+      case "/employee":
+        return "Nhân viên";
+      case "/employee/shipment":
+        return "Đơn vận chuyển";
+      case `/employee/salary/${params.id}`:
+        return "Chi tiết lương";
+      case `/employee/salary`:
+        return "lương";
+      case `/employee/attendance`:
+        return "điểm danh nhân viên";
+      case `/employee/attendance/update-attendance`:
+        return "đếm sản phẩm";
+      // quản lý cơ sở
+      case `/branchadmin`:
+        return "Quản lý cơ sở";
+      case `/branchadmin/attendance`:
+        return "Điểm danh";
+      case `/branchadmin/attendance/update-attendance`:
+        return "Điểm danh chi tiết";
       default:
         return defaultTitle;
     }
@@ -88,7 +106,7 @@ export function BreadcrumbComponent() {
     <Breadcrumb className="pb-4">
       <BreadcrumbList>
         {breadcrumbs.map((breadcrumb, index) => {
-          const isLast = index === breadcrumbs.length -1 ;
+          const isLast = index === breadcrumbs.length - 1;
           const customTitle = getCustomTitle(breadcrumb.href, breadcrumb.title);
 
           return isLast ? (

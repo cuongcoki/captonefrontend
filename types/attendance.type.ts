@@ -161,13 +161,13 @@ export type GetAllProductResponse = SearchResponse<Product[]>;
 
 //-------------------------------------------- Phase --------------------------------------------
 
-type Phase = {
+export type PhaseType = {
   id: string;
   name: string;
   description: string;
 };
 
-export type GetAllPhaseResponse = SuccessResponse<Phase[]>;
+export type GetAllPhaseResponse = SuccessResponse<PhaseType[]>;
 
 //-------------------------------------------- Employee Product-----------------------------------
 export type ProductEmployee = {
