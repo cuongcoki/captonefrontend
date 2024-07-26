@@ -94,7 +94,7 @@ export default function SideNavbar({}: Props) {
             </Button>
           )}
 
-          <Nav
+           <Nav
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
               // {

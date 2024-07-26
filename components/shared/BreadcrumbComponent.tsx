@@ -57,7 +57,7 @@ export function BreadcrumbComponent() {
     return { href, title };
   });
 
-  const getCustomTitle = (href: any, defaultTitle: any) => {
+   const getCustomTitle = (href: any, defaultTitle: any) => {
     switch (href) {
       case "/dashboard/products":
         return "Loại Sản phẩm";
