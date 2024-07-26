@@ -94,7 +94,7 @@ export default function SideNavbar({}: Props) {
             </Button>
           )}
 
-          <Nav
+           <Nav
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
               // {
@@ -176,7 +176,7 @@ export default function SideNavbar({}: Props) {
                 href: "/employee/view-attendance",
                 icon: UserRound,
                 variant: "ghost",
-                checkRoll: [{id:3},{id:4},{id:5}],
+                checkRoll: [{id:2},{id:3},{id:4},{id:5}],
               },
               {
                 title: "Công ty",
@@ -190,7 +190,7 @@ export default function SideNavbar({}: Props) {
                 href: "/employee/report",
                 icon: MessageSquareWarning,
                 variant: "ghost",
-                checkRoll:[{id:3},{id:4},{id:5}],
+                checkRoll:[{id:2},{id:3},{id:4},{id:5}],
               },
               {
                 title: "Đơn vận chuyển",
@@ -214,11 +214,32 @@ export default function SideNavbar({}: Props) {
                 checkRoll: [{id:1}],
               },
               {
+                title: "Lương nhân viên",
+                href: `/employee/salary/${user.user?.id}`,
+                icon: Coins,
+                variant: "ghost",
+                checkRoll: [{id:2},{id:3},{id:4},{id:5}],
+              },
+              {
                 title: "Kho",
                 href: "/dashboard/product-phase",
                 icon: Warehouse,
                 variant: "ghost",
                 checkRoll: [{id:1}],
+              },
+              {
+                title: "Đếm sản phẩm",
+                href: "/employee/attendance/update-attendance",
+                icon: CalendarSearch,
+                variant: "ghost",
+                checkRoll: [{id:3}],
+              },
+              {
+                title: "Điểm danh",
+                href: "/branchadmin/attendance/update-attendance",
+                icon: CalendarSearch,
+                variant: "ghost",
+                checkRoll: [{id:2}],
               },
             ]}
           />
