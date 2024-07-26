@@ -255,51 +255,53 @@ export default function ReportManagerTable({
               </TableRow>
             ) : (
               tableData.map((report, index) => (
-                <TableRow key={report.id}>
-                  <TableCell>
-                    <div className="text-center">
-                      {report.fullName}
-                      <div className="w-32 h-44 bg-gray-300">
-                        <Image
-                          src={report.avatar}
-                          alt="avatar"
-                          width={320}
-                          height={440}
-                          className="object-cover h-full w-full"
-                        />
+                <ReportManagerUpdate index={index} key={report.id}>
+                  <TableRow className="hover:cursor-pointer">
+                    <TableCell>
+                      <div className="text-center">
+                        {report.fullName}
+                        <div className="w-32 h-44 bg-gray-300">
+                          <Image
+                            src={report.avatar}
+                            alt="avatar"
+                            width={320}
+                            height={440}
+                            className="object-cover h-full w-full"
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-center">
-                      {report.reportTypeDescription}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="whitespace-normal break-words w-64 mx-auto">
-                      {report.description}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-center">
-                      {formatDate(report.createdDate)}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="whitespace-normal break-words w-64 mx-auto">
-                      {report.replyMessage}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div
-                      className={`text-center ${
-                        ColorOfTypeStatus[report.status]
-                      }`}
-                    >
-                      {report.statusDesscription}
-                    </div>
-                  </TableCell>
-                </TableRow>
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-center">
+                        {report.reportTypeDescription}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="whitespace-normal break-words w-64 mx-auto">
+                        {report.description}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-center">
+                        {formatDate(report.createdDate)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="whitespace-normal break-words w-64 mx-auto">
+                        {report.replyMessage}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div
+                        className={`text-center ${
+                          ColorOfTypeStatus[report.status]
+                        }`}
+                      >
+                        {report.statusDesscription}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                </ReportManagerUpdate>
               ))
             )}
           </TableBody>
