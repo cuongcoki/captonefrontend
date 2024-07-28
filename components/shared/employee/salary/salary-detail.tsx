@@ -252,7 +252,10 @@ export default function SalaryDetailEm({
                     Sản phẩm tạo ra
                   </CardTitle>
                   <div className="flex">
-                    <div>Số lượng sản phẩm tạo ra trong tháng 7 năm 2024</div>
+                    <div>
+                      Số lượng sản phẩm tạo ra trong tháng {params.month} năm{" "}
+                      {params.year}
+                    </div>
                     <div className="ml-auto">
                       Tổng lương sản phẩm:{" "}
                       <span className="font-bold text-primary">

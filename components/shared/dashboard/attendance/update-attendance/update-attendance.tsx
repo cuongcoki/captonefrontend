@@ -35,15 +35,15 @@ import HeaderComponent from "@/components/shared/common/header";
 
 const comboboxData: ComboboxDataType[] = [
   {
-    label: "Slot Sáng",
+    label: "Buổi Sáng",
     value: "1",
   },
   {
-    label: "Slot Chiều",
+    label: "Buổi Chiều",
     value: "2",
   },
   {
-    label: "Slot Tối",
+    label: "Buổi Tối",
     value: "3",
   },
 ];
@@ -392,7 +392,9 @@ export default function UpdateAttendance({
     <div>
       <HeaderComponent
         title="Điểm danh nhân viên"
-        description={`Điểm danh nhân viên ngày ${dateProp} slot ${slotProp}`}
+        description={`Điểm danh nhân viên ngày ${dateProp} - ${
+          comboboxData.find((item) => item.value === slotProp)?.label
+        }`}
       />
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 mb-5 flex-wrap ">
         {userData.roleId != "2" && (

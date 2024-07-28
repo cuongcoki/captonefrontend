@@ -23,12 +23,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
   {
     accessorKey: "material.name",
     header: ({ column }) => {
-      return (
-        <div>
-          Tên Vật Liệu
-          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
-        </div>
-      );
+      return <div className="text-center">Ảnh minh họa</div>;
     },
     cell: async ({ row }) => {
       var href;
@@ -41,9 +36,9 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
         console.log("error in get image", error);
       }
       return (
-        <div className="flex items-center space-x-2 max-w-[200px]">
+        <div className="flex justify-center items-center space-x-2 max-w-[200px]">
           <Image
-            className="w-10 h-10 mr-2"
+            className="size-20 mr-2"
             width={100}
             height={100}
             src={
@@ -52,67 +47,70 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
             }
             alt={row.original.image}
           />
-          <span>{row.original.materialName}</span>
         </div>
       );
     },
   },
   {
+    accessorKey: "materialName",
+    header: () => <div className="flex justify-center">Tên nguyên liệu</div>,
+    cell: ({ row }) => {
+      return <div className="text-center">{row.original.materialName}</div>;
+    },
+  },
+  {
     accessorKey: "quantity",
-    header: "Số Lượng",
+    header: () => <div className="flex justify-center">Số lượng</div>,
+    cell: ({ row }) => {
+      return <div className="text-center">{row.original.quantity}</div>;
+    },
   },
   {
     accessorKey: "price",
     header: ({ column }) => {
       return (
-        <div className="flex items-center justify-start p-0">
-          Giá Mua 1 Vật Liệu
-          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
+        <div className="flex items-center justify-center p-0">
+          Giá mua 1 nguyên liệu
         </div>
       );
     },
     cell: ({ row }) => {
       const formattedPrice = Number(row.original.price).toLocaleString("vi-VN");
-      return `${formattedPrice}`;
+      return <div className="text-center">{formattedPrice}</div>;
     },
   },
   {
     accessorKey: "importDate",
     header: ({ column }) => {
       return (
-        <div className="flex items-center justify-start p-0">
-          Ngày Mua
-          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
-        </div>
+        <div className="flex items-center justify-center p-0">Ngày mua</div>
       );
     },
     cell: ({ row }) => {
-      return format(row.original.importDate, "dd/MM/yyyy");
+      return (
+        <div className="text-center">
+          {format(row.original.importDate, "dd/MM/yyyy")}
+        </div>
+      );
     },
   },
-  // {
-  //   id: "totalMoney",
-  //   header: "Thành tiền",
-  //   cell: ({ row }) => {
-  //     const payment = row.original;
 
-  //     return (
-  //       (payment.price * payment.quantity).toLocaleString("en-US") + " VND"
-  //     );
-  //   },
-  // },
   {
     accessorKey: "description",
-    header: "Ghi Chú",
+    header: () => <div className="flex justify-center">Ghi chú</div>,
     cell: ({ row }) => {
-      return <div className="max-w-[30vh]">{row.original.description}</div>;
+      return (
+        <div className="max-w-[30vh] text-center">
+          {row.original.description}
+        </div>
+      );
     },
   },
   {
     id: "actions",
     header: ({ column }) => {
       return (
-        <div className="flex items-center justify-start p-0">
+        <div className="flex items-center justify-center p-0">
           Hành Động
           {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
         </div>
@@ -121,7 +119,7 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
     cell: ({ row }) => {
       const payment = row.original;
       return (
-        <div className="flex items-center justify-start p-0 gap-x-3">
+        <div className="flex items-center justify-center p-0 gap-x-3">
           <UpdateMaterialHistory id={payment.id}>
             <div id={payment.id}>
               <Edit className="hover:cursor-pointer" />

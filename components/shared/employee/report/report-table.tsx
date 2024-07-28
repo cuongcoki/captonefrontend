@@ -73,11 +73,11 @@ export default function ReportTable({ searchParams }: ReportParams) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Loại Đơn</TableHead>
-              <TableHead>Nội dung</TableHead>
-              <TableHead>Ngày Tạo</TableHead>
-              <TableHead>Phản Hồi</TableHead>
-              <TableHead>Trạng thái</TableHead>
+              <TableHead className="text-center">Loại Đơn</TableHead>
+              <TableHead className="text-center">Nội dung</TableHead>
+              <TableHead className="text-center">Ngày Tạo</TableHead>
+              <TableHead className="text-center">Phản Hồi</TableHead>
+              <TableHead className="text-center">Trạng thái</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -100,7 +100,7 @@ export default function ReportTable({ searchParams }: ReportParams) {
                     </div>
                   </TableCell>
                   <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                    <div className="mx-auto whitespace-normal break-words w-72">
+                    <div className="mx-auto whitespace-normal break-words w-72 text-center">
                       {report.description}
                     </div>
                   </TableCell>
@@ -110,7 +110,7 @@ export default function ReportTable({ searchParams }: ReportParams) {
                     </div>
                   </TableCell>
                   <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
-                    <div className="mx-auto whitespace-normal break-words w-72">
+                    <div className="mx-auto whitespace-normal break-words w-72 text-center">
                       {report.replyMessage}
                     </div>
                   </TableCell>

@@ -44,6 +44,7 @@ export function ReportManagerUpdate({
     tableData: state.tableData,
     updateReport: state.updateReport,
   }));
+  const [isOpen, setIsOpen] = useState(false);
 
   const [reportData] = useState(tableData[index]);
   const form = useForm<ReportUpdateSchemaType>({
@@ -70,6 +71,7 @@ export function ReportManagerUpdate({
       .then(() => {
         toast.success("Cập nhật đơn thành công");
         // ForceRender();
+        setIsOpen(false);
         updateReport(index, Number(data.status), data.replyMessage);
       })
       .catch((error) => {
@@ -79,7 +81,7 @@ export function ReportManagerUpdate({
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[40vw] dark:bg-[#1c1917]">
         <DialogHeader>
