@@ -33,6 +33,17 @@ interface updateStatusShipment {
   status: number
 }
 
+// ** Function to create unique cache ID
+const createCacheId = (base: string, params: Record<string, any>): string => {
+  const query = new URLSearchParams(params).toString();
+  return `${base}?${query}`;
+};
+
+// ** Store for cache IDs
+const shipmentCacheIds: Set<string> = new Set();
+const shipmentsCacheIds: Map<string, string> = new Map();
+
+
 export const shipmentApi = {
   getShipments: (
     PageIndex?: number,
@@ -40,6 +51,11 @@ export const shipmentApi = {
     Status?: string | null,
     SearchTerm?: string
   ) => {
+    const requestBody = { PageIndex, PageSize, Status, SearchTerm };
+    const cacheId = createCacheId("get-shipments", requestBody);
+    shipmentCacheIds.add(cacheId);
+    console.log("Added cacheId:", cacheId);
+
     let url = `${endPointConstant.BASE_URL}/shipments?`;
     if (PageIndex !== undefined) url += `PageIndex=${PageIndex}&`;
     if (PageSize !== undefined) url += `PageSize=${PageSize}&`;
@@ -47,23 +63,68 @@ export const shipmentApi = {
     if (SearchTerm) url += `SearchTerm=${SearchTerm}&`;
     // Remove trailing '&' or '?' if no parameters were added
     url = url.slice(-1) === '&' || url.slice(-1) === '?' ? url.slice(0, -1) : url;
-    return axiosClient.get(url);
+
+    return axiosClient.get(url, { id: cacheId });
   },
 
-  getShipmentID: (id: any) =>
-    axiosClient.get(`${endPointConstant.BASE_URL}/shipments/${id}`),
+  getShipmentID: (id: string) => {
+    const cacheId = `get-shipment-${id}`;
+    shipmentsCacheIds.set(id, cacheId);
+    return axiosClient.get(`${endPointConstant.BASE_URL}/shipments/${id}`, {
+      id: cacheId,
+    });
+  },
 
   createShipment: (data: Shipment) =>
-    axiosClient.post(`${endPointConstant.BASE_URL}/shipments`, data),
+    axiosClient.post(`${endPointConstant.BASE_URL}/shipments`, data, {
+      cache: {
+        update: () => {
+          console.log("Clearing shipmentCacheIds:", shipmentCacheIds);
+          shipmentCacheIds.forEach((id) => axiosClient.storage.remove(id));
+          shipmentCacheIds.clear();
+          console.log("shipmentCacheIds after clearing:", shipmentCacheIds);
+        },
+      },
+    }),
 
   updateShipment: (data: ShipmentId, id: string) =>
-    axiosClient.put(`${endPointConstant.BASE_URL}/shipments/${id}`, data),
+    axiosClient.put(`${endPointConstant.BASE_URL}/shipments/${id}`, data, {
+      cache: {
+        update: () => {
+          shipmentCacheIds.forEach((id) => axiosClient.storage.remove(id));
+          shipmentCacheIds.clear();
+
+          const shipmentCacheId = shipmentsCacheIds.get(id);
+          if (shipmentCacheId) {
+            axiosClient.storage.remove(shipmentCacheId);
+            shipmentsCacheIds.delete(id);
+            console.log("Removed shipmentCacheId:", shipmentCacheId);
+          }
+        },
+      },
+    }),
 
   getAllCompanyByType: (companyType?: any, pageIndex?: number, pageSize?: number) =>
     axiosClient.get(`${endPointConstant.BASE_URL}/companies?CompanyType=${companyType}&PageIndex=${pageIndex}&PageSize=${pageSize}`),
 
   changeStatus: (id: string, data: updateStatusShipment) =>
-    axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/status`, data),
+    axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/status`, data, {
+      cache: {
+        update: () => {
+          shipmentCacheIds.forEach((id) => {
+            axiosClient.storage.remove(id);
+          });
+          shipmentCacheIds.clear();
+
+          const shipmentCacheId = shipmentsCacheIds.get(id);
+          if (shipmentCacheId) {
+            axiosClient.storage.remove(shipmentCacheId);
+            shipmentsCacheIds.delete(id);
+            console.log("Removed shipmentCacheId:", shipmentCacheId);
+          }
+        },
+      },
+    }),
 
   isAcceptedShipment: (id: string, isAccepted: boolean) =>
     axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/accept/${isAccepted}`),
@@ -71,12 +132,12 @@ export const shipmentApi = {
   changeStatusByShipper: (id: string, data: updateStatusShipment) =>
     axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/shipper/change-status`, data),
 
-  getByShipper:(
+  getByShipper: (
     PageIndex?: number,
     PageSize?: number,
     Status?: string | null,
     SearchTerm?: string
-  ) =>{
+  ) => {
     let url = `${endPointConstant.BASE_URL}/shipments/get-by-shipper?`;
     if (PageIndex !== undefined) url += `PageIndex=${PageIndex}&`;
     if (PageSize !== undefined) url += `PageSize=${PageSize}&`;

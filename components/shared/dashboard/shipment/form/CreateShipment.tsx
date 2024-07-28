@@ -98,17 +98,13 @@ import ImageIconShipmentForm from "./ImageIconShipmentForm"
 import { phaseApi } from "@/apis/phase.api"
 import { materialApi } from "@/apis/material.api";
 import ImageIconMaterial from "./ImageIconMaterial"
+import { ShipmentStore } from "../shipment-store"
 
 const enumCompany = [
     {
         description: "Nhà xưởng",
         id: 0,
         value: "0"
-    },
-    {
-        description: "Công ty mua đặt hàng",
-        id: 1,
-        value: "1"
     },
     {
         description: "Công ty hợp tác sản xuất",
@@ -226,7 +222,7 @@ export default function CreateShipment() {
     //state 
     const [loading, setLoading] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
-
+    const { ForceRender } = ShipmentStore();
     //state ** company
     const [company, setCompany] = useState<Company[]>([]);
     const [companyType, setCompanyType] = useState<number>(0);
@@ -268,11 +264,11 @@ export default function CreateShipment() {
     const handleAddProducts = (imgProducts: string, itemId: string, itemKind: number) => {
         console.log("mainImage", imgProducts)
         // check id
-        const itemExists = shipmentDetailRequests.some((item) => item.itemId === itemId);
-        if (itemExists) {
-            toast.error("sản phẩm này đã thêm");
-            return;
-        }
+        // const itemExists = shipmentDetailRequests.some((item) => item.itemId === itemId);
+        // if (itemExists) {
+        //     toast.error("sản phẩm này đã thêm");
+        //     return;
+        // }
         setShipmentDetailRequests((prev: any) => [
             ...prev,
             { itemId: itemId, phaseId: null, quantity: 1, kindOfShip: itemKind, productPhaseType: 0 }
@@ -284,20 +280,21 @@ export default function CreateShipment() {
     };
 
     // Hàm xóa sản phẩm
-    const handleDeleteProducts = (itemId: string) => {
+    const handleDeleteProducts = (itemId: string, index: number) => {
         setShipmentDetailRequests((prev) =>
-            prev.filter((item) => item.itemId !== itemId)
+            prev.filter((item, i) => !(item.itemId === itemId && i === index))
         );
         setProductDetail((prev) =>
-            prev.filter((product) => product.itemId !== itemId)
+            prev.filter((product,i) => !(product.itemId === itemId && i === index))
         );
+       
     };
 
     // Hàm thay đổi giá trị của một sản phẩm
-    const handleChange = (itemId: string, name: keyof ShipmentDetailRequest, value: any) => {
+    const handleChange = (itemId: string, name: keyof ShipmentDetailRequest, value: any, index: number) => {
         setShipmentDetailRequests((prev) =>
-            prev.map((item) => {
-                if (item.itemId === itemId) {
+            prev.map((item, i) => {
+                if (item.itemId === itemId && i === index) {
                     return { ...item, [name]: value };
                 }
                 return item;
@@ -616,28 +613,29 @@ export default function CreateShipment() {
         };
 
         console.log("requestBodyCreateShipment=====", requestBody);
-        setLoading(true)
-        shipmentApi.createShipment(requestBody)
-            .then(({ data }) => {
-                console.log("data", data)
-                if (data.isSuccess) {
-                    toast.success(data.message);
-                }
-            })
-            .catch(error => {
-                const errorResponse = error.response?.data?.error;
-                if (errorResponse?.ShipmentDetailRequests) {
-                    toast.error(errorResponse.ShipmentDetailRequests);
-                } else {
-                    toast.error(error.response?.data?.message);
-                }
-                if (errorResponse?.ToId) {
-                    toast.error(errorResponse.ToId);
-                }
-            })
-            .finally(() => {
-                setLoading(false)
-            })
+        // setLoading(true)
+        // shipmentApi.createShipment(requestBody)
+        //     .then(({ data }) => {
+        //         console.log("data", data)
+        //         ForceRender();
+        //         if (data.isSuccess) {
+        //             toast.success(data.message);
+        //         }
+        //     })
+        //     .catch(error => {
+        //         const errorResponse = error.response?.data?.error;
+        //         if (errorResponse?.ShipmentDetailRequests) {
+        //             toast.error(errorResponse.ShipmentDetailRequests);
+        //         } else {
+        //             toast.error(error.response?.data?.message);
+        //         }
+        //         if (errorResponse?.ToId) {
+        //             toast.error(errorResponse.ToId);
+        //         }
+        //     })
+        //     .finally(() => {
+        //         setLoading(false)
+        //     })
 
 
     };
@@ -715,15 +713,18 @@ export default function CreateShipment() {
                                                         </CardDescription>
                                                     </CardHeader>
                                                     <CardContent className="space-y-2">
-                                                        {
-                                                            dataM.map(item => (
-                                                                <div className="group relative w-[100px] h-[100px] shadow-md rounded-md" key={item.id} >
-                                                                    <ImageIconMaterial dataImage={item} />
-                                                                    <Check className={`${shipmentDetailRequests.some(item1 => item1.itemId === item.id) ? "absolute top-0 right-0 bg-primary text-white" : "hidden"}`} />
-                                                                    <Button variant={"ghost"} size={"icon"} className="absolute bottom-0 left-0 w-full opacity-0 group-hover:opacity-100 hover:bg-primary" onClick={() => handleAddProducts(item?.image, item?.id, materialType)}><CirclePlus className="text-white" /></Button>
-                                                                </div>
-                                                            ))
-                                                        }
+                                                        <div className=" w-full grid grid-cols-4 md:grid-cols-6 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
+
+                                                            {
+                                                                dataM.map(item => (
+                                                                    <div className="group relative w-[100px] h-[100px] shadow-md rounded-md" key={item.id} >
+                                                                        <ImageIconMaterial dataImage={item} />
+                                                                        <Check className={`${shipmentDetailRequests.some(item1 => item1.itemId === item.id) ? "absolute top-0 right-0 bg-primary text-white" : "hidden"}`} />
+                                                                        <Button variant={"ghost"} size={"icon"} className="absolute bottom-0 left-0 w-full opacity-0 group-hover:opacity-100 hover:bg-primary" onClick={() => handleAddProducts(item?.image, item?.id, materialType)}><CirclePlus className="text-white" /></Button>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </div>
                                                     </CardContent>
                                                     <CardFooter className="flex justify-end">
                                                         <Button onClick={handleClear}>Bỏ chọn tất cả</Button>
@@ -748,7 +749,7 @@ export default function CreateShipment() {
                                                     </TableHeader>
                                                     <TableBody className="min-h-[200px] overflow-y-auto">
                                                         {
-                                                            productDetail.map((proDetail) => (
+                                                            productDetail.map((proDetail, index) => (
                                                                 <TableRow key={proDetail.itemId}>
                                                                     <TableCell className="font-medium">
                                                                         <div className="w-[50px] h-[50px] rounded-md shadow-md">
@@ -760,7 +761,7 @@ export default function CreateShipment() {
                                                                             proDetail.kindOfShip === 0 ? (
                                                                                 <Select
                                                                                     defaultValue={String(proDetail.phaseId)}
-                                                                                    onValueChange={(value) => handleChange(proDetail.itemId, 'phaseId', value)}
+                                                                                    onValueChange={(value) => handleChange(proDetail.itemId, 'phaseId', value, index)}
                                                                                 >
                                                                                     <SelectTrigger className="w-[100px]">
                                                                                         <SelectValue placeholder="Giai đoạn sản phẩm" />
@@ -786,10 +787,10 @@ export default function CreateShipment() {
                                                                             name="quantity"
                                                                             value={
                                                                                 shipmentDetailRequests.find(
-                                                                                    (item) => item.itemId === proDetail.itemId
+                                                                                    (item, i) => item.itemId === proDetail.itemId && i === index
                                                                                 )?.quantity || 0
                                                                             }
-                                                                            onChange={(e) => handleChange(proDetail.itemId, 'quantity', parseInt(e.target.value))}
+                                                                            onChange={(e) => handleChange(proDetail.itemId, 'quantity', parseInt(e.target.value), index)}
                                                                             className="w-16 text-center outline-none"
                                                                         />
                                                                     </TableCell>
@@ -799,7 +800,7 @@ export default function CreateShipment() {
                                                                     <TableCell>
                                                                         <Select
                                                                             defaultValue={String(proDetail.productPhaseType)}
-                                                                            onValueChange={(value) => handleChange(proDetail.itemId, 'productPhaseType', parseInt(value))}
+                                                                            onValueChange={(value) => handleChange(proDetail.itemId, 'productPhaseType', parseInt(value), index)}
                                                                         >
                                                                             <SelectTrigger className="w-[180px]">
                                                                                 <SelectValue placeholder="Loại chất lượng sản phẩm" />
@@ -816,7 +817,7 @@ export default function CreateShipment() {
                                                                         </Select>
                                                                     </TableCell>
                                                                     <TableCell>
-                                                                        <Button variant={"ghost"} size={"icon"} onClick={() => handleDeleteProducts(proDetail.itemId)}><CircleX /></Button>
+                                                                        <Button variant={"ghost"} size={"icon"} onClick={() => handleDeleteProducts(proDetail.itemId,index)}><CircleX /></Button>
                                                                     </TableCell>
                                                                 </TableRow>
                                                             ))
@@ -863,21 +864,20 @@ export default function CreateShipment() {
                                                                             </FormControl>
                                                                             <SelectContent>
                                                                                 {company.map((item) => (
-                                                                                    <SelectItem key={item.id} value={item.id} className="hover:bg-slate-100">
-                                                                                        <div className="flex flex-col items-start shadow-sm mb-1">
+                                                                                    <SelectItem key={item.id} value={item.id} className="hover:bg-slate-100 shadow-md mb-1">
+                                                                                        <div className="flex flex-col items-start  ">
                                                                                             <span>
-                                                                                                {limitLength(item.name, 30)}
+                                                                                                {limitLength(item.name, 30)}-{limitLength(item.address, 30)}
                                                                                             </span>
                                                                                             <span className="text-sm text-gray-500">
-                                                                                                {limitLength(item.address, 30)}
-                                                                                            </span>
-                                                                                        </div>
-                                                                                        <div className="flex flex-col items-start">
-                                                                                            <span>
-                                                                                                {item.directorName}
-                                                                                            </span>
-                                                                                            <span className="text-sm text-gray-500">
-                                                                                                {item.directorPhone} - {item.email}
+                                                                                                <div className="flex flex-col items-start">
+                                                                                                    <span>
+                                                                                                        {item.directorName}
+                                                                                                    </span>
+                                                                                                    <span className="text-sm text-gray-500">
+                                                                                                        {item.directorPhone}-{item.email}
+                                                                                                    </span>
+                                                                                                </div>
                                                                                             </span>
                                                                                         </div>
                                                                                     </SelectItem>
@@ -921,21 +921,20 @@ export default function CreateShipment() {
                                                                             </FormControl>
                                                                             <SelectContent>
                                                                                 {company1.map((item) => (
-                                                                                    <SelectItem key={item.id} value={item.id} className="hover:bg-slate-100">
-                                                                                        <div className="flex flex-col items-start shadow-sm mb-1">
+                                                                                    <SelectItem key={item.id} value={item.id} className="hover:bg-slate-100 shadow-md mb-1">
+                                                                                        <div className="flex flex-col items-start  ">
                                                                                             <span>
-                                                                                                {limitLength(item.name, 30)}
+                                                                                                {limitLength(item.name, 30)}-{limitLength(item.address, 30)}
                                                                                             </span>
                                                                                             <span className="text-sm text-gray-500">
-                                                                                                {limitLength(item.address, 30)}
-                                                                                            </span>
-                                                                                        </div>
-                                                                                        <div className="flex flex-col items-start">
-                                                                                            <span>
-                                                                                                {item.directorName}
-                                                                                            </span>
-                                                                                            <span className="text-sm text-gray-500">
-                                                                                                {item.directorPhone} - {item.email}
+                                                                                                <div className="flex flex-col items-start">
+                                                                                                    <span>
+                                                                                                        {item.directorName}
+                                                                                                    </span>
+                                                                                                    <span className="text-sm text-gray-500">
+                                                                                                        {item.directorPhone}-{item.email}
+                                                                                                    </span>
+                                                                                                </div>
                                                                                             </span>
                                                                                         </div>
                                                                                     </SelectItem>

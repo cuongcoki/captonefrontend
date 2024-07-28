@@ -47,12 +47,11 @@ import { useParams } from "next/navigation";
 
 // ** import Components
 import { NoImage } from "@/constants/images";
-import UpdateOrder from "../form/UpdateOrder";
-import { UpdateOrderDetails } from "../form/UpdateOrderDetail";
+
 import { Badge } from "@/components/ui/badge";
 import { Building2, Copy, CreditCard, MoreVertical, Truck } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { ShipOrder } from "./shipOrder/ShipOrder";
+import { ShipOrderShipper } from "./shipOrder/ShipOrder";
 import TitleComponent from "@/components/shared/common/Title";
 import HeaderComponent from "@/components/shared/common/header";
 
@@ -124,7 +123,7 @@ interface orderIds {
   vat: number;
 }
 
-export default function OrderIdPage({ orderId }: OrderId) {
+export default function OrderIdPageShipper({ orderId }: OrderId) {
   //state
   const params = useParams<{ id: string }>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -141,7 +140,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
     const fetchDataOrderId = () => {
       setLoading(true);
       orderApi
-        .getOrderId(params.id)
+        .getOrderId(orderId)
         .then(({ data }) => {
           const orderData = data.data;
           setData(orderData);
@@ -156,7 +155,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
     const fetchDataOrderIds = () => {
       setLoading(true);
       orderApi
-        .getOrderDetailsId(params.id)
+        .getOrderDetailsId(orderId)
         .then(({ data }) => {
           const orderData = data.data;
           setDataId(orderData);
@@ -170,7 +169,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
     };
     fetchDataOrderIds();
     fetchDataOrderId();
-  }, [data, dataId, params.id]);
+  }, [data, dataId, orderId]);
 
   const [checkStatus, setCheckStatus] = useState<boolean>(false);
   useEffect(() => {
@@ -262,7 +261,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
             <div className="flex justify-between items-center ">
               <CardTitle className="text-primary">Đơn hàng chi tiết</CardTitle>
 
-              {checkStatus ? <UpdateOrder orderId={data} /> : ""}
+        
             </div>
           </CardHeader>
           <CardContent>
@@ -300,7 +299,6 @@ export default function OrderIdPage({ orderId }: OrderId) {
             <div className="flex justify-between items-center ">
               <CardTitle className="text-primary">Sản phẩm chi tiết</CardTitle>
 
-              {checkStatus ? <UpdateOrderDetails orderId={dataId} /> : ""}
             </div>
           </CardHeader>
           <CardContent>
@@ -309,7 +307,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
                 <TabsTrigger value="productOrderResponses">
                   Sản phẩm
                 </TabsTrigger>
-                <TabsTrigger value="setOrderResponses">Bộ sản phẩm</TabsTrigger>
+                <TabsTrigger value="setOrderResponses">Bộ sẩn phẩm</TabsTrigger>
               </TabsList>
               <TabsContent value="productOrderResponses">
                 <Card>
@@ -400,7 +398,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
                           <TableHead>Tên sản phẩm</TableHead>
                           <TableHead>mô tả</TableHead>
                           <TableHead>Số lượng</TableHead>
-                          <TableHead>Đơn vị giá</TableHead>
+                          <TableHead>Giá unit</TableHead>
                           <TableHead>Ghi chú</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -440,48 +438,9 @@ export default function OrderIdPage({ orderId }: OrderId) {
           </CardContent>
         </Card>
       </div>
-      <ShipOrder orderId={dataId} checkStatus={checkStatus} />
+      <ShipOrderShipper orderId={dataId} checkStatus={checkStatus} />
     </div>
   );
 }
 
-{
-  /* <div className="flex justify-between items-center gap-8 text-xl">
 
-<div className="flex flex-col gap-5">
-    <div className="flex  justify-between items-center">
-        <span className="font-medium text-gray-600">Tên công ty: </span>
-        <span className="text-gray-800 text-lg">{data?.company.name}</span>
-    </div>
-
-    <div className="flex  justify-between items-center">
-        <span className="font-medium text-gray-600">Địa chỉ: </span>
-        <span className="text-gray-800 text-lg">{data?.company.address}</span>
-    </div>
-
-    <div className="flex  justify-between items-center">
-        <span className="font-medium text-gray-600">Loại công ty: </span>
-        <span className="text-gray-800 text-lg">{data?.company.companyTypeDescription}</span>
-    </div>
-</div>
-
-<div className="flex flex-col gap-5">
-
-    <div className="flex justify-between items-center">
-        <span className="font-medium text-gray-600">Tên giám đốc: </span>
-        <span className="text-gray-800 text-lg">{data?.company.directorName}</span>
-    </div>
-    <div className="flex justify-between items-center">
-        <span className="font-medium text-gray-600">Số điện thoại: </span>
-        <span className=" flex justify-center text-red-500 text-lg">{data?.company.directorPhone}</span>
-    </div>
-    <div className="flex  justify-between items-center">
-        <span className="font-medium text-gray-600">Email: </span>
-        <span className="text-gray-800 text-lg">{data?.company.email}</span>
-    </div>
-</div>
-
-
-
-</div> */
-}

@@ -198,11 +198,6 @@ export default function ProductIDPage() {
                     Thông tin các giai đoạn của sản phẩm.
                   </span>
                 </div>
-                <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
-                  <ProductUpdate product={productId}>
-                    <PencilLine />
-                  </ProductUpdate>
-                </div>
               </div>
             </CardHeader>
             <CardContent>

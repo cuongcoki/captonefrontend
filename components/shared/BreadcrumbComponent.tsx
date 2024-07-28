@@ -57,7 +57,7 @@ export function BreadcrumbComponent() {
     return { href, title };
   });
 
-   const getCustomTitle = (href: any, defaultTitle: any) => {
+  const getCustomTitle = (href: any, defaultTitle: any) => {
     switch (href) {
       case "/dashboard/products":
         return "Loại Sản phẩm";
@@ -97,6 +97,8 @@ export function BreadcrumbComponent() {
         return "Điểm danh";
       case `/branchadmin/attendance/update-attendance`:
         return "Điểm danh chi tiết";
+      case `/branchadmin/report-manager`:
+        return "Khiếu nại";
       default:
         return defaultTitle;
     }

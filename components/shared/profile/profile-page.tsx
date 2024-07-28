@@ -247,13 +247,13 @@ export default function ProfilePage() {
               {userId?.firstName} {userId?.lastName}
             </p>
 
-            <div className="mb-4 md:text-md text-lg text-gray-400">
+            <div className=" mb-4 md:text-md md:text-start text-center text-lg text-gray-400">
               <p>{userId?.address}</p>
             </div>
 
             <div className="flex gap-4">
               <Phone size={23} />
-              <Globe size={23} />
+              {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}
             </div>
           </div>
         </div>
@@ -422,22 +422,6 @@ export default function ProfilePage() {
                 <div>
                   <div className="font-extralight text-[0.8rem]">Địa chỉ</div>
                   <div>{userId?.address}</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="font-semibold text-xl dark:text-primary">
-              Thông Tin Liên Lạc
-            </CardHeader>
-            <CardContent className="">
-              <div>
-                <div className="font-extralight text-[0.8rem]">
-                  Số điện thoại
-                </div>
-                <div>
-                  {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}{" "}
                 </div>
               </div>
             </CardContent>

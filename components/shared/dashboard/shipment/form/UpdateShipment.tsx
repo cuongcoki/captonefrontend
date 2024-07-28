@@ -99,6 +99,7 @@ import { phaseApi } from "@/apis/phase.api"
 import { materialApi } from "@/apis/material.api";
 import { Phase, Product, Company, Employee, Material, ShipmentDetailRequest, shipmentID, ImageResponse, Detail } from "@/types/shipment.type"
 import ImageIconMaterial from "./ImageIconMaterial"
+import { ShipmentStore } from "../shipment-store"
 
 const enumCompany = [
     {
@@ -106,11 +107,7 @@ const enumCompany = [
         id: 0,
         value: "0"
     },
-    {
-        description: "Công ty mua đặt hàng",
-        id: 1,
-        value: "1"
-    },
+
     {
         description: "Công ty hợp tác sản xuất",
         id: 2,
@@ -148,6 +145,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     //state 
     const [loading, setLoading] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
+    const { ForceRender } = ShipmentStore();
 
     //state ** company
     const [company, setCompany] = useState<Company[]>([]);
@@ -399,13 +397,13 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         };
         const fetchDataCompany1 = () => {
             shipmentApi.getAllCompanyByType(setCompanyType1, 1, 20)
-            .then(({ data }) => {
-                console.log("========", data.data)
-                setCompany1(data.data.data);
-            })
-            .catch(error => {
-                console.error('Error fetching companies:', error);
-            });
+                .then(({ data }) => {
+                    console.log("========", data.data)
+                    setCompany1(data.data.data);
+                })
+                .catch(error => {
+                    console.error('Error fetching companies:', error);
+                });
         }
         fetchDataCompany1();
         fetchDataCompany()
@@ -620,6 +618,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         shipmentApi.updateShipment(requestBody, shipmentIDDes)
             .then(({ data }) => {
                 console.log("data", data)
+                ForceRender();
                 if (data.isSuccess) {
                     toast.success(data.message);
                 }
@@ -716,15 +715,17 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                         </CardDescription>
                                                     </CardHeader>
                                                     <CardContent className="space-y-2">
-                                                        {
-                                                            dataM.map(item => (
-                                                                <div className="group relative w-[100px] h-[100px] shadow-md rounded-md" key={item.id} >
-                                                                    <ImageIconMaterial dataImage={item} />
-                                                                    <Check className={`${shipmentDetailRequests.some(item1 => item1.itemId === item.id) ? "absolute top-0 right-0 bg-primary text-white" : "hidden"}`} />
-                                                                    <Button variant={"ghost"} size={"icon"} className="absolute bottom-0 left-0 w-full opacity-0 group-hover:opacity-100 hover:bg-primary" onClick={() => handleAddProducts(item?.image, item?.id, materialType)}><CirclePlus className="text-white" /></Button>
-                                                                </div>
-                                                            ))
-                                                        }
+                                                        <div className=" w-full grid grid-cols-4 md:grid-cols-6 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
+                                                            {
+                                                                dataM.map(item => (
+                                                                    <div className="group relative w-[100px] h-[100px] shadow-md rounded-md" key={item.id} >
+                                                                        <ImageIconMaterial dataImage={item} />
+                                                                        <Check className={`${shipmentDetailRequests.some(item1 => item1.itemId === item.id) ? "absolute top-0 right-0 bg-primary text-white" : "hidden"}`} />
+                                                                        <Button variant={"ghost"} size={"icon"} className="absolute bottom-0 left-0 w-full opacity-0 group-hover:opacity-100 hover:bg-primary" onClick={() => handleAddProducts(item?.image, item?.id, materialType)}><CirclePlus className="text-white" /></Button>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </div>
                                                     </CardContent>
                                                     <CardFooter className="flex justify-end">
                                                         <Button onClick={handleClear}>Bỏ chọn tất cả</Button>
@@ -864,21 +865,20 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                             </FormControl>
                                                                             <SelectContent>
                                                                                 {company.map((item) => (
-                                                                                    <SelectItem key={item.id} value={item.id} className="hover:bg-slate-100">
-                                                                                        <div className="flex flex-col items-start shadow-sm mb-1">
+                                                                                    <SelectItem key={item.id} value={item.id} className="hover:bg-slate-100 shadow-md mb-1">
+                                                                                        <div className="flex flex-col items-start  ">
                                                                                             <span>
-                                                                                                {limitLength(item.name, 30)}
+                                                                                                {limitLength(item.name, 30)}-{limitLength(item.address, 30)}
                                                                                             </span>
                                                                                             <span className="text-sm text-gray-500">
-                                                                                                {limitLength(item.address, 30)}
-                                                                                            </span>
-                                                                                        </div>
-                                                                                        <div className="flex flex-col items-start">
-                                                                                            <span>
-                                                                                                {item.directorName}
-                                                                                            </span>
-                                                                                            <span className="text-sm text-gray-500">
-                                                                                                {item.directorPhone} - {item.email}
+                                                                                                <div className="flex flex-col items-start">
+                                                                                                    <span>
+                                                                                                        {item.directorName}
+                                                                                                    </span>
+                                                                                                    <span className="text-sm text-gray-500">
+                                                                                                        {item.directorPhone}-{item.email}
+                                                                                                    </span>
+                                                                                                </div>
                                                                                             </span>
                                                                                         </div>
                                                                                     </SelectItem>
@@ -922,21 +922,20 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                             </FormControl>
                                                                             <SelectContent>
                                                                                 {company1.map((item) => (
-                                                                                    <SelectItem key={item.id} value={item.id} className="hover:bg-slate-100">
-                                                                                        <div className="flex flex-col items-start shadow-sm mb-1">
+                                                                                    <SelectItem key={item.id} value={item.id} className="hover:bg-slate-100 shadow-md mb-1">
+                                                                                        <div className="flex flex-col items-start  ">
                                                                                             <span>
-                                                                                                {limitLength(item.name, 30)}
+                                                                                                {limitLength(item.name, 30)}-{limitLength(item.address, 30)}
                                                                                             </span>
                                                                                             <span className="text-sm text-gray-500">
-                                                                                                {limitLength(item.address, 30)}
-                                                                                            </span>
-                                                                                        </div>
-                                                                                        <div className="flex flex-col items-start">
-                                                                                            <span>
-                                                                                                {item.directorName}
-                                                                                            </span>
-                                                                                            <span className="text-sm text-gray-500">
-                                                                                                {item.directorPhone} - {item.email}
+                                                                                                <div className="flex flex-col items-start">
+                                                                                                    <span>
+                                                                                                        {item.directorName}
+                                                                                                    </span>
+                                                                                                    <span className="text-sm text-gray-500">
+                                                                                                        {item.directorPhone}-{item.email}
+                                                                                                    </span>
+                                                                                                </div>
                                                                                             </span>
                                                                                         </div>
                                                                                     </SelectItem>

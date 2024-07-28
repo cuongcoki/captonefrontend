@@ -1,0 +1,5 @@
+.attendance-table-overall th,
+.attendance-table-overall td {
+  padding: 10px;
+  text-align: center;
+}

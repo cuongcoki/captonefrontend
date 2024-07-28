@@ -16,6 +16,7 @@ import {
 import toast from "react-hot-toast";
 import { shipmentApi } from "@/apis/shipment.api";
 import CreateShipment from "../form/CreateShipment";
+import { ShipmentStore } from "../shipment-store";
 type ContexType = {
   forceUpdate: () => void;
 };
@@ -61,9 +62,7 @@ export default function RenderTableShipment() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const router = useRouter();
   const pathname = usePathname();
-  const [force, setForce] = useState<number>(1);
-
-  const forceUpdate = () => setForce((prev) => prev + 1);
+  const { force } = ShipmentStore();
 
   useEffect(() => {
     const fetchDataShipment = async () => {
@@ -105,7 +104,6 @@ export default function RenderTableShipment() {
     <div className="px-3 mt-3">
       <div className="flex flex-col md:flex-row justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
-          <MyContext.Provider value={{ forceUpdate }}>
             <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
                 <Input
@@ -132,19 +130,15 @@ export default function RenderTableShipment() {
                 </Select>
               </div>
             </div>
-          </MyContext.Provider>
         </div>
 
-        <MyContext.Provider value={{ forceUpdate }}>
           <div className="flex items-center justify-end">
             <div className="flex items-center space-x-2">
               <CreateShipment />
             </div>
           </div>
-        </MyContext.Provider>
       </div>
 
-      <MyContext.Provider value={{ forceUpdate }}>
         <div className="overflow-x-auto">
           <DataTable columns={columns} data={data} />
           <DataTablePagination
@@ -153,7 +147,6 @@ export default function RenderTableShipment() {
             setCurrentPage={setCurrentPage}
           />
         </div>
-      </MyContext.Provider>
     </div>
   );
 }
