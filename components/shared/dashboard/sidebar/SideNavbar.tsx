@@ -241,6 +241,13 @@ export default function SideNavbar({}: Props) {
                 variant: "ghost",
                 checkRoll: [{id:2}],
               },
+              {
+                title: "Khiếu nại",
+                href: "/branchadmin/report-manager",
+                icon: MessageSquareMore,
+                variant: "ghost",
+                checkRoll: [{id:2}],
+              },
             ]}
           />
         </div>
