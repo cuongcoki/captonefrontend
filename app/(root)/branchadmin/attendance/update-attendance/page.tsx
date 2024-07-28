@@ -1,4 +1,4 @@
-import UpdateAttendance from "@/components/shared/dashboard/attendance/update-attendance/update-attendance";
+import UpdateAttendanceBrandAdmin from "@/components/shared/brand-admin/attendance/update-attendance/update-attendance";
 import { AttendanceDetailProps } from "@/types/attendance.type";
 import React from "react";
 
@@ -19,7 +19,7 @@ export default async function page({ searchParams }: Props) {
 
   return (
     <div className="">
-      <UpdateAttendance
+      <UpdateAttendanceBrandAdmin
         dateProp={searchParams.date}
         slotProp={searchParams.slot}
         warehouseProp={searchParams.warehouse}
