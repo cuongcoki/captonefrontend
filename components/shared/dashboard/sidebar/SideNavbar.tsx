@@ -106,7 +106,7 @@ export default function SideNavbar({}: Props) {
               // },
               {
                 title: "Nhân Viên",
-                href: "/dashboard/user",
+                href: "/dashboard/user?roleId=5&page=1",
                 icon: UserRound,
                 variant: "ghost",
                 checkRoll: [{ id: 1 }],
@@ -223,18 +223,18 @@ export default function SideNavbar({}: Props) {
                 checkRoll: [{ id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
               },
               {
-                title: "Khiếu nại",
-                href: "/branchadmin/report-manager",
-                icon: MessageSquareMore,
-                variant: "ghost",
-                checkRoll: [{ id: 2 }],
-              },
-              {
-                title: "Đơn khiếu nại",
-                href: "/employee/report",
-                icon: MessageSquareWarning,
+                title: "Lương",
+                href: `/employee/salary/${user.user?.id}`,
+                icon: Coins,
                 variant: "ghost",
                 checkRoll: [{ id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
+              },
+              {
+                title: "Đếm sản phẩm",
+                href: "/employee/attendance/update-attendance",
+                icon: CalendarSearch,
+                variant: "ghost",
+                checkRoll: [{ id: 3 }],
               },
               {
                 title: "Đơn vận chuyển",
@@ -243,21 +243,19 @@ export default function SideNavbar({}: Props) {
                 variant: "ghost",
                 checkRoll: [{ id: 4 }],
               },
-
               {
-                title: "Lương nhân viên",
-                href: `/employee/salary/${user.user?.id}`,
-                icon: Coins,
+                title: "Khiếu nại",
+                href: "/branchadmin/report-manager",
+                icon: MessageSquareMore,
+                variant: "ghost",
+                checkRoll: [{ id: 2 }],
+              },
+              {
+                title: "Gửi khiếu nại",
+                href: "/employee/report",
+                icon: MessageSquareWarning,
                 variant: "ghost",
                 checkRoll: [{ id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
-              },
-
-              {
-                title: "Đếm sản phẩm",
-                href: "/employee/attendance/update-attendance",
-                icon: CalendarSearch,
-                variant: "ghost",
-                checkRoll: [{ id: 3 }],
               },
             ]}
           />

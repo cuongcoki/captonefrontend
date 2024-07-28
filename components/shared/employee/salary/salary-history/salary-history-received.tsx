@@ -121,7 +121,6 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
               <TableRow>
                 <TableHead>Thời gian</TableHead>
                 <TableHead>Lương </TableHead>
-                <TableHead> </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -145,7 +144,6 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
               )}
             </TableBody>
           </Table>
-       
         </CardContent>
         <CardFooter className="flex flex-row items-center px-6">
           <Pagination className="ml-auto mr-0 w-auto">

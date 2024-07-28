@@ -75,10 +75,10 @@ export default function ForgetPassword() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-secondary-backgroudPrimary">
-                      CĂN CƯỚC CÔNG DÂN
+                      SỐ ĐIỆN THOẠI
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Cccd" {...field} />
+                      <Input placeholder="Nhập số điện thoại" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

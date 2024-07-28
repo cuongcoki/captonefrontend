@@ -78,8 +78,8 @@ export default function RenderTableShipment() {
         console.log("DATA SHIPMENT", response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
-      } catch (error:any) {
-        toast.error(error.response.data.message)
+      } catch (error: any) {
+        // toast.error(error.response.data.message)
         console.error("Error fetching order data:", error);
       } finally {
         setLoading(false);

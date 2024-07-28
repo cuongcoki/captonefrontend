@@ -206,7 +206,7 @@ export default function ProductPhaseTable({
                 <TableHead>Lỗi bên mình</TableHead>
                 <TableHead>Lỗi bên thứ 3</TableHead>
                 <TableHead>Hàng hỏng</TableHead>
-                <TableHead>Hành động</TableHead>
+                <TableHead className="text-center">Hành động</TableHead>
               </TableRow>
             </TableHeader>
 
@@ -246,7 +246,7 @@ export default function ProductPhaseTable({
                     <TableCell>
                       {formatCurrency(item.brokenAvailableQuantity)}
                     </TableCell>
-                    <TableCell className="flex">
+                    <TableCell className="flex justify-center">
                       <ProductPhaseAction index={index} />
                     </TableCell>
                   </TableRow>

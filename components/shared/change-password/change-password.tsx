@@ -23,15 +23,13 @@ import {
 import { authApi } from "@/apis/auth.api";
 import { ConfirmChangePassword } from "@/types/userTypes";
 import { useState } from "react";
-import toast,{Toaster} from "react-hot-toast";
-
-
+import toast, { Toaster } from "react-hot-toast";
 
 export default function ChangePasswod() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
 
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<ChangePasswordFormType>({
     resolver: zodResolver(ChangePasswordSchema),
@@ -44,7 +42,7 @@ export default function ChangePasswod() {
   });
 
   const onSubmit = (data: ChangePasswordFormType) => {
-    setLoading(true)
+    setLoading(true);
     const body: ConfirmChangePassword = {
       userId: data.id,
       verifyCode: data.verifyCode,
@@ -54,18 +52,18 @@ export default function ChangePasswod() {
       .confirmChangePassword(body)
       .then((response) => {
         console.log(">>> change password", response.data.message);
-        toast.success(response.data.message)
+        toast.success(response.data.message);
         setTimeout(() => {
           router.push("/sign-in");
-        }, 2000)
+        }, 2000);
       })
       .catch((error) => {
         console.log(">>> change pass error", error);
-        toast.error(error.response.data.message)
+        toast.error(error.response.data.message);
       })
       .finally(() => {
-        setLoading(false)
-      })
+        setLoading(false);
+      });
   };
   return (
     <div className="w-full h-screen lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px] bg-primary-backgroudPrimary">
@@ -121,7 +119,11 @@ export default function ChangePasswod() {
                       MẬT KHẨU MỚI
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Mật khẩu" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Mật khẩu"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -136,7 +138,11 @@ export default function ChangePasswod() {
                       NHẬP LẠI MẬT KHẨU
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Mật khẩu" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="Mật khẩu"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

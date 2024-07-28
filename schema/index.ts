@@ -212,13 +212,14 @@ export const UserUpdateSchema = UsersSchema.omit({
 export type UserUpdateFormType = z.infer<typeof UserUpdateSchema>;
 
 export const ForgetPasswordSchema = z.object({
-  id: z.string().refine(
-    (id) => {
-      const idPattern = /^\d{12}$/;
-      return idPattern.test(id);
-    },
-    { message: "Id phải đúng 12 chữ số" }
-  ),
+  id: z.string(),
+  // .refine(
+  //   (phone) => {
+  //     const phonePattern = /^\d{10}$/;
+  //     return phonePattern.test(phone);
+  //   },
+  //   { message: "Số điện thoại phải đúng 10 chữ số" }
+  // ),
 });
 
 export type ForgetPasswordFormType = z.infer<typeof ForgetPasswordSchema>;

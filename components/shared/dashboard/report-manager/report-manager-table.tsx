@@ -34,6 +34,12 @@ const ColorOfTypeStatus: { [key: number]: string } = {
   2: "text-red-500",
 };
 
+const StatusDescription: { [key: number]: string } = {
+  0: "Đang chờ xử lý",
+  1: "Đã xử lý",
+  2: "Đã từ chối",
+};
+
 export default function ReportManagerTable({
   searchParams,
 }: ReportManagerParams) {
@@ -237,12 +243,13 @@ export default function ReportManagerTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nhân viên</TableHead>
-              <TableHead>Loại Đơn</TableHead>
-              <TableHead>Nội dung</TableHead>
-              <TableHead>Ngày Tạo</TableHead>
-              <TableHead>Phản Hồi</TableHead>
-              <TableHead>Trạng thái</TableHead>
+              <TableHead className="text-center">Ảnh Đại Diện</TableHead>
+              <TableHead className="text-center">Nhân viên</TableHead>
+              <TableHead className="text-center">Loại Đơn</TableHead>
+              <TableHead className="text-center">Nội dung</TableHead>
+              <TableHead className="text-center">Ngày Tạo</TableHead>
+              <TableHead className="text-center">Phản Hồi</TableHead>
+              <TableHead className="text-center">Trạng thái</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -257,27 +264,27 @@ export default function ReportManagerTable({
               tableData.map((report, index) => (
                 <ReportManagerUpdate index={index} key={report.id}>
                   <TableRow className="hover:cursor-pointer">
-                    <TableCell>
-                      <div className="text-center">
-                        {report.fullName}
-                        <div className="w-32 h-44 bg-gray-300">
-                          <Image
-                            src={report.avatar}
-                            alt="avatar"
-                            width={320}
-                            height={440}
-                            className="object-cover h-full w-full"
-                          />
-                        </div>
+                    <TableCell className="flex justify-center">
+                      <div className="w-32 h-44 bg-gray-300">
+                        <Image
+                          src={report.avatar}
+                          alt="avatar"
+                          width={320}
+                          height={440}
+                          className="object-cover h-full w-full"
+                        />
                       </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-center">{report.fullName}</div>
                     </TableCell>
                     <TableCell>
                       <div className="text-center">
                         {report.reportTypeDescription}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className="whitespace-normal break-words w-64 mx-auto">
+                    <TableCell className="px-0">
+                      <div className="whitespace-normal break-words w-64 mx-auto text-center">
                         {report.description}
                       </div>
                     </TableCell>
@@ -287,7 +294,7 @@ export default function ReportManagerTable({
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="whitespace-normal break-words w-64 mx-auto">
+                      <div className="whitespace-normal break-words w-64 mx-auto text-center">
                         {report.replyMessage}
                       </div>
                     </TableCell>
@@ -297,7 +304,7 @@ export default function ReportManagerTable({
                           ColorOfTypeStatus[report.status]
                         }`}
                       >
-                        {report.statusDesscription}
+                        {StatusDescription[report.status]}
                       </div>
                     </TableCell>
                   </TableRow>
