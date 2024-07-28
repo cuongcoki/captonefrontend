@@ -33,11 +33,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { CompanyAddSchemaType } from "@/schema/company";
 import { reportAddSchema, ReportAddSchemaType } from "@/schema/report";
 import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 export function ReportAdd() {
   const { ForceRender } = ReportStore();
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const form = useForm<ReportAddSchemaType>({
     resolver: zodResolver(reportAddSchema),
@@ -57,6 +59,7 @@ export function ReportAdd() {
         toast.success("Tạo đơn thành công");
         ForceRender();
         form.reset();
+        setIsOpen(false);
       })
       .catch((error) => {
         toast.error("Tạo đơn thất bại");
@@ -65,7 +68,7 @@ export function ReportAdd() {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="default" className="bg-[#22c55e]">
           Thêm mới

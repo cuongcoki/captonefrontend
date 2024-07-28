@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import {
   AttendanceDetailProductType,
   AttendanceDetailType,
@@ -48,16 +48,7 @@ const comboboxData: ComboboxDataType[] = [
     value: "3",
   },
 ];
-// const wareHouseData: ComboboxDataType[] = [
-//   {
-//     label: "Cơ sở chính",
-//     value: "b6897f71-491b-43d4-9234-36bef2290c2b",
-//   },
-//   {
-//     label: "Cơ sở phụ",
-//     value: "f6a24556-9ae6-4aed-95f9-34289595db21",
-//   },
-// ];
+
 const noIamge =
   "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
 export default function UpdateAttendanceEm({
@@ -69,6 +60,8 @@ export default function UpdateAttendanceEm({
   slotProp: string;
   warehouseProp: string;
 }): JSX.Element {
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+
   const colorSlaryByProduct = "bg-white";
   function formatDate(dateStr: String) {
     const [day, month, year] = dateStr.split("/");
@@ -95,7 +88,9 @@ export default function UpdateAttendanceEm({
   const CheckUser = useAuth();
   const [date, setDate] = useState<string>(formatDate(dateProp));
   const [slot, setSlot] = useState<string>(slotProp);
-  const [warehouse, setWarehouse] = useState<string>(String(CheckUser.user?.companyId));
+  const [warehouse, setWarehouse] = useState<string>(
+    String(CheckUser.user?.companyId)
+  );
   const [users, setUsers] = useState<User[]>(user);
   const [isCreated, setIsCreated] = useState(false);
   const pathname = usePathname();
@@ -107,26 +102,57 @@ export default function UpdateAttendanceEm({
     new Map<string, string>()
   );
 
+  console.log("CheckUser", CheckUser.user);
+  const [isChangeCompany, setIsChangeCompany] = useState(false);
 
-  console.log('CheckUser', CheckUser.user)
-  
-  useEffect(() => {
-    companyApi.getCompany(String(CheckUser.user?.companyId)).then(({ data }) => {
-      console.log("Company Data: ", data);
-      setSelectWareHouseData(
-        data.data.map((item:any) => ({ label: item.name, value: item.id }))
-      );
-        setWarehouse(data.data.id);
-    });
-  }, [warehouseProp]);
+  const wareHouseRef = useRef(warehouse);
+  const selectWareHouseDataRef = useRef(selectWareHouseData);
+  const usersRef = useRef(users);
+  const imageOfUserRef = useRef(imageOfUser);
+  const isChangeCompanyRef = useRef(isChangeCompany);
 
-  // GET USERS DATA
   useEffect(() => {
+    wareHouseRef.current = warehouse;
+  }, [warehouse]);
+
+  useEffect(() => {
+    selectWareHouseDataRef.current = selectWareHouseData;
+  }, [selectWareHouseData]);
+
+  useEffect(() => {
+    usersRef.current = users;
+  }, [users]);
+
+  useEffect(() => {
+    imageOfUserRef.current = imageOfUser;
+  }, [imageOfUser]);
+
+  useEffect(() => {
+    isChangeCompanyRef.current = isChangeCompany;
+  }, [isChangeCompany]);
+
+  useEffect(() => {
+    let localWareHouse = wareHouseRef.current || "";
     let userD: User[] = [];
+    // GET WAREHOUSE DATA
+    if (selectWareHouseDataRef.current.length === 0) {
+      companyApi.getCompanyByType(0).then(({ data }) => {
+        console.log("Company Data: ", data);
+        setSelectWareHouseData(
+          data.data.map((item) => ({ label: item.name, value: item.id }))
+        );
+        if (wareHouseRef.current === "") {
+          localWareHouse = data.data[0].id;
+          setWarehouse(data.data[0].id);
+        }
+      });
+    }
+    // GET USERS DATA
     const FetchGetUser = async () => {
+      // if (userD.length > 0 && !isChangeCompany) return;
       try {
         const response = await attendanceApi.getUserByCompanyId({
-          CompanyId: warehouse,
+          CompanyId: localWareHouse,
         });
         const data = response.data.data;
         console.log("GetUSERS:", data);
@@ -137,9 +163,10 @@ export default function UpdateAttendanceEm({
         console.log("Error getUserByCompanyId: ", error);
       }
     };
-
+    // GET IMAGE OF USER
     const FetchImageOfUser = async () => {
-      await FetchGetUser();
+      if (!isChangeCompanyRef.current && imageOfUserRef.current.size > 0)
+        return;
       const iamges = new Map<string, string>();
       for (let i = 0; i < userD.length; i++) {
         try {
@@ -150,15 +177,12 @@ export default function UpdateAttendanceEm({
           console.log("Error get image: ", error);
         }
       }
-      console.log("iamges of user", iamges);
+      console.log("iamges of user", iamges.size);
       setImageOfUser(iamges);
       setUsers(userD);
       setUser(userD);
     };
-    FetchImageOfUser();
-  }, [setUser, warehouse]);
-  // GET ATTENDANCE DATA
-  useEffect(() => {
+    // GET IMAGE OF PRODUCT
     const getImage = async (name: string) => {
       try {
         const res = await filesApi.getFile(name);
@@ -168,108 +192,101 @@ export default function UpdateAttendanceEm({
         console.log("Error get image: ", error.response.data);
       }
     };
-    const setUser = new Set<string>();
-    attendanceApi
-      .getAttendance({
-        Date: date,
-        SlotId: slot,
-        PageIndex: "1",
-        PageSize: "1000",
-        SearchTerm: "",
-        CompanyId: warehouse,
-      })
-      .then(async ({ data }) => {
-        // console.log("data", data.data.data);
-        setIsCreated(true);
-        const attendanceData = await Promise.all(
-          data.data.data.map(async (item): Promise<AttendanceDetailType> => {
-            setUser.add(item.userId);
-            const products = await Promise.all(
-              item.employeeProductResponses.map(
-                async (product): Promise<AttendanceDetailProductType> => {
-                  return {
-                    productID: product.productId,
-                    productName: product.productName,
-                    image: await getImage(product.imageUrl),
-                    phaseID: product.phaseId,
-                    phaseName: product.phaseName,
-                    quantity: product.quantity.toString(),
-                  };
-                }
-              )
-            );
-            return {
-              userID: item.userId,
-              userName: item.fullName,
-              image: "",
-              hourOverTime: item.hourOverTime,
-              isAttendance: item.isAttendance,
-              isSalaryByProduct: item.isSalaryByProduct,
-              isManufacture: item.isManufacture,
-              products: products,
-            };
-          })
-        );
-        console.log("attendanceData", attendanceData);
-        // users.forEach((u) => {
-        //   if (!setUser.has(u.id)) {
-        //     attendanceData.push({
-        //       userID: u.id,
-        //       userName: u.firstName + " " + u.lastName,
-        //       image: "",
-        //       hourOverTime: "0",
-        //       isAttendance: false,
-        //       isSalaryByProduct: false,
-        //       isManufacture: false,
-        //       products: [],
-        //     });
-        //   }
-        // });
-        setTableData(attendanceData);
-      })
-      .catch((error) => {
-        console.log("Error getAttendance: ", error.response.data.message);
-        if ("Attendance is not found" === error.response.data.message) {
-          const attendanceData = users?.map((item): AttendanceDetailType => {
-            return {
-              userID: item.id,
-              userName: item.firstName + " " + item.lastName,
-              image: "",
-              hourOverTime: "0",
-              isAttendance: false,
-              isSalaryByProduct: false,
-              isManufacture: false,
-              products: [],
-            };
-          });
-          setTableData(attendanceData as AttendanceDetailType[]);
-          setIsCreated(false);
-        }
-      })
-      .finally(() => {
-        router.push(
-          `${pathname}?warehouse=${warehouse}&date=${date}&slot=${slot}`
-        );
-      });
+    const setOfUser = new Set<string>();
+    // GET ATTENDANCE DATA
+    const getAttendanceData = async () => {
+      attendanceApi
+        .getAttendance({
+          Date: date,
+          SlotId: slot,
+          PageIndex: "1",
+          PageSize: "1000",
+          SearchTerm: "",
+          CompanyId: warehouse,
+        })
+        .then(async ({ data }) => {
+          // console.log("data", data.data.data);
+          setIsCreated(true);
+          const attendanceData = await Promise.all(
+            data.data.data.map(async (item): Promise<AttendanceDetailType> => {
+              setOfUser.add(item.userId);
+              const products = await Promise.all(
+                item.employeeProductResponses.map(
+                  async (product): Promise<AttendanceDetailProductType> => {
+                    return {
+                      productID: product.productId,
+                      productName: product.productName,
+                      image: await getImage(product.imageUrl),
+                      phaseID: product.phaseId,
+                      phaseName: product.phaseName,
+                      quantity: product.quantity.toString(),
+                    };
+                  }
+                )
+              );
+              return {
+                userID: item.userId,
+                userName: item.fullName,
+                image: "",
+                hourOverTime: item.hourOverTime,
+                isAttendance: item.isAttendance,
+                isSalaryByProduct: item.isSalaryByProduct,
+                isManufacture: item.isManufacture,
+                products: products,
+              };
+            })
+          );
+          console.log("attendanceData", attendanceData);
+
+          setTableData(attendanceData);
+        })
+        .catch((error) => {
+          console.log("Error getAttendance: ", error.response.data.message);
+          if ("Attendance is not found" === error.response.data.message) {
+            const attendanceData = userD?.map((item): AttendanceDetailType => {
+              return {
+                userID: item.id,
+                userName: item.firstName + " " + item.lastName,
+                image: "",
+                hourOverTime: "0",
+                isAttendance: false,
+                isSalaryByProduct: false,
+                isManufacture: false,
+                products: [],
+              };
+            });
+            setTableData(attendanceData as AttendanceDetailType[]);
+            setIsCreated(false);
+          }
+        })
+        .finally(() => {
+          router.push(
+            `${pathname}?${
+              userData.roleId == "2" ? "" : `warehouse=${warehouse}&`
+            }date=${date}&slot=${slot}`
+          );
+        });
+      await FetchImageOfUser();
+    };
+
+    const FetchData = async () => {
+      await FetchGetUser();
+      await getAttendanceData();
+      setIsChangeCompany(false);
+    };
+    FetchData();
+
     console.log("RERENDER DATA ATTENDANCE");
-  }, [date, slot, setTableData, force, router, pathname, users, warehouse]);
-  // GET PRODUCT DATA
-  useEffect(() => {
-    attendanceApi
-      .getALlProduct({
-        SearchTerm: "",
-        IsInProcessing: true,
-        pageIndex: 1,
-        pageSize: 10000,
-      })
-      .then(({ data }) => {
-        console.log("Product Data: ", data);
-        setListProduct(data);
-      })
-      .catch((error) => {
-        console.log("Error getALlProduct: ", error);
-      });
-  }, [setListProduct]);
+  }, [
+    setUser,
+    pathname,
+    router,
+    date,
+    slot,
+    setTableData,
+    warehouse,
+    userData.roleId,
+  ]);
 
   const updateEmployeeProduct = () => {
     const employeeProductData: ProductEmployee[] = [];
@@ -381,16 +398,13 @@ export default function UpdateAttendanceEm({
     console.log("tableData", tableData);
   }, [tableData]);
 
-
-
-  
   return (
     <div>
       <HeaderComponent
         title={`Điểm danh nhân viên - ${CheckUser.user?.companyName}`}
         description={`Điểm danh nhân viên ngày ${dateProp} slot ${slotProp}`}
       />
-      <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 m-5 flex-wrap ">
+      <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 mb-5 flex-wrap ">
         <div className="">
           <DatePicker
             selected={new Date(convertDateFormat(date || ""))}
@@ -444,7 +458,7 @@ export default function UpdateAttendanceEm({
             </tr>
             <tr>
               <th className="dark:bg-[#1c1917] dark:text-primary">Tên</th>
-              <th className="dark:bg-[#1c1917] dark:text-primary">Giai đoạn</th>
+              <th className="dark:bg-[#1c1917] dark:text-primary">Mã</th>
               <th className="dark:bg-[#1c1917] dark:text-primary">Số lượng</th>
             </tr>
           </thead>
@@ -614,10 +628,11 @@ export default function UpdateAttendanceEm({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
-                            ? "dark:bg-[#1c1917] "
-                            : "bg-white dark:bg-card "
-                            }`}
+                          className={`${
+                            item.isSalaryByProduct === true
+                              ? "dark:bg-[#1c1917] "
+                              : "bg-white dark:bg-card "
+                          }`}
                         >
                           Nhấn vào
                         </td>
@@ -627,10 +642,11 @@ export default function UpdateAttendanceEm({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
-                            ? "dark:bg-[#1c1917] "
-                            : "bg-white dark:bg-card"
-                            }`}
+                          className={`${
+                            item.isSalaryByProduct === true
+                              ? "dark:bg-[#1c1917] "
+                              : "bg-white dark:bg-card"
+                          }`}
                         >
                           Để tạo
                         </td>
@@ -640,10 +656,11 @@ export default function UpdateAttendanceEm({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
-                            ? "dark:bg-[#1c1917] "
-                            : "bg-white dark:bg-card"
-                            }`}
+                          className={`${
+                            item.isSalaryByProduct === true
+                              ? "dark:bg-[#1c1917] "
+                              : "bg-white dark:bg-card"
+                          }`}
                         >
                           Sản phẩm
                         </td>

@@ -19,6 +19,7 @@ import {
   LogOut,
   Coins,
   Warehouse,
+  HandCoins,
 } from "lucide-react";
 
 import {
@@ -94,7 +95,7 @@ export default function SideNavbar({}: Props) {
             </Button>
           )}
 
-           <Nav
+          <Nav
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
               // {
@@ -108,21 +109,21 @@ export default function SideNavbar({}: Props) {
                 href: "/dashboard/user",
                 icon: UserRound,
                 variant: "ghost",
-                checkRoll: [{id:1}],
+                checkRoll: [{ id: 1 }],
               },
               {
                 title: "Đơn đặt hàng",
                 href: "/dashboard/order",
                 icon: ShoppingCart,
                 variant: "ghost",
-                checkRoll: [{id:1}],
+                checkRoll: [{ id: 1 }],
               },
               {
                 title: "Đơn vận chuyển",
                 href: "/dashboard/shipment",
                 icon: Truck,
                 variant: "ghost",
-                checkRoll: [{id:1}],
+                checkRoll: [{ id: 1 }],
               },
               {
                 title: "Sản phẩm",
@@ -142,7 +143,7 @@ export default function SideNavbar({}: Props) {
                 ],
                 icon: PackageSearch,
                 variant: "ghost",
-                checkRoll: [{id:1}],
+                checkRoll: [{ id: 1 }],
               },
               {
                 title: "Vật liệu",
@@ -162,97 +163,102 @@ export default function SideNavbar({}: Props) {
                 ],
                 icon: InspectionPanel,
                 variant: "ghost",
-                checkRoll: [{id:1}],
+                checkRoll: [{ id: 1 }],
               },
               {
                 title: "Điểm danh",
                 href: "/dashboard/attendance/update-attendance",
                 icon: CalendarSearch,
                 variant: "ghost",
-                checkRoll: [{id:1}],
+                checkRoll: [{ id: 1 }],
               },
               {
                 title: "Công ty",
                 href: "/dashboard/company",
                 icon: Building,
                 variant: "ghost",
-                checkRoll: [{id:1}],
+                checkRoll: [{ id: 1 }],
               },
               {
                 title: "Khiếu nại",
                 href: "/dashboard/report-manager",
                 icon: MessageSquareMore,
                 variant: "ghost",
-                checkRoll: [{id:1}],
+                checkRoll: [{ id: 1 }],
               },
               {
                 title: "Lương",
                 href: "/dashboard/salary",
                 icon: Coins,
                 variant: "ghost",
-                checkRoll: [{id:1}],
+                checkRoll: [{ id: 1 }],
+              },
+              {
+                title: "Lương cơ sở",
+                href: "/dashboard/salary-company",
+                icon: HandCoins,
+                variant: "ghost",
+                checkRoll: [{ id: 1 }],
               },
               {
                 title: "Kho",
                 href: "/dashboard/product-phase",
                 icon: Warehouse,
                 variant: "ghost",
-                checkRoll: [{id:1}],
+                checkRoll: [{ id: 1 }],
               },
-
 
               {
                 title: "Điểm danh",
                 href: "/branchadmin/attendance/update-attendance",
                 icon: CalendarSearch,
                 variant: "ghost",
-                checkRoll: [{id:2}],
+                checkRoll: [{ id: 2 }],
               },
               {
                 title: "Xem điểm danh",
                 href: "/employee/view-attendance",
                 icon: UserRound,
                 variant: "ghost",
-                checkRoll: [{id:2},{id:3},{id:4},{id:5}],
+                checkRoll: [{ id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
               },
               {
                 title: "Khiếu nại",
                 href: "/branchadmin/report-manager",
                 icon: MessageSquareMore,
                 variant: "ghost",
-                checkRoll: [{id:2}],
+                checkRoll: [{ id: 2 }],
               },
               {
                 title: "Đơn khiếu nại",
                 href: "/employee/report",
                 icon: MessageSquareWarning,
                 variant: "ghost",
-                checkRoll:[{id:2},{id:3},{id:4},{id:5}],
+                checkRoll: [{ id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
               },
               {
                 title: "Đơn vận chuyển",
                 href: "/employee/shipment",
                 icon: Truck,
                 variant: "ghost",
-                checkRoll:[{id:4}],
+                checkRoll: [{ id: 4 }],
               },
-            
+
               {
                 title: "Lương nhân viên",
                 href: `/employee/salary/${user.user?.id}`,
                 icon: Coins,
                 variant: "ghost",
-                checkRoll: [{id:2},{id:3},{id:4},{id:5}],
+                checkRoll: [{ id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }],
               },
-              
+
               {
                 title: "Đếm sản phẩm",
                 href: "/employee/attendance/update-attendance",
                 icon: CalendarSearch,
                 variant: "ghost",
-                checkRoll: [{id:3}],
+                checkRoll: [{ id: 3 }],
               },
-            
             ]}
           />
         </div>
