@@ -76,6 +76,9 @@ export type SalaryDetailType = {
   totalWorkingDays: number;
   totalWorkingHours: number;
   totalSalaryProduct: number;
+  rate: number;
+  rateOverTime: number;
+  rateWorkingDay: number;
   productWorkingResponses: ProductWorkingResponses[];
 };
 

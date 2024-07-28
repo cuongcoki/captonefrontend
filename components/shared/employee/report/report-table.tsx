@@ -16,6 +16,7 @@ import { ReportAdd } from "@/components/shared/employee/report/report-add";
 import { Button } from "@/components/ui/button";
 import HeaderComponent from "@/components/shared/common/header";
 import { Card } from "@/components/ui/card";
+import { usePathname, useRouter } from "next/navigation";
 
 const ColorOfTypeStatus: { [key: number]: string } = {
   0: "text-gray-500",
@@ -27,6 +28,8 @@ export default function ReportTable({ searchParams }: ReportParams) {
   const [params, setParams] = React.useState(searchParams);
   const [totalPage, setTotalPage] = React.useState(0);
   const { force, tableData, setTableData } = ReportStore();
+  const router = useRouter();
+  const pathName = usePathname();
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("userData") || "{}");
@@ -49,8 +52,12 @@ export default function ReportTable({ searchParams }: ReportParams) {
       })
       .catch((e) => {
         console.log("ERROR IN GET REPORTS", e);
+      })
+      .finally(() => {
+        console.log("FINALLY");
+        router.push(`${pathName}?PageIndex=${params.PageIndex}`);
       });
-  }, [params, force, setTableData]);
+  }, [params, force, setTableData, router, pathName]);
   return (
     <div className="">
       <HeaderComponent
@@ -128,10 +135,10 @@ export default function ReportTable({ searchParams }: ReportParams) {
           size="sm"
           onClick={() => {
             setParams((prev) => {
-              return { ...prev, pageIndex: Number(prev.PageIndex) - 1 };
+              return { ...prev, PageIndex: Number(prev.PageIndex) - 1 };
             });
           }}
-          disabled={Number(searchParams.PageIndex) === 1}
+          disabled={Number(searchParams.PageIndex) == 1}
         >
           Previous
         </Button>
@@ -140,7 +147,7 @@ export default function ReportTable({ searchParams }: ReportParams) {
           size="sm"
           onClick={() => {
             setParams((prev) => {
-              return { ...prev, pageIndex: Number(prev.PageIndex) + 1 };
+              return { ...prev, PageIndex: Number(prev.PageIndex) + 1 };
             });
           }}
           disabled={Number(searchParams.PageIndex) >= totalPage}
