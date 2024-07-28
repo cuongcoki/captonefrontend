@@ -19,6 +19,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
+import RenderTableOrderShipment from "./order/table/RenderTable";
 export default function ShipmentByShipper() {
     return (
         <>
@@ -36,7 +37,7 @@ export default function ShipmentByShipper() {
                     <RenderTableShipment />
                     </TabsContent>
                     <TabsContent value="shiporder">
-                        order
+                        <RenderTableOrderShipment />
                     </TabsContent>
                 </Tabs>
 
