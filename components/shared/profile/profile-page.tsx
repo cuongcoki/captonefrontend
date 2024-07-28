@@ -247,17 +247,13 @@ export default function ProfilePage() {
               {userId?.firstName} {userId?.lastName}
             </p>
 
-            <div className="mb-4 md:text-md text-lg text-gray-400">
+            <div className=" mb-4 md:text-md md:text-start text-center text-lg text-gray-400">
               <p>{userId?.address}</p>
             </div>
 
             <div className="flex gap-4">
-              <Popover>
-                <PopoverTrigger><Phone size={23} /></PopoverTrigger>
-                <PopoverContent className="w-[100]">
-                  {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}
-                </PopoverContent>
-              </Popover>
+              <Phone size={23} />
+              {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}
             </div>
           </div>
         </div>
