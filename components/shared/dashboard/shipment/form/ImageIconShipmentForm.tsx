@@ -49,16 +49,13 @@ export default function ImageIconShipmentForm({ dataImage }: ImageIconShipOrderP
     return (
         <>
             {mainImage ? (
-                <Popover modal={true} open={open} onOpenChange={handleOnDialog}>
+                <Popover modal={true} >
                     <PopoverTrigger className="cursor-pointer w-full h-full object-cover rounded-md"><Image src={mainImage.imageUrl} className="w-full h-full object-cover rounded-md" width={900} height={900} alt="ảnh sản phẩm" /></PopoverTrigger>
                     <PopoverContent align="start">
                         <div className="grid gap-4">
                             <div className="space-y-2">
                                 <div className="flex justify-between items-center">
                                     <h4 className="font-medium leading-none">Thông tin sản phẩm</h4>
-                                    <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                                        <X className="w-4 h-4" />
-                                    </Button>
                                 </div>
                             </div>
                             <Separator className="opacity-60"/>
