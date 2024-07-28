@@ -72,6 +72,9 @@ export default function SalaryDetailEm({
     totalWorkingHours: 0,
     year: 0,
     salary: 0,
+    rate: -999999999,
+    rateOverTime: -999999999,
+    rateWorkingDay: -999999999,
   });
 
   const router = useRouter();
@@ -101,6 +104,9 @@ export default function SalaryDetailEm({
           totalWorkingHours: 0,
           year: 0,
           salary: 0,
+          rate: -999999999,
+          rateOverTime: -999999999,
+          rateWorkingDay: -999999999,
         });
       });
   }, [params, id, router, pathname, setSalaryAvailiable]);
@@ -146,7 +152,8 @@ export default function SalaryDetailEm({
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-muted-foreground">
-                  +10% so với tháng trước
+                  {data.rate != -999999999 &&
+                    `${data.rate}% so với tháng trước`}
                 </div>
               </CardContent>
             </Card>
@@ -159,7 +166,8 @@ export default function SalaryDetailEm({
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-muted-foreground">
-                  +25% so với tháng trước
+                  {data.rateWorkingDay != -999999999 &&
+                    `${data.rateWorkingDay}% so với tháng trước`}
                 </div>
               </CardContent>
               <CardFooter></CardFooter>
@@ -173,7 +181,8 @@ export default function SalaryDetailEm({
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-muted-foreground">
-                  +10% so với tháng trước
+                  {data.rateOverTime != -999999999 &&
+                    `${data.rateOverTime}% so với tháng trước`}
                 </div>
               </CardContent>
               <CardFooter></CardFooter>
