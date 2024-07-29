@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { LogoSignIn } from "@/constants/images/index.js";
+import { ImageBackGround, LogoSignIn } from "@/constants/images/index.js";
 import FormSignIn from "./formSignIn";
 
 export default function SignIn() {
@@ -32,14 +32,14 @@ export default function SignIn() {
           </div>
         </div>
       </div>
-      <div className="hidden bg-muted lg:block flex item-center flex-center flex-column justify-center">
-        {/* <Image
-          src={LogoSignIn}
+      <div className=" bg-muted lg:block flex item-center flex-center flex-column justify-center h-full">
+        <Image
+          src={ImageBackGround}
           alt="Image"
-          // width="1920"
-          // height="1080"
-          className="object-cover dark:brightness-[0.2] dark:grayscale mx-auto"
-        /> */}
+          width="4000"
+          height="4000"
+          className="object-fill dark:brightness-[0.2] dark:grayscale mx-auto h-full w-full"
+        />
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 
-import { LogoSignIn } from "@/constants/images/index.js";
+import { ImageBackGround, LogoSignIn } from "@/constants/images/index.js";
 import { ForgetPasswordFormType, ForgetPasswordSchema } from "@/schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -75,10 +75,10 @@ export default function ForgetPassword() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-secondary-backgroudPrimary">
-                      SỐ ĐIỆN THOẠI
+                      CCCD/CMND
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Nhập số điện thoại" {...field} />
+                      <Input placeholder="Nhập CCCD hoặc CMND" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -88,7 +88,7 @@ export default function ForgetPassword() {
                 type="submit"
                 className="w-full bg-secondary-backgroudPrimary text-primary-backgroudPrimary hover:bg-yellow-300"
               >
-                GỬI MÃ XÁC NHẬN
+                ĐỔI MẬT KHẨU
               </Button>
             </form>
           </Form>
@@ -105,7 +105,7 @@ export default function ForgetPassword() {
       </div>
       <div className="hidden bg-muted lg:block">
         <Image
-          src="/placeholder.svg"
+          src={ImageBackGround}
           alt="Image"
           width="1920"
           height="1080"

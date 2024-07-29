@@ -36,7 +36,7 @@ import LoadingPage from "../loading/loading-page";
 import { ListCollapse, Phone, Globe, KeyRound, Contact } from "lucide-react";
 
 // ** import react
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { userApi } from "@/apis/user.api";
 import Link from "next/link";
@@ -50,6 +50,7 @@ import { Role } from "@/components/shared/dashboard/users/table/users/data/data"
 import Image from "next/image";
 import { filesApi } from "@/apis/files.api";
 import { salaryApi } from "@/apis/salary.api";
+import { authApi } from "@/apis/auth.api";
 
 const invoices = [
   {
@@ -70,6 +71,8 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
   const [lastDay, setLastDay] = useState<string>("");
+  const router = useRouter();
+
   // ** hooks
   const user = useAuth();
   useEffect(() => {
@@ -80,7 +83,7 @@ export default function ProfilePage() {
         UserId: params.id,
       })
       .then((res) => {
-        setLastDay(res.data.data.data[0].createdAt);
+        setLastDay(res.data.data.data[0]?.createdAt);
       });
   }, [params.id]);
 
@@ -139,6 +142,24 @@ export default function ProfilePage() {
     // Nếu thỏa mãn tất cả các điều kiện
     return true;
   }
+  const handleLogout = () => {
+    const id: any = user.user?.id;
+
+    authApi
+      .logout(id)
+      .then(({ data }) => {
+        console.log("dataLogout", data);
+        user.logout();
+        router.push("/sign-in");
+        // toast.success(data.message);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   const handleChangePassword = () => {
     if (newPassword !== confirmPassword) {
       toast.error("Mật khẩu xác nhận không khớp");
@@ -163,6 +184,7 @@ export default function ProfilePage() {
       .changePassword(data)
       .then((res) => {
         toast.success("Đổi mật khẩu thành công");
+        handleLogout();
       })
       .catch((error) => {
         console.error("Error changing password:", error);
