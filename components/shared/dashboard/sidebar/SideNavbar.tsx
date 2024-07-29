@@ -194,7 +194,7 @@ export default function SideNavbar({}: Props) {
                 checkRoll: [{ id: 1 }],
               },
               {
-                title: "Lương cơ sở",
+                title: "Chi phí gia công",
                 href: "/dashboard/salary-company",
                 icon: HandCoins,
                 variant: "ghost",

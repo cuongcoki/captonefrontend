@@ -95,8 +95,8 @@ export default function SalaryCompanyTable({
   return (
     <div className="p-2 ">
       <HeaderComponent
-        title="Danh sách lương công ty"
-        description={`Danh sách lương công ty của tháng ${params.Month} năm ${params.Year}.`}
+        title="Danh sách chi phí gia công"
+        description={`Danh sách chi phí gia công của tháng ${params.Month} năm ${params.Year}.`}
       />
       <div className="mb-5 mt-2 grid grid-cols-12 space-y-1 grid-rows-2 xl:space-y-0 xl:grid-rows-1">
         <Input
@@ -193,7 +193,7 @@ export default function SalaryCompanyTable({
                         scope="col"
                         className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
                       >
-                        Lương
+                        Chi phí
                       </th>
                       <th
                         scope="col"
