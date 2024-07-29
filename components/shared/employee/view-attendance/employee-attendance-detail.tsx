@@ -55,7 +55,7 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
           </tr>
           <tr>
             <th className="dark:bg-[#1c1917]">Tên</th>
-            <th className="dark:bg-[#1c1917]">Giai đoạn</th>
+            <th className="dark:bg-[#1c1917]">Mã sản phẩm</th>
             <th className="dark:bg-[#1c1917]">Số lượng</th>
           </tr>
         </thead>
@@ -74,7 +74,7 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
                       </td>
                     ) : null}
                     <td className="dark:bg-[#1c1917]">{product.productName}</td>
-                    <td className="dark:bg-[#1c1917]">{product.phaseName}</td>
+                    <td className="dark:bg-[#1c1917]">{product.productId}</td>
                     <td className="dark:bg-[#1c1917]">{product.quantity}</td>
                     {index === 0 ? (
                       <td
