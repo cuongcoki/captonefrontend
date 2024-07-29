@@ -83,22 +83,22 @@ export default function CountProduct({
   }, [searchInput]);
 
   // GET PHASE DATA
-  useEffect(() => {
-    attendanceApi
-      .getAllPhase()
-      .then(({ data }) => {
-        // console.log("Phase Data: ", data);
-        setDataPhase(
-          data.data.map((phase) => ({
-            label: phase.name,
-            value: phase.id,
-          }))
-        );
-      })
-      .catch((error) => {
-        console.log("Error getAllPhase: ", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   attendanceApi
+  //     .getAllPhase()
+  //     .then(({ data }) => {
+  //       // console.log("Phase Data: ", data);
+  //       setDataPhase(
+  //         data.data.map((phase) => ({
+  //           label: phase.name,
+  //           value: phase.id,
+  //         }))
+  //       );
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error getAllPhase: ", error);
+  //     });
+  // }, []);
 
   const AddNewProductForUser = async (product: Product) => {
     const getImage = async (name: string) => {
