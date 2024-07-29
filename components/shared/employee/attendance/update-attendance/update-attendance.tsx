@@ -313,11 +313,15 @@ export default function UpdateAttendanceEm({
       .then(({ data }) => {
         console.log(data);
         // ForceRender();
-        // toast.success(data.message);
+        toast.success(data.message);
       });
   };
 
   const handleSubmit = (isCreate: boolean) => {
+    if (tableData.find((item) => item.products.length === 0)) {
+      toast.error("Vui lòng tạo sản phẩm cho nhân viên");
+      return;
+    }
     let DataBody = {};
     if (isCreate) {
       DataBody = {
@@ -354,6 +358,7 @@ export default function UpdateAttendanceEm({
     }
 
     console.log("updateData", DataBody);
+
     if (isCreate) {
       attendanceApi
         .createAttendance(DataBody as CreateAttendanceBody)
