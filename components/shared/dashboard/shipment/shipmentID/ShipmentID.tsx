@@ -240,7 +240,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                               <span className="text-muted-foreground flex justify-between items-center mb-1">
                                 <span className="w-[50px] h-[50px] shadow-md rounded-md">
                                   <Link
-                                    href={`/dashboard/products/product/${item.product.id}`}
+                                    href={`/dashboard/products/product/${item.product?.id}`}
                                   >
                                     {" "}
                                     <ImageIconShipment
@@ -248,18 +248,18 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                     />{" "}
                                   </Link>
                                 </span>
-                                <span>{item.product.name}</span>
-                                <span>{item.product.code}</span>
+                                <span>{item.product?.name}</span>
+                                <span>{item.product?.code}</span>
                                 <span>x</span>
                                 <span>{item.quantity}</span>
                               </span>
                               <div className="flex gap-2">
                                 <span className="text-muted-foreground flex justify-between items-center ">
-                                  {item.phase.name}
+                                  {item.phase?.name}
                                 </span>
                                 -
                                 <span className="text-muted-foreground flex justify-between items-center ">
-                                  {item.phase.description}
+                                  {item.phase?.description}
                                 </span>
                                 -
                                 <span className="text-muted-foreground flex justify-between items-center ">
