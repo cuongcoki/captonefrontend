@@ -88,7 +88,7 @@ export default function ForgetPassword() {
                 type="submit"
                 className="w-full bg-secondary-backgroudPrimary text-primary-backgroudPrimary hover:bg-yellow-300"
               >
-                ĐỔI MẬT KHẨU
+                GỬI MÃ XÁC NHẬN
               </Button>
             </form>
           </Form>
