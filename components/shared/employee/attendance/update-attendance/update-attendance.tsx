@@ -135,18 +135,18 @@ export default function UpdateAttendanceEm({
     let localWareHouse = wareHouseRef.current || "";
     let userD: User[] = [];
     // GET WAREHOUSE DATA
-    if (selectWareHouseDataRef.current.length === 0) {
-      companyApi.getCompanyByType(0).then(({ data }) => {
-        console.log("Company Data: ", data);
-        setSelectWareHouseData(
-          data.data.map((item) => ({ label: item.name, value: item.id }))
-        );
-        if (wareHouseRef.current === "") {
-          localWareHouse = data.data[0].id;
-          setWarehouse(data.data[0].id);
-        }
-      });
-    }
+    // if (selectWareHouseDataRef.current.length === 0) {
+    //   companyApi.getCompanyByType(0).then(({ data }) => {
+    //     console.log("Company Data: ", data);
+    //     setSelectWareHouseData(
+    //       data.data.map((item) => ({ label: item.name, value: item.id }))
+    //     );
+    //     if (wareHouseRef.current === "") {
+    //       localWareHouse = data.data[0].id;
+    //       setWarehouse(data.data[0].id);
+    //     }
+    //   });
+    // }
     // GET USERS DATA
     const FetchGetUser = async () => {
       // if (userD.length > 0 && !isChangeCompany) return;
