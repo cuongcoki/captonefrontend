@@ -197,7 +197,7 @@ export default function SalaryCompanyDetail({
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
             <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
               <CardHeader className="pb-3">
-                <CardDescription>Lương khả dụng</CardDescription>
+                <CardDescription>Tổng chi phí</CardDescription>
                 <CardTitle className="text-4xl text-primary">
                   {data.salary === 0
                     ? 0
@@ -311,7 +311,7 @@ export default function SalaryCompanyDetail({
                   <div className="flex">
                     <div>Số lượng sản phẩm tạo ra trong tháng 7 năm 2024</div>
                     <div className="ml-auto">
-                      Tổng lương sản phẩm:{" "}
+                      Tổng chi phí tạo sản phẩm:{" "}
                       <span className="font-bold text-primary">
                         {data.totalSalaryProduct === 0
                           ? 0
@@ -330,7 +330,7 @@ export default function SalaryCompanyDetail({
                         </TableHead>
                         <TableHead className="">Tên sản phẩm</TableHead>
                         <TableHead className="">Số lượng</TableHead>
-                        <TableHead className="">Lương</TableHead>
+                        <TableHead className="">Chi phí</TableHead>
                         <TableHead className="text-right hidden sm:table-cell">
                           Tổng
                         </TableHead>
