@@ -33,6 +33,7 @@ import { filesApi } from "@/apis/files.api";
 import { companyApi } from "@/apis/company.api";
 import HeaderComponent from "@/components/shared/common/header";
 import { useAuth } from "@/hooks/useAuth";
+import DatePickerLimit from "@/components/shared/common/datapicker/date-picker-limit";
 
 const comboboxData: ComboboxDataType[] = [
   {
@@ -318,10 +319,6 @@ export default function UpdateAttendanceEm({
   };
 
   const handleSubmit = (isCreate: boolean) => {
-    if (tableData.find((item) => item.products.length === 0)) {
-      toast.error("Vui lòng tạo sản phẩm cho nhân viên");
-      return;
-    }
     let DataBody = {};
     if (isCreate) {
       DataBody = {
@@ -369,8 +366,9 @@ export default function UpdateAttendanceEm({
           setIsCreated(true);
         })
         .catch((error) => {
-          console.log("Create error", error.response.data);
-          toast.error(error.response.data.message);
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
         })
         .finally(() => {
           // ForceRender();
@@ -385,8 +383,9 @@ export default function UpdateAttendanceEm({
           toast.success(data.message);
         })
         .catch((error) => {
-          console.log("Update error", error.response.data);
-          toast.error(error.response.data.message);
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
         })
         .finally(() => {
           // ForceRender();
@@ -413,7 +412,7 @@ export default function UpdateAttendanceEm({
       />
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 mb-5 flex-wrap ">
         <div className="">
-          <DatePicker
+          <DatePickerLimit
             selected={new Date(convertDateFormat(date || ""))}
             name="from"
             title={date || "Chọn ngày"}
@@ -713,17 +712,17 @@ export default function UpdateAttendanceEm({
         </Button> */}
         {isCreated ? (
           <Button
-            className="bg-[#00a9ff] hover:bg-[#0087cc]"
+            className="bg-[#00dd00] hover:bg-[#00aa00]"
             onClick={() => handleSubmit(false)}
           >
-            Lưu thay đổi
+            Lưu điểm danh
           </Button>
         ) : (
           <Button
             className="bg-[#00dd00] hover:bg-[#00aa00]"
             onClick={() => handleSubmit(true)}
           >
-            Tạo điểm danh
+            Lưu điểm dnah
           </Button>
         )}
       </div>

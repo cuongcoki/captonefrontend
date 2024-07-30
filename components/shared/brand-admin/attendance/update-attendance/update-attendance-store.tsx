@@ -108,7 +108,7 @@ export const useUpdateAttendanceStore = create<UpdateAttendanceStore>(
         });
         return;
       }
-      if (Number(value) < 0 || Number(value) > 5) {
+      if (Number(value) < 0 || Number(value) > 3) {
         return;
       }
       set((state) => {
