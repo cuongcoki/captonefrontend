@@ -32,6 +32,7 @@ import CountProduct from "@/components/shared/dashboard/attendance/update-attend
 import { filesApi } from "@/apis/files.api";
 import { companyApi } from "@/apis/company.api";
 import HeaderComponent from "@/components/shared/common/header";
+import DatePickerLimit from "@/components/shared/common/datapicker/date-picker-limit";
 
 const comboboxData: ComboboxDataType[] = [
   {
@@ -355,8 +356,9 @@ export default function UpdateAttendance({
           setIsCreated(true);
         })
         .catch((error) => {
-          console.log("Create error", error.response.data);
-          toast.error(error.response.data.message);
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
         })
         .finally(() => {
           // ForceRender();
@@ -371,8 +373,9 @@ export default function UpdateAttendance({
           toast.success(data.message);
         })
         .catch((error) => {
-          console.log("Update error", error.response.data);
-          toast.error(error.response.data.message);
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
         })
         .finally(() => {
           // ForceRender();
@@ -409,7 +412,7 @@ export default function UpdateAttendance({
           />
         )}
         <div className="">
-          <DatePicker
+          <DatePickerLimit
             selected={new Date(convertDateFormat(date || ""))}
             name="from"
             title={date || "Chọn ngày"}
@@ -749,17 +752,17 @@ export default function UpdateAttendance({
         </Button> */}
         {isCreated ? (
           <Button
-            className="bg-[#00a9ff] hover:bg-[#0087cc]"
+            className="bg-[#00dd00] hover:bg-[#00aa00]"
             onClick={() => handleSubmit(false)}
           >
-            Lưu thay đổi
+            Lưu điểm danh
           </Button>
         ) : (
           <Button
             className="bg-[#00dd00] hover:bg-[#00aa00]"
             onClick={() => handleSubmit(true)}
           >
-            Tạo điểm danh
+            Lưu điểm dnah
           </Button>
         )}
       </div>
