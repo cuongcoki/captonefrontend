@@ -1,8 +1,6 @@
-
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
-import { Row } from "@tanstack/react-table"
-
-import { Button } from "@/components/ui/button"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { Row } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,36 +8,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import Link from "next/link"
-import { ScanEye } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+import { ScanEye } from "lucide-react";
+import { UpdateShipment } from "../form/UpdateShipment";
 
-
-
-interface DataTableRowActionsProps<TData> {
-  row: Row<TData>
+interface DataWithId {
+  id: string;
 }
 
-export function DataTableRowActions<TData>({
+interface DataTableRowActionsProps<TData extends DataWithId> {
+  row: Row<TData>;
+}
+
+export function DataTableRowActions<TData extends DataWithId>({
   row,
 }: DataTableRowActionsProps<TData>) {
-
   return (
-    <DropdownMenu modal={false}>
-    <DropdownMenuTrigger asChild>
-      <Button
-        variant="ghost"
-        className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
-      >
-        <DotsHorizontalIcon className="h-4 w-4" />
-        <span className="sr-only">Open menu</span>
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" className="w-[160px]">
-     
-      
-    </DropdownMenuContent>
-  </DropdownMenu>
-
-  )
+    <>
+      <UpdateShipment shipmentIDDes={row.original.id} />
+    </>
+  );
 }

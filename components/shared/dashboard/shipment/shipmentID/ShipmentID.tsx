@@ -53,6 +53,7 @@ import { shipmentApi } from "@/apis/shipment.api";
 import { format } from "date-fns";
 import ImageIconShipment from "./ImageIconShipment";
 import Link from "next/link";
+import ImageIconShipmentMa from "./ImageIconShipmentMa";
 
 interface ImageResponse {
   id: string;
@@ -78,12 +79,25 @@ interface Phase {
   description: string;
 }
 
-interface Detail {
+export type Material = {
+  id: string
+  name: string;
+  description: string;
+  unit: string;
+  quantityPerUnit: number;
+  image: string;
+  quantityInStock: number;
+}
+
+
+
+export interface Detail {
   product: Product;
   phase: Phase;
-  material: string | null;
+  material: Material;
   quantity: number;
   productPhaseType: number;
+  materialPrice: number;
   productPhaseTypeDescription: string;
 }
 
@@ -177,7 +191,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
     return `${day}/${month}/${year}`;
   }
 
-  // console.log("datashipment=====", data)
+  console.log("datashipment=====", data)
   return (
     <>
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
@@ -238,33 +252,50 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                               key={index}
                             >
                               <span className="text-muted-foreground flex justify-between items-center mb-1">
-                                <span className="w-[50px] h-[50px] shadow-md rounded-md">
-                                  <Link
-                                    href={`/dashboard/products/product/${item.product?.id}`}
-                                  >
-                                    {" "}
-                                    <ImageIconShipment
-                                      dataImage={item.product?.imageResponses}
-                                    />{" "}
-                                  </Link>
-                                </span>
-                                <span>{item.product?.name}</span>
-                                <span>{item.product?.code}</span>
+                                {item?.product ? (
+                                  <>
+                                    <span className="w-[50px] h-[50px] shadow-md rounded-md">
+                                      <Link
+                                        href={`/dashboard/products/product/${item?.product?.id}`}
+                                      >
+                                        {" "}
+                                        <ImageIconShipment
+                                          dataImage={item?.product?.imageResponses}
+                                        />{" "}
+                                      </Link>
+                                    </span>
+                                    <span>{item?.product?.name}</span>
+                                    <span>{item?.product?.code}</span>
+                                  </>
+                                ) : item?.material ? (
+                                  <>
+                                    <span className="w-[50px] h-[50px] shadow-md rounded-md">
+                                      <ImageIconShipmentMa dataImage={item?.material?.image} />
+                                    </span>
+                                    <span>{item?.material?.name}</span>
+                                    <span>{item?.material?.unit}</span>
+                                  </>
+                                ) : null}
                                 <span>x</span>
-                                <span>{item.quantity}</span>
+                                <span>{item?.quantity}</span>
                               </span>
                               <div className="flex gap-2">
-                                <span className="text-muted-foreground flex justify-between items-center ">
-                                  {item.phase?.name}
+                                <span className="text-muted-foreground flex justify-between items-center">
+                                  {item?.product ? "Sản phẩm: " : "Vật liệu: "}
                                 </span>
-                                -
-                                <span className="text-muted-foreground flex justify-between items-center ">
-                                  {item.phase?.description}
+                                <span className="text-muted-foreground flex justify-between items-center">
+                                  {item.material && (`${item?.materialPrice} đ`)}
                                 </span>
-                                -
-                                <span className="text-muted-foreground flex justify-between items-center ">
-                                  {item.productPhaseTypeDescription}
+                                <span className="text-muted-foreground flex justify-between items-center">
+                                  {item.product && (`${item?.phase?.name}`)}
                                 </span>
+                                <span className="text-muted-foreground flex justify-between items-center">
+                                  {item.product && (`- ${item?.phase?.description}`)}
+                                </span>
+                                <span className="text-muted-foreground flex justify-between items-center">
+                                  {item.product && (`- ${item?.productPhaseTypeDescription}`)}
+                                </span>
+
                               </div>
                             </li>
                           ))}

@@ -181,6 +181,7 @@ export type ShipmentDetailRequest = {
   itemId: string;
   phaseId: string;
   quantity: number;
+  materialPrice: number;
   kindOfShip: number;
   productPhaseType: number;
 };
@@ -283,6 +284,7 @@ export default function CreateShipment() {
         quantity: 1,
         kindOfShip: itemKind,
         productPhaseType: 0,
+        ...(itemKind !== 0 && { materialPrice: 0 }),
       },
     ]);
     setProductDetail((prev) => [
@@ -294,6 +296,7 @@ export default function CreateShipment() {
         quantity: 1,
         kindOfShip: itemKind,
         productPhaseType: 0,
+        materialPrice: 0,
       },
     ]);
   };
@@ -515,6 +518,9 @@ export default function CreateShipment() {
   // call gủi form
   const onSubmit = (data: z.infer<typeof ShipmentSchema>) => {
     console.log("data", data);
+    if(data.fromId === data.toId){
+      return toast.error("2 Công ty không được trùng nhau")
+    }
 
     // check data shipmentDetailRequests
     // Kiểm tra dữ liệu của shipmentDetailRequests
@@ -525,21 +531,21 @@ export default function CreateShipment() {
     let hasError = false;
     shipmentDetailRequests.forEach((request, index) => {
       if (!request.itemId) {
-        console.error(
-          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
-          request
-        );
+        console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
         toast.custom((t) => (
           <div
-            className={`${
-              t.visible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${t.visible ? 'animate-enter' : 'animate-leave'
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
                 <div className="ml-3 flex-1">
-                  <p className="text-sm font-medium text-gray-900">Lỗi</p>
-                  <p className="mt-1 text-sm text-gray-500">ID không tồn tại</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    Lỗi
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    ID không tồn tại
+                  </p>
                 </div>
               </div>
             </div>
@@ -554,21 +560,19 @@ export default function CreateShipment() {
           </div>
         ));
         hasError = true;
-      } else if (!request.phaseId) {
-        console.error(
-          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
-          request
-        );
+      } else if (!request.phaseId && request.kindOfShip === 0) {
+        console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
         toast.custom((t) => (
           <div
-            className={`${
-              t.visible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${t.visible ? 'animate-enter' : 'animate-leave'
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
                 <div className="ml-3 flex-1">
-                  <p className="text-sm font-medium text-gray-900">Lỗi</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    Lỗi - {request.kindOfShip === 0 ? "Sản phẩm" : "Vật liệu"}
+                  </p>
                   <p className="mt-1 text-sm text-gray-500">
                     Hãy chọn giai đoạn
                   </p>
@@ -587,22 +591,81 @@ export default function CreateShipment() {
         ));
         hasError = true;
       } else if (request.quantity <= 0) {
-        console.error(
-          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
-          request
-        );
+        console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
         toast.custom((t) => (
           <div
-            className={`${
-              t.visible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${t.visible ? 'animate-enter' : 'animate-leave'
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
                 <div className="ml-3 flex-1">
-                  <p className="text-sm font-medium text-gray-900">Lỗi</p>
+                  <p className="text-sm font-medium text-gray-900">
+                    Lỗi - {request.kindOfShip === 0 ? "Sản phẩm" : "Vật liệu"}
+                  </p>
                   <p className="mt-1 text-sm text-gray-500">
                     Số lượng không thể bé hơn 0
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex border-l border-gray-200">
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        ));
+        hasError = true;
+      } else if (request.productPhaseType === null && request.kindOfShip === 0) { // Sửa điều kiện ở đây
+        console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
+        toast.custom((t) => (
+          <div
+            className={`${t.visible ? 'animate-enter' : 'animate-leave'
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+          >
+            <div className="flex-1 w-0 p-4">
+              <div className="flex items-start">
+                <div className="ml-3 flex-1">
+                  <p className="text-sm font-medium text-gray-900">
+                    Lỗi - {request.kindOfShip === 0 ? "Sản phẩm" : "Vật liệu"}
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Hãy chọn loại cho sản phẩm
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="flex border-l border-gray-200">
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        ));
+        hasError = true;
+      }
+      else if (request.materialPrice <= 0 && request.kindOfShip === 1) {
+        console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
+        toast.custom((t) => (
+          <div
+            className={`${t.visible ? 'animate-enter' : 'animate-leave'
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+          >
+            <div className="flex-1 w-0 p-4">
+              <div className="flex items-start">
+                <div className="ml-3 flex-1">
+                  <p className="text-sm font-medium text-gray-900">
+                    Lỗi
+                  </p>
+                  <p className="mt-1 text-sm text-gray-500">
+                    Giá tiền phải lớn hơn 0
                   </p>
                 </div>
               </div>
@@ -621,6 +684,7 @@ export default function CreateShipment() {
       }
     });
 
+
     if (hasError) {
       return;
     }
@@ -635,29 +699,33 @@ export default function CreateShipment() {
     };
 
     console.log("requestBodyCreateShipment=====", requestBody);
-    // setLoading(true)
-    // shipmentApi.createShipment(requestBody)
-    //     .then(({ data }) => {
-    //         console.log("data", data)
-    //         ForceRender();
-    //         if (data.isSuccess) {
-    //             toast.success(data.message);
-    //         }
-    //     })
-    //     .catch(error => {
-    //         const errorResponse = error.response?.data?.error;
-    //         if (errorResponse?.ShipmentDetailRequests) {
-    //             toast.error(errorResponse.ShipmentDetailRequests);
-    //         } else {
-    //             toast.error(error.response?.data?.message);
-    //         }
-    //         if (errorResponse?.ToId) {
-    //             toast.error(errorResponse.ToId);
-    //         }
-    //     })
-    //     .finally(() => {
-    //         setLoading(false)
-    //     })
+    setLoading(true)
+    shipmentApi.createShipment(requestBody)
+      .then(({ data }) => {
+        console.log("data", data)
+        ForceRender();
+        setOpen(false);
+        form.reset();
+        setShipmentDetailRequests([]);
+        if (data.isSuccess) {
+          toast.success(data.message);
+        }
+      })
+      .catch(error => {
+        const errorResponse = error.response?.data?.error;
+        if (errorResponse?.ShipmentDetailRequests) {
+          toast.error(errorResponse.ShipmentDetailRequests);
+        }
+        if (errorResponse?.ToId) {
+          toast.error(errorResponse.ToId);
+        }
+        if(!errorResponse?.ToId && !errorResponse?.ShipmentDetailRequests && error.response?.data){
+          toast.error(error.response?.data.message);
+        }
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   };
 
   const limitLength = (text: any, maxLength: any) => {
@@ -671,6 +739,33 @@ export default function CreateShipment() {
   //consolo.log
   // console.log("dataP", dataP)
   console.log("shipmentDetailRequests", shipmentDetailRequests);
+  const formatCurrency = (value: any): string => {
+    if (!value) return "0";
+    let valueString = value.toString();
+
+    // Remove all non-numeric characters except dots
+    valueString = valueString.replace(/[^0-9]/g, "");
+
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+
+    if (valueString === "") return "0";
+
+    // Convert to number to format with toLocaleString
+    let numberValue = parseInt(valueString, 10);
+
+    // Format number with commas as thousands separators
+    let formatted = numberValue.toLocaleString("vi-VN");
+
+    return formatted;
+  };
+
+  const parseCurrency = (value: any) => {
+    // Loại bỏ các dấu chấm ngăn cách hàng nghìn
+    const cleanedValue = value.replace(/\./g, "");
+
+    return parseInt(cleanedValue);
+  };
 
   return (
     <>
@@ -680,7 +775,7 @@ export default function CreateShipment() {
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-            <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[800px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+            <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1000px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
               <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">Tạo đơn vận chuyển</h2>
@@ -716,13 +811,12 @@ export default function CreateShipment() {
                                 >
                                   <ImageIconShipmentForm dataImage={item} />
                                   <Check
-                                    className={`${
-                                      shipmentDetailRequests.some(
-                                        (item1) => item1.itemId === item.id
-                                      )
-                                        ? "absolute top-0 right-0 bg-primary text-white"
-                                        : "hidden"
-                                    }`}
+                                    className={`${shipmentDetailRequests.some(
+                                      (item1) => item1.itemId === item.id
+                                    )
+                                      ? "absolute top-0 right-0 bg-primary text-white"
+                                      : "hidden"
+                                      }`}
                                   />
                                   <Button
                                     variant={"ghost"}
@@ -768,13 +862,12 @@ export default function CreateShipment() {
                                 >
                                   <ImageIconMaterial dataImage={item} />
                                   <Check
-                                    className={`${
-                                      shipmentDetailRequests.some(
-                                        (item1) => item1.itemId === item.id
-                                      )
-                                        ? "absolute top-0 right-0 bg-primary text-white"
-                                        : "hidden"
-                                    }`}
+                                    className={`${shipmentDetailRequests.some(
+                                      (item1) => item1.itemId === item.id
+                                    )
+                                      ? "absolute top-0 right-0 bg-primary text-white"
+                                      : "hidden"
+                                      }`}
                                   />
                                   <Button
                                     variant={"ghost"}
@@ -815,6 +908,8 @@ export default function CreateShipment() {
                               <TableHead>Số lượng</TableHead>
                               <TableHead>Loại hàng</TableHead>
                               <TableHead>Chất lượng</TableHead>
+                              <TableHead>Giá Tiền</TableHead>
+                              <TableHead></TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody className="min-h-[200px] overflow-y-auto">
@@ -924,6 +1019,35 @@ export default function CreateShipment() {
                                     </Select>
                                   ) : (
                                     <div>Không có</div>
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  {proDetail.kindOfShip === 1 ? (
+                                    <Input
+                                    min={0}
+                                    max={20000000000}
+                                    type="text"
+                                    name="materialPrice"
+                                    value={formatCurrency(
+                                      shipmentDetailRequests.find(
+                                        (item, i) =>
+                                          item.itemId === proDetail.itemId && i === index
+                                      )?.materialPrice || 0
+                                    )}
+                                    inputMode="numeric"
+                                    onChange={(e) =>
+                                      handleChange(
+                                        proDetail.itemId,
+                                        "materialPrice",
+                                        parseCurrency(e.target.value),
+                                        index
+                                      )
+                                    }
+                                    className="w-[150px] text-center outline-none"
+                                  />
+                                  
+                                  ) : (
+                                    <>Không có</>
                                   )}
                                 </TableCell>
                                 <TableCell>
