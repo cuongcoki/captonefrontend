@@ -214,10 +214,10 @@ export type UserUpdateFormType = z.infer<typeof UserUpdateSchema>;
 export const ForgetPasswordSchema = z.object({
   id: z.string().refine(
     (id) => {
-      const idPattern = /^\d{12}$/;
+      const idPattern = /^(\d{9}|\d{12})$/;
       return idPattern.test(id);
     },
-    { message: "Id phải đúng 12 chữ số" }
+    { message: "CCCD/CMND phải đúng 9 hoặc 12 chữ số" }
   ),
 });
 
@@ -227,10 +227,10 @@ export const ChangePasswordSchema = z
   .object({
     id: z.string().refine(
       (id) => {
-        const idPattern = /^\d{12}$/;
+        const idPattern = /^(\d{9}|\d{12})$/; // Allow 9 or 12 digits
         return idPattern.test(id);
       },
-      { message: "Id phải đúng 12 chữ số" }
+      { message: "Id phải đúng 9 hoặc 12 chữ số" }
     ),
     verifyCode: z.string(),
     password: z

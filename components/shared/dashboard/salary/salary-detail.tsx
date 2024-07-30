@@ -71,6 +71,9 @@ export default function SalaryDetail({
     totalWorkingHours: 0,
     year: 0,
     salary: 0,
+    rate: -999999999,
+    rateOverTime: -999999999,
+    rateWorkingDay: -999999999,
   });
 
   const router = useRouter();
@@ -100,6 +103,9 @@ export default function SalaryDetail({
           totalWorkingHours: 0,
           year: 0,
           salary: 0,
+          rate: -999999999,
+          rateOverTime: -999999999,
+          rateWorkingDay: -999999999,
         });
       });
   }, [params, id, router, pathname, setSalaryAvailiable]);
@@ -145,7 +151,8 @@ export default function SalaryDetail({
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-muted-foreground">
-                  +10% so với tháng trước
+                  {data.rate != -999999999 &&
+                    `${data.rate}% so với tháng trước`}
                 </div>
               </CardContent>
             </Card>
@@ -158,7 +165,8 @@ export default function SalaryDetail({
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-muted-foreground">
-                  +25% so với tháng trước
+                  {data.rateWorkingDay != -999999999 &&
+                    `${data.rateWorkingDay}% so với tháng trước`}
                 </div>
               </CardContent>
               <CardFooter></CardFooter>
@@ -172,7 +180,8 @@ export default function SalaryDetail({
               </CardHeader>
               <CardContent>
                 <div className="text-xs text-muted-foreground">
-                  +10% so với tháng trước
+                  {data.rateOverTime != -999999999 &&
+                    `${data.rateOverTime}% so với tháng trước`}
                 </div>
               </CardContent>
               <CardFooter></CardFooter>
@@ -242,7 +251,10 @@ export default function SalaryDetail({
                     Sản phẩm tạo ra
                   </CardTitle>
                   <div className="flex">
-                    <div>Số lượng sản phẩm tạo ra trong tháng 7 năm 2024</div>
+                    <div>
+                      Số lượng sản phẩm tạo ra trong tháng {params.month} năm{" "}
+                      {params.year}
+                    </div>
                     <div className="ml-auto">
                       Tổng lương sản phẩm:{" "}
                       <span className="font-bold text-primary">

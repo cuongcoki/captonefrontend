@@ -122,8 +122,8 @@ export default function CountProduct({
             productID: product.id,
             productName: product.name,
             image: imageP || "",
-            phaseID: dataPhase[0].value as string,
-            phaseName: dataPhase[0].label as string,
+            phaseID: "42ccc305-85c7-4a4a-92c0-bc41669afe25",
+            phaseName: product.code,
             quantity: "0",
           },
         ],
@@ -264,7 +264,7 @@ export default function CountProduct({
             <tr>
               <th className="dark:bg-[#1c1917]">Hình ảnh</th>
               <th className="dark:bg-[#1c1917]">Tên sản phẩm</th>
-              <th className="dark:bg-[#1c1917]">Giai đoạn</th>
+              <th className="dark:bg-[#1c1917]">Mã sản phẩm</th>
               <th className="dark:bg-[#1c1917]">Số lượng</th>
               <th className="dark:bg-[#1c1917]">Xóa</th>
             </tr>
@@ -288,24 +288,7 @@ export default function CountProduct({
                 </td>
                 <td className="text-center">{product.productName}</td>
                 {/* <td className="text-center">{product.phaseName}</td> */}
-                <td className="text-center">
-                  <select
-                    onChange={(event) => {
-                      updatePhaseOfProduct(indexP, event.target.value);
-                    }}
-                    value={product.phaseID}
-                  >
-                    {dataPhase.map((phase) => (
-                      <option
-                        key={phase.value}
-                        value={phase.value}
-                        // selected={phase.value === product.phaseID}
-                      >
-                        {phase.label}
-                      </option>
-                    ))}
-                  </select>
-                </td>
+                <td className="text-center">{product.phaseName}</td>
                 <td>
                   <Input
                     type="number"

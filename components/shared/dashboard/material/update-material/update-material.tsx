@@ -22,10 +22,14 @@ export default function UpdateMaterial({
   return (
     <>
       <Dialog modal={true}>
-        <DialogTrigger asChild>{children}</DialogTrigger>
+        <DialogTrigger asChild>
+          {<div className="flex justify-center">{children}</div>}
+        </DialogTrigger>
         <DialogContent className=" max-w-[340px] md:max-w-[700px] dark:bg-[#1c1917]">
           <DialogHeader>
-            <DialogTitle className="text-primary">Cập Nhật Nguyên Vật Liệu</DialogTitle>
+            <DialogTitle className="text-primary">
+              Cập Nhật Nguyên Vật Liệu
+            </DialogTitle>
           </DialogHeader>
           <DialogDescription></DialogDescription>
           <UpdateMaterialForm id={id} />

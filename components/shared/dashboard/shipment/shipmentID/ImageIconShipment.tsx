@@ -15,8 +15,8 @@ interface ImageIconShipOrderProps {
     dataImage: ImageResponse[] ;
 }
 export default function ImageIconShipment({ dataImage }: ImageIconShipOrderProps) {
-    const [linkImages, setLinkImages] = useState<ImageResponse[]>([]);
-    console.log('dataImage', dataImage)
+    // const [linkImages, setLinkImages] = useState<ImageResponse[]>([]);
+    // console.log('dataImage', dataImage)
     // useEffect(() => {
     //     const getImage = async () => {
     //         if (!dataImage || dataImage.length === 0) {
@@ -52,7 +52,7 @@ export default function ImageIconShipment({ dataImage }: ImageIconShipOrderProps
     // }
 
     const mainImage = dataImage.find(image => image.isMainImage);
-    // console.log("mainImage",mainImage)
+    console.log("mainImage",mainImage)
     return (
         <>
             {mainImage ? (

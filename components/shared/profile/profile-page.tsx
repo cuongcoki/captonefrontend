@@ -24,7 +24,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,10 +33,10 @@ import { Separator } from "@/components/ui/separator";
 import LoadingPage from "../loading/loading-page";
 
 // ** import icon
-import { ListCollapse, Phone, Globe } from "lucide-react";
+import { ListCollapse, Phone, Globe, KeyRound, Contact } from "lucide-react";
 
 // ** import react
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { userApi } from "@/apis/user.api";
 import Link from "next/link";
@@ -49,6 +49,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { Role } from "@/components/shared/dashboard/users/table/users/data/data";
 import Image from "next/image";
 import { filesApi } from "@/apis/files.api";
+import { salaryApi } from "@/apis/salary.api";
+import { authApi } from "@/apis/auth.api";
 
 const invoices = [
   {
@@ -68,8 +70,22 @@ export default function ProfilePage() {
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
+  const [lastDay, setLastDay] = useState<string>("");
+  const router = useRouter();
+
   // ** hooks
   const user = useAuth();
+  useEffect(() => {
+    salaryApi
+      .getPaidSalaries({
+        PageIndex: 1,
+        PageSize: 1,
+        UserId: params.id,
+      })
+      .then((res) => {
+        setLastDay(res.data.data.data[0]?.createdAt);
+      });
+  }, [params.id]);
 
   // ** call API
   useEffect(() => {
@@ -104,14 +120,7 @@ export default function ProfilePage() {
   if (!user?.user?.id) {
     return <LoadingPage />;
   }
-  function formatDate(dateString: string) {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng bắt đầu từ 0
-    const year = date.getFullYear();
 
-    return `${day}/${month}/${year}`;
-  }
   function validatePassword(password: string) {
     // Kiểm tra độ dài tối thiểu
     if (password.length < 6) {
@@ -133,6 +142,24 @@ export default function ProfilePage() {
     // Nếu thỏa mãn tất cả các điều kiện
     return true;
   }
+  const handleLogout = () => {
+    const id: any = user.user?.id;
+
+    authApi
+      .logout(id)
+      .then(({ data }) => {
+        console.log("dataLogout", data);
+        user.logout();
+        router.push("/sign-in");
+        // toast.success(data.message);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
   const handleChangePassword = () => {
     if (newPassword !== confirmPassword) {
       toast.error("Mật khẩu xác nhận không khớp");
@@ -156,8 +183,8 @@ export default function ProfilePage() {
     userApi
       .changePassword(data)
       .then((res) => {
-        console.log("res", res);
         toast.success("Đổi mật khẩu thành công");
+        handleLogout();
       })
       .catch((error) => {
         console.error("Error changing password:", error);
@@ -221,7 +248,13 @@ export default function ProfilePage() {
       });
   };
 
-  console.log(user.user)
+  const formatDate = (dateString: string) => {
+    const data = dateString?.split("-");
+    if (!dateString) return "";
+    return `${data[2]}/${data[1]}/${data[0]}`;
+  };
+
+  console.log(user.user);
 
   return (
     <div className="flex flex-col gap-6 justify-center">
@@ -250,10 +283,15 @@ export default function ProfilePage() {
             <div className=" mb-4 md:text-md md:text-start text-center text-lg text-gray-400">
               <p>{userId?.address}</p>
             </div>
-
-            <div className="flex gap-4">
-              <Phone size={23} />
-              {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}
+            <div className="flex items-center">
+              <div className="flex gap-4">
+                <Phone size={23} />
+                {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}
+              </div>
+              <div className="flex gap-4 ml-10">
+                <Contact size={23} />
+                {userId?.id === "" ? "Chưa cập nhật" : userId?.id}
+              </div>
             </div>
           </div>
         </div>
@@ -262,134 +300,138 @@ export default function ProfilePage() {
         <div className="absolute lg:relative lg:right-0 right-7 ">
           {/* giao diện desktop */}
 
-          {
-            user.user?.roleId === 1 && (
-              <>
-                <div className="hidden lg:block">
-                  <Card>
-                    <CardContent className="p-4 flex flex-col justify-between gap-4">
-                      <Tabs defaultValue="status">
-                        <TabsList className="grid w-[300px] grid-cols-3">
-                          <TabsTrigger value="status">Trạng thái</TabsTrigger>
-                          <TabsTrigger value="role">Vai trò</TabsTrigger>
-                          <TabsTrigger value="edit">Chỉnh sửa</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="status">
-                          <div className="grid gap-3">
-                            <Select
-                              value={userId.isActive?.toString()}
-                              onValueChange={handleChangeActive}
-                            >
-                              <SelectTrigger id="status" aria-label="Select status">
-                                <SelectValue placeholder="Chọn trạng thái" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="true">Đang làm </SelectItem>
-                                <SelectItem value="false">Đã nghỉ</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </TabsContent>
-                        <TabsContent value="role">
+          {user.user?.roleId === 1 && (
+            <>
+              <div className="hidden lg:block">
+                <Card>
+                  <CardContent className="p-4 flex flex-col justify-between gap-4">
+                    <Tabs defaultValue="status">
+                      <TabsList className="grid w-[300px] grid-cols-3">
+                        <TabsTrigger value="status">Trạng thái</TabsTrigger>
+                        <TabsTrigger value="role">Vai trò</TabsTrigger>
+                        <TabsTrigger value="edit">Chỉnh sửa</TabsTrigger>
+                      </TabsList>
+                      <TabsContent value="status">
+                        <div className="grid gap-3">
                           <Select
-                            value={userId.roleId?.toString()}
-                            onValueChange={(value) => {
-                              handleChangeRole(value);
-                            }}
+                            value={userId.isActive?.toString()}
+                            onValueChange={handleChangeActive}
                           >
-                            <SelectTrigger id="role" aria-label="Select role">
-                              <SelectValue placeholder="Chọn vai trò" />
+                            <SelectTrigger
+                              id="status"
+                              aria-label="Select status"
+                            >
+                              <SelectValue placeholder="Chọn trạng thái" />
                             </SelectTrigger>
                             <SelectContent>
-                              {Role.map((role) => (
-                                <SelectItem
-                                  key={role.value}
-                                  value={role.value.toString()}
-                                >
-                                  {role.label}
-                                </SelectItem>
-                              ))}
+                              <SelectItem value="true">Đang làm </SelectItem>
+                              <SelectItem value="false">Đã nghỉ</SelectItem>
                             </SelectContent>
                           </Select>
-                        </TabsContent>
-                        <TabsContent value="edit"></TabsContent>
-                      </Tabs>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <div className="block lg:hidden ">
-
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="bg-primary text-white m-2 "
-                      >
-                        <ListCollapse className="h-4 w-4" />
-                      </Button>
-                    </PopoverTrigger >
-                    <PopoverContent className="w-100" align="end">
-                      <Card>
-                        <CardContent className="p-4 flex flex-col justify-between gap-4">
-                          <Tabs defaultValue="status">
-                            <TabsList className="grid w-[300px] grid-cols-3">
-                              <TabsTrigger value="status">Trạng thái</TabsTrigger>
-                              <TabsTrigger value="role">Vai trò</TabsTrigger>
-                              <TabsTrigger value="edit">Chỉnh sửa</TabsTrigger>
-                            </TabsList>
-                            <TabsContent value="status">
-                              <div className="grid gap-3">
-                                <Select
-                                  value={userId.isActive?.toString()}
-                                  onValueChange={handleChangeActive}
-                                >
-                                  <SelectTrigger id="status" aria-label="Select status">
-                                    <SelectValue placeholder="Chọn trạng thái" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="true">Đang làm </SelectItem>
-                                    <SelectItem value="false">Đã nghỉ</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </TabsContent>
-                            <TabsContent value="role">
-                              <Select
-                                value={userId.roleId?.toString()}
-                                onValueChange={(value) => {
-                                  handleChangeRole(value);
-                                }}
+                        </div>
+                      </TabsContent>
+                      <TabsContent value="role">
+                        <Select
+                          value={userId.roleId?.toString()}
+                          onValueChange={(value) => {
+                            handleChangeRole(value);
+                          }}
+                        >
+                          <SelectTrigger id="role" aria-label="Select role">
+                            <SelectValue placeholder="Chọn vai trò" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Role.map((role) => (
+                              <SelectItem
+                                key={role.value}
+                                value={role.value.toString()}
                               >
-                                <SelectTrigger id="role" aria-label="Select role">
-                                  <SelectValue placeholder="Chọn vai trò" />
+                                {role.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </TabsContent>
+                      <TabsContent value="edit"></TabsContent>
+                    </Tabs>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="block lg:hidden ">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="bg-primary text-white m-2 "
+                    >
+                      <ListCollapse className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-100" align="end">
+                    <Card>
+                      <CardContent className="p-4 flex flex-col justify-between gap-4">
+                        <Tabs defaultValue="status">
+                          <TabsList className="grid w-[300px] grid-cols-3">
+                            <TabsTrigger value="status">Trạng thái</TabsTrigger>
+                            <TabsTrigger value="role">Vai trò</TabsTrigger>
+                            <TabsTrigger value="edit">Chỉnh sửa</TabsTrigger>
+                          </TabsList>
+                          <TabsContent value="status">
+                            <div className="grid gap-3">
+                              <Select
+                                value={userId.isActive?.toString()}
+                                onValueChange={handleChangeActive}
+                              >
+                                <SelectTrigger
+                                  id="status"
+                                  aria-label="Select status"
+                                >
+                                  <SelectValue placeholder="Chọn trạng thái" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {Role.map((role) => (
-                                    <SelectItem
-                                      key={role.value}
-                                      value={role.value.toString()}
-                                    >
-                                      {role.label}
-                                    </SelectItem>
-                                  ))}
+                                  <SelectItem value="true">
+                                    Đang làm{" "}
+                                  </SelectItem>
+                                  <SelectItem value="false">Đã nghỉ</SelectItem>
                                 </SelectContent>
                               </Select>
-                            </TabsContent>
-                            <TabsContent value="edit"></TabsContent>
-                          </Tabs>
-                        </CardContent>
-                      </Card>
-                    </PopoverContent>
-                  </Popover>
-                </div>
-              </>
-            )
-          }
+                            </div>
+                          </TabsContent>
+                          <TabsContent value="role">
+                            <Select
+                              value={userId.roleId?.toString()}
+                              onValueChange={(value) => {
+                                handleChangeRole(value);
+                              }}
+                            >
+                              <SelectTrigger id="role" aria-label="Select role">
+                                <SelectValue placeholder="Chọn vai trò" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Role.map((role) => (
+                                  <SelectItem
+                                    key={role.value}
+                                    value={role.value.toString()}
+                                  >
+                                    {role.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </TabsContent>
+                          <TabsContent value="edit"></TabsContent>
+                        </Tabs>
+                      </CardContent>
+                    </Card>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </>
+          )}
 
           {/* giao diện mobile */}
-
         </div>
       </header>
 
@@ -464,7 +506,7 @@ export default function ProfilePage() {
                   <div className="font-extralight text-[0.8rem]">
                     Ngày nhận lương gần nhất
                   </div>
-                  <div>28/10/2024</div>
+                  <div>{lastDay ? formatDate(lastDay) : "Không có"}</div>
                 </div>
               </div>
             </CardContent>
@@ -492,67 +534,66 @@ export default function ProfilePage() {
       </div>
 
       {/* Thông tin tài khoản */}
-      {
-        getMe && (
-          <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
-            <div className="p-4 flex flex-col justify-between gap-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="dark:text-primary">Mật Khẩu</CardTitle>
-                  <CardDescription>
-                    Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng xuất.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="space-y-1">
-                    <Label htmlFor="current">Mật khẩu hiện tại</Label>
-                    <Input
-                      value={currentPassword}
-                      onChange={(e) => {
-                        setCurrentPassword(e.target.value);
-                      }}
-                      id="current"
-                      type="password"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="new">Mật khẩu mới</Label>
-                    <Input
-                      id="new"
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => {
-                        setNewPassword(e.target.value);
-                      }}
-                    />
-                    <div id="error" className="text-destructive"></div>
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="confirm">Nhập lại mật khẩu mới</Label>
-                    <Input
-                      id="confirm"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value);
-                      }}
-                    />
-                    <div id="errorConfirm" className="text-destructive"></div>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button
-                    className="bg-primary hover:bg-primary/90"
-                    onClick={handleChangePassword}
-                  >
-                    Xác nhận thay đổi
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
+      {getMe && (
+        <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
+          <div className="p-4 flex flex-col justify-between gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="dark:text-primary">Mật Khẩu</CardTitle>
+                <CardDescription>
+                  Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng
+                  xuất.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="space-y-1">
+                  <Label htmlFor="current">Mật khẩu hiện tại</Label>
+                  <Input
+                    value={currentPassword}
+                    onChange={(e) => {
+                      setCurrentPassword(e.target.value);
+                    }}
+                    id="current"
+                    type="password"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="new">Mật khẩu mới</Label>
+                  <Input
+                    id="new"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => {
+                      setNewPassword(e.target.value);
+                    }}
+                  />
+                  <div id="error" className="text-destructive"></div>
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="confirm">Nhập lại mật khẩu mới</Label>
+                  <Input
+                    id="confirm"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value);
+                    }}
+                  />
+                  <div id="errorConfirm" className="text-destructive"></div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button
+                  className="bg-primary hover:bg-primary/90"
+                  onClick={handleChangePassword}
+                >
+                  Xác nhận thay đổi
+                </Button>
+              </CardFooter>
+            </Card>
           </div>
-        )
-      }
+        </div>
+      )}
     </div>
   );
 }

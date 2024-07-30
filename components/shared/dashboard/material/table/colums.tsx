@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { materialType } from "@/schema/material";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Edit, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, Edit, MoreHorizontal, PenLine } from "lucide-react";
 import Image from "next/image";
 
 // This type is used to define the shape of our data.
@@ -32,12 +32,7 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
-      return (
-        <div>
-          Tên vật liệu
-          {/* <ArrowUpDown className="ml-2 h-4 w-4" /> */}
-        </div>
-      );
+      return <div className="text-center">Ảnh minh họa</div>;
     },
     cell: async ({ row }) => {
       var href;
@@ -50,40 +45,55 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
         console.log("error in get image", error);
       }
       return (
-        <div className="flex items-center space-x-2 max-w-[200px]">
+        <div className="flex justify-center items-center space-x-2 max-w-[200px]">
           <Image
-            className="w-10 h-10 mr-2"
+            className="size-20 mr-2"
             width={100}
             height={100}
             src={
               href ||
               "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg"
             }
-            // src={
-            //   "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg"
-            // }
             alt={row.original.name}
           />
-          <span>{row.original.name}</span>
         </div>
       );
     },
   },
 
   {
+    accessorKey: "name",
+    header: () => <div className="flex justify-center">Tên nguyên liệu</div>,
+    cell: ({ row }) => {
+      return <div className="flex justify-center">{row.original.name}</div>;
+    },
+  },
+  {
     accessorKey: "quantityPerUnit",
-    header: "Số lượng mỗi đơn vị",
+    header: () => (
+      <div className="flex justify-center">Số lượng mỗi đơn vị</div>
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex justify-center">
+          {row.original.quantityPerUnit}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "unit",
-    header: "Đơn vị",
+    header: () => <div className="flex justify-center">Đơn vị tính</div>,
+    cell: ({ row }) => {
+      return <div className="flex justify-center">{row.original.unit}</div>;
+    },
   },
   {
     accessorKey: "description",
-    header: "Miêu tả",
+    header: () => <div className="flex justify-center">Miêu tả</div>,
     cell: ({ row }) => {
       return (
-        <div className="max-w-[30vh]">
+        <div className="max-w-[30vh] text-center">
           {limitLength(row.original.description, 200)}
         </div>
       );
@@ -91,18 +101,25 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
   },
   {
     accessorKey: "quantityInStock",
-    header: "Số lượng trong kho",
+    header: () => <div className="flex justify-center">Số lượng</div>,
+    cell: ({ row }) => {
+      return (
+        <div className="flex justify-center">
+          {row.original.quantityInStock}
+        </div>
+      );
+    },
   },
   {
     id: "actions",
-    header: "Hành động",
+    header: () => <div className="flex justify-center">Chỉnh sửa</div>,
     cell: ({ row }) => {
       const rowData = row.original;
       // console.log("rowData", rowData);
       return (
         <>
           <UpdateMaterial id={rowData.id}>
-            <Edit className="cursor-pointer" />
+            <PenLine className="cursor-pointer" />
           </UpdateMaterial>
         </>
       );

@@ -130,7 +130,23 @@ export const shipmentApi = {
     axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/accept/${isAccepted}`),
 
   changeStatusByShipper: (id: string, data: updateStatusShipment) =>
-    axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/shipper/change-status`, data),
+    axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/shipper/change-status`, data,{
+      cache: {
+        update: () => {
+          shipmentCacheIds.forEach((id) => {
+            axiosClient.storage.remove(id);
+          });
+          shipmentCacheIds.clear();
+
+          const shipmentCacheId = shipmentsCacheIds.get(id);
+          if (shipmentCacheId) {
+            axiosClient.storage.remove(shipmentCacheId);
+            shipmentsCacheIds.delete(id);
+            console.log("Removed shipmentCacheId:", shipmentCacheId);
+          }
+        },
+      },
+    }),
 
   getByShipper: (
     PageIndex?: number,
@@ -138,6 +154,11 @@ export const shipmentApi = {
     Status?: string | null,
     SearchTerm?: string
   ) => {
+    const requestBody = { PageIndex, PageSize, Status, SearchTerm };
+    const cacheId = createCacheId("get-shipments", requestBody);
+    shipmentCacheIds.add(cacheId);
+    console.log("Added cacheId:", cacheId);
+
     let url = `${endPointConstant.BASE_URL}/shipments/get-by-shipper?`;
     if (PageIndex !== undefined) url += `PageIndex=${PageIndex}&`;
     if (PageSize !== undefined) url += `PageSize=${PageSize}&`;
@@ -145,7 +166,7 @@ export const shipmentApi = {
     if (SearchTerm) url += `SearchTerm=${SearchTerm}&`;
     // Remove trailing '&' or '?' if no parameters were added
     url = url.slice(-1) === '&' || url.slice(-1) === '?' ? url.slice(0, -1) : url;
-    return axiosClient.get(url);
+    return axiosClient.get(url, { id: cacheId });
   },
 
   getByShipperID: (id: string) =>

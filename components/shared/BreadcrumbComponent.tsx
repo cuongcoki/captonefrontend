@@ -35,7 +35,7 @@ const LinkBread = [
     variant: "ghost",
   },
   { title: "Công ty", href: "/dashboard/company", variant: "ghost" },
-  { title: "Đơn báo cáo", href: "/employee/report", variant: "ghost" },
+  { title: "Đơn khiếu nại", href: "/employee/report", variant: "ghost" },
   { title: "Khiếu nại", href: "/dashboard/report-manager", variant: "ghost" },
   { title: "Lương", href: "/dashboard/salary", variant: "ghost" },
   { title: "Đơn vận chuyển", href: "/dashboard/shipment", variant: "ghost" },
@@ -66,13 +66,13 @@ export function BreadcrumbComponent() {
       case "/dashboard":
         return "Quản Lý";
       case "/dashboard/attendance":
-        return "bảng điểm danh";
+        return "Bảng điểm danh";
       case `/dashboard/order/${params.id}`:
         return "Chi tiết đơn hàng";
       case `/dashboard/products/product/${params.id}`:
         return "Chi tiết sản phẩm";
       case `/dashboard/products/set/${params.id}`:
-        return "Thông tin bộ";
+        return "Thông tin bộ sản phẩm";
       case `/dashboard/salary/detail/${params.id}`:
         return "Chi tiết lương";
       case `/dashboard/product-phase`:
@@ -85,11 +85,11 @@ export function BreadcrumbComponent() {
       case `/employee/salary/${params.id}`:
         return "Chi tiết lương";
       case `/employee/salary`:
-        return "lương";
+        return "Lương nhân viên";
       case `/employee/attendance`:
-        return "điểm danh nhân viên";
+        return "Điểm danh nhân viên";
       case `/employee/attendance/update-attendance`:
-        return "đếm sản phẩm";
+        return "Đếm sản phẩm";
       // quản lý cơ sở
       case `/branchadmin`:
         return "Quản lý cơ sở";
@@ -98,7 +98,7 @@ export function BreadcrumbComponent() {
       case `/branchadmin/attendance/update-attendance`:
         return "Điểm danh chi tiết";
       case `/branchadmin/report-manager`:
-        return "Khiếu nại";
+        return "Danh sách đơn khiếu nại";
       default:
         return defaultTitle;
     }

@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label"
 import { X } from "lucide-react";
 import { shipmentApi } from "@/apis/shipment.api";
 import { error } from "console";
+import { ShipmentStore } from "../shipment-store";
 interface shipmentIDType {
     id: string;
     status: number;
@@ -63,7 +64,7 @@ export const ChangeStatusShipmentShipper: React.FC<ShipmentIDProps> = ({ shipmen
     //state 
     const [loading, setLoading] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
-
+    const { ForceRender } = ShipmentStore();
     const handleOffDialog = () => {
         setOpen(false);
     };
@@ -89,6 +90,7 @@ export const ChangeStatusShipmentShipper: React.FC<ShipmentIDProps> = ({ shipmen
             .then(({ data }) => {
                 console.log("data", data)
                 setOpen(false)
+                ForceRender();
                 toast.success(data.message)
             })
             .catch(error => {

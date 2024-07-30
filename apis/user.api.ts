@@ -16,6 +16,7 @@ const createCacheId = (base: string, params: Record<string, any>): string => {
 // ** Store for cache IDs
 const cacheIds: Set<string> = new Set();
 const userCacheIds: Map<string, string> = new Map();
+const listUserCacheIds: Set<string> = new Set();
 
 type userType = {
   id: string;
@@ -90,8 +91,13 @@ export const userApi = {
     });
   },
 
-  getUserId: (id: string) =>
-    axiosClient.get(`${endPointConstant.BASE_URL}/users/${id}`),
+  getUserId: (id: string) => {
+    const cacheId = createCacheId("get-user", { id });
+    listUserCacheIds.add(cacheId);
+    return axiosClient.get(`${endPointConstant.BASE_URL}/users/${id}`, {
+      id: cacheId,
+    });
+  },
 
   createUser: (data: userType) =>
     axiosClient.post(`${endPointConstant.BASE_URL}/users`, data, {
@@ -127,6 +133,10 @@ export const userApi = {
         cache: {
           update: () => {
             // Remove all cache entries in cacheIds
+            listUserCacheIds.forEach((id) => {
+              axiosClient.storage.remove(id);
+            });
+            listUserCacheIds.clear();
             cacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
@@ -178,6 +188,10 @@ export const userApi = {
       {
         cache: {
           update: () => {
+            listUserCacheIds.forEach((id) => {
+              axiosClient.storage.remove(id);
+            });
+            listUserCacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
             cacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
@@ -211,4 +225,13 @@ export const userApi = {
       }
     );
   },
+
+   getUserCompany: (companyId:string) => {
+    return axiosClient.get(`${endPointConstant.BASE_URL}/users/Company`, {
+      params: {
+        CompanyId: companyId
+      }
+    });
+  }
+
 };
