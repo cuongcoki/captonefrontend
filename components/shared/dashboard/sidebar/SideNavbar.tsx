@@ -216,6 +216,13 @@ export default function SideNavbar({}: Props) {
                 checkRoll: [{ id: 2 }],
               },
               {
+                title: "Nhân Viên",
+                href: "/branchadmin/user",
+                icon: UserRound,
+                variant: "ghost",
+                checkRoll: [{ id: 2 }],
+              },
+              {
                 title: "Xem điểm danh",
                 href: "/employee/view-attendance",
                 icon: UserRound,

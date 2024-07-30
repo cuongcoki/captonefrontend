@@ -28,6 +28,7 @@ import { shipmentApi } from "@/apis/shipment.api"
 import toast from "react-hot-toast"
 import { ChangeStatusShipment } from "../form/ChangeStatusShipment";
 import { error } from "console";
+import { DataTableRowActions } from "./data-table-row-actions";
 
 export type Shipment = {
   from: {
@@ -341,7 +342,9 @@ export const columns: ColumnDef<Shipment>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) => <UpdateShipment shipmentIDDes={row.original.id} />,
+    cell: ({ row }) =>
+    <DataTableRowActions row={row}/>
+    ,
   },
 
 ]

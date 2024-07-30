@@ -15,11 +15,12 @@ import {
 
 import toast from "react-hot-toast";
 import { shipmentApi } from "@/apis/shipment.api";
+import { ShipmentStore } from "../shipment-store";
 type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => {},
+  forceUpdate: () => { },
 });
 
 const enumStatus = [
@@ -60,9 +61,7 @@ export default function RenderTableShipment() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const router = useRouter();
   const pathname = usePathname();
-  const [force, setForce] = useState<number>(1);
-
-  const forceUpdate = () => setForce((prev) => prev + 1);
+  const { force } = ShipmentStore();
 
   useEffect(() => {
     const fetchDataShipment = async () => {
@@ -78,6 +77,7 @@ export default function RenderTableShipment() {
         console.log("DATA SHIPMENT", response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
+        
       } catch (error: any) {
         // toast.error(error.response.data.message)
         console.error("Error fetching order data:", error);
@@ -105,47 +105,41 @@ export default function RenderTableShipment() {
     <div className="px-3 mt-3">
       <div className="flex flex-col md:flex-row justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
-          <MyContext.Provider value={{ forceUpdate }}>
-            <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
-                <Input
-                  placeholder="Tìm kiếm đơn hàng..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="md:w-[300px] w-full"
-                />
-
-                <Select
-                  value={status || ""}
-                  onValueChange={(value) => handleStatusChange(value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Trạng thái" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {enumStatus.map((item, index) => (
-                      <SelectItem value={item.value} key={item.id}>
-                        {item.description}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+          <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
+              <Input
+                placeholder="Tìm kiếm đơn hàng..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="md:w-[300px] w-full"
+              />
+              <Select
+                value={status || ""}
+                onValueChange={(value) => handleStatusChange(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Trạng thái" />
+                </SelectTrigger>
+                <SelectContent>
+                  {enumStatus.map((item, index) => (
+                    <SelectItem value={item.value} key={item.id}>
+                      {item.description}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          </MyContext.Provider>
+          </div>
         </div>
       </div>
-
-      <MyContext.Provider value={{ forceUpdate }}>
-        <div className="overflow-x-auto">
-          <DataTable columns={columns} data={data} />
-          <DataTablePagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            setCurrentPage={setCurrentPage}
-          />
-        </div>
-      </MyContext.Provider>
+      <div className="overflow-x-auto">
+        <DataTable columns={columns} data={data} />
+        <DataTablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
     </div>
   );
 }

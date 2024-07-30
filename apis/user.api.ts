@@ -225,4 +225,13 @@ export const userApi = {
       }
     );
   },
+
+   getUserCompany: (companyId:string) => {
+    return axiosClient.get(`${endPointConstant.BASE_URL}/users/Company`, {
+      params: {
+        CompanyId: companyId
+      }
+    });
+  }
+
 };
