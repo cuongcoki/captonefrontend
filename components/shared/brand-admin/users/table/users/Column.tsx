@@ -76,7 +76,7 @@ export const columns: ColumnDef<Employee>[] = [
 
   {
     accessorKey: "gender",
-    header: ({ column }) => <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Giới tính  <ArrowUpDown className="ml-2 h-4 w-4" /></Button>,
+    header: ({ column }) => <div>Giới tính</div>,
     cell: ({ row }) => {
       const gender = Gender.find(
         (gender) => gender.value === row.getValue("gender")
@@ -117,7 +117,14 @@ export const columns: ColumnDef<Employee>[] = [
   {
     accessorKey: "isActive",
     header: ({ column }) => {
-      return <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>Hoạt động</Button>;
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Hoạt động
+        </Button>
+      );
     },
     cell: ({ row }) => {
       const active = isActive.find(
@@ -130,15 +137,11 @@ export const columns: ColumnDef<Employee>[] = [
 
       return (
         <span
-          className={`p-2 ${
-            active.value ? "text-primary" : "text-red-500"
-          }`}
+          className={`p-2 ${active.value ? "text-primary" : "text-red-500"}`}
         >
           {active.label}
         </span>
       );
     },
   },
-
- 
 ];

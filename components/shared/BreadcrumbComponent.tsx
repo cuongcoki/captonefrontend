@@ -93,6 +93,8 @@ export function BreadcrumbComponent() {
       // quản lý cơ sở
       case `/branchadmin`:
         return "Quản lý cơ sở";
+      case `/branchadmin/user`:
+        return "Danh sách nhân viên";
       case `/branchadmin/attendance`:
         return "Điểm danh";
       case `/branchadmin/attendance/update-attendance`:
