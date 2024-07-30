@@ -518,8 +518,8 @@ export default function CreateShipment() {
   // call gủi form
   const onSubmit = (data: z.infer<typeof ShipmentSchema>) => {
     console.log("data", data);
-    if(data.fromId === data.toId){
-      return toast.error("2 Công ty không được trùng nhau")
+    if (data.fromId === data.toId) {
+      return toast.error("2 Công ty không được trùng nhau");
     }
 
     // check data shipmentDetailRequests
@@ -531,21 +531,21 @@ export default function CreateShipment() {
     let hasError = false;
     shipmentDetailRequests.forEach((request, index) => {
       if (!request.itemId) {
-        console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
+        console.error(
+          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
+          request
+        );
         toast.custom((t) => (
           <div
-            className={`${t.visible ? 'animate-enter' : 'animate-leave'
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
                 <div className="ml-3 flex-1">
-                  <p className="text-sm font-medium text-gray-900">
-                    Lỗi
-                  </p>
-                  <p className="mt-1 text-sm text-gray-500">
-                    ID không tồn tại
-                  </p>
+                  <p className="text-sm font-medium text-gray-900">Lỗi</p>
+                  <p className="mt-1 text-sm text-gray-500">ID không tồn tại</p>
                 </div>
               </div>
             </div>
@@ -561,11 +561,15 @@ export default function CreateShipment() {
         ));
         hasError = true;
       } else if (!request.phaseId && request.kindOfShip === 0) {
-        console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
+        console.error(
+          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
+          request
+        );
         toast.custom((t) => (
           <div
-            className={`${t.visible ? 'animate-enter' : 'animate-leave'
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -591,11 +595,15 @@ export default function CreateShipment() {
         ));
         hasError = true;
       } else if (request.quantity <= 0) {
-        console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
+        console.error(
+          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
+          request
+        );
         toast.custom((t) => (
           <div
-            className={`${t.visible ? 'animate-enter' : 'animate-leave'
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -620,12 +628,20 @@ export default function CreateShipment() {
           </div>
         ));
         hasError = true;
-      } else if (request.productPhaseType === null && request.kindOfShip === 0) { // Sửa điều kiện ở đây
-        console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
+      } else if (
+        request.productPhaseType === null &&
+        request.kindOfShip === 0
+      ) {
+        // Sửa điều kiện ở đây
+        console.error(
+          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
+          request
+        );
         toast.custom((t) => (
           <div
-            className={`${t.visible ? 'animate-enter' : 'animate-leave'
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -650,20 +666,21 @@ export default function CreateShipment() {
           </div>
         ));
         hasError = true;
-      }
-      else if (request.materialPrice <= 0 && request.kindOfShip === 1) {
-        console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
+      } else if (request.materialPrice <= 0 && request.kindOfShip === 1) {
+        console.error(
+          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
+          request
+        );
         toast.custom((t) => (
           <div
-            className={`${t.visible ? 'animate-enter' : 'animate-leave'
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
                 <div className="ml-3 flex-1">
-                  <p className="text-sm font-medium text-gray-900">
-                    Lỗi
-                  </p>
+                  <p className="text-sm font-medium text-gray-900">Lỗi</p>
                   <p className="mt-1 text-sm text-gray-500">
                     Giá tiền phải lớn hơn 0
                   </p>
@@ -684,7 +701,6 @@ export default function CreateShipment() {
       }
     });
 
-
     if (hasError) {
       return;
     }
@@ -699,10 +715,11 @@ export default function CreateShipment() {
     };
 
     console.log("requestBodyCreateShipment=====", requestBody);
-    setLoading(true)
-    shipmentApi.createShipment(requestBody)
+    setLoading(true);
+    shipmentApi
+      .createShipment(requestBody)
       .then(({ data }) => {
-        console.log("data", data)
+        console.log("data", data);
         ForceRender();
         setOpen(false);
         form.reset();
@@ -711,7 +728,7 @@ export default function CreateShipment() {
           toast.success(data.message);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         const errorResponse = error.response?.data?.error;
         if (errorResponse?.ShipmentDetailRequests) {
           toast.error(errorResponse.ShipmentDetailRequests);
@@ -719,13 +736,17 @@ export default function CreateShipment() {
         if (errorResponse?.ToId) {
           toast.error(errorResponse.ToId);
         }
-        if(!errorResponse?.ToId && !errorResponse?.ShipmentDetailRequests && error.response?.data){
+        if (
+          !errorResponse?.ToId &&
+          !errorResponse?.ShipmentDetailRequests &&
+          error.response?.data
+        ) {
           toast.error(error.response?.data.message);
         }
       })
       .finally(() => {
-        setLoading(false)
-      })
+        setLoading(false);
+      });
   };
 
   const limitLength = (text: any, maxLength: any) => {
@@ -811,12 +832,13 @@ export default function CreateShipment() {
                                 >
                                   <ImageIconShipmentForm dataImage={item} />
                                   <Check
-                                    className={`${shipmentDetailRequests.some(
-                                      (item1) => item1.itemId === item.id
-                                    )
-                                      ? "absolute top-0 right-0 bg-primary text-white"
-                                      : "hidden"
-                                      }`}
+                                    className={`${
+                                      shipmentDetailRequests.some(
+                                        (item1) => item1.itemId === item.id
+                                      )
+                                        ? "absolute top-0 right-0 bg-primary text-white"
+                                        : "hidden"
+                                    }`}
                                   />
                                   <Button
                                     variant={"ghost"}
@@ -862,12 +884,13 @@ export default function CreateShipment() {
                                 >
                                   <ImageIconMaterial dataImage={item} />
                                   <Check
-                                    className={`${shipmentDetailRequests.some(
-                                      (item1) => item1.itemId === item.id
-                                    )
-                                      ? "absolute top-0 right-0 bg-primary text-white"
-                                      : "hidden"
-                                      }`}
+                                    className={`${
+                                      shipmentDetailRequests.some(
+                                        (item1) => item1.itemId === item.id
+                                      )
+                                        ? "absolute top-0 right-0 bg-primary text-white"
+                                        : "hidden"
+                                    }`}
                                   />
                                   <Button
                                     variant={"ghost"}
@@ -1024,28 +1047,28 @@ export default function CreateShipment() {
                                 <TableCell>
                                   {proDetail.kindOfShip === 1 ? (
                                     <Input
-                                    min={0}
-                                    max={20000000000}
-                                    type="text"
-                                    name="materialPrice"
-                                    value={formatCurrency(
-                                      shipmentDetailRequests.find(
-                                        (item, i) =>
-                                          item.itemId === proDetail.itemId && i === index
-                                      )?.materialPrice || 0
-                                    )}
-                                    inputMode="numeric"
-                                    onChange={(e) =>
-                                      handleChange(
-                                        proDetail.itemId,
-                                        "materialPrice",
-                                        parseCurrency(e.target.value),
-                                        index
-                                      )
-                                    }
-                                    className="w-[150px] text-center outline-none"
-                                  />
-                                  
+                                      min={0}
+                                      max={20000000000}
+                                      type="text"
+                                      name="materialPrice"
+                                      value={formatCurrency(
+                                        shipmentDetailRequests.find(
+                                          (item, i) =>
+                                            item.itemId === proDetail.itemId &&
+                                            i === index
+                                        )?.materialPrice || 0
+                                      )}
+                                      inputMode="numeric"
+                                      onChange={(e) =>
+                                        handleChange(
+                                          proDetail.itemId,
+                                          "materialPrice",
+                                          parseCurrency(e.target.value),
+                                          index
+                                        )
+                                      }
+                                      className="w-[150px] text-center outline-none"
+                                    />
                                   ) : (
                                     <>Không có</>
                                   )}
@@ -1297,7 +1320,7 @@ export default function CreateShipment() {
                         render={({ field }) => (
                           <FormItem className="flex flex-col">
                             <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                              Ngày đặt hàng *
+                              Ngày vận chuyển *
                             </FormLabel>
                             <Popover modal={true}>
                               <PopoverTrigger asChild>
