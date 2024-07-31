@@ -93,6 +93,8 @@ export function BreadcrumbComponent() {
       // quản lý cơ sở
       case `/branchadmin`:
         return "Quản lý cơ sở";
+      case `/branchadmin/user`:
+        return "Danh sách nhân viên";
       case `/branchadmin/attendance`:
         return "Điểm danh";
       case `/branchadmin/attendance/update-attendance`:
@@ -112,14 +114,12 @@ export function BreadcrumbComponent() {
           const customTitle = getCustomTitle(breadcrumb.href, breadcrumb.title);
 
           return isLast ? (
-            <BreadcrumbItem key={breadcrumb.href}>
+            <BreadcrumbItem >
               <BreadcrumbPage>{customTitle}</BreadcrumbPage>
             </BreadcrumbItem>
           ) : (
-            <BreadcrumbItem key={breadcrumb.href}>
-              <BreadcrumbLink href={breadcrumb.href}>
+            <BreadcrumbItem >
                 {customTitle}
-              </BreadcrumbLink>
               <BreadcrumbSeparator />
             </BreadcrumbItem>
           );

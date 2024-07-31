@@ -42,14 +42,14 @@ export const materialSchema = z.object({
     ),
   quantityInStock: z
     .string()
-    .min(1, "Số lượng không được để trống")
+    .min(1, "Số lượng trong kho không được để trống")
     .refine(
       (value) => {
         const parsedValue = parseFloat(value);
         return !isNaN(parsedValue) && parsedValue > 0;
       },
       {
-        message: "Số lượng phải lớn hơn 0",
+        message: "Số lượng trong kho phải lớn hơn 0",
       }
     ),
 });

@@ -265,7 +265,7 @@ export default function CreateOrder() {
       .catch((error) => {
         toast.error("Không tìm thấy bộ sản phẩm");
       })
-      .finally(() => {});
+      .finally(() => { });
   };
 
   const handleSearch = () => {
@@ -280,7 +280,7 @@ export default function CreateOrder() {
         toast.error("Không tìm thấy sản phẩm");
         setSearchResults([]);
       })
-      .finally(() => {});
+      .finally(() => { });
   };
 
   useEffect(() => {
@@ -417,6 +417,7 @@ export default function CreateOrder() {
       console.log("response", response);
       toast.success("Tạo đơn hàng thành công");
       if (response.data.isSuccess) {
+        setOpen(false)
         setNextStep(true);
       }
     } catch (error) {
@@ -676,7 +677,7 @@ export default function CreateOrder() {
                                               height={900}
                                               src={
                                                 product?.imageUrl ===
-                                                "Image_not_found"
+                                                  "Image_not_found"
                                                   ? NoImage
                                                   : product?.imageUrl
                                               }
@@ -822,7 +823,7 @@ export default function CreateOrder() {
                                       <FormControl>
                                         <SelectTrigger>
                                           <SelectValue
-                                            placeholder="Hãy chọn cơ sở"
+                                            placeholder="Hãy chọn công ty"
                                             defaultValue={field.value}
                                           />
                                         </SelectTrigger>
@@ -869,11 +870,11 @@ export default function CreateOrder() {
                                               <SelectItem value="5">
                                                 5%
                                               </SelectItem>
-                                              <SelectItem value="10">
-                                                10%
+                                              <SelectItem value="8">
+                                                8%
                                               </SelectItem>
                                               <SelectItem value="20">
-                                                20%
+                                                10%
                                               </SelectItem>
                                             </SelectContent>
                                           </Select>
@@ -898,7 +899,7 @@ export default function CreateOrder() {
                                                 className={cn(
                                                   "w-[240px] pl-3 text-left font-normal",
                                                   !field.value &&
-                                                    "text-muted-foreground"
+                                                  "text-muted-foreground"
                                                 )}
                                               >
                                                 {field.value ? (
@@ -919,10 +920,10 @@ export default function CreateOrder() {
                                               selected={
                                                 field.value
                                                   ? parse(
-                                                      field.value,
-                                                      "dd/MM/yyyy",
-                                                      new Date()
-                                                    )
+                                                    field.value,
+                                                    "dd/MM/yyyy",
+                                                    new Date()
+                                                  )
                                                   : undefined
                                               }
                                               onSelect={(date: any) =>
@@ -958,7 +959,7 @@ export default function CreateOrder() {
                                                 className={cn(
                                                   "w-[240px] pl-3 text-left font-normal",
                                                   !field.value &&
-                                                    "text-muted-foreground"
+                                                  "text-muted-foreground"
                                                 )}
                                               >
                                                 {field.value ? (
@@ -979,10 +980,10 @@ export default function CreateOrder() {
                                               selected={
                                                 field.value
                                                   ? parse(
-                                                      field.value,
-                                                      "dd/MM/yyyy",
-                                                      new Date()
-                                                    )
+                                                    field.value,
+                                                    "dd/MM/yyyy",
+                                                    new Date()
+                                                  )
                                                   : undefined
                                               }
                                               onDayClick={(date: any) =>
