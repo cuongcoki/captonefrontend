@@ -21,19 +21,24 @@ import toast from "react-hot-toast";
 import { productPhaseStore } from "@/components/shared/dashboard/product-phase/product-phase-store";
 import { productPhaseApi } from "@/apis/product-phase.api";
 import { ProductPhaseQuantityType } from "@/types/product-phase.type";
+import { Separator } from "@/components/ui/separator";
 
 export default function ProductPhaseChangeQuantityType({
   index,
+  children,
 }: {
   index: number;
+  children: React.ReactNode;
 }) {
+  const { tableData, changeQuantityType, phaseData, ForceRender } =
+    productPhaseStore();
+  const productPhase = tableData[index];
   const [isOpen, setIsOpen] = React.useState(false);
   const [from, setFrom] = useState<string>("");
   const [to, setTo] = useState<string>("");
+  const [phaseTo, setPhaseTo] = useState<string>(productPhase.phaseId);
   const [quantity, setQuantity] = useState<number>(1);
-  const { tableData, changeQuantityType } = productPhaseStore();
   const [loading, setLoading] = useState(false);
-  const productPhase = tableData[index];
 
   const handleChange = () => {
     if (!from) {
@@ -44,12 +49,7 @@ export default function ProductPhaseChangeQuantityType({
       toast.error("Vui lòng chọn loại hàng được chuyển");
       return;
     }
-    if (from == to) {
-      toast.error(
-        "Loại hàng sẽ chuyển và loại hàng được chuyển không được giống nhau"
-      );
-      return;
-    }
+
     if (
       quantity > Number(productPhase[ProductPhaseQuantityType[Number(from)]])
     ) {
@@ -60,94 +60,152 @@ export default function ProductPhaseChangeQuantityType({
     productPhaseApi
       .changeQuantityType({
         companyId: productPhase.companyId,
-        phaseId: productPhase.phaseId,
         productId: productPhase.productId,
         from: parseInt(from),
         to: parseInt(to),
+        phaseIdFrom: productPhase.phaseId,
+        phaseIdTo: phaseTo,
         quantity: quantity,
       })
       .then((res) => {
         toast.success("Thay đổi loại hàng thành công");
-        changeQuantityType(index, Number(from), Number(to), quantity);
+        // changeQuantityType(index, Number(from), Number(to), quantity);
+        ForceRender();
+        setIsOpen(false);
       })
-      .catch((e) => {
-        toast.error("Thay đổi loại hàng thất bại");
+      .catch((error) => {
+        for (const key in error.response.data.error) {
+          toast.error(error.response.data.error[key][0]);
+        }
       })
       .finally(() => {
         setLoading(false);
-        setIsOpen(false);
       });
   };
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <div className="hover:bg-gray-200 hover:cursor-pointer  relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-            Thay đổi loại hàng
-          </div>
+          {/* <div className="hover:bg-gray-200 hover:cursor-pointer  relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+            Cập nhật số lượng sản phẩm
+          </div> */}
+          {children}
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="min-w-[700px]">
           <DialogHeader>
             <DialogTitle className="text-primary">
-              Thay đổi loại hàng
+              Cập nhật sản phẩm
             </DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>
-          <div className="grid grid-flow-col">
-            <div className="space-y-2">
+          <Separator />
+          <div className="grid grid-cols-12">
+            <div className="space-y-2 col-span-5">
               <Select value={from} onValueChange={setFrom}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Loại hạng sẽ chuyển" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem className="hover:bg-gray-200" value="0">
+                <SelectContent className="">
+                  <SelectItem className="hover:bg-gray-200 w-full" value="0">
                     Bình thường
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200" value="1">
+                  <SelectItem className="hover:bg-gray-200 w-full" value="1">
                     Lỗi bên thứ 3
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200" value="2">
+                  <SelectItem className="hover:bg-gray-200 w-full" value="2">
                     Lỗi bên mình
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200" value="3">
+                  <SelectItem className="hover:bg-gray-200 w-full" value="3">
                     Hỏng
                   </SelectItem>
                 </SelectContent>
               </Select>
               <div className="text-sm ml-1 text-primary" hidden={from == ""}>
-                Số lượng: {productPhase[ProductPhaseQuantityType[Number(from)]]}
+                {/* Số lượng: {productPhase[ProductPhaseQuantityType[Number(from)]]} */}
               </div>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center col-span-2">
               <MoveRight className="w-10" />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 col-span-5">
               <Select value={to} onValueChange={setTo}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Loại hạng được chuyển" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem className="hover:bg-gray-200" value="0">
+                  <SelectItem className="hover:bg-gray-200 w-full" value="0">
                     Bình thường
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200" value="1">
+                  <SelectItem className="hover:bg-gray-200 w-full" value="1">
                     Lỗi bên thứ 3
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200" value="2">
+                  <SelectItem className="hover:bg-gray-200 w-full" value="2">
                     Lỗi bên mình
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200" value="3">
+                  <SelectItem className="hover:bg-gray-200 w-full" value="3">
                     Hỏng
                   </SelectItem>
                 </SelectContent>
               </Select>
               <div className="text-sm ml-1 text-primary" hidden={to == ""}>
-                Số lượng: {productPhase[ProductPhaseQuantityType[Number(to)]]}
+                {/* Số lượng: {productPhase[ProductPhaseQuantityType[Number(to)]]} */}
               </div>
             </div>
           </div>
-          <div className="grid grid-flow-col gap-x-5">
-            <div className="flex justify-center items-center">Số lượng</div>
+          {/* <Separator className="my-1" /> */}
+          {/* -------------------------------------------------------------------------------------------------------------------------------- */}
+          <div className="grid grid-cols-12 ">
+            <div className="space-y-2 col-span-5">
+              <Select disabled={true} value={productPhase.phaseId}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Giai đoạn sẽ chuyển" />
+                </SelectTrigger>
+                <SelectContent>
+                  {phaseData.map((item) => (
+                    <SelectItem
+                      key={item.id}
+                      value={item.id}
+                      className="hover:bg-gray-200"
+                    >
+                      {item.description}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div
+                className="text-sm font-sans ml-1 text-primary"
+                hidden={from == ""}
+              >
+                {/* Số lượng: {productPhase.availableQuantity} */}
+              </div>
+            </div>
+            <div className="flex items-center justify-center col-span-2">
+              <MoveRight className="w-10" />
+            </div>
+            <div className="space-y-2 col-span-5">
+              <Select value={phaseTo} onValueChange={setPhaseTo}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Giai đoạn được chuyển" />
+                </SelectTrigger>
+                <SelectContent>
+                  {phaseData
+                    // .filter((item) => item.id !== productPhase.phaseId)
+                    .map((item) => (
+                      <SelectItem
+                        className="hover:bg-gray-200"
+                        key={item.id}
+                        value={item.id}
+                      >
+                        {item.description}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <Separator />
+          <div className="flex gap-x-5">
+            <div className="flex justify-start items-center">Số lượng</div>
             <Input
               value={quantity}
               type="number"
@@ -159,10 +217,14 @@ export default function ProductPhaseChangeQuantityType({
                 }
                 setQuantity(parseInt(value));
               }}
-              className="w-[250px]"
+              className="w-[450px]"
               placeholder="Nhập số lượng muốn đổi"
             />
-            <Button onClick={handleChange} disabled={loading}>
+            <Button
+              className="ml-auto"
+              onClick={handleChange}
+              disabled={loading}
+            >
               {loading ? "Đang xử lý" : "Thay đổi"}
             </Button>
           </div>

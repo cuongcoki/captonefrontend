@@ -317,13 +317,12 @@ export default function SalaryDetailEm({
                             </TableCell>
 
                             <TableCell className="">
-                              {formatCurrency(item.salaryPerProduct)} VNĐ
+                              {formatCurrency(item.salaryPerProduct)}
                             </TableCell>
                             <TableCell className="text-right hidden sm:table-cell">
                               {formatCurrency(
                                 item.salaryPerProduct * item.quantity
                               )}{" "}
-                              VNĐ
                             </TableCell>
                           </TableRow>
                         ))
