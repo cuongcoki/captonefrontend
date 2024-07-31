@@ -341,7 +341,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
             });
         }
 
-    }, [,reset,orderId, shipOrderId]);
+    }, [, reset, orderId, shipOrderId]);
 
 
 
@@ -372,7 +372,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         };
 
         fetchData();
-    }, [isActive,roleId,searchTearm,currentPage, pageSize, dataEm]);
+    }, [isActive, roleId, searchTearm, currentPage, pageSize, dataEm]);
 
 
 
@@ -393,6 +393,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
             .then(({ data }) => {
                 console.log("data", data)
                 if (data.isSuccess) {
+                    setOpen(false)
                     toast.success(data.message);
                 }
             })

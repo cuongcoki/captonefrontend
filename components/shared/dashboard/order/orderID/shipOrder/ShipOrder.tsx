@@ -64,7 +64,7 @@ import { useParams } from "next/navigation";
 // ** import Components
 import { NoImage } from "@/constants/images";
 import { Badge } from "@/components/ui/badge";
-import { Copy, CreditCard, MoreVertical, Truck } from "lucide-react";
+import { Copy, CreditCard, MoreVertical, PenLine, Truck } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { FormShipOrder } from "./form/FormShipOrder";
 import { shipOrderApi } from "@/apis/shipOrder.api";
@@ -145,7 +145,7 @@ interface imageResponses {
 
 interface OrderId {
   orderId?: any;
-  checkStatus: boolean;
+  checkStatus: any;
 }
 
 interface ImageResponse {
@@ -257,6 +257,16 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
   // console.log('data', data)
   // console.log('vvvvvv', valueStatus)
   // console.log("checkStatus",checkStatus)
+  function formatDate(inputDate:any) {
+    const date = new Date(inputDate);
+  
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+  
+    return `${day}/${month}/${year}`;
+  }
+  
 
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6">
@@ -264,10 +274,10 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
         <CardHeader>
           <div className="flex justify-between items-center">
             <TitleComponent
-              title="Vận chuyên đơn hàng"
+              title="Vận chuyển đơn hàng"
               description="Danh sách các đơn hàng vận chuyển."
             />
-            {checkStatus ? <FormShipOrder orderId={orderId} /> : ""}
+            {checkStatus === 1 ? <FormShipOrder orderId={orderId} /> : ""}
           </div>
         </CardHeader>
         <CardContent>
@@ -298,86 +308,80 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                     </div>
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">
-                    {item.shipDate}
+                    {formatDate(item.shipDate)}
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     {item.deliveryMethodDescription}
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">
-                    {item.status === 2 ||
-                    item.status === 3 ||
-                    checkStatus === false ? (
-                      <span>{item.statusDescription}</span>
-                    ) : (
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          {item.status === 2 || item.status === 3 ? (
-                            <span>{item.statusDescription}</span>
-                          ) : (
-                            <Button variant="outline">
-                              {" "}
-                              {item.statusDescription}
-                            </Button>
-                          )}
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                          <DialogHeader>
-                            <DialogTitle>Đổi trạng thái đơn hàng</DialogTitle>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label
-                                htmlFor="Trạng thái"
-                                className="text-right"
-                              >
-                                Trạng thái
-                              </Label>
-                              <Select
-                                defaultValue={String(item.status)}
-                                onValueChange={(value) =>
-                                  handleSelectChange(
-                                    Number(value),
-                                    item.shipOrderId
-                                  )
-                                }
-                              >
-                                <SelectTrigger className="w-[200px]">
-                                  <SelectValue
-                                    placeholder="Hãy chọn loại đơn"
-                                    defaultValue={item.status}
-                                  />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {OrderStatus.map((status) => (
-                                    <SelectItem
-                                      key={status.id}
-                                      value={String(status.id)}
-                                    >
-                                      {status.des}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                          <DialogFooter>
-                            <Button
-                              type="submit"
-                              onClick={() =>
-                                handleSubmitOrderStatus(item.shipOrderId)
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline">
+                          {" "}
+                          {item.statusDescription}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Đổi trạng thái đơn hàng</DialogTitle>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label
+                              htmlFor="Trạng thái"
+                              className="text-right"
+                            >
+                              Trạng thái
+                            </Label>
+                            <Select
+                              defaultValue={String(item.status)}
+                              onValueChange={(value) =>
+                                handleSelectChange(
+                                  Number(value),
+                                  item.shipOrderId
+                                )
                               }
                             >
-                              Lưu thay đổi
-                            </Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    )}
+                              <SelectTrigger className="w-[200px]">
+                                <SelectValue
+                                  placeholder="Hãy chọn loại đơn"
+                                  defaultValue={item.status}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {OrderStatus.map((status) => (
+                                  <SelectItem
+                                    key={status.id}
+                                    value={String(status.id)}
+                                  >
+                                    {status.des}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <DialogFooter>
+                          <Button
+                            type="submit"
+                            onClick={() =>
+                              handleSubmitOrderStatus(item.shipOrderId)
+                            }
+                          >
+                            Lưu thay đổi
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </TableCell>
                   <TableCell className="hidden sm:table-cell">
                     {item.status === 2 ||
-                    item.status === 3 ||
-                    checkStatus === false ? null : (
+                      item.status === 3 ||
+                      checkStatus === false ? (
+                        <>
+                        <Button className="rounded p-2 hover:bg-gray text-black bg-gay" onClick={()=>{toast.error("Hãy chuyển sang trạng thái đang đợi giao để chỉnh sửa")}}> <PenLine /></Button>
+                        </>
+                      ) : (
                       <FormUpdateShipOrder
                         orderId={orderId}
                         shipOrderId={item}
@@ -398,7 +402,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
               Giao hàng
             </CardTitle>
             {data[indexItemShipOrder] && (
-              <CardDescription>{`Ngày ${data[indexItemShipOrder]?.shipDate}`}</CardDescription>
+              <CardDescription>{`Ngày ${formatDate(data[indexItemShipOrder]?.shipDate)}`}</CardDescription>
             )}
           </div>
         </CardHeader>

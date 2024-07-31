@@ -380,6 +380,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       setLoading(true);
       orderApi.createOrderId(requestBody).then(({ data }) => {
         if (data.isSuccess) {
+          setOpen(false)
           // console.log("dataaaa=======", data);
           toast.success("Cặp nhật sản phẩm thành công");
         }

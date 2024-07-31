@@ -341,6 +341,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
       .then(({ data }) => {
         console.log("data", data);
         if (data.isSuccess) {
+          setOpen(false)
           toast.success(data.message);
         }
       })
@@ -624,7 +625,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                       render={({ field }) => (
                         <FormItem className="flex flex-col">
                           <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                            Ngày đặt hàng *
+                            Ngày chuyển hàng *
                           </FormLabel>
                           <Popover modal={true}>
                             <PopoverTrigger asChild>

@@ -73,16 +73,19 @@ interface productOrderResponses {
   imageProductUrl: string;
   quantity: number;
   unitPrice: number;
+  shippedQuantiy: number;
   note: number;
 }
 interface setOrderResponses {
   setId: string;
   setName: string;
+  setCode: string;
   setDescription: string;
   imageSetUrl: string;
   productResponses: productResponses[];
   quantity: number;
   unitPrice: number;
+  shippedQuantiy: number;
   note: number;
 }
 interface productResponses {
@@ -172,13 +175,9 @@ export default function OrderIdPage({ orderId }: OrderId) {
     fetchDataOrderId();
   }, [data, dataId, params.id]);
 
-  const [checkStatus, setCheckStatus] = useState<boolean>(false);
+  const [checkStatus, setCheckStatus] = useState<number>();
   useEffect(() => {
-    if (data?.status === 2 || data?.status === 3) {
-      setCheckStatus(false);
-    } else {
-      setCheckStatus(true);
-    }
+    setCheckStatus(data?.status);
   }, [data?.status]);
 
   const formatCurrency = (value: any): string => {
@@ -212,236 +211,257 @@ export default function OrderIdPage({ orderId }: OrderId) {
   };
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6">
-        <Card className="sm:col-span-1 md:col-span-10 lg:col-span-7 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-primary">Thông tin Công ty</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-col-6">
-              <div className="col-span-2 flex items-center gap-4 ">
-                <Building2 className="h-10 w-10" />
-                <span className="text-xl font-medium">
-                  {data?.company.name}
-                </span>
-              </div>
+    <>
+      <HeaderComponent
+        title="Chi tiết đơn hàng"
+        description="Thông tin chi tiết của đơn hàng."
+      />
+      <div className="flex flex-col gap-8">
 
-              <div className="divide-x-2 divide-gray-300 grid grid-cols-6 gap-4 items-start text-sm xl:flex-row  xl:space-y-0 md:border-t-2 p-2 border-t-0">
-                <div className="col-span-2 flex flex-col space-y-1 sm:w-[300px] w-full p-2  h-full">
-                  <div className="text-lg font-medium">Địa chỉ công ty</div>
-                  <div>{data?.company.address}</div>
+        <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6">
+          <Card className="sm:col-span-1 md:col-span-10 lg:col-span-7 shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-primary">Thông tin Công ty</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-col-6">
+                <div className="col-span-2 flex items-center gap-4 ">
+                  <Building2 className="h-10 w-10" />
+                  <span className="text-xl font-medium">
+                    {data?.company.name}
+                  </span>
                 </div>
 
-                <div className="flex flex-col space-y-1 p-2 h-full">
-                  <div className="text-lg font-medium">Loại công ty</div>
-                  <div>{data?.company.companyTypeDescription}</div>
+                <div className="divide-x-2 divide-gray-300 grid grid-cols-6 gap-4 items-start text-sm xl:flex-row  xl:space-y-0 md:border-t-2 p-2 border-t-0">
+                  <div className="col-span-2 flex flex-col space-y-1 sm:w-[300px] w-full p-2  h-full">
+                    <div className="text-lg font-medium">Địa chỉ công ty</div>
+                    <div>{data?.company.address}</div>
+                  </div>
+
+                  <div className="flex flex-col space-y-1 p-2 h-full">
+                    <div className="text-lg font-medium">Loại công ty</div>
+                    <div>{data?.company.companyTypeDescription}</div>
+                  </div>
+
+                  <div className="flex flex-col space-y-1 p-2 h-full">
+                    <div className="text-lg font-medium">Tên giám đốc</div>
+                    <div>{data?.company.directorName}</div>
+                  </div>
+
+                  <div className="flex flex-col space-y-1 p-2 h-full">
+                    <div className="text-lg font-medium">Liên hệ</div>
+                    <div className="">{data?.company.directorPhone}</div>
+                  </div>
+
+                  <div className="flex flex-col space-y-1 p-2 h-full">
+                    <div className="text-lg font-medium">Email</div>
+                    <div>{data?.company.email}</div>
+                  </div>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
 
-                <div className="flex flex-col space-y-1 p-2 h-full">
-                  <div className="text-lg font-medium">Tên giám đốc</div>
-                  <div>{data?.company.directorName}</div>
+          <Card className="sm:col-span-1 md:col-span-10 lg:col-span-3 shadow-sm">
+            <CardHeader>
+              <div className="flex justify-between items-center ">
+                <CardTitle className="text-primary">Đơn hàng chi tiết</CardTitle>
+                <UpdateOrder orderId={data} />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col space-y-2">
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-600 ">Trạng thái:</span>
+                  <span className={`
+  ${data?.status === 0 ? "text-yellow-500 font-semibold" : ""}
+  ${data?.status === 1 ? "text-blue-500 font-semibold" : ""}
+  ${data?.status === 2 ? "text-green-500 font-semibold" : ""}
+  ${data?.status === 3 ? "text-red-500 font-semibold" : ""}
+`}>
+                    {data?.statusDescription}
+                  </span>
                 </div>
-
-                <div className="flex flex-col space-y-1 p-2 h-full">
-                  <div className="text-lg font-medium">Liên hệ</div>
-                  <div className="">{data?.company.directorPhone}</div>
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-600">Ngày bắt đầu:</span>
+                  <span className="text-gray-800">
+                    {formatDate(data?.startOrder as string)}
+                  </span>
                 </div>
-
-                <div className="flex flex-col space-y-1 p-2 h-full">
-                  <div className="text-lg font-medium">Email</div>
-                  <div>{data?.company.email}</div>
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-600">
+                    Ngày kết thúc:
+                  </span>
+                  <span className="text-gray-800">
+                    {formatDate(data?.endOrder as string)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium text-gray-600">VAT:</span>
+                  <span className="text-gray-800">{data?.vat}%</span>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card className="sm:col-span-1 md:col-span-10 lg:col-span-3 shadow-sm">
-          <CardHeader>
-            <div className="flex justify-between items-center ">
-              <CardTitle className="text-primary">Đơn hàng chi tiết</CardTitle>
+          <Card className="sm:col-span-1 md:col-span-10 shadow-sm">
+            <CardHeader>
+              <div className="flex justify-between items-center ">
+                <CardTitle className="text-primary">Sản phẩm chi tiết</CardTitle>
 
-              {checkStatus ? <UpdateOrder orderId={data} /> : ""}
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col space-y-2">
-              <div className="flex justify-between">
-                <span className="font-medium text-gray-600 ">Trạng thái:</span>
-                <span className="text-gray-800 bg-slate-100 p-2 rounded-full">
-                  {data?.statusDescription}
-                </span>
+                {checkStatus === 0 || checkStatus === 1 ? <UpdateOrderDetails orderId={dataId} /> : ""}
               </div>
-              <div className="flex justify-between">
-                <span className="font-medium text-gray-600">Ngày bắt đầu:</span>
-                <span className="text-gray-800">
-                  {formatDate(data?.startOrder as string)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium text-gray-600">
-                  Ngày kết thúc:
-                </span>
-                <span className="text-gray-800">
-                  {formatDate(data?.endOrder as string)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium text-gray-600">VAT:</span>
-                <span className="text-gray-800">{data?.vat}%</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="sm:col-span-1 md:col-span-10 shadow-sm">
-          <CardHeader>
-            <div className="flex justify-between items-center ">
-              <CardTitle className="text-primary">Sản phẩm chi tiết</CardTitle>
-
-              {checkStatus ? <UpdateOrderDetails orderId={dataId} /> : ""}
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="productOrderResponses" className="">
-              <TabsList className="grid grid-cols-2 w-[250px]">
-                <TabsTrigger value="productOrderResponses">
-                  Sản phẩm
-                </TabsTrigger>
-                <TabsTrigger value="setOrderResponses">Bộ sản phẩm</TabsTrigger>
-              </TabsList>
-              <TabsContent value="productOrderResponses">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Sản phẩm</CardTitle>
-                    <CardDescription>
-                      Hãy xem chi tiết sản phẩm bằng cách bấm vào ảnh
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <Table className="w-full overflow-x-auto">
-                      <TableCaption>Sản phẩm trong đơn hàng</TableCaption>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-[100px]">ảnh</TableHead>
-                          <TableHead className="hidden sm:table-cell">
-                            Tên sản phẩm
-                          </TableHead>
-                          <TableHead className="hidden sm:table-cell">
-                            Mã CODE
-                          </TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Mô tả
-                          </TableHead>
-                          <TableHead>Số lượng</TableHead>
-                          <TableHead>Giá unit</TableHead>
-                          <TableHead className="hidden md:table-cell">
-                            Ghi chú
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {dataId.productOrderResponses.map((item) => (
-                          <TableRow key={item.productId}>
-                            <TableCell>
-                              <Image
-                                src={
-                                  item.imageProductUrl === "No Image"
-                                    ? NoImage
-                                    : item.imageProductUrl
-                                }
-                                width={900}
-                                height={900}
-                                alt="ảnh sản phẩm"
-                                className="w-[50px] h-[50px] object-contain shadow-md rounded-sm"
-                              />
-                            </TableCell>
-                            <TableCell className="hidden sm:table-cell">
-                              {item.productName}
-                            </TableCell>
-                            <TableCell className="hidden sm:table-cell">
-                              {item.productCode}
-                            </TableCell>
-                            <TableCell className="hidden md:table-cell">
-                              {item.productDescription}
-                            </TableCell>
-                            <TableCell>
-                              {formatCurrency(item.quantity)}
-                            </TableCell>
-                            <TableCell>
-                              {formatCurrency(item.unitPrice)}
-                            </TableCell>
-                            <TableCell className="hidden md:table-cell">
-                              {item.note}
-                            </TableCell>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="productOrderResponses" className="">
+                <TabsList className="grid grid-cols-2 w-[250px]">
+                  <TabsTrigger value="productOrderResponses">
+                    Sản phẩm
+                  </TabsTrigger>
+                  <TabsTrigger value="setOrderResponses">Bộ sản phẩm</TabsTrigger>
+                </TabsList>
+                <TabsContent value="productOrderResponses">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Sản phẩm</CardTitle>
+                      <CardDescription>
+                        Hãy xem chi tiết sản phẩm bằng cách bấm vào ảnh
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <Table className="w-full overflow-x-auto">
+                        <TableCaption>Sản phẩm trong đơn hàng</TableCaption>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-[100px]">ảnh</TableHead>
+                            <TableHead className="hidden sm:table-cell">
+                              Tên sản phẩm
+                            </TableHead>
+                            <TableHead className="hidden sm:table-cell">
+                              Mã sản phẩm
+                            </TableHead>
+                            <TableHead className="hidden md:table-cell">
+                              Mô tả
+                            </TableHead>
+                            <TableHead>Số lượng</TableHead>
+                            <TableHead>Hàng đã giao</TableHead>
+                            <TableHead>Đơn vị giá</TableHead>
+                            <TableHead className="hidden md:table-cell">
+                              Ghi chú
+                            </TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </CardContent>
-                </Card>
-              </TabsContent>
+                        </TableHeader>
+                        <TableBody>
+                          {dataId.productOrderResponses.map((item) => (
+                            <TableRow key={item.productId}>
+                              <TableCell>
+                                <Image
+                                  src={
+                                    item.imageProductUrl === "No Image"
+                                      ? NoImage
+                                      : item.imageProductUrl
+                                  }
+                                  width={900}
+                                  height={900}
+                                  alt="ảnh sản phẩm"
+                                  className="w-[50px] h-[50px] object-contain shadow-md rounded-sm"
+                                />
+                              </TableCell>
+                              <TableCell className="hidden sm:table-cell">
+                                {item.productName}
+                              </TableCell>
+                              <TableCell className="hidden sm:table-cell">
+                                {item.productCode}
+                              </TableCell>
+                              <TableCell className="hidden md:table-cell">
+                                {item.productDescription}
+                              </TableCell>
+                              <TableCell>
+                                {formatCurrency(item.quantity)}
+                              </TableCell>
+                              <TableCell>
+                                {item.shippedQuantiy}
+                              </TableCell>
+                              <TableCell>
+                                {formatCurrency(item.unitPrice)}
+                              </TableCell>
+                              <TableCell className="hidden md:table-cell">
+                                {item.note}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
 
-              <TabsContent value="setOrderResponses">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Bộ sản phẩm</CardTitle>
-                    <CardDescription>
-                      Hãy xem chi tiết sản phẩm bằng cách bấm vào ảnh
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <Table className="w-full overflow-x-auto">
-                      <TableCaption>Bộ sản phẩm trong đơn hàng</TableCaption>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead className="w-[100px]">ảnh</TableHead>
-                          <TableHead>Tên sản phẩm</TableHead>
-                          <TableHead>mô tả</TableHead>
-                          <TableHead>Số lượng</TableHead>
-                          <TableHead>Đơn vị giá</TableHead>
-                          <TableHead>Ghi chú</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {dataId.setOrderResponses.map((item) => (
-                          <TableRow key={item.setId}>
-                            <TableCell>
-                              <Image
-                                src={
-                                  item.imageSetUrl === "No Image"
-                                    ? NoImage
-                                    : item.imageSetUrl
-                                }
-                                width={900}
-                                height={900}
-                                alt="ảnh sản phẩm"
-                                className="w-[50px] h-[50px] object-contain shadow-md rounded-sm"
-                              />
-                            </TableCell>
-                            <TableCell>{item.setName}</TableCell>
-                            <TableCell>{item.setDescription}</TableCell>
-                            <TableCell>
-                              {formatCurrency(item.quantity)}
-                            </TableCell>
-                            <TableCell>
-                              {formatCurrency(item.unitPrice)}
-                            </TableCell>
-                            <TableCell>{item.note}</TableCell>
+                <TabsContent value="setOrderResponses">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Bộ sản phẩm</CardTitle>
+                      <CardDescription>
+                        Hãy xem chi tiết sản phẩm bằng cách bấm vào ảnh
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <Table className="w-full overflow-x-auto">
+                        <TableCaption>Bộ sản phẩm trong đơn hàng</TableCaption>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-[100px]">ảnh</TableHead>
+                            <TableHead>Tên sản phẩm</TableHead>
+                            <TableHead>Mã sản phẩm</TableHead>
+                            <TableHead>mô tả</TableHead>
+                            <TableHead>Số lượng</TableHead>
+                            <TableHead>Hàng đã giao</TableHead>
+                            <TableHead>Đơn vị giá</TableHead>
+                            <TableHead>Ghi chú</TableHead>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+                        </TableHeader>
+                        <TableBody>
+                          {dataId.setOrderResponses.map((item) => (
+                            <TableRow key={item.setId}>
+                              <TableCell>
+                                <Image
+                                  src={
+                                    item.imageSetUrl === "No Image"
+                                      ? NoImage
+                                      : item.imageSetUrl
+                                  }
+                                  width={900}
+                                  height={900}
+                                  alt="ảnh sản phẩm"
+                                  className="w-[50px] h-[50px] object-contain shadow-md rounded-sm"
+                                />
+                              </TableCell>
+                              <TableCell>{item.setName}</TableCell>
+                              <TableCell>{item.setCode}</TableCell>
+                              <TableCell>{item.setDescription}</TableCell>
+                              <TableCell>
+                                {formatCurrency(item.quantity)}
+                              </TableCell>
+                              <TableCell>
+                                {item.shippedQuantiy}
+                              </TableCell>
+                              <TableCell>
+                                {formatCurrency(item.unitPrice)}
+                              </TableCell>
+                              <TableCell>{item.note}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+        <ShipOrder orderId={dataId} checkStatus={checkStatus} />
       </div>
-      <ShipOrder orderId={dataId} checkStatus={checkStatus} />
-    </div>
+    </>
   );
 }
 
