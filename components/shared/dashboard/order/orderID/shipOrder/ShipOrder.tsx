@@ -72,6 +72,7 @@ import { FormUpdateShipOrder } from "./form/FormUpdateShipOrder";
 import ImageIconShipOrder from "./ImageIconShipOrder";
 import Link from "next/link";
 import TitleComponent from "@/components/shared/common/Title";
+import { OrderStore } from "../../order-store";
 
 const OrderStatus = [
   {
@@ -207,6 +208,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
     }
   }, [orderId]);
   const [valueStatus, setValueStatus] = useState<any>(0);
+  const { force } = OrderStore();
 
   const handleSelectChange = (value: any, id: string) => {
     console.log("value", value);
@@ -241,7 +243,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
           setLoading(false);
         });
     }
-  }, [orderId, order, valueStatus]);
+  }, [orderId, order, valueStatus,force]);
 
   // ** handle render order detail
   const [indexItemShipOrder, setIndexItemShipOrder] = useState<number>(0);

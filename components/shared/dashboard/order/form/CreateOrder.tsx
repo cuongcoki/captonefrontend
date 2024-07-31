@@ -86,6 +86,7 @@ import ImageDisplayDialog from "../../product-set/form/imageDisplayDialog";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { NoImage } from "@/constants/images";
+import { OrderStore } from "../order-store";
 
 // Define Company Type
 type Company = {
@@ -128,7 +129,7 @@ export default function CreateOrder() {
   const [open, setOpen] = useState<boolean>(false);
   const [openDetils, setOpenDetils] = useState<boolean>(false);
   const [openNote, setOpenNote] = useState<boolean>(false);
-
+  const { ForceRender } = OrderStore();
   const handleOffDialogNote = () => {
     setOpenNote(false);
   };
@@ -417,6 +418,7 @@ export default function CreateOrder() {
       console.log("response", response);
       toast.success("Tạo đơn hàng thành công");
       if (response.data.isSuccess) {
+        ForceRender();
         setOpen(false)
         setNextStep(true);
       }

@@ -68,6 +68,7 @@ import { filesApi } from "@/apis/files.api";
 import { NoImage } from "@/constants/images";
 import useDebounce from "./useDebounce";
 import { orderApi } from "@/apis/order.api";
+import { OrderStore } from "../order-store";
 
 type OrderDetailRequest = {
   productIdOrSetId: string;
@@ -113,6 +114,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   //state
   const [open, setOpen] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
+  const { ForceRender } = OrderStore();
 
   const handleOffDialog = () => {
     setOpen(false);
@@ -380,6 +382,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       setLoading(true);
       orderApi.createOrderId(requestBody).then(({ data }) => {
         if (data.isSuccess) {
+          ForceRender()
           setOpen(false)
           // console.log("dataaaa=======", data);
           toast.success("Cặp nhật sản phẩm thành công");

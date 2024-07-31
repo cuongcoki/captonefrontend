@@ -67,6 +67,7 @@ import { UserSearchParams } from "@/types/userTypes";
 import Image from "next/image";
 import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
+import { OrderStore } from "../../../order-store";
 
 // Define Status Enum
 const OrderStatus = [
@@ -208,6 +209,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
   const [roleId, setRoleId] = useState<number>(4);
   const [searchTearm, setSearchTearm] = useState<string>("");
   const [dataEm, setDataEm] = useState<Employee[]>([]);
+  const { ForceRender } = OrderStore();
 
   // ** các hàm sử lý logic
   const [shipOrderDetailRequests, setShipOrderDetailRequests] = useState<
@@ -341,6 +343,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
       .then(({ data }) => {
         console.log("data", data);
         if (data.isSuccess) {
+          ForceRender()
           setOpen(false)
           toast.success(data.message);
         }
