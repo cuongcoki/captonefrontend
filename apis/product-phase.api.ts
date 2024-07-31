@@ -23,9 +23,23 @@ export const productPhaseApi = {
       }
     );
   },
-  changePhase: (requestBody: ChangePhaseBody) => {
+  // changePhase: (requestBody: ChangePhaseBody) => {
+  //   return axiosClient.put(
+  //     `${endPointConstant.BASE_URL}/productphase/changePhase`,
+  //     requestBody,
+  //     {
+  //       cache: {
+  //         update: () => {
+  //           listCacheId.forEach((id) => axiosClient.storage.remove(id));
+  //           listCacheId.clear();
+  //         },
+  //       },
+  //     }
+  //   );
+  // },
+  changeQuantityType: (requestBody: ChangeQuantityTypeBody) => {
     return axiosClient.put(
-      `${endPointConstant.BASE_URL}/productphase/changePhase`,
+      `${endPointConstant.BASE_URL}/productphase/changeQuantityType`,
       requestBody,
       {
         cache: {
@@ -35,12 +49,6 @@ export const productPhaseApi = {
           },
         },
       }
-    );
-  },
-  changeQuantityType: (requestBody: ChangeQuantityTypeBody) => {
-    return axiosClient.put(
-      `${endPointConstant.BASE_URL}/productphase/changeQuantityType`,
-      requestBody
     );
   },
 };

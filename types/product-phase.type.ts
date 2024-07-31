@@ -47,6 +47,7 @@ export type ChangeQuantityTypeBody = {
   to: number;
   quantity: number;
   productId: string;
-  phaseId: string;
+  phaseIdFrom: string;
+  phaseIdTo: string;
   companyId: string;
 };

@@ -86,7 +86,7 @@ export function ReportManagerUpdate({
       <DialogContent className="sm:max-w-[40vw] dark:bg-[#1c1917]">
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3">
-            Cập nhật đơn báo cáo
+            Cập nhật đơn khiếu nại
           </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>

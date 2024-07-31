@@ -33,6 +33,7 @@ import { Input } from "@/components/ui/input";
 import ProductPhaseAction from "@/components/shared/dashboard/product-phase/product-phase-action";
 import { attendanceApi } from "@/apis/attendance.api";
 import HeaderComponent from "@/components/shared/common/header";
+import ProductPhaseChangeQuantityType from "@/components/shared/dashboard/product-phase/product-phase-change-quantity-type";
 
 export default function ProductPhaseTable({
   searchParams,
@@ -206,7 +207,7 @@ export default function ProductPhaseTable({
                 <TableHead>Lỗi bên mình</TableHead>
                 <TableHead>Lỗi bên thứ 3</TableHead>
                 <TableHead>Hàng hỏng</TableHead>
-                <TableHead className="text-center">Hành động</TableHead>
+                {/* <TableHead className="text-center">Hành động</TableHead> */}
               </TableRow>
             </TableHeader>
 
@@ -219,37 +220,42 @@ export default function ProductPhaseTable({
                 </TableRow>
               ) : (
                 tableData.map((item, index) => (
-                  <TableRow key={item.productId + item.phaseId}>
-                    <TableCell>
-                      <div className="size-10 bg-gray-400">
-                        <Image
-                          className="object-cover size-10"
-                          src={item.imageUrl}
-                          width={100}
-                          height={100}
-                          alt={item.productName}
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell>{item.productName}</TableCell>
-                    <TableCell>{item.productCode}</TableCell>
-                    <TableCell>{item.phaseDescription}</TableCell>
-                    <TableCell>
-                      {formatCurrency(item.availableQuantity)}
-                    </TableCell>
-                    <TableCell>
-                      {formatCurrency(item.failureAvailabeQuantity)}
-                    </TableCell>
-                    <TableCell>
-                      {formatCurrency(item.errorAvailableQuantity)}
-                    </TableCell>
-                    <TableCell>
-                      {formatCurrency(item.brokenAvailableQuantity)}
-                    </TableCell>
-                    <TableCell className="flex justify-center">
+                  <ProductPhaseChangeQuantityType
+                    index={index}
+                    key={item.productId + item.phaseId}
+                  >
+                    <TableRow className="hover:cursor-pointer">
+                      <TableCell>
+                        <div className="size-10 bg-gray-400">
+                          <Image
+                            className="object-cover size-10"
+                            src={item.imageUrl}
+                            width={100}
+                            height={100}
+                            alt={item.productName}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>{item.productName}</TableCell>
+                      <TableCell>{item.productCode}</TableCell>
+                      <TableCell>{item.phaseDescription}</TableCell>
+                      <TableCell>
+                        {formatCurrency(item.availableQuantity)}
+                      </TableCell>
+                      <TableCell>
+                        {formatCurrency(item.failureAvailabeQuantity)}
+                      </TableCell>
+                      <TableCell>
+                        {formatCurrency(item.errorAvailableQuantity)}
+                      </TableCell>
+                      <TableCell>
+                        {formatCurrency(item.brokenAvailableQuantity)}
+                      </TableCell>
+                      {/* <TableCell className="flex justify-center">
                       <ProductPhaseAction index={index} />
-                    </TableCell>
-                  </TableRow>
+                    </TableCell> */}
+                    </TableRow>
+                  </ProductPhaseChangeQuantityType>
                 ))
               )}
             </TableBody>
