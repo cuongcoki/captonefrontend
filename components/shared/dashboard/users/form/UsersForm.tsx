@@ -295,6 +295,17 @@ export const UsersForm = () => {
               toast.error(errors.Phone);
             }
 
+            if (errors.FirstName) {
+              toast.error(errors.FirstName);
+            }
+            if (errors.LastName) {
+              toast.error(errors.LastName);
+            }
+            if (errors.DOB && Array.isArray(errors.DOB)) {
+              errors.DOB.forEach((error:any) => {
+                  toast.error(error);
+              });
+          }
           } else {
             console.error("Tạo tài khoản không thành công");
           }
