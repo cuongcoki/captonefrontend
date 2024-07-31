@@ -60,6 +60,7 @@ import Image from "next/image";
 import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
 import { filesApi } from "@/apis/files.api";
+import { OrderStore } from "../../../order-store";
 
 // Define Status Enum
 const OrderStatus = [
@@ -204,6 +205,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
     const handleOnDialog = () => {
         setOpen(true);
     };
+    const { ForceRender } = OrderStore();
 
     // ** state
     const [loading, setLoading] = useState(false);
@@ -393,6 +395,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
             .then(({ data }) => {
                 console.log("data", data)
                 if (data.isSuccess) {
+                    ForceRender()
                     setOpen(false)
                     toast.success(data.message);
                 }
