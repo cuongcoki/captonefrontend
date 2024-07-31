@@ -35,15 +35,15 @@ import HeaderComponent from "@/components/shared/common/header";
 
 const comboboxData: ComboboxDataType[] = [
   {
-    label: "Slot Sáng",
+    label: "Buổi Sáng",
     value: "1",
   },
   {
-    label: "Slot Chiều",
+    label: "Buổi Chiều",
     value: "2",
   },
   {
-    label: "Slot Tối",
+    label: "Buổi Tối",
     value: "3",
   },
 ];
@@ -58,7 +58,7 @@ export default function UpdateAttendance({
   slotProp: string;
   warehouseProp: string;
 }): JSX.Element {
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const userData = JSON.parse(localStorage?.getItem("userData") || "{}");
 
   const colorSlaryByProduct = "bg-white";
   function formatDate(dateStr: String) {

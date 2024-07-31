@@ -35,7 +35,7 @@ export default function CountProduct({
   const [isUpdate, setIsUpdate] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
 
-  const [dataPhase, setDataPhase] = useState<ComboboxDataType[]>([]);
+  // const [dataPhase, setDataPhase] = useState<ComboboxDataType[]>([]);
 
   const [searchInput, setSearchInput] = useState<string>("");
   const [searchData, setSearchData] = useState<GetAllProductResponse | null>(
@@ -83,22 +83,22 @@ export default function CountProduct({
   }, [searchInput]);
 
   // GET PHASE DATA
-  useEffect(() => {
-    attendanceApi
-      .getAllPhase()
-      .then(({ data }) => {
-        // console.log("Phase Data: ", data);
-        setDataPhase(
-          data.data.map((phase) => ({
-            label: phase.name,
-            value: phase.id,
-          }))
-        );
-      })
-      .catch((error) => {
-        console.log("Error getAllPhase: ", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   attendanceApi
+  //     .getAllPhase()
+  //     .then(({ data }) => {
+  //       // console.log("Phase Data: ", data);
+  //       setDataPhase(
+  //         data.data.map((phase) => ({
+  //           label: phase.name,
+  //           value: phase.id,
+  //         }))
+  //       );
+  //     })
+  //     .catch((error) => {
+  //       console.log("Error getAllPhase: ", error);
+  //     });
+  // }, []);
 
   const AddNewProductForUser = async (product: Product) => {
     const getImage = async (name: string) => {
@@ -144,20 +144,20 @@ export default function CountProduct({
     setIsUpdate(true);
   };
 
-  const updatePhaseOfProduct = (indexP: number, value: string) => {
-    setUserData((prev) => {
-      const newProducts = [...prev.products];
-      newProducts[indexP].phaseID = value;
-      newProducts[indexP].phaseName = dataPhase.find(
-        (phase) => phase.value === value
-      )?.label as string;
-      return {
-        ...prev,
-        products: newProducts,
-      };
-    });
-    setIsUpdate(true);
-  };
+  // const updatePhaseOfProduct = (indexP: number, value: string) => {
+  //   setUserData((prev) => {
+  //     const newProducts = [...prev.products];
+  //     newProducts[indexP].phaseID = value;
+  //     newProducts[indexP].phaseName = dataPhase.find(
+  //       (phase) => phase.value === value
+  //     )?.label as string;
+  //     return {
+  //       ...prev,
+  //       products: newProducts,
+  //     };
+  //   });
+  //   setIsUpdate(true);
+  // };
 
   const removeProduct = (indexP: number) => {
     setUserData((prev) => {

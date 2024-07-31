@@ -41,10 +41,10 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
         <thead>
           <tr>
             <th className="dark:bg-[#1c1917]" rowSpan={2}>
-              Slot
+              Buổi
             </th>
-            <th className="dark:bg-[#1c1917]" colSpan={3}>
-              Sản phẩm{" "}
+            <th className="dark:bg-[#1c1917]" colSpan={2}>
+              Sản phẩm
             </th>
             <th className="dark:bg-[#1c1917]" rowSpan={2}>
               Tăng ca
@@ -55,7 +55,7 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
           </tr>
           <tr>
             <th className="dark:bg-[#1c1917]">Tên</th>
-            <th className="dark:bg-[#1c1917]">Giai đoạn</th>
+            {/* <th className="dark:bg-[#1c1917]">Giai đoạn</th> */}
             <th className="dark:bg-[#1c1917]">Số lượng</th>
           </tr>
         </thead>
@@ -74,7 +74,7 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
                       </td>
                     ) : null}
                     <td className="dark:bg-[#1c1917]">{product.productName}</td>
-                    <td className="dark:bg-[#1c1917]">{product.phaseName}</td>
+                    {/* <td className="dark:bg-[#1c1917]">{product.phaseName}</td> */}
                     <td className="dark:bg-[#1c1917]">{product.quantity}</td>
                     {index === 0 ? (
                       <td
@@ -97,7 +97,7 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
               ) : (
                 <tr>
                   <td className="dark:bg-[#1c1917]">{SlotName[item.slotId]}</td>
-                  <td colSpan={3} className="bg-gray-300 dark:bg-black "></td>
+                  <td colSpan={2} className="bg-gray-300 dark:bg-black "></td>
 
                   <td className="dark:bg-[#1c1917]">{item.hourOverTime}h</td>
                   <td className="dark:bg-[#1c1917]">

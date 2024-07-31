@@ -152,7 +152,7 @@ export default function ChangePasswod() {
                 type="submit"
                 className="w-full bg-secondary-backgroudPrimary text-primary-backgroudPrimary hover:bg-yellow-300"
               >
-                GỬI MÃ XÁC NHẬN
+                ĐỔI MẬT KHẨU
               </Button>
             </form>
           </Form>
