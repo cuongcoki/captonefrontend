@@ -2,6 +2,7 @@
 
 import { filesApi } from "@/apis/files.api";
 import { DeleteMaterialHistory } from "@/components/shared/dashboard/material-history/delete-material-history/delete-material-history";
+import MaterialHistoryAction from "@/components/shared/dashboard/material-history/table/material-history-action";
 import UpdateMaterialHistory from "@/components/shared/dashboard/material-history/update-material-history/update-material-history";
 import UpdateMaterial from "@/components/shared/dashboard/material/update-material/update-material";
 import { Button } from "@/components/ui/button";
@@ -120,12 +121,13 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
       const payment = row.original;
       return (
         <div className="flex items-center justify-center p-0 gap-x-3">
-          <UpdateMaterialHistory id={payment.id}>
+          {/* <UpdateMaterialHistory id={payment.id}>
             <div id={payment.id}>
               <Edit className="hover:cursor-pointer" />
             </div>
           </UpdateMaterialHistory>
-          <DeleteMaterialHistory id={payment.id} />
+          <DeleteMaterialHistory id={payment.id} /> */}
+          <MaterialHistoryAction id={payment.id} />
         </div>
       );
     },
