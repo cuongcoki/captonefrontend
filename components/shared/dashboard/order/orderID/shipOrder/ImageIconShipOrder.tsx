@@ -51,7 +51,7 @@ export default function ImageIconShipOrder({ dataImage }: ImageIconShipOrderProp
     }
 
     const mainImage = linkImages.find(image => image.isMainImage);
-    console.log("mainImage",mainImage)
+    // console.log("mainImage",mainImage)
     return (
     <> 
          {mainImage ? (

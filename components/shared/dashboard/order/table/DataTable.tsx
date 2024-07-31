@@ -35,7 +35,7 @@ export function DataTable<TData extends OrderData, TValue>({
   const router = useRouter();
   const handleGotoDetail = (id: string) => {
     router.push(`/dashboard/order/${id}`);
-    console.log('id',id)
+    console.log('id', id)
   }
 
   return (
@@ -65,10 +65,10 @@ export function DataTable<TData extends OrderData, TValue>({
               >
 
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-3 text-center cursor-pointer" onClick={() => handleGotoDetail(row.original.id)}>
-                    {/* <Link href={`/dashboard/order/${row.original.id}`} > */}
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    {/* </Link> */}
+                  <TableCell key={cell.id} className="py-3 text-center cursor-pointer" >
+                    <Link  href={`/dashboard/order/${row.original.id}`} >
+                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </Link>
                   </TableCell>
                 ))}
 

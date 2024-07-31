@@ -236,6 +236,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
       .updateOrder(requestBody)
       .then(({ data }) => {
         if (data.isSuccess) {
+          setOpen(false)
           console.log("dâtupdatessss", data);
           toast.success("Cặp nhật đơn hàng thành công");
         }

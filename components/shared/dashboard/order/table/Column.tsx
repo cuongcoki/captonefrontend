@@ -83,6 +83,28 @@ export const columns: ColumnDef<Order>[] = [
   //  },
   // },
 
+  
+
+  {
+    accessorKey: "startOrder",
+    header: ({ column }) => {
+      return <Button variant="ghost">Ngày Bắt Đầu</Button>;
+    },
+    cell: ({ row }) => {
+      return <span>{formatDate(row.original.startOrder)}</span>;
+    },
+  },
+
+  {
+    accessorKey: "endOrder",
+    header: ({ column }) => {
+      return <Button variant="ghost">Ngày Kết Thúc</Button>;
+    },
+    cell: ({ row }) => {
+      return <span>{formatDate(row.original.endOrder)}</span>;
+    },
+  },
+
   {
     accessorKey: "status",
     header: ({ column }) => {
@@ -125,26 +147,6 @@ export const columns: ColumnDef<Order>[] = [
           {statusOr.label}
         </span>
       );
-    },
-  },
-
-  {
-    accessorKey: "startOrder",
-    header: ({ column }) => {
-      return <Button variant="ghost">Ngày Bắt Đầu</Button>;
-    },
-    cell: ({ row }) => {
-      return <span>{formatDate(row.original.startOrder)}</span>;
-    },
-  },
-
-  {
-    accessorKey: "endOrder",
-    header: ({ column }) => {
-      return <Button variant="ghost">Ngày Kết Thúc</Button>;
-    },
-    cell: ({ row }) => {
-      return <span>{formatDate(row.original.endOrder)}</span>;
     },
   },
 
