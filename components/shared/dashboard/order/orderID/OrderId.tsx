@@ -55,6 +55,7 @@ import { Separator } from "@/components/ui/separator";
 import { ShipOrder } from "./shipOrder/ShipOrder";
 import TitleComponent from "@/components/shared/common/Title";
 import HeaderComponent from "@/components/shared/common/header";
+import { OrderStore } from "../order-store";
 
 interface OrderId {
   orderId?: string;
@@ -137,6 +138,8 @@ export default function OrderIdPage({ orderId }: OrderId) {
     productOrderResponses: [],
     setOrderResponses: [],
   });
+  const { force } = OrderStore();
+
   // console.log("data=====", data);
   // console.log("data=====", dataId);
   // console.log('ssssssssssssssssssssssssssssssss', params.id)
@@ -173,7 +176,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
     };
     fetchDataOrderIds();
     fetchDataOrderId();
-  }, [data, dataId, params.id]);
+  }, [data, dataId, params.id,force]);
 
   const [checkStatus, setCheckStatus] = useState<number>();
   useEffect(() => {
@@ -412,7 +415,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
                             <TableHead className="w-[100px]">ảnh</TableHead>
                             <TableHead>Tên sản phẩm</TableHead>
                             <TableHead>Mã sản phẩm</TableHead>
-                            <TableHead>mô tả</TableHead>
+                            <TableHead>Mô tả</TableHead>
                             <TableHead>Số lượng</TableHead>
                             <TableHead>Hàng đã giao</TableHead>
                             <TableHead>Đơn vị giá</TableHead>

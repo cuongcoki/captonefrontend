@@ -20,6 +20,7 @@ import DatePicker from "@/components/shared/common/datapicker/date-picker";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
 import { companyApi } from "@/apis/company.api";
+import { OrderStore } from "../order-store";
 type ContexType = {
   forceUpdate: () => void;
 };
@@ -82,12 +83,10 @@ export default function RenderTableOrder() {
   const [endOrder, setEndOrder] = useState<Date | null>(null);
   const [companyName, setCompanyName] = useState<string>("");
   const [company, setCompany] = useState<Company[]>([]);
-
+  const { force } = OrderStore();
   const router = useRouter();
   const pathname = usePathname();
-  const [force, setForce] = useState<number>(1);
 
-  const forceUpdate = () => setForce((prev) => prev + 1);
   type Props = {
     searchParams: ProductSearchParams;
   };
@@ -168,7 +167,6 @@ export default function RenderTableOrder() {
     <div className=" mt-3">
       <div className="flex flex-col md:flex-row justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
-          <MyContext.Provider value={{ forceUpdate }}>
             <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
                 <Input
@@ -212,19 +210,15 @@ export default function RenderTableOrder() {
                 />
               </div>
             </div>
-          </MyContext.Provider>
         </div>
 
-        <MyContext.Provider value={{ forceUpdate }}>
           <div className="flex items-center justify-end">
             <div className="flex items-center space-x-2">
               <CreateOrder />
             </div>
           </div>
-        </MyContext.Provider>
       </div>
 
-      <MyContext.Provider value={{ forceUpdate }}>
         <div className="overflow-x-auto">
           <DataTable columns={columns} data={data} />
           <DataTablePagination
@@ -233,7 +227,6 @@ export default function RenderTableOrder() {
             setCurrentPage={setCurrentPage}
           />
         </div>
-      </MyContext.Provider>
     </div>
   );
 }

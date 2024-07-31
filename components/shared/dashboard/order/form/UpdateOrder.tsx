@@ -98,6 +98,7 @@ import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { NoImage } from "@/constants/images";
 import { error } from "console";
+import { OrderStore } from "../order-store";
 
 interface OrderId {
   orderId?: orderIds;
@@ -165,6 +166,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
   //state
   const [open, setOpen] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
+  const { ForceRender } = OrderStore();
 
   const handleOffDialog = () => {
     setOpen(false);
@@ -236,6 +238,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
       .updateOrder(requestBody)
       .then(({ data }) => {
         if (data.isSuccess) {
+          ForceRender();
           setOpen(false)
           console.log("dâtupdatessss", data);
           toast.success("Cặp nhật đơn hàng thành công");
