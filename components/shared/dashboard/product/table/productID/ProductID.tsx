@@ -210,24 +210,29 @@ export default function ProductIDPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {productId?.productPhaseSalaries?.map((item: any) => (
-                    <TableRow key={item.phaseId}>
-                      <TableCell className="font-semibold">
-                        {item?.phaseName}
-                      </TableCell>
-                      <TableCell className="max-w-[300px] overflow-hidden truncate">
-                        {item?.phaseDescription}
-                      </TableCell>
-                      <TableCell>
-                        <Label htmlFor="price-1" className="sr-only">
-                          Price
-                        </Label>
-                        <div className="border px-3 py-2 rounded-md">
-                          {item?.salaryPerProduct} VNĐ
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {productId?.productPhaseSalaries
+                    ?.sort(
+                      (a: any, b: any) =>
+                        b.salaryPerProduct - a.salaryPerProduct
+                    )
+                    .map((item: any) => (
+                      <TableRow key={item.phaseId}>
+                        <TableCell className="font-semibold">
+                          {item?.phaseName}
+                        </TableCell>
+                        <TableCell className="max-w-[300px] overflow-hidden truncate">
+                          {item?.phaseDescription}
+                        </TableCell>
+                        <TableCell>
+                          <Label htmlFor="price-1" className="sr-only">
+                            Price
+                          </Label>
+                          <div className="border px-3 py-2 rounded-md">
+                            {formatCurrency(item?.salaryPerProduct)}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </CardContent>
