@@ -106,7 +106,7 @@ export default function SideNavbar({}: Props) {
               // },
               {
                 title: "Nhân Viên",
-                href: "/dashboard/user?roleId=5&page=1",
+                href: "/dashboard/user",
                 icon: UserRound,
                 variant: "ghost",
                 checkRoll: [{ id: 1 }],
