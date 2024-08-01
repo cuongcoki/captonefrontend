@@ -68,7 +68,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
     const fetchGetSalarys = async () => {
       try {
         const { data } = await salaryApi.getSalaries({
-          searchUser: params.name,
+          searchUser: params.searchUser,
           month: Number(params.month),
           year: Number(params.year),
           PageIndex: Number(params.pageIndex),
@@ -81,7 +81,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
         console.log("Error", error);
       } finally {
         router.push(
-          `${pathname}?name=${params.name}&year=${params.year}&month=${params.month}&pageIndex=${params.pageIndex}`
+          `${pathname}?searchUser=${params.searchUser}&year=${params.year}&month=${params.month}&pageIndex=${params.pageIndex}`
         );
       }
     };
@@ -98,12 +98,12 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
         <Input
           className="col-span-11 xl:col-span-6 xl:row-start-1"
           placeholder="Tìm kiếm nhân viên"
-          value={params.name}
+          value={params.searchUser}
           onChange={(event) => {
             setParams((prev) => {
               return {
                 ...prev,
-                name: event.target.value,
+                searchUser: event.target.value,
               };
             });
           }}

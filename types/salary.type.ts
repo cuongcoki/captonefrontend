@@ -6,7 +6,7 @@ export type SearchSalaryParams = {
     year: string;
     month: string;
     companyId: string;
-    name: string;
+    searchUser: string;
   };
 };
 

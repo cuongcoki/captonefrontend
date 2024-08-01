@@ -69,8 +69,9 @@ export function CompanyAdd() {
         form.reset();
       })
       .catch((error) => {
-        toast.error("Tạo công ty thất bại");
-        console.log("Error", error);
+        for (const key in error.response.data.error) {
+          toast.error(error.response.data.error[key][0]);
+        }
       });
   };
 
