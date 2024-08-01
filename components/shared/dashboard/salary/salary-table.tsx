@@ -68,7 +68,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
     const fetchGetSalarys = async () => {
       try {
         const { data } = await salaryApi.getSalaries({
-          fullName: params.name,
+          searchUser: params.name,
           month: Number(params.month),
           year: Number(params.year),
           PageIndex: Number(params.pageIndex),
