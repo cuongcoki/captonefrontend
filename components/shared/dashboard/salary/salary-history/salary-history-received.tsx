@@ -39,7 +39,7 @@ import { salaryApi } from "@/apis/salary.api";
 import { SalaryHistoryType } from "@/types/salary.type";
 import toast from "react-hot-toast";
 import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 export default function SalaryHistoryReceived({ id }: { id: string }) {
   const [salaryHistory, setSalaryHistory] = useState<SalaryHistoryType[]>([]);
   const { force, forceRender, setSalaryAvailiable, salaryAvailiable } =
@@ -47,6 +47,7 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
   const [index, setIndex] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [salaryHistoryDelete, setSalaryHistoryDelete] =
     useState<SalaryHistoryType>({
       id: "",
@@ -97,15 +98,16 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
   };
 
   const handleDelete = async () => {
+    setIsLoading(true);
     try {
       await salaryApi.deletePaidSalary(salaryHistoryDelete.id);
       setSalaryAvailiable(salaryAvailiable + salaryHistoryDelete.salary);
       forceRender();
       toast.success("Xoá lịch sử nhận lương thành công");
-      setIsOpen(false);
     } catch (error) {
       toast.error("Xoá lịch sử nhận lương thất bại");
     }
+    setIsLoading(false);
     setIsOpen(false);
   };
 
@@ -174,6 +176,7 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
                     e.preventDefault();
                     await handleDelete();
                   }}
+                  disabled={isLoading}
                 >
                   Đồng ý
                 </AlertDialogAction>
