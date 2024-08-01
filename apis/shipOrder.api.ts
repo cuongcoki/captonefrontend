@@ -45,5 +45,17 @@ export const shipOrderApi = {
 
     updateStatus: (data: updateStatusShipOrder, id: string) =>
         axiosClient.patch(`${endPointConstant.BASE_URL}/ship-orders/${id}`, data),
+    
+    shipOrderByShipper: (
+        PageIndex?: number,
+        PageSize?: number,
+        Status?: string | null,
+        ShipDate?: string | null,
+    ) => {
+        let url = `${endPointConstant.BASE_URL}/ship-orders/by-shipper?PageIndex=${PageIndex}&PageSize=${PageSize}`;
+        if (Status !== null && Status !== undefined) url += `&Status=${Status}`;
+        if (ShipDate !== null && ShipDate !== undefined) url += `&ShipDate=${ShipDate}`;
+        return axiosClient.get(url);
+    },
 }
 

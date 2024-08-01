@@ -10,20 +10,10 @@ import {
 } from "@/components/ui/card";
 
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import { Button } from "@/components/ui/button";
-
-import { Input } from "@/components/ui/input";
-
-import { Label } from "@/components/ui/label";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -176,7 +166,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
     };
     fetchDataOrderIds();
     fetchDataOrderId();
-  }, [data, dataId, params.id,force]);
+  }, [data, dataId, params.id, force]);
 
   const [checkStatus, setCheckStatus] = useState<number>();
   useEffect(() => {
@@ -227,7 +217,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
               <CardTitle className="text-primary">Thông tin Công ty</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-col-6">
+              <div className="grid grid-col-6 gap-2">
                 <div className="col-span-2 flex items-center gap-4 ">
                   <Building2 className="h-10 w-10" />
                   <span className="text-xl font-medium">
@@ -235,31 +225,78 @@ export default function OrderIdPage({ orderId }: OrderId) {
                   </span>
                 </div>
 
-                <div className="divide-x-2 divide-gray-300 grid grid-cols-6 gap-4 items-start text-sm xl:flex-row  xl:space-y-0 md:border-t-2 p-2 border-t-0">
-                  <div className="col-span-2 flex flex-col space-y-1 sm:w-[300px] w-full p-2  h-full">
-                    <div className="text-lg font-medium">Địa chỉ công ty</div>
-                    <div>{data?.company.address}</div>
-                  </div>
+                <div className="hidden  md:flex gap-6">
 
-                  <div className="flex flex-col space-y-1 p-2 h-full">
-                    <div className="text-lg font-medium">Loại công ty</div>
-                    <div>{data?.company.companyTypeDescription}</div>
-                  </div>
+                  <Card className="w-full xl:w-[200px] h-[100px] overflow-auto shadow-md shadow-primary/50">
+                    <div className="flex items-center justify-center flex-col gap-2 p-2">
+                      <h2 className="font-semibold text-lg">Địa chỉ công ty</h2>
+                      <span className="text-center">
+                        {data?.company.address}
+                      </span>
+                    </div>
+                  </Card>
 
-                  <div className="flex flex-col space-y-1 p-2 h-full">
-                    <div className="text-lg font-medium">Tên giám đốc</div>
-                    <div>{data?.company.directorName}</div>
-                  </div>
+                  <Card className="w-full xl:w-[200px] h-[100px] overflow-auto shadow-md shadow-primary/50">
+                    <div className="flex items-center justify-center flex-col gap-2 p-2">
+                      <h2 className="font-semibold text-lg">Loại công ty</h2>
+                      <span className="text-center">
+                        {data?.company.companyTypeDescription}
+                      </span>
+                    </div>
+                  </Card>
 
-                  <div className="flex flex-col space-y-1 p-2 h-full">
-                    <div className="text-lg font-medium">Liên hệ</div>
-                    <div className="">{data?.company.directorPhone}</div>
-                  </div>
+                  <Card className="w-full xl:w-[200px] h-[100px] overflow-auto shadow-md shadow-primary/50">
+                    <div className="flex items-center justify-center flex-col gap-2 p-2">
+                      <h2 className="font-semibold text-lg">Thông tin giám đốc</h2>
+                      <span className="text-center">
+                        {data?.company.directorName}
+                      </span>
+                      <span className="text-center">
+                        {data?.company.directorPhone}
+                      </span>
+                      <span className="text-center">
+                        {data?.company.email}
+                      </span>
+                    </div>
+                  </Card>
 
-                  <div className="flex flex-col space-y-1 p-2 h-full">
-                    <div className="text-lg font-medium">Email</div>
-                    <div>{data?.company.email}</div>
-                  </div>
+                </div>
+
+                <div className="md:hidden flex gap-6">
+                  <Popover>
+                    <PopoverTrigger className="p-1 shadow-md shadow-primary/50 text-sm">Địa chỉ công ty</PopoverTrigger>
+                    <PopoverContent>
+                      <span className="text-center">
+                        {data?.company.address}
+                      </span>
+                    </PopoverContent>
+                  </Popover>
+
+                  <Popover>
+                    <PopoverTrigger className="p-1 shadow-md shadow-primary/50 text-sm">Loại công ty</PopoverTrigger>
+                    <PopoverContent>
+                      <span className="text-center">
+                        {data?.company.companyTypeDescription}
+                      </span>
+                    </PopoverContent>
+                  </Popover>
+
+                  <Popover>
+                    <PopoverTrigger className="p-1 shadow-md shadow-primary/50 text-sm">Thông tin giám đốc</PopoverTrigger>
+                    <PopoverContent className="flex flex-col gap-2">
+                      <span className="text-center">
+                        {data?.company.directorName}
+                      </span>
+                      <span className="text-center">
+                        {data?.company.directorPhone}
+                      </span>
+                      <span className="text-center">
+                        {data?.company.email}
+                      </span>
+                    </PopoverContent>
+                  </Popover>
+
+
                 </div>
               </div>
             </CardContent>
@@ -307,7 +344,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
             </CardContent>
           </Card>
 
-          <Card className="sm:col-span-1 md:col-span-10 shadow-sm">
+          <Card className="sm:col-span-1 md:col-span-10 shadow-sm overflow-auto">
             <CardHeader>
               <div className="flex justify-between items-center ">
                 <CardTitle className="text-primary">Sản phẩm chi tiết</CardTitle>

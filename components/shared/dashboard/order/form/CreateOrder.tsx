@@ -59,6 +59,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 // ** import REACT
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -82,7 +94,7 @@ import { productApi } from "@/apis/product.api";
 import { filesApi } from "@/apis/files.api";
 import useDebounce from "./useDebounce";
 import { setApi } from "@/apis/set.api";
-import ImageDisplayDialog from "../../product-set/form/imageDisplayDialog";
+import ImageDisplayDialog from "./imageDisplayDialog";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { NoImage } from "@/constants/images";
@@ -126,35 +138,24 @@ const OrderStatus = [
 ];
 
 export default function CreateOrder() {
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const [openDetils, setOpenDetils] = useState<boolean>(false);
-  const [openNote, setOpenNote] = useState<boolean>(false);
   const { ForceRender } = OrderStore();
-  const handleOffDialogNote = () => {
-    setOpenNote(false);
-  };
-  const handleOnDialogNot = () => {
-    setOpenNote(true);
-  };
 
-  const handleOffDialogDetails = () => {
-    setOpenDetils(false);
+  const handleOffDialogA = () => {
+    setOpenAlert(false);
   };
-  const handleOnDialogDetails = () => {
-    setOpenDetils(true);
+  const handleOnDialogA = () => {
+    setOpenAlert(true);
   };
-
   const handleOffDialog = () => {
-    setOpen(false);
+    setOpenAlert(true);
   };
   const handleOnDialog = () => {
     setOpen(true);
   };
 
-  const handleContinue = () => {
-    setOpen(false);
-    setOpenDetils(true);
-  };
+
 
   // useForm hook for managing form state and validation
   const form = useForm({
@@ -226,11 +227,11 @@ export default function CreateOrder() {
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  console.log("searchResults", searchResults);
+  // console.log("searchResults", searchResults);
 
   const [searchTermSet, setSearchTermSet] = useState<string>("");
   const [searchResultsSet, setSearchResultsSet] = useState<any[]>([]);
-  console.log("searchResultsSet==============", searchResultsSet);
+  // console.log("searchResultsSet==============", searchResultsSet);
 
   const debouncedSearchTermSet = useDebounce(searchTermSet, 500);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -454,15 +455,49 @@ export default function CreateOrder() {
     return formatted;
   };
 
+  const productCheck = 0;
+  const setCheck = 1;
+  const handleClearForm = () => {
+    setOpen(false)
+    setOpenAlert(false)
+    form.reset();
+    setProductsRequest([]);
+    setGetDetailsPro([]);
+    setSearchTerm("");
+    setSearchTermSet("")
+    setSearchResults([]);
+    setSearchResultsSet([]);
+  }
   return (
     <>
+      {
+        openAlert && (
+          <AlertDialog open={openAlert} >
+            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
+                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )
+      }
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
         <Dialog.Trigger className="rounded p-2 hover:bg-[#2bff7e] bg-[#24d369] ">
           <Plus />
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-            <Dialog.Content className="w-full fixed z-50 left-1/2 top-1/2 max-w-[1200px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+            <Dialog.Content className="w-full fixed z-50 left-1/2 top-1/2 max-w-[1000px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+              <Dialog.Title className="hidden visible"></Dialog.Title>
+              <Dialog.Description className="hidden visible"></Dialog.Description>
               <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">Tạo Đơn Hàng</h2>
@@ -531,54 +566,35 @@ export default function CreateOrder() {
                                   <CardHeader className="font-semibold text-xl">
                                     <span>Thông tin sản phẩm</span>
                                   </CardHeader>
-                                  <CardContent className="overflow-y-auto">
-                                    <Table>
-                                      <TableHeader>
-                                        <TableRow>
-                                          <TableHead className="w-[100px]">
-                                            Ảnh
-                                          </TableHead>
-                                          <TableHead>Tên</TableHead>
-                                          <TableHead>Mã Code</TableHead>
-                                          <TableHead className="text-right"></TableHead>
-                                        </TableRow>
-                                      </TableHeader>
-
-                                      <TableBody>
-                                        {searchResults !== null ? (
-                                          searchResults.map((product) => (
-                                            <TableRow key={product.id}>
-                                              <TableCell className="font-medium">
-                                                <ImageDisplayDialog
-                                                  images={product?.imageUrl}
-                                                />
-                                              </TableCell>
-                                              <TableCell>
-                                                {product?.name}
-                                              </TableCell>
-                                              <TableCell>
-                                                {product?.code}
-                                              </TableCell>
-                                              <TableCell>
-                                                <Button
-                                                  variant="outline"
-                                                  size="icon"
-                                                  onClick={() =>
-                                                    handleAddProducts(product)
-                                                  }
-                                                >
-                                                  <PackagePlus className="h-4 w-4" />
-                                                </Button>
-                                              </TableCell>
-                                            </TableRow>
-                                          ))
-                                        ) : (
-                                          <TableRow className="text-center flex justify-center items-center w-full">
-                                            không thấy sản phẩm nào
-                                          </TableRow>
-                                        )}
-                                      </TableBody>
-                                    </Table>
+                                  <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
+                                    {searchResults !== null ? (
+                                      searchResults.map((product) => (
+                                        <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
+                                          <div className="font-medium flex flex-col rounded-md">
+                                            <ImageDisplayDialog
+                                              images={product}
+                                              checkProduct={productCheck}
+                                            />
+                                          </div>
+                                          <div>
+                                            <Button
+                                              variant={"ghost"}
+                                              size={"icon"}
+                                              className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                              onClick={() =>
+                                                handleAddProducts(product)
+                                              }
+                                            >
+                                              <Plus className="text-white" />
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <div className="text-center flex justify-center items-center w-full">
+                                        không thấy sản phẩm nào
+                                      </div>
+                                    )}
                                   </CardContent>
                                 </Card>
                               ) : (
@@ -592,54 +608,35 @@ export default function CreateOrder() {
                                   <CardHeader className="font-semibold text-xl">
                                     <span>Thông tin Bộ sản phẩm</span>
                                   </CardHeader>
-                                  <CardContent className="md:w-full overflow-auto">
-                                    <Table>
-                                      <TableHeader>
-                                        <TableRow>
-                                          <TableHead className="w-[100px]">
-                                            Ảnh
-                                          </TableHead>
-                                          <TableHead>Tên</TableHead>
-                                          <TableHead>Mã Code</TableHead>
-                                          <TableHead className="text-right"></TableHead>
-                                        </TableRow>
-                                      </TableHeader>
-
-                                      <TableBody>
-                                        {searchResultsSet !== null ? (
-                                          searchResultsSet.map((product) => (
-                                            <TableRow key={product.id}>
-                                              <TableCell className="font-medium">
-                                                <ImageDisplayDialog
-                                                  images={product?.imageUrl}
-                                                />
-                                              </TableCell>
-                                              <TableCell>
-                                                {product?.name}
-                                              </TableCell>
-                                              <TableCell>
-                                                {product?.code}
-                                              </TableCell>
-                                              <TableCell>
-                                                <Button
-                                                  variant="outline"
-                                                  size="icon"
-                                                  onClick={() =>
-                                                    handleAddProducts(product)
-                                                  }
-                                                >
-                                                  <PackagePlus className="h-4 w-4" />
-                                                </Button>
-                                              </TableCell>
-                                            </TableRow>
-                                          ))
-                                        ) : (
-                                          <TableRow className="text-center flex justify-center items-center w-full">
-                                            không thấy sản phẩm nào
-                                          </TableRow>
-                                        )}
-                                      </TableBody>
-                                    </Table>
+                                  <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
+                                    {searchResultsSet !== null ? (
+                                      searchResultsSet.map((product) => (
+                                        <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
+                                          <div className="font-medium flex flex-col rounded-md">
+                                            <ImageDisplayDialog
+                                              images={product}
+                                              checkProduct={setCheck}
+                                            />
+                                          </div>
+                                          <div>
+                                            <Button
+                                              variant={"ghost"}
+                                              size={"icon"}
+                                              className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                              onClick={() =>
+                                                handleAddProducts(product)
+                                              }
+                                            >
+                                              <Plus className="text-white" />
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <div className="text-center flex justify-center items-center w-full">
+                                        không thấy sản phẩm nào
+                                      </div>
+                                    )}
                                   </CardContent>
                                 </Card>
                               ) : (
@@ -647,19 +644,20 @@ export default function CreateOrder() {
                               )}
                             </>
                           )}
-                          <div className="md:col-span-1 md:mt-0">
+
+
+                          <div className="md:col-span-1 md:mt-0 md:w-full w-[1000px]">
                             <Card className="mt-4">
                               <CardHeader className="font-semibold text-xl">
                                 <span>Thông tin sản phẩm đã thêm</span>
                               </CardHeader>
-                              <CardContent className="overflow-auto md:w-full">
-                                <Table className="overflow-x-auto">
+                              <CardContent >
+                                <Table >
                                   <TableHeader>
                                     <TableRow>
                                       <TableHead className="w-[100px]">
                                         Sản phẩm
                                       </TableHead>
-                                      <TableHead>Tên sản phẩm</TableHead>
                                       <TableHead>Số lượng</TableHead>
                                       <TableHead>Đơn vị giá</TableHead>
                                       <TableHead>Ghi chú</TableHead>
@@ -667,14 +665,14 @@ export default function CreateOrder() {
                                     </TableRow>
                                   </TableHeader>
 
-                                  <TableBody>
+                                  <TableBody >
                                     {getDetailsPro.map((product, index) => (
-                                      <TableRow key={index}>
+                                      <TableRow key={index} >
                                         <TableCell className="font-medium w-[20%]">
-                                          <div className="flex gap-4">
+                                          <div className="flex flex-col gap-2">
                                             <Image
                                               alt="ảnh mẫu"
-                                              className="w-[50px] h-[50px] rounded-lg object-contain"
+                                              className="w-[50px] h-[50px] rounded-lg object-cover"
                                               width={900}
                                               height={900}
                                               src={
@@ -687,16 +685,14 @@ export default function CreateOrder() {
 
                                             <div className="font-medium dark:text-white">
                                               <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                <b>Code: </b>
-                                                {product.code}
+                                                {product.code}-{product.name}
                                               </div>
                                             </div>
                                           </div>
                                         </TableCell>
-                                        <TableCell>{product.name}</TableCell>
 
                                         <TableCell className="font-medium">
-                                          <input
+                                          <Input
                                             name="quantity"
                                             value={formatCurrency(
                                               productsRequest.find(
@@ -722,7 +718,7 @@ export default function CreateOrder() {
                                         </TableCell>
 
                                         <TableCell className="font-medium">
-                                          <input
+                                          <Input
                                             name="unitPrice"
                                             step={1}
                                             value={formatCurrency(

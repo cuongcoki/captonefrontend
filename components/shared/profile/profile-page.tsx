@@ -280,15 +280,16 @@ export default function ProfilePage() {
               {userId?.firstName} {userId?.lastName}
             </p>
 
-            <div className=" mb-4 md:text-md md:text-start text-center text-lg text-gray-400">
-              <p>{userId?.address}</p>
+            <div className="mb-4 text-sm sm:text-md md:text-lg text-center sm:text-start">
+              <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary font-semibold">{userId?.address}</p>
             </div>
-            <div className="flex items-center">
-              <div className="flex gap-4">
+
+            <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
+              <div className="flex gap-4 text-sm sm:text-base">
                 <Phone size={23} />
                 {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}
               </div>
-              <div className="flex gap-4 ml-10">
+              <div className="flex gap-4  text-sm sm:text-base">
                 <Contact size={23} />
                 {userId?.id === "" ? "Chưa cập nhật" : userId?.id}
               </div>

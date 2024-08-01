@@ -302,10 +302,10 @@ export const UsersForm = () => {
               toast.error(errors.LastName);
             }
             if (errors.DOB && Array.isArray(errors.DOB)) {
-              errors.DOB.forEach((error:any) => {
-                  toast.error(error);
+              errors.DOB.forEach((error: any) => {
+                toast.error(error);
               });
-          }
+            }
           } else {
             console.error("Tạo tài khoản không thành công");
           }
@@ -402,7 +402,7 @@ export const UsersForm = () => {
                         <Card className="md:col-span-5 col-span-1">
                           <CardContent className="relative mt-5">
                             <div className="grid grid-cols-1 gap-2">
-                              <div className="grid grid-cols-2 gap-x-5">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
                                 {/* firstName */}
 
                                 <FormField
@@ -442,7 +442,7 @@ export const UsersForm = () => {
                                   }}
                                 />
                               </div>
-                              <div className="flex items-center gap-x-10">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
                                 {/* CMND/CCCD */}
                                 <FormField
                                   control={form.control}
@@ -454,7 +454,7 @@ export const UsersForm = () => {
                                       </FormLabel>
                                       <FormControl>
                                         <InputOTP maxLength={12} {...field}>
-                                          <InputOTPGroup>
+                                          <InputOTPGroup className="w-full xl:w-[350px]">
                                             {[...Array(12)].map((_, index) => (
                                               <InputOTPSlot
                                                 key={index}
@@ -506,7 +506,7 @@ export const UsersForm = () => {
                                   )}
                                 />
                               </div>
-                              <div className="grid grid-cols-2 gap-x-6">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
                                 {/* dob */}
                                 <FormField
                                   control={form.control}
@@ -550,8 +550,8 @@ export const UsersForm = () => {
                           </CardContent>
                         </Card>
                       </div>
-                      <div className="flex gap-x-5">
-                        <Card className="w-[50%]">
+                      <div className="flex flex-col sm:flex-row gap-y-5 sm:gap-x-5 ">
+                        <Card className="sm:w-[50%] w-full">
                           <CardContent className="mt-5 flex flex-col gap-2">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               {/* address */}
@@ -699,7 +699,7 @@ export const UsersForm = () => {
                         </Card>
 
                         {/* tính lương  */}
-                        <Card className="w-[50%]">
+                        <Card className="sm:w-[50%] w-full">
                           <CardContent className="mt-5 flex flex-col gap-2">
                             {/* salaryByDayRequest */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -746,7 +746,7 @@ export const UsersForm = () => {
                                           <Button
                                             variant={"outline"}
                                             className={cn(
-                                              "w-[240px] pl-3 text-left font-normal",
+                                              "w-full pl-3 text-left font-normal",
                                               !field.value &&
                                               "text-muted-foreground"
                                             )}
@@ -830,7 +830,7 @@ export const UsersForm = () => {
                                           <Button
                                             variant={"outline"}
                                             className={cn(
-                                              "w-[240px] pl-3 text-left font-normal",
+                                              "w-full pl-3 text-left font-normal",
                                               !field.value &&
                                               "text-muted-foreground"
                                             )}

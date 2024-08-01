@@ -1,4 +1,4 @@
-import { Order, columns } from "./Column";
+import { ShipOrderShipper, columns } from "./Column";
 import { DataTable } from "./DataTable";
 import { useEffect, useState, createContext } from "react";
 import { DataTablePagination } from "./data-table-pagination";
@@ -19,6 +19,7 @@ import DatePicker from "@/components/shared/common/datapicker/date-picker";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
 import { companyApi } from "@/apis/company.api";
+import { shipOrderApi } from "@/apis/shipOrder.api";
 type ContexType = {
   forceUpdate: () => void;
 };
@@ -72,15 +73,13 @@ type Company = {
 export default function RenderTableOrderShipment() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [data, setData] = useState<Order[]>([]);
+  const [data, setData] = useState<ShipOrderShipper[]>([]);
   console.log("data", data);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
-  const [status, setStatus] = useState<string | null>(null);
-  const [startOrder, setStartOrder] = useState<Date | null>(null);
-  const [endOrder, setEndOrder] = useState<Date | null>(null);
+  const [status, setStatus] = useState<string | null>("0");
+  const [shipDate, setShipDate] = useState<Date | null>(null);
   const [companyName, setCompanyName] = useState<string>("");
-  const [company, setCompany] = useState<Company[]>([]);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -95,33 +94,26 @@ export default function RenderTableOrderShipment() {
     const fetchDataOrder = async () => {
       setLoading(true);
       try {
-        const response = await orderApi.searchOrder(
+        const response = await shipOrderApi.shipOrderByShipper(
           currentPage,
           pageSize,
           status,
-          startOrder ? formatDate(startOrder) : null,
-          endOrder ? formatDate(endOrder) : null,
-          companyName
+          shipDate ? formatDate(shipDate) : null,
         );
         setData(response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
-        console.error("Error fetching order data:", error);
+        console.error("Error fetching shipOrder data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    const fetchDataCompany = () => {
-      companyApi.getCompanyByType(1).then(({ data }) => {
-        setCompany(data.data);
-      });
-    };
+    
 
-    fetchDataCompany();
     fetchDataOrder();
-  }, [currentPage, pageSize, companyName, startOrder, endOrder, status, force]);
+  }, [currentPage, pageSize, companyName,  status, force]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
@@ -136,22 +128,10 @@ export default function RenderTableOrderShipment() {
   };
 
   const handleStartDateChange = (date: Date | null) => {
-    if (date && endOrder && date > endOrder) {
-      toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
-      return;
-    }
-    setStartOrder(date);
+    setShipDate(date);
     setCurrentPage(1);
   };
 
-  const handleEndDateChange = (date: Date | null) => {
-    if (startOrder && date && startOrder > date) {
-      toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
-      return;
-    }
-    setEndOrder(date);
-    setCurrentPage(1);
-  };
 
   const formatDate = (date: Date | null) => {
     if (!date) return "";
@@ -160,8 +140,8 @@ export default function RenderTableOrderShipment() {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-  console.log("startOrder", formatDate(startOrder)),
-    console.log("endOrder", formatDate(endOrder));
+  // console.log("startOrder", formatDate(startOrder)),
+  //   console.log("endOrder", formatDate(endOrder));
 
   return (
     <div className=" mt-3">
@@ -195,20 +175,13 @@ export default function RenderTableOrderShipment() {
               </div>
               <div className="grid grid-cols-2 gap-x-4 ">
                 <DatePicker
-                  selected={startOrder}
+                  selected={shipDate}
                   name="from"
-                  title={startOrder ? formatDate(startOrder) : "Từ ngày"}
+                  title={shipDate ? formatDate(shipDate) : "Từ ngày"}
                   className="w-full"
                   onDayClick={handleStartDateChange}
                 />
 
-                <DatePicker
-                  selected={endOrder}
-                  name="to"
-                  title={endOrder ? formatDate(endOrder) : "Đến ngày"}
-                  className="w-full"
-                  onDayClick={handleEndDateChange}
-                />
               </div>
             </div>
           </MyContext.Provider>
@@ -218,7 +191,7 @@ export default function RenderTableOrderShipment() {
 
       <MyContext.Provider value={{ forceUpdate }}>
         <div className="overflow-x-auto">
-          <DataTable columns={columns} data={data} />
+          {/* <DataTable columns={columns} data={data} /> */}
           <DataTablePagination
             currentPage={currentPage}
             totalPages={totalPages}
