@@ -77,6 +77,8 @@ export function BreadcrumbComponent() {
         return "Chi tiết lương";
       case `/dashboard/product-phase`:
         return "Kho";
+        case `/dashboard/salary/detail`:
+          return `Nhân viên ID: ${params.id}`;
       // nhân viên
       case "/employee":
         return "Nhân viên";

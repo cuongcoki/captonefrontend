@@ -132,7 +132,7 @@ export default function SalaryCompanyDetail({
       })
       .then((res) => {
         setData(res.data.data);
-        console.log("SALARY COMPANY DETAIL API RESPONSE", res.data);
+        console.log("SALARY COMPANY DETAIL API RESPONSE", res.data.data);
       })
       .catch((e) => {
         console.log("SALARY DETAIL API ERROR", e);
@@ -245,7 +245,7 @@ export default function SalaryCompanyDetail({
               <TabsList className="">
                 <TabsTrigger value="product">Sản phẩm</TabsTrigger>
                 <TabsTrigger value="material">Nguyên liệu</TabsTrigger>
-                <TabsTrigger value="error">Lỗi</TabsTrigger>
+                <TabsTrigger value="broken">Hàng Lỗi</TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
                 <Select
@@ -302,6 +302,7 @@ export default function SalaryCompanyDetail({
                 </Select>
               </div>
             </div>
+            {/* ------------------------------------------------------------Product------------------------------------------------------------ */}
             <TabsContent value="product">
               <Card x-chunk="dashboard-05-chunk-3">
                 <CardHeader className="px-7">
@@ -309,7 +310,10 @@ export default function SalaryCompanyDetail({
                     Sản phẩm tạo ra
                   </CardTitle>
                   <div className="flex">
-                    <div>Số lượng sản phẩm tạo ra trong tháng 7 năm 2024</div>
+                    <div>
+                      Số lượng sản phẩm tạo ra trong tháng {params.Month} năm{" "}
+                      {params.Year}
+                    </div>
                     <div className="ml-auto">
                       Tổng chi phí tạo sản phẩm:{" "}
                       <span className="font-bold text-primary">
@@ -345,42 +349,210 @@ export default function SalaryCompanyDetail({
                         </TableRow>
                       ) : (
                         data.productExportResponses.map((item) => (
-                          // <TableRow
-                          //   key={item.productId}
-                          //   className="hover:bg-accent"
-                          // >
-                          //   <TableCell className="hidden sm:table-cell">
-                          //     <div className="bg-gray-400 size-10">
-                          //       <Image
-                          //         src={item.productImage}
-                          //         alt={item.productName}
-                          //         width={100}
-                          //         height={100}
-                          //       />
-                          //     </div>
-                          //   </TableCell>
-                          //   <TableCell className="">
-                          //     {item.productName}
-                          //   </TableCell>
-                          //   <TableCell className="">
-                          //     {item.quantity}
-                          //     {/* <Badge
-                          //     className="text-xs"
-                          //     variant="secondary"
-                          //   ></Badge> */}
-                          //   </TableCell>
+                          <TableRow
+                            key={item.productId}
+                            className="hover:bg-accent"
+                          >
+                            <TableCell className="hidden sm:table-cell">
+                              <div className="bg-gray-400 size-10">
+                                <Image
+                                  src={item.productImage}
+                                  alt={item.productName}
+                                  width={100}
+                                  height={100}
+                                />
+                              </div>
+                            </TableCell>
+                            <TableCell className="">
+                              {item.productName}
+                            </TableCell>
+                            <TableCell className="">
+                              {item.quantity}
+                              {/* <Badge
+                              className="text-xs"
+                              variant="secondary"
+                            ></Badge> */}
+                            </TableCell>
 
-                          //   <TableCell className="">
-                          //     {formatCurrency(item.salaryPerProduct)} VNĐ
-                          //   </TableCell>
-                          //   <TableCell className="text-right hidden sm:table-cell">
-                          //     {formatCurrency(
-                          //       item.salaryPerProduct * item.quantity
-                          //     )}{" "}
-                          //     VNĐ
-                          //   </TableCell>
-                          // </TableRow>
-                          <></>
+                            <TableCell className="">
+                              {formatCurrency(item.price)}
+                            </TableCell>
+                            <TableCell className="text-right hidden sm:table-cell">
+                              {formatCurrency(item.price * item.quantity)}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            {/* ------------------------------------------------------------Material------------------------------------------------------------ */}
+            <TabsContent value="material">
+              <Card x-chunk="dashboard-05-chunk-3">
+                <CardHeader className="px-7">
+                  <CardTitle className="mb-3 text-primary">
+                    Nguyên liệu đã giao
+                  </CardTitle>
+                  <div className="flex">
+                    <div>
+                      Số lượng nguyên liệu đã giao trong tháng {params.Month}{" "}
+                      năm {params.Year}
+                    </div>
+                    <div className="ml-auto">
+                      Tổng giá trị vật liệu:{" "}
+                      <span className="font-bold text-primary">
+                        {data.totalSalaryMaterial === 0
+                          ? 0
+                          : formatCurrency(data.totalSalaryMaterial)}{" "}
+                        VNĐ
+                      </span>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="hidden sm:table-cell">
+                          Ảnh
+                        </TableHead>
+                        <TableHead className="">Tên nguyên liệu</TableHead>
+                        <TableHead className="">Số lượng</TableHead>
+                        <TableHead className="">Chi phí</TableHead>
+                        <TableHead className="text-right hidden sm:table-cell">
+                          Tổng
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {data.materialResponses.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center">
+                            Không có dữ liệu nào
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        data.materialResponses.map((item) => (
+                          <TableRow
+                            key={item.materialId}
+                            className="hover:bg-accent"
+                          >
+                            <TableCell className="hidden sm:table-cell">
+                              <div className="bg-gray-400 size-10">
+                                <Image
+                                  src={item.materialImage}
+                                  alt={item.materialName}
+                                  width={100}
+                                  height={100}
+                                />
+                              </div>
+                            </TableCell>
+                            <TableCell className="">
+                              {item.materialName}
+                            </TableCell>
+                            <TableCell className="">
+                              {item.quantity}
+                              {/* <Badge
+                              className="text-xs"
+                              variant="secondary"
+                            ></Badge> */}
+                            </TableCell>
+
+                            <TableCell className="">
+                              {formatCurrency(item.price)}
+                            </TableCell>
+                            <TableCell className="text-right hidden sm:table-cell">
+                              {formatCurrency(item.price * item.quantity)}
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      )}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            {/* ------------------------------------------------------------Broken------------------------------------------------------------ */}
+            <TabsContent value="broken">
+              <Card x-chunk="dashboard-05-chunk-3">
+                <CardHeader className="px-7">
+                  <CardTitle className="mb-3 text-primary">
+                    Sản phẩm lỗi
+                  </CardTitle>
+                  <div className="flex">
+                    <div>
+                      Số lượng sản phẩm lỗi phát hiện trong tháng {params.Month}{" "}
+                      năm {params.Year}
+                    </div>
+                    <div className="ml-auto">
+                      Tổng giá trị sản phẩm lỗi:{" "}
+                      <span className="font-bold text-primary">
+                        {data.totalSalaryBroken === 0
+                          ? 0
+                          : formatCurrency(data.totalSalaryBroken)}{" "}
+                        VNĐ
+                      </span>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="hidden sm:table-cell">
+                          Ảnh
+                        </TableHead>
+                        <TableHead className="">Tên sản phẩm</TableHead>
+                        <TableHead className="">Số lượng</TableHead>
+                        <TableHead className="">Chi phí</TableHead>
+                        <TableHead className="text-right hidden sm:table-cell">
+                          Tổng
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {data.productBrokenResponses.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center">
+                            Không có dữ liệu nào
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        data.productBrokenResponses.map((item) => (
+                          <TableRow
+                            key={item.productId}
+                            className="hover:bg-accent"
+                          >
+                            <TableCell className="hidden sm:table-cell">
+                              <div className="bg-gray-400 size-10">
+                                <Image
+                                  src={item.productImage}
+                                  alt={item.productName}
+                                  width={100}
+                                  height={100}
+                                />
+                              </div>
+                            </TableCell>
+                            <TableCell className="">
+                              {item.productName}
+                            </TableCell>
+                            <TableCell className="">
+                              {item.quantity}
+                              {/* <Badge
+                              className="text-xs"
+                              variant="secondary"
+                            ></Badge> */}
+                            </TableCell>
+
+                            <TableCell className="">
+                              {formatCurrency(item.price)}
+                            </TableCell>
+                            <TableCell className="text-right hidden sm:table-cell">
+                              {formatCurrency(item.price * item.quantity)}
+                            </TableCell>
+                          </TableRow>
                         ))
                       )}
                     </TableBody>

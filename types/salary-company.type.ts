@@ -26,6 +26,26 @@ export type GetSalaryCompanyDetailParams = {
   Year: string;
 };
 
+export type SalaryCompanyMaterialType = {
+  materialId: string;
+  materialName: string;
+  materialUnit: string;
+  materialImage: string;
+  quantity: number;
+  price: number;
+};
+
+export type SalaryCompanyProductType = {
+  productId: string;
+  productCode: string;
+  productName: string;
+  productImage: string;
+  phaseId: string;
+  phaseName: string;
+  quantity: number;
+  price: number;
+};
+
 export type SalaryCompanyDetailType = {
   companyId: string;
   month: number;
@@ -42,9 +62,9 @@ export type SalaryCompanyDetailType = {
   totalBroken: number;
   rateProduct: number;
   rateBroken: number;
-  materialResponses: [];
-  productExportResponses: [];
-  productBrokenResponses: [];
+  materialResponses: SalaryCompanyMaterialType[];
+  productExportResponses: SalaryCompanyProductType[];
+  productBrokenResponses: SalaryCompanyProductType[];
 };
 
 export type GetSalaryCompanyDetailResponse =
