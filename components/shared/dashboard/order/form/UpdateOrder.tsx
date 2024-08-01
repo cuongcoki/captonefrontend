@@ -370,8 +370,8 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                       <SelectContent>
                                         <SelectItem value="0">0%</SelectItem>
                                         <SelectItem value="5">5%</SelectItem>
+                                        <SelectItem value="8">8%</SelectItem>
                                         <SelectItem value="10">10%</SelectItem>
-                                        <SelectItem value="20">20%</SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </FormControl>
