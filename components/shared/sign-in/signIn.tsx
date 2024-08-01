@@ -32,7 +32,7 @@ export default function SignIn() {
           </div>
         </div>
       </div>
-      <div className=" bg-muted lg:block flex item-center flex-center flex-column justify-center h-full">
+      <div className=" hidden bg-muted lg:block xs:flex item-center flex-center flex-column justify-center h-full">
         <Image
           src={ImageBackGround}
           alt="Image"

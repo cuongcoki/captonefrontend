@@ -10,14 +10,16 @@ import {
 } from "@/components/ui/card";
 
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 import { Button } from "@/components/ui/button";
 
@@ -223,6 +225,8 @@ export default function CreateShipment() {
   //state
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const { ForceRender } = ShipmentStore();
   //state ** company
   const [company, setCompany] = useState<Company[]>([]);
@@ -335,10 +339,16 @@ export default function CreateShipment() {
   };
 
   const handleOffDialog = () => {
-    setOpen(false);
+    setOpenAlert(true);
   };
   const handleOnDialog = () => {
     setOpen(true);
+  };
+  const handleOffDialogA = () => {
+    setOpenAlert(false);
+  };
+  const handleOnDialogA = () => {
+    setOpenAlert(true);
   };
 
   const handleStatusChange = (value: number) => {
@@ -537,9 +547,8 @@ export default function CreateShipment() {
         );
         toast.custom((t) => (
           <div
-            className={`${
-              t.visible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${t.visible ? "animate-enter" : "animate-leave"
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -567,9 +576,8 @@ export default function CreateShipment() {
         );
         toast.custom((t) => (
           <div
-            className={`${
-              t.visible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${t.visible ? "animate-enter" : "animate-leave"
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -601,9 +609,8 @@ export default function CreateShipment() {
         );
         toast.custom((t) => (
           <div
-            className={`${
-              t.visible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${t.visible ? "animate-enter" : "animate-leave"
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -639,9 +646,8 @@ export default function CreateShipment() {
         );
         toast.custom((t) => (
           <div
-            className={`${
-              t.visible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${t.visible ? "animate-enter" : "animate-leave"
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -673,9 +679,8 @@ export default function CreateShipment() {
         );
         toast.custom((t) => (
           <div
-            className={`${
-              t.visible ? "animate-enter" : "animate-leave"
-            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${t.visible ? "animate-enter" : "animate-leave"
+              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -759,7 +764,7 @@ export default function CreateShipment() {
   const materialType = 1;
   //consolo.log
   // console.log("dataP", dataP)
-  console.log("shipmentDetailRequests", shipmentDetailRequests);
+  // console.log("shipmentDetailRequests", shipmentDetailRequests);
   const formatCurrency = (value: any): string => {
     if (!value) return "0";
     let valueString = value.toString();
@@ -787,9 +792,35 @@ export default function CreateShipment() {
 
     return parseInt(cleanedValue);
   };
-
+  const handleClearForm = () => {
+    setOpen(false)
+    setOpenAlert(false)
+    setFetchTrigger((prev) => prev + 1);
+    form.reset();
+    setShipmentDetailRequests([]);
+    setProductDetail([]);
+  }
   return (
     <>
+      {
+        openAlert && (
+          <AlertDialog open={openAlert} >
+            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
+                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )
+      }
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
         <Dialog.Trigger className="rounded p-2 hover:bg-[#2bff7e] bg-[#24d369] ">
           <Plus />
@@ -824,26 +855,25 @@ export default function CreateShipment() {
                             </CardDescription>
                           </CardHeader>
                           <CardContent className="space-y-2">
-                            <div className=" w-full grid grid-cols-4 md:grid-cols-6 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
+                            <div className=" w-full grid grid-cols-3 md:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
                               {dataP.map((item) => (
                                 <div
-                                  className="group relative w-[100px] h-[100px] shadow-md rounded-md"
+                                  className="group relative w-[80px] h-[80px] shadow-md rounded-md"
                                   key={item.id}
                                 >
                                   <ImageIconShipmentForm dataImage={item} />
                                   <Check
-                                    className={`${
-                                      shipmentDetailRequests.some(
-                                        (item1) => item1.itemId === item.id
-                                      )
-                                        ? "absolute top-0 right-0 bg-primary text-white"
-                                        : "hidden"
-                                    }`}
+                                    className={`${shipmentDetailRequests.some(
+                                      (item1) => item1.itemId === item.id
+                                    )
+                                      ? "absolute top-0 right-0 bg-primary text-white"
+                                      : "hidden"
+                                      }`}
                                   />
                                   <Button
                                     variant={"ghost"}
                                     size={"icon"}
-                                    className="absolute bottom-0 left-0 w-full opacity-0 group-hover:opacity-100 hover:bg-primary"
+                                  className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary "
                                     onClick={() => {
                                       const mainImage =
                                         item?.imageResponses.find(
@@ -856,7 +886,7 @@ export default function CreateShipment() {
                                       );
                                     }}
                                   >
-                                    <CirclePlus className="text-white" />
+                                    <Plus className="text-white" />
                                   </Button>
                                 </div>
                               ))}
@@ -876,26 +906,25 @@ export default function CreateShipment() {
                             <CardDescription></CardDescription>
                           </CardHeader>
                           <CardContent className="space-y-2">
-                            <div className=" w-full grid grid-cols-4 md:grid-cols-6 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
+                            <div className=" w-full grid grid-cols-3 sm:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
                               {dataM.map((item) => (
                                 <div
-                                  className="group relative w-[100px] h-[100px] shadow-md rounded-md"
+                                  className="group relative w-[80px] h-[80px] shadow-md rounded-md"
                                   key={item.id}
                                 >
                                   <ImageIconMaterial dataImage={item} />
                                   <Check
-                                    className={`${
-                                      shipmentDetailRequests.some(
-                                        (item1) => item1.itemId === item.id
-                                      )
-                                        ? "absolute top-0 right-0 bg-primary text-white"
-                                        : "hidden"
-                                    }`}
+                                    className={`${shipmentDetailRequests.some(
+                                      (item1) => item1.itemId === item.id
+                                    )
+                                      ? "absolute top-0 right-0 bg-primary text-white"
+                                      : "hidden"
+                                      }`}
                                   />
                                   <Button
                                     variant={"ghost"}
                                     size={"icon"}
-                                    className="absolute bottom-0 left-0 w-full opacity-0 group-hover:opacity-100 hover:bg-primary"
+                                    className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary "
                                     onClick={() =>
                                       handleAddProducts(
                                         item?.image,
@@ -904,7 +933,7 @@ export default function CreateShipment() {
                                       )
                                     }
                                   >
-                                    <CirclePlus className="text-white" />
+                                    <Plus className="text-white" />
                                   </Button>
                                 </div>
                               ))}
@@ -920,9 +949,9 @@ export default function CreateShipment() {
                     </Tabs>
                   </div>
 
-                  <div>
+                  <div className="w-full overflow-auto">
                     {productDetail.length > 0 && (
-                      <Card>
+                      <Card className="w-[1000px] sm:w-full overflow-auto">
                         <Table>
                           <TableHeader>
                             <TableRow>
@@ -945,7 +974,7 @@ export default function CreateShipment() {
                                       width={900}
                                       height={900}
                                       alt="ảnh sản phẩm"
-                                      className="w-ful h-ful object-contain"
+                                      className="w-full h-full object-cover rounded-md"
                                     />
                                   </div>
                                 </TableCell>
@@ -983,7 +1012,7 @@ export default function CreateShipment() {
                                   )}
                                 </TableCell>
                                 <TableCell>
-                                  <input
+                                  <Input
                                     type="number"
                                     name="quantity"
                                     value={
@@ -1100,7 +1129,7 @@ export default function CreateShipment() {
                       onSubmit={form.handleSubmit(onSubmit)}
                       className="w-full flex flex-col gap-4"
                     >
-                      <div className="flex justify-between items-center gap-6">
+                      <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                         <div className="w-full">
                           <FormLabel className="text-primary-backgroudPrimary ">
                             Công ty gửi *
@@ -1179,7 +1208,7 @@ export default function CreateShipment() {
                             </CardContent>
                           </Card>
                         </div>
-                        <Card>
+                        <Card className="hidden md:block">
                           <Truck className="w-10 h-10 p-1" />
                         </Card>
                         <div className="w-full">

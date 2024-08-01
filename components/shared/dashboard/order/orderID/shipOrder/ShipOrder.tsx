@@ -271,8 +271,8 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
   
 
   return (
-    <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6">
-      <Card className="sm:col-span-1 md:col-span-10 lg:col-span-7 shadow-sm">
+    <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6 ">
+      <Card className="sm:col-span-1 md:col-span-10 lg:col-span-7 shadow-sm overflow-auto">
         <CardHeader>
           <div className="flex justify-between items-center">
             <TitleComponent
@@ -287,12 +287,14 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
             <TableHeader>
               <TableRow>
                 <TableHead>Nhân viên vận chuyển</TableHead>
-                <TableHead className="hidden md:table-cell">
+                <TableHead >
                   Ngày giao
                 </TableHead>
-                <TableHead className="hidden sm:table-cell">Loại đơn</TableHead>
-                <TableHead className="hidden sm:table-cell">
+                <TableHead >Loại đơn</TableHead>
+                <TableHead >
                   Trạng thái
+                </TableHead>
+                <TableHead >
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -309,13 +311,13 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                       {item.shipperId}
                     </div>
                   </TableCell>
-                  <TableCell className="hidden sm:table-cell">
+                  <TableCell >
                     {formatDate(item.shipDate)}
                   </TableCell>
-                  <TableCell className="hidden md:table-cell">
+                  <TableCell >
                     {item.deliveryMethodDescription}
                   </TableCell>
-                  <TableCell className="hidden sm:table-cell">
+                  <TableCell >
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button variant="outline">
@@ -376,7 +378,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                       </DialogContent>
                     </Dialog>
                   </TableCell>
-                  <TableCell className="hidden sm:table-cell">
+                  <TableCell >
                     {item.status === 2 ||
                       item.status === 3 ||
                       checkStatus === false ? (

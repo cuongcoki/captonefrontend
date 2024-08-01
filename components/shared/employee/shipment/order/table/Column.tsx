@@ -8,21 +8,13 @@ import { DataTableRowActions } from "./data-table-row-actions";
 import Image from "next/image";
 import { IsInProcessing, StatusOrder } from "./data/data";
 import { ArrowUpDown } from "lucide-react";
-export type Order = {
-  id: string;
-  companyId: string;
-  company: {
-    name: string;
-    address: string;
-    directorName: string;
-    directorPhone: string;
-    email: string;
-    companyType: number;
-    companyTypeDescription: string;
-  };
-  status: string;
-  startOrder: string;
-  endOrder: string;
+export type ShipOrderShipper = {
+  deliveryMethod: number;
+  deliveryMethodDescription: string;
+  shipDate: string; // ISO 8601 format, could also use Date if you intend to parse it
+  shipOrderId: string;
+  status: number;
+  statusDescription: string;
 };
 const limitLength = (text: any, maxLength: any) => {
   if (text.length > maxLength) {
@@ -35,7 +27,7 @@ const formatDate = (date: string) => {
   const data = date.split("-");
   return `${data[2]}/${data[1]}/${data[0]}`;
 };
-export const columns: ColumnDef<Order>[] = [
+export const columns: ColumnDef<ShipOrderShipper>[] = [
   {
     accessorKey: "company.name",
     header: ({ column }) => {
@@ -48,7 +40,6 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => {
       return (
         <span className="flex justify-center ">
-          {limitLength(row.original.company.name, 30)}
         </span>
       );
     },
@@ -134,7 +125,6 @@ export const columns: ColumnDef<Order>[] = [
       return <Button variant="ghost">Ngày Bắt Đầu</Button>;
     },
     cell: ({ row }) => {
-      return <span>{formatDate(row.original.startOrder)}</span>;
     },
   },
 
@@ -144,12 +134,11 @@ export const columns: ColumnDef<Order>[] = [
       return <Button variant="ghost">Ngày Kết Thúc</Button>;
     },
     cell: ({ row }) => {
-      return <span>{formatDate(row.original.endOrder)}</span>;
     },
   },
 
-  {
-   id: "actions",
-   cell: ({ row }) => <DataTableRowActions row={row} />,
-  },
+  // {
+  //  id: "actions",
+  //  cell: ({ row }) => <DataTableRowActions row={row} />,
+  // },
 ];

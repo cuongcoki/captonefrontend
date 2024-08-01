@@ -85,7 +85,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           className={`flex-1 bg-slate-100 dark:bg-[#09090b]  transition-all duration-300 grid w-full h-full`}
         >
           <div className="p-6 overflow-auto bg-card">{children}</div>
-          <div className=" sm:hidden block sticky bottom-0 z-10">
+          <div className="sm:hidden block h-[50px]">
+
+          </div>
+          <div className="sm:hidden block fixed bottom-0 w-full z-10">
             <Header />
           </div>
         </main>

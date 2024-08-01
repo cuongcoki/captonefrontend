@@ -37,7 +37,7 @@ export const columns: ColumnDef<Product>[] = [
               width={100}
               height={100}
               alt="Product Image"
-              className="w-[50px] h-[50px] rounded-lg object-contain"
+              className="w-[50px] h-[50px] rounded-lg object-cover"
             />
           </div>
         </Link>
