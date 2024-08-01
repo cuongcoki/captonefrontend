@@ -242,8 +242,8 @@ export default function UpdateAttendanceEm({
           setTableData(attendanceData);
         })
         .catch((error) => {
-          console.log("Error getAttendance: ", error.response.data.message);
-          if ("Attendance is not found" === error.response.data.message) {
+          console.log("Error getAttendance: ", error.response.data.status);
+          if (404 === error.response.data.status) {
             const attendanceData = userD?.map((item): AttendanceDetailType => {
               return {
                 userID: item.id,
@@ -722,7 +722,7 @@ export default function UpdateAttendanceEm({
             className="bg-[#00dd00] hover:bg-[#00aa00]"
             onClick={() => handleSubmit(true)}
           >
-            Lưu điểm dnah
+            Lưu điểm danh
           </Button>
         )}
       </div>
