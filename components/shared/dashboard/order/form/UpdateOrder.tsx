@@ -38,26 +38,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 // ** import REACT
 import { useEffect, useState } from "react";
@@ -75,12 +66,9 @@ import {
   Truck,
   X,
 } from "lucide-react";
-import { ChevronDown, Minus, PackagePlus, Pencil, Search } from "lucide-react";
 
 // ** import TYPE & SCHEMA
 import {
-  OrderSchema,
-  CompanyRequestSchema,
   UpdateOrderSchema,
 } from "@/schema/order";
 import { useFormStatus } from "react-dom";
@@ -88,16 +76,6 @@ import { cn } from "@/lib/utils";
 import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
 import { companyApi } from "@/apis/company.api";
-import { CreateOrderDetails } from "./CreateOrderDetail";
-import { productApi } from "@/apis/product.api";
-import { filesApi } from "@/apis/files.api";
-import useDebounce from "./useDebounce";
-import { setApi } from "@/apis/set.api";
-import ImageDisplayDialog from "../../product-set/form/imageDisplayDialog";
-import Image from "next/image";
-import { Label } from "@/components/ui/label";
-import { NoImage } from "@/constants/images";
-import { error } from "console";
 import { OrderStore } from "../order-store";
 
 interface OrderId {
@@ -167,15 +145,20 @@ export default function UpdateOrder({ orderId }: OrderId) {
   const [open, setOpen] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const { ForceRender } = OrderStore();
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
 
   const handleOffDialog = () => {
-    setOpen(false);
-    setFetchTrigger((prev) => prev + 1);
+    setOpenAlert(true);
   };
   const handleOnDialog = () => {
     setOpen(true);
   };
-
+  const handleOffDialogA = () => {
+    setOpenAlert(false);
+  };
+  const handleOnDialogA = () => {
+    setOpenAlert(true);
+  };
   //state
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<orderIds>();
@@ -253,274 +236,300 @@ export default function UpdateOrder({ orderId }: OrderId) {
   };
 
   const { pending } = useFormStatus();
-
+  const handleClearForm = () => {
+    setOpen(false)
+    setOpenAlert(false)
+    setFetchTrigger((prev) => prev + 1);
+    form.reset();
+  }
   return (
-    <Dialog.Root open={open} onOpenChange={handleOnDialog}>
-      <Dialog.Trigger>
-        <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
-          <PenLine />
-        </div>
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-          <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[700px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-            <div className="flex flex-col space-y-4 rounded-md bg-white">
-              <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
-                <h2 className="text-2xl text-white">
-                  Chỉnh sửa sản phẩm đơn hàng
-                </h2>
-                <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              <div className=" p-4 overflow-y-auto">
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <Card>
-                      <CardContent className="flex gap-6 mt-6">
-                        <div className="flex flex-col gap-6 w-full">
-                          <FormField
-                            control={form.control}
-                            name="companyId"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel className="text-primary">
-                                  Công ty đặt hàng *
-                                </FormLabel>
-                                <Select
-                                  onValueChange={field.onChange}
-                                  defaultValue={field.value}
-                                >
-                                  <FormControl>
-                                    <SelectTrigger>
-                                      <SelectValue
-                                        placeholder="Hãy chọn công ty"
-                                        defaultValue={field.value}
-                                      />
-                                    </SelectTrigger>
-                                  </FormControl>
-                                  <SelectContent>
-                                    {company.map((item) => (
-                                      <SelectItem key={item.id} value={item.id}>
-                                        {item.name}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <div className="md:flex gap-4 items-center ">
+    <>
+      {
+        openAlert && (
+          <AlertDialog open={openAlert} >
+            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
+                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )
+      }
+      <Dialog.Root open={open} onOpenChange={handleOnDialog}>
+        <Dialog.Trigger>
+          <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
+            <PenLine />
+          </div>
+        </Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
+            <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[700px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+              <div className="flex flex-col space-y-4 rounded-md bg-white">
+                <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
+                  <h2 className="text-2xl text-white">
+                    Chỉnh sửa sản phẩm đơn hàng
+                  </h2>
+                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className=" p-4 overflow-y-auto">
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)}>
+                      <Card>
+                        <CardContent className="flex gap-6 mt-6">
+                          <div className="flex flex-col gap-6 w-full">
                             <FormField
                               control={form.control}
-                              name="status"
+                              name="companyId"
                               render={({ field }) => (
-                                <FormItem className="w-full">
+                                <FormItem>
                                   <FormLabel className="text-primary">
-                                    Trạng thái *
+                                    Công ty đặt hàng *
                                   </FormLabel>
                                   <Select
-                                    onValueChange={(value) =>
-                                      field.onChange(Number(value))
-                                    }
-                                    defaultValue={String(field.value)}
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
                                   >
                                     <FormControl>
                                       <SelectTrigger>
                                         <SelectValue
-                                          placeholder="Chọn trạng thái"
-                                          defaultValue={String(field.value)}
+                                          placeholder="Hãy chọn công ty"
+                                          defaultValue={field.value}
                                         />
                                       </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                      {Object.values(OrderStatus).map(
-                                        (status) => (
-                                          <SelectItem
-                                            key={status.id}
-                                            value={String(status.id)}
-                                          >
-                                            {status.des}
-                                          </SelectItem>
-                                        )
-                                      )}
+                                      {company.map((item) => (
+                                        <SelectItem key={item.id} value={item.id}>
+                                          {item.name}
+                                        </SelectItem>
+                                      ))}
                                     </SelectContent>
                                   </Select>
                                   <FormMessage />
                                 </FormItem>
                               )}
                             />
-                            <FormField
-                              control={form.control}
-                              name="vat"
-                              render={({ field }) => (
-                                <FormItem className="space-y-4 w-[40%]">
-                                  <FormLabel className="">
-                                    <div className="text-primary">%Thuế</div>
-                                  </FormLabel>
-                                  <FormControl className="">
+                            <div className="md:flex gap-4 items-center ">
+                              <FormField
+                                control={form.control}
+                                name="status"
+                                render={({ field }) => (
+                                  <FormItem className="w-full">
+                                    <FormLabel className="text-primary">
+                                      Trạng thái *
+                                    </FormLabel>
                                     <Select
-                                      onValueChange={field.onChange}
-                                      defaultValue={field.value.toString()}
+                                      onValueChange={(value) =>
+                                        field.onChange(Number(value))
+                                      }
+                                      defaultValue={String(field.value)}
                                     >
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Chọn % thuế" />
-                                      </SelectTrigger>
+                                      <FormControl>
+                                        <SelectTrigger>
+                                          <SelectValue
+                                            placeholder="Chọn trạng thái"
+                                            defaultValue={String(field.value)}
+                                          />
+                                        </SelectTrigger>
+                                      </FormControl>
                                       <SelectContent>
-                                        <SelectItem value="0">0%</SelectItem>
-                                        <SelectItem value="5">5%</SelectItem>
-                                        <SelectItem value="8">8%</SelectItem>
-                                        <SelectItem value="10">10%</SelectItem>
+                                        {Object.values(OrderStatus).map(
+                                          (status) => (
+                                            <SelectItem
+                                              key={status.id}
+                                              value={String(status.id)}
+                                            >
+                                              {status.des}
+                                            </SelectItem>
+                                          )
+                                        )}
                                       </SelectContent>
                                     </Select>
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="vat"
+                                render={({ field }) => (
+                                  <FormItem className="space-y-4 w-[40%]">
+                                    <FormLabel className="">
+                                      <div className="text-primary">%Thuế</div>
+                                    </FormLabel>
+                                    <FormControl className="">
+                                      <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value.toString()}
+                                      >
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Chọn % thuế" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          <SelectItem value="0">0%</SelectItem>
+                                          <SelectItem value="5">5%</SelectItem>
+                                          <SelectItem value="8">8%</SelectItem>
+                                          <SelectItem value="10">10%</SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
 
-                          <div className="md:flex gap-4 ">
-                            <FormField
-                              control={form.control}
-                              name="startOrder"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                  <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                                    Ngày bắt đầu *
-                                  </FormLabel>
-                                  <Popover modal={true}>
-                                    <PopoverTrigger asChild>
-                                      <FormControl>
-                                        <Button
-                                          variant={"outline"}
-                                          className={cn(
-                                            "w-[240px] pl-3 text-left font-normal",
-                                            !field.value &&
+                            <div className="md:flex gap-4 ">
+                              <FormField
+                                control={form.control}
+                                name="startOrder"
+                                render={({ field }) => (
+                                  <FormItem className="flex flex-col">
+                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">
+                                      Ngày bắt đầu *
+                                    </FormLabel>
+                                    <Popover modal={true}>
+                                      <PopoverTrigger asChild>
+                                        <FormControl>
+                                          <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                              "w-[240px] pl-3 text-left font-normal",
+                                              !field.value &&
                                               "text-muted-foreground"
-                                          )}
-                                        >
-                                          {field.value ? (
+                                            )}
+                                          >
+                                            {field.value ? (
+                                              field.value
+                                            ) : (
+                                              <span>Chọn ngày</span>
+                                            )}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                          </Button>
+                                        </FormControl>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                      >
+                                        <Calendar
+                                          mode="single"
+                                          selected={
                                             field.value
-                                          ) : (
-                                            <span>Chọn ngày</span>
-                                          )}
-                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
-                                      </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                      className="w-auto p-0"
-                                      align="start"
-                                    >
-                                      <Calendar
-                                        mode="single"
-                                        selected={
-                                          field.value
-                                            ? parse(
+                                              ? parse(
                                                 field.value,
                                                 "dd/MM/yyyy",
                                                 new Date()
                                               )
-                                            : undefined
-                                        }
-                                        onSelect={(date: any) =>
-                                          field.onChange(
-                                            format(date, "dd/MM/yyyy")
-                                          )
-                                        }
-                                        // disabled={(date) =>
-                                        //   date > new Date() || date < new Date("1900-01-01")
-                                        // }
-                                        initialFocus
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <FormField
-                              control={form.control}
-                              name="endOrder"
-                              render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                  <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                                    Ngày kết thúc *
-                                  </FormLabel>
-                                  <Popover modal={true}>
-                                    <PopoverTrigger asChild>
-                                      <FormControl>
-                                        <Button
-                                          variant={"outline"}
-                                          className={cn(
-                                            "w-[240px] pl-3 text-left font-normal",
-                                            !field.value &&
+                                              : undefined
+                                          }
+                                          onSelect={(date: any) =>
+                                            field.onChange(
+                                              format(date, "dd/MM/yyyy")
+                                            )
+                                          }
+                                          // disabled={(date) =>
+                                          //   date > new Date() || date < new Date("1900-01-01")
+                                          // }
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="endOrder"
+                                render={({ field }) => (
+                                  <FormItem className="flex flex-col">
+                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">
+                                      Ngày kết thúc *
+                                    </FormLabel>
+                                    <Popover modal={true}>
+                                      <PopoverTrigger asChild>
+                                        <FormControl>
+                                          <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                              "w-[240px] pl-3 text-left font-normal",
+                                              !field.value &&
                                               "text-muted-foreground"
-                                          )}
-                                        >
-                                          {field.value ? (
+                                            )}
+                                          >
+                                            {field.value ? (
+                                              field.value
+                                            ) : (
+                                              <span>Chọn ngày</span>
+                                            )}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                          </Button>
+                                        </FormControl>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                      >
+                                        <Calendar
+                                          mode="single"
+                                          selected={
                                             field.value
-                                          ) : (
-                                            <span>Chọn ngày</span>
-                                          )}
-                                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
-                                      </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                      className="w-auto p-0"
-                                      align="start"
-                                    >
-                                      <Calendar
-                                        mode="single"
-                                        selected={
-                                          field.value
-                                            ? parse(
+                                              ? parse(
                                                 field.value,
                                                 "dd/MM/yyyy",
                                                 new Date()
                                               )
-                                            : undefined
-                                        }
-                                        onDayClick={(date: any) =>
-                                          field.onChange(
-                                            format(date, "dd/MM/yyyy")
-                                          )
-                                        }
-                                        disabled={(date) =>
-                                          date < new Date("2024-01-01")
-                                        }
-                                        initialFocus
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
+                                              : undefined
+                                          }
+                                          onDayClick={(date: any) =>
+                                            field.onChange(
+                                              format(date, "dd/MM/yyyy")
+                                            )
+                                          }
+                                          disabled={(date) =>
+                                            date < new Date("2024-01-01")
+                                          }
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
 
-                          <Card>
-                            <Button
-                              type="submit"
-                              className="w-full bg-primary hover:bg-primary/90"
-                              disabled={pending}
-                            >
-                              {pending ? "Loading..." : "GỬI"}
-                            </Button>
-                          </Card>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </form>
-                </Form>
+                            <Card>
+                              <Button
+                                type="submit"
+                                className="w-full bg-primary hover:bg-primary/90"
+                                disabled={pending}
+                              >
+                                {pending ? "Loading..." : "GỬI"}
+                              </Button>
+                            </Card>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </form>
+                  </Form>
+                </div>
               </div>
-            </div>
-          </Dialog.Content>
-        </Dialog.Overlay>
-      </Dialog.Portal>
-    </Dialog.Root>
+            </Dialog.Content>
+          </Dialog.Overlay>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </>
   );
 }

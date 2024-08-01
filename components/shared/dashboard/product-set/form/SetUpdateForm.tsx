@@ -473,8 +473,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       update: updateProducts,
       removeProductIds: removeProductIds,
     };
+
+    console.log("requestBodyrequestBodyrequestBody",requestBody)
     setApi
-      .updateSet(requestBody, "")
+      .updateSet(requestBody, setProductId.id)
       .then((res) => {
         console.log("Update Successful:", res);
         toast.success(res.data.message);

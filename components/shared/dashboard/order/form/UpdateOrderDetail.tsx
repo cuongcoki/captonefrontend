@@ -21,14 +21,16 @@ import { z } from "zod";
 import { OrderDetailRequestSchema } from "@/schema/order";
 
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 import * as Dialog from "@radix-ui/react-dialog";
 
@@ -61,7 +63,7 @@ import Image from "next/image";
 import { useFormStatus } from "react-dom";
 import { productApi } from "@/apis/product.api";
 import toast from "react-hot-toast";
-import ImageDisplayDialog from "../../product-set/form/imageDisplayDialog";
+import ImageDisplayDialog from "./imageDisplayDialog";
 import { Label } from "@/components/ui/label";
 import { setApi } from "@/apis/set.api";
 import { filesApi } from "@/apis/files.api";
@@ -115,13 +117,19 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const { ForceRender } = OrderStore();
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
 
   const handleOffDialog = () => {
-    setOpen(false);
-    setFetchTrigger((prev) => prev + 1);
+    setOpenAlert(true);
   };
   const handleOnDialog = () => {
     setOpen(true);
+  };
+  const handleOffDialogA = () => {
+    setOpenAlert(false);
+  };
+  const handleOnDialogA = () => {
+    setOpenAlert(true);
   };
 
   // console.log('orderIdddddd', orderId)
@@ -187,7 +195,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       .catch((error) => {
         toast.error("Không tìm thấy bộ sản phẩm");
       })
-      .finally(() => {});
+      .finally(() => { });
   };
 
   const handleSearch = () => {
@@ -201,7 +209,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       .catch((error) => {
         toast.error("Không tìm thấy sản phẩm");
       })
-      .finally(() => {});
+      .finally(() => { });
   };
 
   useEffect(() => {
@@ -419,284 +427,283 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
 
     return formatted;
   };
+
+  const productCheck = 0;
+  const setCheck = 1;
+
+  const handleClearForm = () => {
+    setOpen(false)
+    setOpenAlert(false)
+    setFetchTrigger((prev) => prev + 1);
+    form.reset();
+    setProductsRequest([]);
+    setGetDetailsPro([]);
+    setSearchTerm("");
+    setSearchTermSet("")
+    setSearchResults([]);
+    setSearchResultsSet([]);
+  }
   return (
-    <Dialog.Root open={open} onOpenChange={handleOnDialog}>
-      <Dialog.Trigger>
-        <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
-          <PenLine />
-        </div>
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-          <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1000px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-            <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
-              <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
-                <h2 className="text-2xl text-white">
-                  Chỉnh sửa sản phẩm đơn hàng
-                </h2>
-                <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-              <div className="p-4  h-[800px] overflow-auto">
-                <Card className="">
-                  <CardHeader>
-                    <CardTitle className="text-lg">
-                      Thêm sản phẩm cho đơn hàng
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center my-4">
-                      <div className="flex items-center border w-full rounded-lg px-2 ">
-                        <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <ChevronDown className="mr-2 h-4 w-4  text-primary-backgroudPrimary" />
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="start">
-                            <DropdownMenuItem onClick={handleCheckProduct}>
-                              Sản phẩm
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={handleCheckOrder}>
-                              Bộ sản phẩm
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+    <>
+      {
+        openAlert && (
+          <AlertDialog open={openAlert} >
+            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
+                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )
+      }
+      <Dialog.Root open={open} onOpenChange={handleOnDialog}>
+        <Dialog.Trigger>
+          <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
+            <PenLine />
+          </div>
+        </Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
+            <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1000px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+              <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
+                <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
+                  <h2 className="text-2xl text-white">
+                    Chỉnh sửa sản phẩm đơn hàng
+                  </h2>
+                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="p-4  h-[800px] overflow-auto">
+                  <Card >
+                    <CardHeader>
+                      <CardTitle className="text-lg">
+                        Thêm sản phẩm cho đơn hàng
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center my-4">
+                        <div className="flex items-center border w-full rounded-lg px-2 ">
+                          <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <ChevronDown className="mr-2 h-4 w-4  text-primary-backgroudPrimary" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start">
+                              <DropdownMenuItem onClick={handleCheckProduct}>
+                                Sản phẩm
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={handleCheckOrder}>
+                                Bộ sản phẩm
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
 
-                        {!checkProducts ? (
-                          <Input
-                            placeholder="tìm kiếm tên sản phẩm ..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="border-none w-full"
-                          />
-                        ) : (
-                          <Input
-                            placeholder="tìm kiếm bộ sản phẩm ..."
-                            value={searchTermSet}
-                            onChange={(e) => setSearchTermSet(e.target.value)}
-                            className="border-none w-full"
-                          />
-                        )}
+                          {!checkProducts ? (
+                            <Input
+                              placeholder="tìm kiếm tên sản phẩm ..."
+                              value={searchTerm}
+                              onChange={(e) => setSearchTerm(e.target.value)}
+                              className="border-none w-full"
+                            />
+                          ) : (
+                            <Input
+                              placeholder="tìm kiếm bộ sản phẩm ..."
+                              value={searchTermSet}
+                              onChange={(e) => setSearchTermSet(e.target.value)}
+                              className="border-none w-full"
+                            />
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    {!checkProducts ? (
-                      <>
-                        {searchResults !== null ? (
-                          <Card className="my-4">
-                            <CardHeader className="font-semibold text-xl">
-                              <span>Thông tin sản phẩm</span>
-                            </CardHeader>
-                            <CardContent className="overflow-y-auto">
-                              <Table>
-                                <TableHeader>
-                                  <TableRow>
-                                    <TableHead className="w-[100px]">
-                                      Ảnh
-                                    </TableHead>
-                                    <TableHead>Tên</TableHead>
-                                    <TableHead>Mã Code</TableHead>
-                                    <TableHead className="text-right">
-                                      Thêm
-                                    </TableHead>
-                                  </TableRow>
-                                </TableHeader>
-
-                                <TableBody>
-                                  {searchResults !== null ? (
-                                    searchResults.map((product) => (
-                                      <TableRow key={product.id}>
-                                        <TableCell className="font-medium">
-                                          <ImageDisplayDialog
-                                            images={product?.imageUrl}
-                                          />
-                                        </TableCell>
-                                        <TableCell>{product?.name}</TableCell>
-                                        <TableCell>{product?.code}</TableCell>
-                                        <TableCell>
-                                          <Button
-                                            variant="outline"
-                                            size="icon"
-                                            onClick={() =>
-                                              handleAddProducts(product)
-                                            }
-                                          >
-                                            <PackagePlus className="h-4 w-4" />
-                                          </Button>
-                                        </TableCell>
-                                      </TableRow>
-                                    ))
-                                  ) : (
-                                    <TableRow className="text-center flex justify-center items-center w-full">
-                                      không thấy sản phẩm nào
-                                    </TableRow>
-                                  )}
-                                </TableBody>
-                              </Table>
-                            </CardContent>
-                          </Card>
-                        ) : (
-                          ""
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        {searchResultsSet !== null ? (
-                          <Card className="my-4">
-                            <CardHeader className="font-semibold text-xl">
-                              <span>Thông tin Bộ sản phẩm</span>
-                            </CardHeader>
-                            <CardContent className="overflow-y-auto">
-                              <Table>
-                                <TableHeader>
-                                  <TableRow>
-                                    <TableHead className="w-[100px]">
-                                      Ảnh
-                                    </TableHead>
-                                    <TableHead>Tên</TableHead>
-                                    <TableHead>Mã Code</TableHead>
-                                    <TableHead className="text-right">
-                                      Thêm
-                                    </TableHead>
-                                  </TableRow>
-                                </TableHeader>
-
-                                <TableBody>
-                                  {searchResultsSet !== null ? (
-                                    searchResultsSet.map((product) => (
-                                      <TableRow key={product.id}>
-                                        <TableCell className="font-medium">
-                                          <ImageDisplayDialog
-                                            images={product?.imageUrl}
-                                          />
-                                        </TableCell>
-                                        <TableCell>{product?.name}</TableCell>
-                                        <TableCell>{product?.code}</TableCell>
-                                        <TableCell>
-                                          <Button
-                                            variant="outline"
-                                            size="icon"
-                                            onClick={() =>
-                                              handleAddProducts(product)
-                                            }
-                                          >
-                                            <PackagePlus className="h-4 w-4" />
-                                          </Button>
-                                        </TableCell>
-                                      </TableRow>
-                                    ))
-                                  ) : (
-                                    <TableRow className="text-center flex justify-center items-center w-full">
-                                      không thấy sản phẩm nào
-                                    </TableRow>
-                                  )}
-                                </TableBody>
-                              </Table>
-                            </CardContent>
-                          </Card>
-                        ) : (
-                          ""
-                        )}
-                      </>
-                    )}
-
-                    <div className="md:col-span-1  md:mt-0">
-                      <Card className="mt-4">
-                        <CardHeader className="font-semibold text-xl">
-                          <span>Thông tin sản phẩm đã thêm</span>
-                        </CardHeader>
-                        <CardContent>
-                          <Table className="overflow-x-auto md:w-full w-[800px]">
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead className="w-[100px]">
-                                  Sản phẩm
-                                </TableHead>
-                                <TableHead>Tên sản phẩm</TableHead>
-                                <TableHead>Số lượng</TableHead>
-                                <TableHead>Đơn vị giá</TableHead>
-                                <TableHead>Ghi chú</TableHead>
-                                <TableHead className="text-right">
-                                  Xóa
-                                </TableHead>
-                              </TableRow>
-                            </TableHeader>
-
-                            <TableBody>
-                              {getDetailsPro.map((product, index) => (
-                                <TableRow key={index}>
-                                  <TableCell className="font-medium w-[20%]">
-                                    <div className="flex  gap-4">
-                                      <Image
-                                        alt="ảnh mẫu"
-                                        className="w-[50px] h-[50px] rounded-lg object-cover"
-                                        width={900}
-                                        height={900}
-                                        src={
-                                          product?.imageUrl ===
-                                          "Image_not_found"
-                                            ? NoImage
-                                            : product?.imageUrl
-                                        }
-                                      />
-
-                                      <div className="font-medium dark:text-white">
-                                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                                          <b>Code: </b>
-                                          {product.code}
-                                        </div>
+                      {!checkProducts ? (
+                        <>
+                          {searchResults !== null ? (
+                            <Card className="my-4">
+                              <CardHeader className="font-semibold text-xl">
+                                <span>Thông tin sản phẩm</span>
+                              </CardHeader>
+                              <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
+                                {searchResults !== null ? (
+                                  searchResults.map((product) => (
+                                    <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
+                                      <div className="font-medium flex flex-col rounded-md">
+                                        <ImageDisplayDialog
+                                          images={product}
+                                          checkProduct={productCheck}
+                                        />
+                                      </div>
+                                      <div>
+                                        <Button
+                                          variant={"ghost"}
+                                          size={"icon"}
+                                          className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                          onClick={() =>
+                                            handleAddProducts(product)
+                                          }
+                                        >
+                                          <Plus className="text-white" />
+                                        </Button>
                                       </div>
                                     </div>
-                                  </TableCell>
-                                  <TableCell>{product.name}</TableCell>
+                                  ))
+                                ) : (
+                                  <TableRow className="text-center flex justify-center items-center w-full">
+                                    không thấy sản phẩm nào
+                                  </TableRow>
+                                )}
+                              </CardContent>
+                            </Card>
+                          ) : (
+                            ""
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {searchResultsSet !== null ? (
+                            <Card className="my-4">
+                              <CardHeader className="font-semibold text-xl">
+                                <span>Thông tin Bộ sản phẩm</span>
+                              </CardHeader>
+                              <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
+                                {searchResultsSet !== null ? (
+                                  searchResultsSet.map((product) => (
+                                    <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
+                                      <div className="font-medium flex flex-col rounded-md">
+                                        <ImageDisplayDialog
+                                          images={product}
+                                          checkProduct={setCheck}
+                                        />
+                                      </div>
+                                      <div>
+                                        <Button
+                                          variant={"ghost"}
+                                          size={"icon"}
+                                          className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                          onClick={() =>
+                                            handleAddProducts(product)
+                                          }
+                                        >
+                                          <Plus className="text-white" />
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <div className="text-center flex justify-center items-center w-full">
+                                    không thấy sản phẩm nào
+                                  </div>
+                                )}
+                              </CardContent>
+                            </Card>
+                          ) : (
+                            ""
+                          )}
+                        </>
+                      )}
 
-                                  <TableCell className="font-medium">
-                                    <input
-                                      name="quantity"
-                                      value={formatCurrency(
-                                        productsRequest.find(
-                                          (item) =>
-                                            item.productIdOrSetId === product.id
-                                        )?.quantity
-                                      )}
-                                      onChange={(e) =>
-                                        handleChange(
-                                          product.id,
-                                          "quantity",
-                                          parseInt(
-                                            e.target.value.replace(/\./g, "")
+                      <div className="md:col-span-1  md:mt-0">
+                        <Card className="mt-4 ">
+                          <CardHeader className="font-semibold text-xl">
+                            <span>Thông tin sản phẩm đã thêm</span>
+                          </CardHeader>
+                          <CardContent className="overflow-auto max-h-[350px]">
+                            <Table className="overflow-x-auto md:w-full w-[800px]">
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead className="w-[100px]">
+                                    Sản phẩm
+                                  </TableHead>
+                                  <TableHead>Số lượng</TableHead>
+                                  <TableHead>Đơn vị giá</TableHead>
+                                  <TableHead>Ghi chú</TableHead>
+                                  <TableHead className="text-right">
+                                    Xóa
+                                  </TableHead>
+                                </TableRow>
+                              </TableHeader>
+
+                              <TableBody >
+                                {getDetailsPro.map((product, index) => (
+                                  <TableRow key={index}>
+                                    <TableCell className="font-medium w-[20%]">
+                                      <div className="flex flex-col gap-2">
+                                        <Image
+                                          alt="ảnh mẫu"
+                                          className="w-[50px] h-[50px] rounded-lg object-cover"
+                                          width={900}
+                                          height={900}
+                                          src={
+                                            product?.imageUrl ===
+                                              "Image_not_found"
+                                              ? NoImage
+                                              : product?.imageUrl
+                                          }
+                                        />
+
+                                        <div className="font-medium dark:text-white">
+                                          <div className="text-sm text-gray-500 dark:text-gray-400">
+                                            {product.code}-{product.name}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </TableCell>
+
+                                    <TableCell className="font-medium">
+                                      <Input
+                                        name="quantity"
+                                        value={formatCurrency(
+                                          productsRequest.find(
+                                            (item) =>
+                                              item.productIdOrSetId === product.id
+                                          )?.quantity
+                                        )}
+                                        onChange={(e) =>
+                                          handleChange(
+                                            product.id,
+                                            "quantity",
+                                            parseInt(
+                                              e.target.value.replace(/\./g, "")
+                                            )
                                           )
-                                        )
-                                      }
-                                      className="w-16 text-left outline-none"
-                                    />
-                                  </TableCell>
+                                        }
+                                        className="w-16 text-left outline-none"
+                                      />
+                                    </TableCell>
 
-                                  <TableCell className="font-medium">
-                                    <input
-                                      name="unitPrice"
-                                      step={1}
-                                      value={formatCurrency(
-                                        productsRequest.find(
-                                          (item) =>
-                                            item.productIdOrSetId === product.id
-                                        )?.unitPrice || 0
-                                      )}
-                                      onChange={(e) =>
-                                        handleChange(
-                                          product.id,
-                                          "unitPrice",
-                                          parseInt(
-                                            e.target.value.replace(/\./g, "")
+                                    <TableCell className="font-medium">
+                                      <Input
+                                        name="unitPrice"
+                                        step={1}
+                                        value={formatCurrency(
+                                          productsRequest.find(
+                                            (item) =>
+                                              item.productIdOrSetId === product.id
+                                          )?.unitPrice || 0
+                                        )}
+                                        onChange={(e) =>
+                                          handleChange(
+                                            product.id,
+                                            "unitPrice",
+                                            parseInt(
+                                              e.target.value.replace(/\./g, "")
+                                            )
                                           )
-                                        )
-                                      }
-                                      className="w-32 text-left outline-none"
-                                    />
-                                  </TableCell>
+                                        }
+                                        className="w-32 text-left outline-none"
+                                      />
+                                    </TableCell>
 
-                                  <TableCell className="relative">
-                                    <div className="overflow-auto  p-4 w-[200px] h-24 text-justify break-words whitespace-pre-wrap">
+                                    <TableCell className="relative">
+                                      {/* <div className="overflow-auto  p-4 w-[200px] h-24 text-justify break-words whitespace-pre-wrap"> */}
                                       <Textarea
                                         id="note"
                                         name="note"
@@ -716,45 +723,46 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                         }
                                         className="col-span-3 border shadow-md"
                                       />
-                                    </div>
-                                  </TableCell>
+                                      {/* </div> */}
+                                    </TableCell>
 
-                                  <TableCell className="font-medium">
-                                    <Button
-                                      variant="outline"
-                                      size="icon"
-                                      onClick={() =>
-                                        handleMinusProducts(product.id)
-                                      }
-                                    >
-                                      <Minus className="h-4 w-4" />
-                                    </Button>
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </CardContent>
+                                    <TableCell className="font-medium">
+                                      <Button
+                                        variant="outline"
+                                        size="icon"
+                                        onClick={() =>
+                                          handleMinusProducts(product.id)
+                                        }
+                                      >
+                                        <Minus className="h-4 w-4" />
+                                      </Button>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      <Card className="my-4">
+                        <Button
+                          onClick={handleSubmit}
+                          type="submit"
+                          className="w-full bg-primary hover:bg-primary/90"
+                          disabled={pending}
+                        >
+                          {pending ? "Loading..." : "GỬI"}
+                        </Button>
                       </Card>
-                    </div>
-
-                    <Card className="my-4">
-                      <Button
-                        onClick={handleSubmit}
-                        type="submit"
-                        className="w-full bg-primary hover:bg-primary/90"
-                        disabled={pending}
-                      >
-                        {pending ? "Loading..." : "GỬI"}
-                      </Button>
-                    </Card>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
-            </div>
-          </Dialog.Content>
-        </Dialog.Overlay>
-      </Dialog.Portal>
-    </Dialog.Root>
+            </Dialog.Content>
+          </Dialog.Overlay>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </>
   );
 };

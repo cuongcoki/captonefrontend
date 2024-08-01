@@ -67,15 +67,16 @@ export default function TableUserFeature({
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex sm:items-start flex-col sm:flex-row gap-y-5 sm:gap-x-5 ">
       <Input
         placeholder="Tìm kiếm nhân viên..."
         value={searchTearm}
         onChange={searchTearmChange}
         className="max-w-sm shadow-sm"
       />
+      
       <Select value={roleId} onValueChange={(value) => roleIdChange(value)}>
-        <SelectTrigger className="w-[280px]">
+        <SelectTrigger className="md:w-[280px] w-full">
           <SelectValue placeholder="Vai trò" />
         </SelectTrigger>
         <SelectContent>
@@ -86,8 +87,9 @@ export default function TableUserFeature({
           ))}
         </SelectContent>
       </Select>
+
       <Select value={isActive} onValueChange={(value) => isActiveChange(value)}>
-        <SelectTrigger className="w-[180px] ">
+        <SelectTrigger className="md:w-[180px] w-full">
           <SelectValue placeholder="Trạng thái" />
         </SelectTrigger>
         <SelectContent>
