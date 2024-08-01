@@ -59,6 +59,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
           <Calendar
             mode="single"
             selected={date}
+            defaultMonth={date}
             onSelect={setDate}
             initialFocus
             {...props}
