@@ -55,7 +55,7 @@ export const columns: ColumnDef<Product>[] = [
       return <Button variant="ghost">Mã Bộ Sản Phẩm</Button>;
     },
     cell: ({ row }) => {
-      return <div className="text-left w-full">{limitLength(row.original.code, 20)}</div>;
+      return <div className="w-full">{limitLength(row.original.code, 20)}</div>;
     },
   },
   
@@ -65,7 +65,7 @@ export const columns: ColumnDef<Product>[] = [
       return <Button variant="ghost">Tên Bộ Sản Phẩm</Button>;
     },
     cell: ({ row }) => {
-      return <div className="text-left w-full">{limitLength(row.original.name, 50)}</div>;
+      return <div className=" w-full">{limitLength(row.original.name, 50)}</div>;
     },
   },
 
@@ -75,7 +75,7 @@ export const columns: ColumnDef<Product>[] = [
       return <Button variant="ghost">Mô Tả</Button>;
     },
     cell: ({ row }) => {
-      return <div className="text-left w-full">{limitLength(row.original.description, 45)}</div>;
+      return <div className="w-full">{limitLength(row.original.description, 45)}</div>;
     },
   },
 

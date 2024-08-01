@@ -16,6 +16,18 @@ import { useFormStatus } from "react-dom";
 import { useContext, useEffect, useState } from "react";
 import { ProductSchema } from "@/schema";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { PencilLine, Plus, Upload, X } from "lucide-react";
@@ -39,9 +51,17 @@ const initialImageRequests = [
   },
 ];
 export const ProductForm = () => {
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+
+  const handleOffDialogA = () => {
+    setOpenAlert(false);
+  };
+  const handleOnDialogA = () => {
+    setOpenAlert(true);
+  };
   const handleOffDialog = () => {
-    setOpen(false);
+    setOpenAlert(true);
   };
   const handleOnDialog = () => {
     setOpen(true);
@@ -75,9 +95,9 @@ export const ProductForm = () => {
   >([]);
 
   //    console.log('imageRequests',imageRequests)
-  console.log("imageUrls", imageUrls);
+  // console.log("imageUrls", imageUrls);
 
-  console.log("imageRequests", imageRequests);
+  // console.log("imageRequests", imageRequests);
 
   const generateRandomString = (length: number = 5) => {
     const characters =
@@ -100,21 +120,27 @@ export const ProductForm = () => {
       (total, req: any) => total + req.file.size,
       0
     );
+    const limitLength = (text: any, maxLength: any) => {
+      if (text.length > maxLength) {
+        return `${text.slice(0, maxLength)}...`;
+      }
+      return text;
+    };
 
     const newImageRequests = files
       .filter((file) => {
         if (!validImageTypes.includes(file.type)) {
-          toast.error(`File ${file.name} is not a valid image type.`);
+          toast.error(`File ${limitLength(file.name, 15)} không đúng kiểu: .png, .jpg, .jpeg.`);
           return false;
         }
         if (file.size > 1000000) {
           // 1000 KB
-          toast.error(`File ${file.name} exceeds the size limit of 1000 KB.`);
+          toast.error(`File ${limitLength(file.name, 15)} Dung lượng không được quá 1M.`);
           return false;
         }
         if (currentTotalSize + file.size > maxTotalSize) {
           toast.error(
-            `Adding file ${file.name} exceeds the total size limit of 1200 KB.`
+            `Vượt quá tổng kích thước giới hạn là 1200 KB.`
           );
           return false;
         }
@@ -208,7 +234,7 @@ export const ProductForm = () => {
     }
   };
 
-  console.log("nameImage", nameImage);
+  // console.log("nameImage", nameImage);
 
   const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
     setLoading(true);
@@ -246,7 +272,7 @@ export const ProductForm = () => {
           toast.error(response.data.message);
         }
       } else {
-        toast.error("imageUrl (nameImage) is not valid");
+        toast.error("imageUrl (nameImage) không hợp lệ");
       }
     } catch (error: any) {
       // Handle errors from form submission or API calls
@@ -265,7 +291,7 @@ export const ProductForm = () => {
           toast.error(errors.Code);
         }
       } else {
-        console.error("Error submitting form:", error);
+        console.error("Lỗi khi gửi biểu mẫu:", error);
       }
     } finally {
       setLoading(false);
@@ -301,267 +327,297 @@ export const ProductForm = () => {
   };
 
   const { pending } = useFormStatus();
+
+  const handleClearForm = () => {
+    setOpen(false)
+    setOpenAlert(false)
+    form.reset();
+    setImageRequests([])
+  }
   return (
-    <Dialog.Root open={open} onOpenChange={handleOnDialog}>
-      <Dialog.Trigger className="rounded p-2 hover:bg-primary/90 bg-primary">
-        <Plus onClick={handleOnDialog} />
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-          <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
-            <div className="bg-slate-100  flex flex-col ">
-              <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
-                <h2 className="text-2xl text-white">Thêm Sản Phẩm</h2>
-                <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                  <X className="w-4 h-4 dark:text-white" />
-                </Button>
-              </div>
-              <div className="grid gap-4 p-4 overflow-y-auto h-[650px] dark:bg-card">
-                <Form {...form}>
-                  {/* Phần đăng hình ảnh */}
+    <>
+      {
+        openAlert && (
+          <AlertDialog open={openAlert} >
+            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
+                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )
+      }
+      <Dialog.Root open={open} onOpenChange={handleOnDialog}>
+        <Dialog.Trigger className="rounded p-2 hover:bg-primary/90 bg-primary">
+          <Plus onClick={handleOnDialog} />
+        </Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
+            <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
+              <Dialog.Title className="hidden visible"></Dialog.Title>
+              <Dialog.Description className="hidden visible"></Dialog.Description>
+              <div className="bg-slate-100  flex flex-col ">
+                <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
+                  <h2 className="text-2xl text-white">Thêm Sản Phẩm</h2>
+                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                    <X className="w-4 h-4 dark:text-white" />
+                  </Button>
+                </div>
+                <div className="grid gap-4 p-4 overflow-y-auto h-[650px] dark:bg-card">
+                  <Form {...form}>
+                    {/* Phần đăng hình ảnh */}
 
-                  <Card>
-                    <CardHeader className="flex items-center justify-between">
-                      <CardTitle className="text-primary">
-                        Thông tin sản phẩm
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="grid md:grid-cols-2 grid-cols-1 justify-center gap-6 ">
-                      <Card className=" relative border-none shadow-none">
-                        <div className="h-[300px] md:h-full">
-                          {/* nếu không có ảnh nào thì hiện input này */}
-                          {imageRequests.length < 1 && (
-                            <div style={{ width: "100%", height: "100%" }}>
-                              <input
-                                id="image"
-                                type="file"
-                                style={{ display: "none" }}
-                                accept="image/*"
-                                onChange={(e) => handleUploadPhotos(e)}
-                                multiple
-                              />
-                              <label
-                                htmlFor="image"
-                                className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                              >
-                                <Upload
-                                  size={100}
-                                  className="text-white flex items-center justify-center bg-primary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto"
+                    <Card>
+                      <CardHeader className="flex items-center justify-between">
+                        <CardTitle className="text-primary">
+                          Thông tin sản phẩm
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="grid md:grid-cols-2 grid-cols-1 justify-center gap-6 ">
+                        <Card className=" relative border-none shadow-none">
+                          <div className="h-[300px] md:h-full">
+                            {/* nếu không có ảnh nào thì hiện input này */}
+                            {imageRequests.length < 1 && (
+                              <div style={{ width: "100%", height: "100%" }}>
+                                <input
+                                  id="image"
+                                  type="file"
+                                  style={{ display: "none" }}
+                                  accept="image/*"
+                                  onChange={(e) => handleUploadPhotos(e)}
+                                  multiple
                                 />
-                                <span className="text-l text-gray-500 font-medium">
-                                  Hãy tải ảnh sản phẩm lên
-                                </span>
-                              </label>
-                            </div>
-                          )}
+                                <label
+                                  htmlFor="image"
+                                  className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                                >
+                                  <Upload
+                                    size={100}
+                                    className="text-white flex items-center justify-center bg-primary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto"
+                                  />
+                                  <span className="text-l text-gray-500 font-medium">
+                                    Hãy tải ảnh sản phẩm lên
+                                  </span>
+                                </label>
+                              </div>
+                            )}
 
-                          {/* nếu có trên 1 ảnh thì hiện input này */}
-                          {imageRequests.length > 0 && (
-                            <div className="relative w-full h-full">
-                              {/* phần hiển thị ảnh xem trước */}
-                              <ImageDisplay
-                                images={imageRequests}
-                                onDelete={handleDeleteImage}
-                                onToggleBlueprint={handleToggleBlueprint}
-                                onToggleMainImage={handleToggleMainImage}
-                              />
-
-                              {/* Phần add thêm image */}
-                              <input
-                                id="image"
-                                type="file"
-                                style={{ display: "none" }}
-                                accept="image/*"
-                                onChange={(e) => handleUploadPhotos(e)}
-                                multiple
-                              />
-                              <label
-                                htmlFor="image"
-                                className="absolute bottom-0"
-                              >
-                                <Upload
-                                  size={35}
-                                  className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
+                            {/* nếu có trên 1 ảnh thì hiện input này */}
+                            {imageRequests.length > 0 && (
+                              <div className="relative w-full h-full">
+                                {/* phần hiển thị ảnh xem trước */}
+                                <ImageDisplay
+                                  images={imageRequests}
+                                  onDelete={handleDeleteImage}
+                                  onToggleBlueprint={handleToggleBlueprint}
+                                  onToggleMainImage={handleToggleMainImage}
                                 />
-                              </label>
-                            </div>
-                          )}
-                        </div>
-                      </Card>
-                      <form onSubmit={form.handleSubmit(onSubmit)}>
-                        {/* Phần nhập dữ liệu thông tin */}
-                        <div className="w-full flex flex-col gap-4">
+
+                                {/* Phần add thêm image */}
+                                <input
+                                  id="image"
+                                  type="file"
+                                  style={{ display: "none" }}
+                                  accept="image/*"
+                                  onChange={(e) => handleUploadPhotos(e)}
+                                  multiple
+                                />
+                                <label
+                                  htmlFor="image"
+                                  className="absolute bottom-0"
+                                >
+                                  <Upload
+                                    size={35}
+                                    className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
+                                  />
+                                </label>
+                              </div>
+                            )}
+                          </div>
+                        </Card>
+                        <form onSubmit={form.handleSubmit(onSubmit)}>
+                          {/* Phần nhập dữ liệu thông tin */}
                           <div className="w-full flex flex-col gap-4">
-                            {/* code */}
-                            <FormField
-                              control={form.control}
-                              name="code"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
-                                    Mã Sản Phẩm *
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input type="text" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            {/* name */}
-                            <FormField
-                              control={form.control}
-                              name="name"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
-                                    Tên Sản Phẩm *
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input type="text" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            {/* size */}
-                            <FormField
-                              control={form.control}
-                              name="size"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
-                                    Kích Thước *
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input type="text" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            {/* description */}
-                            <FormField
-                              control={form.control}
-                              name="description"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
-                                    Mô Tả
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Textarea
-                                      {...field}
-                                      className="h-[120px]"
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
+                            <div className="w-full flex flex-col gap-4">
+                              {/* code */}
+                              <FormField
+                                control={form.control}
+                                name="code"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center text-primary">
+                                      Mã Sản Phẩm *
+                                    </FormLabel>
+                                    <FormControl>
+                                      <Input type="text" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              {/* name */}
+                              <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center text-primary">
+                                      Tên Sản Phẩm *
+                                    </FormLabel>
+                                    <FormControl>
+                                      <Input type="text" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              {/* size */}
+                              <FormField
+                                control={form.control}
+                                name="size"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center text-primary">
+                                      Kích Thước *
+                                    </FormLabel>
+                                    <FormControl>
+                                      <Input type="text" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              {/* description */}
+                              <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center text-primary">
+                                      Mô Tả
+                                    </FormLabel>
+                                    <FormControl>
+                                      <Textarea
+                                        {...field}
+                                        className="h-[120px]"
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="md:flex flex-row gap-4">
+                              {/* price */}
+                              <FormField
+                                control={form.control}
+                                name="pricePhase1"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center text-primary">
+                                      Giá giai đoạn 1 *
+                                    </FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        type="text"
+                                        inputMode="numeric"
+                                        {...field}
+                                        value={formatCurrency(field.value)}
+                                        onChange={(e) =>
+                                          field.onChange(
+                                            parseCurrency(e.target.value)
+                                          )
+                                        }
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              {/* price */}
+                              <FormField
+                                control={form.control}
+                                name="pricePhase2"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center text-primary">
+                                      Giá giai đoạn 2 *
+                                    </FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        type="text"
+                                        inputMode="numeric"
+                                        {...field}
+                                        value={formatCurrency(field.value)}
+                                        onChange={(e) => {
+                                          const rawValue = e.target.value.replace(
+                                            /[^\d.]/g,
+                                            ""
+                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                          field.onChange(rawValue);
+                                        }}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              {/* priceFinished */}
+                              <FormField
+                                control={form.control}
+                                name="priceFinished"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center text-primary">
+                                      Giá hoàn thiện *
+                                    </FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        type="text"
+                                        inputMode="numeric"
+                                        {...field}
+                                        value={formatCurrency(field.value)}
+                                        onChange={(e) => {
+                                          const rawValue = e.target.value.replace(
+                                            /[^\d.]/g,
+                                            ""
+                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                          field.onChange(rawValue);
+                                        }}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            {/* <Separator className="h-1" /> */}
+                            <Button
+                              type="submit"
+                              className="w-full bg-primary hover:bg-primary/90"
+                              disabled={pending}
+                            >
+                              {loading ? "Loading..." : "GỬI"}
+                            </Button>
                           </div>
-                          <div className="md:flex flex-row gap-4">
-                            {/* price */}
-                            <FormField
-                              control={form.control}
-                              name="pricePhase1"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
-                                    Giá giai đoạn 1 *
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      type="text"
-                                      inputMode="numeric"
-                                      {...field}
-                                      value={formatCurrency(field.value)}
-                                      onChange={(e) =>
-                                        field.onChange(
-                                          parseCurrency(e.target.value)
-                                        )
-                                      }
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            {/* price */}
-                            <FormField
-                              control={form.control}
-                              name="pricePhase2"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
-                                    Giá giai đoạn 2 *
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      type="text"
-                                      inputMode="numeric"
-                                      {...field}
-                                      value={formatCurrency(field.value)}
-                                      onChange={(e) => {
-                                        const rawValue = e.target.value.replace(
-                                          /[^\d.]/g,
-                                          ""
-                                        ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                                        field.onChange(rawValue);
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            {/* priceFinished */}
-                            <FormField
-                              control={form.control}
-                              name="priceFinished"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel className="flex items-center text-primary">
-                                    Giá hoàn thiện *
-                                  </FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      type="text"
-                                      inputMode="numeric"
-                                      {...field}
-                                      value={formatCurrency(field.value)}
-                                      onChange={(e) => {
-                                        const rawValue = e.target.value.replace(
-                                          /[^\d.]/g,
-                                          ""
-                                        ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                                        field.onChange(rawValue);
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                          </div>
-                          {/* <Separator className="h-1" /> */}
-                          <Button
-                            type="submit"
-                            className="w-full bg-primary hover:bg-primary/90"
-                            disabled={pending}
-                          >
-                            {loading ? "Loading..." : "GỬI"}
-                          </Button>
-                        </div>
-                      </form>
-                    </CardContent>
-                  </Card>
-                </Form>
+                        </form>
+                      </CardContent>
+                    </Card>
+                  </Form>
+                </div>
               </div>
-            </div>
-          </Dialog.Content>
-        </Dialog.Overlay>
-      </Dialog.Portal>
-    </Dialog.Root>
+            </Dialog.Content>
+          </Dialog.Overlay>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </>
   );
 };

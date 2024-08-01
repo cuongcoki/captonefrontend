@@ -182,7 +182,12 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     }
     return result;
   };
-
+  const limitLength = (text: any, maxLength: any) => {
+    if (text.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`;
+    }
+    return text;
+  };
   // Handle uploading new photos
   const handleUploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -195,17 +200,17 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     const newImageRequests = files
       .filter((file) => {
         if (!validImageTypes.includes(file.type)) {
-          toast.error(`File ${file.name} is not a valid image type.`);
+          toast.error(`File ${limitLength(file.name, 15)} không đúng kiểu: .png, .jpg, .jpeg.`);
           return false;
         }
         if (file.size > 1000000) {
           // 1000 KB
-          toast.error(`File ${file.name} exceeds the size limit of 1000 KB.`);
+          toast.error(`File ${limitLength(file.name, 15)} Dung lượng không được quá 1M.`);
           return false;
         }
         if (currentTotalSize + file.size > maxTotalSize) {
           toast.error(
-            `Adding file ${file.name} exceeds the total size limit of 1200 KB.`
+            `Vượt quá tổng kích thước giới hạn là 1200 KB.`
           );
           return false;
         }
@@ -290,12 +295,12 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       });
     }
   };
-  console.log("removeImageIds", removeImageIds);
-  console.log("imageAddRequests", imageAddRequests);
-  console.log("imageRequests", imageRequests);
-  console.log("imageRequestsUpdate", imageRequestsUpdate);
+  // console.log("removeImageIds", removeImageIds);
+  // console.log("imageAddRequests", imageAddRequests);
+  // console.log("imageRequests", imageRequests);
+  // console.log("imageRequestsUpdate", imageRequestsUpdate);
   const [saveUpdateImage, setSaveUpdateImage] = useState<any[]>([]);
-  console.log("saveUpdateImage", saveUpdateImage);
+  // console.log("saveUpdateImage", saveUpdateImage);
   // Handle toggling blueprint flag for an image
   const handleToggleBluePrint = (imageUrl: string, id: string) => {
     // console.log('imageUrl=', imageUrl)
@@ -496,15 +501,15 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
           error.response.data.message
         ) {
           // Xử lý lỗi từ server
-          toast.error(`Update error: ${error.response.data.message}`);
+          toast.error(`Cập nhật lỗi: ${error.response.data.message}`);
         } else if (error.request) {
           // Xử lý lỗi khi không có phản hồi từ server
           toast.error(
-            "No response from server while updating. Please try again later."
+            "Không có phản hồi từ máy chủ trong khi cập nhật. Vui lòng thử lại sau."
           );
         } else {
           // Xử lý các lỗi khác
-          toast.error(`Unexpected error during update: ${error.message}`);
+          toast.error(`Lỗi không mong muốn trong quá trình cập nhật: ${error.message}`);
         }
         throw error; // Re-throw the error to stop further execution
       }
@@ -516,7 +521,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     }
   };
 
-  useEffect(() => {}, [removeImageIds]);
+  useEffect(() => { }, [removeImageIds]);
 
   const formatCurrency = (value: any): string => {
     if (!value) return "";
@@ -761,100 +766,101 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
             {imageRequests.length > 0 && (
               <CardContent className="relative w-full h-full">
                 {/* phần hiển thị ảnh xem trước */}
-                <div className="flex items-center justify-center w-full h-full ">
-                  <Carousel className="w-full h-full flex flex-col">
-                    <CarouselContent className="w-full h-full">
-                      {imageRequests.map((image, index) => (
-                        <CarouselItem
-                          className="w-full h-full flex items-center justify-center"
-                          key={index}
-                        >
-                          <CardContent className="w-full h-full relative flex aspect-square items-center justify-center p-6 bg-black">
-                            <Image
-                              src={image.imageUrl}
-                              alt={`image-${index}`}
-                              width={500}
-                              height={500}
-                              className="h-full w-full object-contain bg-cover bg-center  bg-no-repeat  pointer-events-none"
-                            />
-                            <button
-                              type="button"
-                              className="absolute right-0 top-0 "
-                              onClick={() => handleDeleteImage(index, image.id)}
-                            >
-                              <Trash2
-                                size={35}
-                                className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
+                <Carousel className="flex items-center justify-center w-full md:max-w-[390px] h-full">
+                  <CarouselContent>
+                    {imageRequests.map((image, index) => (
+                      <CarouselItem
+                        key={index}
+                      >
+                        <div className="p-1">
+                          <Card>
+                            <CardContent className="flex aspect-square items-center justify-center p-6 relative bg-black">
+                              <Image
+                                src={image.imageUrl}
+                                alt={`image-${index}`}
+                                width={500}
+                                height={500}
+                                className="h-full w-full object-contain bg-cover bg-center  bg-no-repeat  pointer-events-none"
                               />
-                            </button>
-
-                            <HoverCard>
-                              <HoverCardTrigger className="absolute left-0 top-0 ">
-                                <EllipsisVertical
-                                  size={35}
-                                  className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5"
-                                />
-                              </HoverCardTrigger>
-                              <HoverCardContent
-                                align="start"
-                                className="w-full"
+                              <button
+                                type="button"
+                                className="absolute right-0 top-0 "
+                                onClick={() => handleDeleteImage(index, image.id)}
                               >
-                                <div className="grid gap-4">
-                                  <div className="space-y-2">
-                                    <h4 className="font-medium leading-none">
-                                      Loại ảnh
-                                    </h4>
-                                    <p className="text-sm text-muted-foreground">
-                                      Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
-                                    </p>
-                                  </div>
-                                  <div className="grid gap-2">
-                                    <div className="flex justify-between items-center">
-                                      <Label htmlFor={`isBluePrint-${index}`}>
-                                        [Ảnh] bản thiết kế
-                                      </Label>
-                                      <Switch
-                                        className="data-[state=checked]:bg-primary"
-                                        id={`isBluePrint-${index}`}
-                                        checked={image.isBluePrint}
-                                        onCheckedChange={() =>
-                                          handleToggleBluePrint(
-                                            image.imageUrl,
-                                            image?.id
-                                          )
-                                        }
-                                      />
+                                <Trash2
+                                  size={35}
+                                  className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
+                                />
+                              </button>
+
+                              <HoverCard>
+                                <HoverCardTrigger className="absolute left-0 top-0 ">
+                                  <EllipsisVertical
+                                    size={35}
+                                    className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5"
+                                  />
+                                </HoverCardTrigger>
+                                <HoverCardContent
+                                  align="start"
+                                  className="w-full"
+                                >
+                                  <div className="grid gap-4">
+                                    <div className="space-y-2">
+                                      <h4 className="font-medium leading-none">
+                                        Loại ảnh
+                                      </h4>
+                                      <p className="text-sm text-muted-foreground">
+                                        Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
+                                      </p>
                                     </div>
-                                    <div className="flex justify-between items-center">
-                                      <Label htmlFor={`isMainImage-${index}`}>
-                                        [Ảnh] Chính
-                                      </Label>
-                                      <Switch
-                                        className="data-[state=checked]:bg-primary"
-                                        id={`isMainImage-${index}`}
-                                        checked={image.isMainImage}
-                                        onCheckedChange={() =>
-                                          handleToggleMainImage(
-                                            image.imageUrl,
-                                            image?.id
-                                          )
-                                        }
-                                      />
+                                    <div className="grid gap-2">
+                                      <div className="flex justify-between items-center">
+                                        <Label htmlFor={`isBluePrint-${index}`}>
+                                          [Ảnh] bản thiết kế
+                                        </Label>
+                                        <Switch
+                                          className="data-[state=checked]:bg-primary"
+                                          id={`isBluePrint-${index}`}
+                                          checked={image.isBluePrint}
+                                          onCheckedChange={() =>
+                                            handleToggleBluePrint(
+                                              image.imageUrl,
+                                              image?.id
+                                            )
+                                          }
+                                        />
+                                      </div>
+                                      <div className="flex justify-between items-center">
+                                        <Label htmlFor={`isMainImage-${index}`}>
+                                          [Ảnh] Chính
+                                        </Label>
+                                        <Switch
+                                          className="data-[state=checked]:bg-primary"
+                                          id={`isMainImage-${index}`}
+                                          checked={image.isMainImage}
+                                          onCheckedChange={() =>
+                                            handleToggleMainImage(
+                                              image.imageUrl,
+                                              image?.id
+                                            )
+                                          }
+                                        />
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              </HoverCardContent>
-                            </HoverCard>
-                          </CardContent>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <div className="  absolute left-[50%] bottom-[6%] transform: translate-x-[50%] transform: translate-y-[50%]">
-                      <CarouselNext />
-                      <CarouselPrevious />
-                    </div>
-                  </Carousel>
-                </div>
+                                </HoverCardContent>
+                              </HoverCard>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <div className="  absolute left-[50%] bottom-[6%] transform: translate-x-[50%] transform: translate-y-[50%]">
+                    <CarouselNext />
+                    <CarouselPrevious />
+                  </div>
+                </Carousel>
 
                 {/* Phần add thêm image */}
                 <input
