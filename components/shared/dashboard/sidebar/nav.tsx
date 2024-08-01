@@ -106,6 +106,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
       pathname.includes(`${link.href}/manage`) ||
       pathname.includes(`${link.href}/set`) ||
       pathname.includes(`${link.href}/product`) ||
+      pathname.includes(`${link.href}/detail`) ||
       (link.hrefCon &&
         link.hrefCon.some((hrefCon: any) => pathname === hrefCon.href)) ||
       pathname.includes(`${link.href}/${params.id}`) ||
