@@ -246,7 +246,7 @@ export default function SalaryCompanyDetail({
               <TabsList className="">
                 <TabsTrigger value="product">Sản phẩm</TabsTrigger>
                 <TabsTrigger value="material">Nguyên liệu</TabsTrigger>
-                <TabsTrigger value="broken">Hàng Lỗi</TabsTrigger>
+                <TabsTrigger value="broken">Hàng hỏng</TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
                 <Select
