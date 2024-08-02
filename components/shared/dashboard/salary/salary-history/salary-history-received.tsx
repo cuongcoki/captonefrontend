@@ -61,7 +61,7 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
       .getPaidSalaries({
         UserId: id,
         PageIndex: 1,
-        PageSize: 10,
+        PageSize: 4,
       })
       .then((res) => {
         setSalaryHistory(res.data.data.data);
