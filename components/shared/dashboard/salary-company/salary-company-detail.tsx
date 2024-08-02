@@ -164,28 +164,29 @@ export default function SalaryCompanyDetail({
       });
   }, [params, router, pathname]);
 
-  const formatCurrency = (value: any): string => {
-    if (!value) return "";
+  const formatCurrencyWithNegative = (value: any): string => {
+    if (value === null || value === undefined) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
+    // Check if the value is negative
+    const isNegative = valueString[0] === "-";
+    // Remove all non-numeric characters, except the minus sign if it is the first character
     valueString = valueString.replace(/\D/g, "");
-
     // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
     // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
     // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
     // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
+    // Add the negative sign back if it was originally negative
+    if (isNegative) {
+      formatted = "-" + formatted;
+    }
     return formatted;
   };
+
   return (
     <>
       <HeaderComponent
@@ -201,7 +202,7 @@ export default function SalaryCompanyDetail({
                 <CardTitle className="text-4xl text-primary">
                   {data.salary === 0
                     ? 0
-                    : formatCurrency(data.totalSalaryTotal)}{" "}
+                    : formatCurrencyWithNegative(data.totalSalaryTotal)}{" "}
                   VNĐ
                 </CardTitle>
               </CardHeader>
@@ -319,7 +320,9 @@ export default function SalaryCompanyDetail({
                       <span className="font-bold text-primary">
                         {data.totalSalaryProduct === 0
                           ? 0
-                          : formatCurrency(data.totalSalaryProduct)}{" "}
+                          : formatCurrencyWithNegative(
+                              data.totalSalaryProduct
+                            )}{" "}
                         VNĐ
                       </span>
                     </div>
@@ -375,10 +378,12 @@ export default function SalaryCompanyDetail({
                             </TableCell>
 
                             <TableCell className="">
-                              {formatCurrency(item.price)}
+                              {formatCurrencyWithNegative(item.price)}
                             </TableCell>
                             <TableCell className="text-right hidden sm:table-cell">
-                              {formatCurrency(item.price * item.quantity)}
+                              {formatCurrencyWithNegative(
+                                item.price * item.quantity
+                              )}
                             </TableCell>
                           </TableRow>
                         ))
@@ -405,7 +410,9 @@ export default function SalaryCompanyDetail({
                       <span className="font-bold text-primary">
                         {data.totalSalaryMaterial === 0
                           ? 0
-                          : formatCurrency(data.totalSalaryMaterial)}{" "}
+                          : formatCurrencyWithNegative(
+                              data.totalSalaryMaterial
+                            )}{" "}
                         VNĐ
                       </span>
                     </div>
@@ -461,10 +468,12 @@ export default function SalaryCompanyDetail({
                             </TableCell>
 
                             <TableCell className="">
-                              {formatCurrency(item.price)}
+                              {formatCurrencyWithNegative(item.price)}
                             </TableCell>
                             <TableCell className="text-right hidden sm:table-cell">
-                              {formatCurrency(item.price * item.quantity)}
+                              {formatCurrencyWithNegative(
+                                item.price * item.quantity
+                              )}
                             </TableCell>
                           </TableRow>
                         ))
@@ -491,7 +500,9 @@ export default function SalaryCompanyDetail({
                       <span className="font-bold text-primary">
                         {data.totalSalaryBroken === 0
                           ? 0
-                          : formatCurrency(data.totalSalaryBroken)}{" "}
+                          : formatCurrencyWithNegative(
+                              data.totalSalaryBroken
+                            )}{" "}
                         VNĐ
                       </span>
                     </div>
@@ -547,10 +558,12 @@ export default function SalaryCompanyDetail({
                             </TableCell>
 
                             <TableCell className="">
-                              {formatCurrency(item.price)}
+                              {formatCurrencyWithNegative(item.price)}
                             </TableCell>
                             <TableCell className="text-right hidden sm:table-cell">
-                              {formatCurrency(item.price * item.quantity)}
+                              {formatCurrencyWithNegative(
+                                item.price * item.quantity
+                              )}
                             </TableCell>
                           </TableRow>
                         ))
@@ -673,7 +686,7 @@ export default function SalaryCompanyDetail({
                     <span>
                       {data.totalSalaryProduct === 0
                         ? "0"
-                        : formatCurrency(data.totalSalaryProduct)}
+                        : formatCurrencyWithNegative(data.totalSalaryProduct)}
                     </span>
                   </li>
                   <li className="flex items-center justify-between">
@@ -682,7 +695,7 @@ export default function SalaryCompanyDetail({
                       -
                       {data.totalSalaryMaterial === 0
                         ? "0"
-                        : formatCurrency(data.totalSalaryMaterial)}
+                        : formatCurrencyWithNegative(data.totalSalaryMaterial)}
                     </span>
                   </li>
                   <li className="flex items-center justify-between">
@@ -693,7 +706,7 @@ export default function SalaryCompanyDetail({
                       -
                       {data.totalSalaryBroken === 0
                         ? "0"
-                        : formatCurrency(data.totalSalaryBroken)}
+                        : formatCurrencyWithNegative(data.totalSalaryBroken)}
                     </span>
                   </li>
                 </ul>
@@ -704,7 +717,7 @@ export default function SalaryCompanyDetail({
                     <span>
                       {data.totalSalaryTotal === 0
                         ? "0"
-                        : formatCurrency(data.totalSalaryTotal)}
+                        : formatCurrencyWithNegative(data.totalSalaryTotal)}
                     </span>
                   </li>
                 </ul>

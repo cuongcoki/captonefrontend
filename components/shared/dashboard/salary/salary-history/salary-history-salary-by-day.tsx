@@ -29,6 +29,7 @@ export default function SalaryHistorySalaryByDay({ id }: { id: string }) {
   const [tableData, setTableData] = React.useState<HistorySalaryType[]>([]);
   const [index, setIndex] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
+
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
