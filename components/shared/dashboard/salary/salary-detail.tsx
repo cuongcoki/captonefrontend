@@ -36,6 +36,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import SalaryPay from "@/components/shared/dashboard/salary/salary-pay";
 import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
+import TitleComponent from "../../common/Title";
 const dataNow = new Date();
 const yearNow = dataNow.getFullYear();
 const listYear = [yearNow, yearNow - 1, yearNow - 2, yearNow - 3];
@@ -137,7 +138,7 @@ export default function SalaryDetail({
     <>
       <HeaderComponent
         title="Chi tiết lương"
-        description={`Thông tin lương của nhân viên tháng ${ params.month}/${ params.year} `}
+        description={`Thông tin lương của nhân viên tháng ${ params.month}/${ params.year}.`}
       />
       <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
         <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
@@ -246,32 +247,29 @@ export default function SalaryDetail({
             </div>
             <TabsContent value="week">
               <Card x-chunk="dashboard-05-chunk-3">
-                <CardHeader className="px-7">
-                  <CardTitle className="mb-3 text-primary">
-                    Sản phẩm tạo ra
-                  </CardTitle>
-                  <div className="flex flex-col  sm:flex-row gap-4">
-                    <div>
-                      Số lượng sản phẩm tạo ra trong tháng {params.month} năm{" "}
-                      {params.year}
-                    </div>
-                    <div className="ml-auto">
-                      Tổng lương sản phẩm:{" "}
-                      <span className="font-bold text-primary">
-                        {data.totalSalaryProduct === 0
-                          ? 0
-                          : formatCurrency(data.totalSalaryProduct)}{" "}
-                        VNĐ
-                      </span>
-                    </div>
+              <div className="flex justify-between items-center">
+                  <CardHeader className="px-7">
+                    <TitleComponent
+                      title="Sản phẩm tạo ra"
+                      description={`Số lượng sản phẩm tạo ra trong tháng ${params.month} năm ${params.year}.`}
+                    />
+                  </CardHeader>
+                  <div className="ml-auto p-5">
+                    Tổng lương sản phẩm:{" "}
+                    <span className="font-bold text-primary">
+                      {data.totalSalaryProduct === 0
+                        ? 0
+                        : formatCurrency(data.totalSalaryProduct)}{" "}
+                      VNĐ
+                    </span>
                   </div>
-                </CardHeader>
+                </div>
                 <CardContent>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead className="hidden sm:table-cell">
-                          Ảnh
+                          Hình ảnh
                         </TableHead>
                         <TableHead className="">Tên sản phẩm</TableHead>
                         <TableHead className="">Số lượng</TableHead>

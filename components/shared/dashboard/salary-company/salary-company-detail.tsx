@@ -189,8 +189,8 @@ export default function SalaryCompanyDetail({
   return (
     <>
       <HeaderComponent
-        title="Chi tiết lương"
-        description="Chi tiết lương của nhân viên"
+        title="Thông tin lương"
+        description="Thông tin chi tiết lương của nhân viên."
       />
       <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
         <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">

@@ -40,6 +40,7 @@ import { SalaryHistoryType } from "@/types/salary.type";
 import toast from "react-hot-toast";
 import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
 import { format } from "date-fns";
+import TitleComponent from "@/components/shared/common/Title";
 export default function SalaryHistoryReceived({ id }: { id: string }) {
   const [salaryHistory, setSalaryHistory] = useState<SalaryHistoryType[]>([]);
   const { force, forceRender, setSalaryAvailiable, salaryAvailiable } =
@@ -60,7 +61,7 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
       .getPaidSalaries({
         UserId: id,
         PageIndex: 1,
-        PageSize: 5,
+        PageSize: 4,
       })
       .then((res) => {
         setSalaryHistory(res.data.data.data);
@@ -113,7 +114,10 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
     <>
       <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="text-primary">Lịch sử nhận lương</CardTitle>
+          <TitleComponent
+            title="Lịch sử nhận lương"
+            description="Lịch sử nhận lương gần nhất của nhân viên."
+          />
         </CardHeader>
         <CardContent>
           <Table>
