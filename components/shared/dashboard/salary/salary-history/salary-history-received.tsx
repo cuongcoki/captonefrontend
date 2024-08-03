@@ -124,7 +124,7 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
             <TableHeader>
               <TableRow>
                 <TableHead>Thời gian</TableHead>
-                <TableHead>Lương </TableHead>
+                <TableHead>Lương nhận</TableHead>
                 <TableHead> </TableHead>
               </TableRow>
             </TableHeader>
