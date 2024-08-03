@@ -34,7 +34,7 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = React.createContext<ContexType>({
-  forceUpdate: () => {},
+  forceUpdate: () => { },
 });
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -152,9 +152,9 @@ export function DataTableForMaterial<TData, TValue>({
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </TableHead>
                     );
                   })}
@@ -202,7 +202,7 @@ export function DataTableForMaterial<TData, TValue>({
             disabled={Number(pageIndex) === 1}
             className=""
           >
-            Previous
+            Trang trước
           </Button>
           <Button
             variant="outline"
@@ -210,7 +210,7 @@ export function DataTableForMaterial<TData, TValue>({
             onClick={() => setPageIndex((prev) => Number(prev) + 1)}
             disabled={pageIndex >= totalPages}
           >
-            Next
+            Trang sau
           </Button>
         </div>
       </div>
