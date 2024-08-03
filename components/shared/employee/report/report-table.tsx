@@ -58,6 +58,11 @@ export default function ReportTable({ searchParams }: ReportParams) {
         router.push(`${pathName}?PageIndex=${params.PageIndex}`);
       });
   }, [params, force, setTableData, router, pathName]);
+
+  const formatDate = (date: string) => {
+    const data = date.split("-");
+    return `${data[2]}/${data[1]}/${data[0]}`;
+  };
   return (
     <div className="">
       <HeaderComponent
@@ -106,7 +111,7 @@ export default function ReportTable({ searchParams }: ReportParams) {
                   </TableCell>
                   <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">
                     <div className="mx-auto text-center">
-                      {report.createdDate}
+                      {formatDate(report.createdDate)}
                     </div>
                   </TableCell>
                   <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-white">

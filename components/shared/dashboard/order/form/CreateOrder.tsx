@@ -225,11 +225,11 @@ export default function CreateOrder() {
   };
 
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>();
   const [searchResults, setSearchResults] = useState<any[]>([]);
   // console.log("searchResults", searchResults);
 
-  const [searchTermSet, setSearchTermSet] = useState<string>("");
+  const [searchTermSet, setSearchTermSet] = useState<string>();
   const [searchResultsSet, setSearchResultsSet] = useState<any[]>([]);
   // console.log("searchResultsSet==============", searchResultsSet);
 
@@ -265,7 +265,8 @@ export default function CreateOrder() {
         setSearchResultsSet(updatedImages);
       })
       .catch((error) => {
-        toast.error("Không tìm thấy bộ sản phẩm");
+        setSearchResultsSet([])
+        // toast.error("Không tìm thấy bộ sản phẩm");
       })
       .finally(() => { });
   };
@@ -286,16 +287,17 @@ export default function CreateOrder() {
   };
 
   useEffect(() => {
+
     if (debouncedSearchTermSet) {
       handleSearchSet();
     }
-  }, [debouncedSearchTermSet]);
+  }, [debouncedSearchTermSet, searchTermSet]);
 
   useEffect(() => {
     if (debouncedSearchTerm) {
       handleSearch();
     }
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, searchTerm]);
 
   // ========================================================= các hàm để thêm sản phẩm và số lượng vào bộ sản phẩm =========================================================
 
@@ -315,7 +317,7 @@ export default function CreateOrder() {
   console.log("productsRequest", productsRequest);
 
   // ** hàm thêm vào danh sách sản phẩm
-  const handleAddProducts = (product: any) => {
+  const handleAddProducts = (product: any, productType: any) => {
     console.warn("product", product.id);
     setSearchTerm("");
     setSearchTermSet("");
@@ -335,7 +337,11 @@ export default function CreateOrder() {
 
     if (!existingDetailProduct) {
       // Nếu chưa có, thêm sản phẩm vào danh sách getDetailsPro
-      const updatedDetailsPro = [...getDetailsPro, product];
+      const updatedProduct = {
+        ...product,
+        productType: productType, // Thêm thuộc tính productType vào product
+      };
+      const updatedDetailsPro = [...getDetailsPro, updatedProduct];
       setGetDetailsPro(updatedDetailsPro);
     }
 
@@ -402,14 +408,20 @@ export default function CreateOrder() {
 
   const onSubmit = async (formData: z.infer<typeof OrderSchema>) => {
     console.log("formData", formData);
-
+    const productsRequestTrimmed = productsRequest.map((product) => ({
+      productIdOrSetId: product.productIdOrSetId,
+      quantity: product.quantity,
+      unitPrice: product.unitPrice,
+      note: product.note.trim(), // Sử dụng trim() để loại bỏ khoảng trắng ở đầu và cuối
+      isProductId: product.isProductId,
+    }));
     const requestBody = {
       companyId: formData.companyId,
       status: 0,
       startOrder: formData.startOrder,
       endOrder: formData.endOrder,
       vat: formData.vat,
-      orderDetailRequests: productsRequest,
+      orderDetailRequests: productsRequestTrimmed,
     };
     console.log("requestBody00000000", requestBody);
     setLoading(true);
@@ -468,6 +480,9 @@ export default function CreateOrder() {
     setSearchResults([]);
     setSearchResultsSet([]);
   }
+
+  const productType = 0;
+  const setType = 1;
   return (
     <>
       {
@@ -582,7 +597,7 @@ export default function CreateOrder() {
                                               size={"icon"}
                                               className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                               onClick={() =>
-                                                handleAddProducts(product)
+                                                handleAddProducts(product, productType)
                                               }
                                             >
                                               <Plus className="text-white" />
@@ -624,7 +639,7 @@ export default function CreateOrder() {
                                               size={"icon"}
                                               className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                               onClick={() =>
-                                                handleAddProducts(product)
+                                                handleAddProducts(product, setType)
                                               }
                                             >
                                               <Plus className="text-white" />
@@ -658,9 +673,11 @@ export default function CreateOrder() {
                                       <TableHead className="w-[100px]">
                                         Sản phẩm
                                       </TableHead>
+                                      <TableHead>Loại Sản phẩm</TableHead>
                                       <TableHead>Số lượng</TableHead>
                                       <TableHead>Đơn vị giá</TableHead>
                                       <TableHead>Ghi chú</TableHead>
+
                                       <TableHead></TableHead>
                                     </TableRow>
                                   </TableHeader>
@@ -670,18 +687,20 @@ export default function CreateOrder() {
                                       <TableRow key={index} >
                                         <TableCell className="font-medium w-[20%]">
                                           <div className="flex flex-col gap-2">
-                                            <Image
-                                              alt="ảnh mẫu"
-                                              className="w-[50px] h-[50px] rounded-lg object-cover"
-                                              width={900}
-                                              height={900}
-                                              src={
-                                                product?.imageUrl ===
-                                                  "Image_not_found"
-                                                  ? NoImage
-                                                  : product?.imageUrl
-                                              }
-                                            />
+                                            <div className="flex items-center gap-1">
+                                              <Image
+                                                alt="ảnh mẫu"
+                                                className="w-[50px] h-[50px] rounded-lg object-cover"
+                                                width={900}
+                                                height={900}
+                                                src={
+                                                  product?.imageUrl ===
+                                                    "Image_not_found"
+                                                    ? NoImage
+                                                    : product?.imageUrl
+                                                }
+                                              />
+                                            </div>
 
                                             <div className="font-medium dark:text-white">
                                               <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -690,7 +709,7 @@ export default function CreateOrder() {
                                             </div>
                                           </div>
                                         </TableCell>
-
+                                        <TableCell>{product.productType === 0 ? "Sản phẩm" : "Bộ sản phẩm"}</TableCell>
                                         <TableCell className="font-medium">
                                           <Input
                                             name="quantity"
@@ -841,166 +860,164 @@ export default function CreateOrder() {
                                   </FormItem>
                                 )}
                               />
-                              <div className="flex w-full gap-6">
-                                <div className="flex gap-6 items-center">
-                                  <FormField
-                                    control={form.control}
-                                    name="vat"
-                                    render={({ field }) => (
-                                      <FormItem className="space-y-0">
-                                        <FormLabel className="">
-                                          <div className="mb-2 text-primary">
-                                            %Thuế
-                                          </div>
-                                        </FormLabel>
-                                        <FormControl className="mt-2">
-                                          <Select
-                                            onValueChange={field.onChange}
-                                            defaultValue={field.value.toString()}
-                                          >
-                                            <SelectTrigger>
-                                              <SelectValue placeholder="Chọn % thuế" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                              <SelectItem value="0">
-                                                0%
-                                              </SelectItem>
-                                              <SelectItem value="5">
-                                                5%
-                                              </SelectItem>
-                                              <SelectItem value="8">
-                                                8%
-                                              </SelectItem>
-                                              <SelectItem value="20">
-                                                10%
-                                              </SelectItem>
-                                            </SelectContent>
-                                          </Select>
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                  <FormField
-                                    control={form.control}
-                                    name="startOrder"
-                                    render={({ field }) => (
-                                      <FormItem className="flex flex-col">
-                                        <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                                          Ngày bắt đầu *
-                                        </FormLabel>
-                                        <Popover modal={true}>
-                                          <PopoverTrigger asChild>
-                                            <FormControl>
-                                              <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                  "w-[240px] pl-3 text-left font-normal",
-                                                  !field.value &&
-                                                  "text-muted-foreground"
-                                                )}
-                                              >
-                                                {field.value ? (
-                                                  field.value
-                                                ) : (
-                                                  <span>Chọn ngày</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                              </Button>
-                                            </FormControl>
-                                          </PopoverTrigger>
-                                          <PopoverContent
-                                            className="w-auto p-0"
-                                            align="start"
-                                          >
-                                            <Calendar
-                                              mode="single"
-                                              selected={
+                              <div className="flex gap-6 items-start ">
+                                <FormField
+                                  control={form.control}
+                                  name="vat"
+                                  render={({ field }) => (
+                                    <FormItem >
+                                      <FormLabel className="">
+                                        <div className="mb-2 text-primary">
+                                          %Thuế
+                                        </div>
+                                      </FormLabel>
+                                      <FormControl className="mt-2">
+                                        <Select
+                                          onValueChange={field.onChange}
+                                          defaultValue={field.value.toString()}
+                                        >
+                                          <SelectTrigger>
+                                            <SelectValue placeholder="Chọn % thuế" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectItem value="0">
+                                              0%
+                                            </SelectItem>
+                                            <SelectItem value="5">
+                                              5%
+                                            </SelectItem>
+                                            <SelectItem value="8">
+                                              8%
+                                            </SelectItem>
+                                            <SelectItem value="20">
+                                              10%
+                                            </SelectItem>
+                                          </SelectContent>
+                                        </Select>
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                <FormField
+                                  control={form.control}
+                                  name="startOrder"
+                                  render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                      <FormLabel className="flex items-center text-primary">
+                                        Ngày bắt đầu *
+                                      </FormLabel>
+                                      <Popover modal={true}>
+                                        <PopoverTrigger asChild>
+                                          <FormControl>
+                                            <Button
+                                              variant={"outline"}
+                                              className={cn(
+                                                "w-[240px] pl-3 text-left font-normal",
+                                                !field.value &&
+                                                "text-muted-foreground"
+                                              )}
+                                            >
+                                              {field.value ? (
                                                 field.value
-                                                  ? parse(
-                                                    field.value,
-                                                    "dd/MM/yyyy",
-                                                    new Date()
-                                                  )
-                                                  : undefined
-                                              }
-                                              onSelect={(date: any) =>
-                                                field.onChange(
-                                                  format(date, "dd/MM/yyyy")
+                                              ) : (
+                                                <span>Chọn ngày</span>
+                                              )}
+                                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                          </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent
+                                          className="w-auto p-0"
+                                          align="start"
+                                        >
+                                          <Calendar
+                                            mode="single"
+                                            selected={
+                                              field.value
+                                                ? parse(
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
                                                 )
-                                              }
-                                              // disabled={(date) =>
-                                              //   date > new Date() || date < new Date("1900-01-01")
-                                              // }
-                                              initialFocus
-                                            />
-                                          </PopoverContent>
-                                        </Popover>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
+                                                : undefined
+                                            }
+                                            onSelect={(date: any) =>
+                                              field.onChange(
+                                                format(date, "dd/MM/yyyy")
+                                              )
+                                            }
+                                            // disabled={(date) =>
+                                            //   date > new Date() || date < new Date("1900-01-01")
+                                            // }
+                                            initialFocus
+                                          />
+                                        </PopoverContent>
+                                      </Popover>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
 
-                                  <FormField
-                                    control={form.control}
-                                    name="endOrder"
-                                    render={({ field }) => (
-                                      <FormItem className="flex flex-col">
-                                        <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                                          Ngày kết thúc *
-                                        </FormLabel>
-                                        <Popover modal={true}>
-                                          <PopoverTrigger asChild>
-                                            <FormControl>
-                                              <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                  "w-[240px] pl-3 text-left font-normal",
-                                                  !field.value &&
-                                                  "text-muted-foreground"
-                                                )}
-                                              >
-                                                {field.value ? (
-                                                  field.value
-                                                ) : (
-                                                  <span>Chọn ngày</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                              </Button>
-                                            </FormControl>
-                                          </PopoverTrigger>
-                                          <PopoverContent
-                                            className="w-auto p-0"
-                                            align="start"
-                                          >
-                                            <Calendar
-                                              mode="single"
-                                              selected={
+                                <FormField
+                                  control={form.control}
+                                  name="endOrder"
+                                  render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                      <FormLabel className="flex items-center text-primary">
+                                        Ngày kết thúc *
+                                      </FormLabel>
+                                      <Popover modal={true}>
+                                        <PopoverTrigger asChild>
+                                          <FormControl>
+                                            <Button
+                                              variant={"outline"}
+                                              className={cn(
+                                                "w-[240px] pl-3 text-left font-normal",
+                                                !field.value &&
+                                                "text-muted-foreground"
+                                              )}
+                                            >
+                                              {field.value ? (
                                                 field.value
-                                                  ? parse(
-                                                    field.value,
-                                                    "dd/MM/yyyy",
-                                                    new Date()
-                                                  )
-                                                  : undefined
-                                              }
-                                              onDayClick={(date: any) =>
-                                                field.onChange(
-                                                  format(date, "dd/MM/yyyy")
+                                              ) : (
+                                                <span>Chọn ngày</span>
+                                              )}
+                                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                          </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent
+                                          className="w-auto p-0"
+                                          align="start"
+                                        >
+                                          <Calendar
+                                            mode="single"
+                                            selected={
+                                              field.value
+                                                ? parse(
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
                                                 )
-                                              }
-                                              disabled={(date) =>
-                                                date < new Date("2024-01-01")
-                                              }
-                                              initialFocus
-                                            />
-                                          </PopoverContent>
-                                        </Popover>
-                                        <FormMessage />
-                                      </FormItem>
-                                    )}
-                                  />
-                                </div>
+                                                : undefined
+                                            }
+                                            onDayClick={(date: any) =>
+                                              field.onChange(
+                                                format(date, "dd/MM/yyyy")
+                                              )
+                                            }
+                                            disabled={(date) =>
+                                              date < new Date("2024-01-01")
+                                            }
+                                            initialFocus
+                                          />
+                                        </PopoverContent>
+                                      </Popover>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
                               </div>
                             </div>
                           </CardContent>

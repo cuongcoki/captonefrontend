@@ -114,6 +114,7 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
       <Card className="overflow-hidden">
         <CardHeader>
           <CardTitle className="text-primary">Lịch sử nhận lương</CardTitle>
+          <CardDescription>Lịch sử nhận lương chi tiết</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>

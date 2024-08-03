@@ -47,7 +47,7 @@ import toast from "react-hot-toast";
 // ** import Components
 import { NoImage } from "@/constants/images";
 import { Badge } from "@/components/ui/badge";
-import { MoreVertical, Truck, X } from "lucide-react";
+import { Mail, MoreVertical, Phone, Truck, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { shipmentApi } from "@/apis/shipment.api";
 import { format } from "date-fns";
@@ -190,8 +190,36 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
     // Trả về chuỗi theo định dạng dd/MM/yyyy
     return `${day}/${month}/${year}`;
   }
+  const limitLength = (text: any, maxLength: any) => {
+    if (text?.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`;
+    }
+    return text;
+  };
+  const formatCurrency = (value: any): string => {
+    if (!value) return "";
+    let valueString = value.toString();
 
-  console.log("datashipment=====", data)
+    // Remove all non-numeric characters, including dots
+    valueString = valueString.replace(/\D/g, "");
+
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+
+    if (valueString === "") return "0";
+
+    // Reverse the string to handle grouping from the end
+    let reversed = valueString.split("").reverse().join("");
+
+    // Add dots every 3 characters
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+
+    // Reverse back to original order
+    let formatted = formattedReversed.split("").reverse().join("");
+
+    return formatted;
+  };
+  // console.log("datashipment=====", data)
   return (
     <>
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
@@ -200,8 +228,8 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-            <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[600px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-              <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
+            <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+              <div className="bg-slate-100 flex flex-col  space-y-1 rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">
                     Thông tin đơn vận chuyển
@@ -214,7 +242,8 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
-                <div className="grid  p-4 overflow-y-auto  gap-4">
+
+                <div className="grid p-4 gap-4">
                   <Card
                     className="overflow-hidden"
                     x-chunk="dashboard-05-chunk-4"
@@ -244,7 +273,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                     </CardHeader>
                     <CardContent className="p-6 text-sm">
                       <div className="grid gap-3">
-                        <div className="font-semibold">Vận chuyển chi tiết</div>
+                        <div className="font-semibold">Mặt hàng vận chuyển</div>
                         <ul className="grid gap-3">
                           {data?.details.map((item, index) => (
                             <li
@@ -284,7 +313,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                   {item?.product ? "Sản phẩm: " : "Vật liệu: "}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
-                                  {item.material && (`${item?.materialPrice} đ`)}
+                                  {item.material && (`${formatCurrency(item?.materialPrice)} đ`)}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
                                   {item.product && (`${item?.phase?.name}`)}
@@ -305,7 +334,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-3">
                           <div className="font-semibold">
-                            Thông tin nhận viên vận chuyển
+                            Thông tin nhân viên vận chuyển
                           </div>
                           <address className="grid gap-0.5 not-italic text-muted-foreground">
                             <Link
@@ -326,49 +355,82 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                       <Separator className="my-4" />
                       <div className="grid gap-3">
                         <div className="font-semibold">
-                          Thông tin công ty khách hàng
+                          Thông tin công ty gửi hàng
                         </div>
-                        <dl className="grid gap-3">
-                          <div className="flex items-center justify-between">
+                        <dl className="grid gap-1">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
                               Tên chủ tịch
                             </dt>
-                            <dd>{data?.to.directorName}</dd>
+                            <dd>{data?.from.directorName}</dd>
                           </div>
-                          <div className="flex items-center justify-between">
-                            <dt className="text-muted-foreground">Email</dt>
-                            <dd>
-                              <a href="mailto:">{data?.to.email}</a>
-                            </dd>
-                          </div>
-                          <div className="flex items-center justify-between">
+                          <div className="flex flex-col  sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
-                              Số điện thoại
+                              Tên công ty
                             </dt>
+                            <dd>{data?.from.companyTypeDescription}</dd>
+                          </div>
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                            <dt className="text-muted-foreground">Địa chỉ</dt>
                             <dd>
-                              <a href="tel:">{data?.to.directorPhone}</a>
+                              <a href="mailto:">{limitLength(data?.from.address, 20)}</a>
                             </dd>
                           </div>
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                            <dt className="text-muted-foreground">Liện hệ</dt>
+                            <dd className="flex items-center gap-1">
+                              <Mail className="h-3.5 w-3.5" /> <a href="mailto:">{data?.from.email}</a>
+                            </dd>
+                            <dd className="flex items-center gap-1">
+                              <Phone className="h-3.5 w-3.5" /> <a href="tel:">{data?.from.directorPhone}</a>
+                            </dd>
+                          </div>
+
                         </dl>
                       </div>
                       <Separator className="my-4" />
                       <div className="grid gap-3">
                         <div className="font-semibold">
-                          Thông tin thanh toán
+                          Thông tin công ty nhận hàng
                         </div>
-                        <dl className="grid gap-3">
-                          <div className="flex items-center justify-between">
-                            <dt className="flex items-center gap-1 text-muted-foreground">
-                              VCB
+                        <dl className="grid gap-1">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                            <dt className="text-muted-foreground">
+                              Tên chủ tịch
                             </dt>
-                            <dd>**** **** **** 4532</dd>
+                            <dd>{data?.to.directorName}</dd>
                           </div>
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                            <dt className="text-muted-foreground">
+                              Tên công ty
+                            </dt>
+                            <dd>{data?.to.companyTypeDescription}</dd>
+                          </div>
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                            <dt className="text-muted-foreground">Địa chỉ</dt>
+                            <dd>
+                              <a href="mailto:">{limitLength(data?.to.address, 20)}</a>
+                            </dd>
+                          </div>
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                            <dt className="text-muted-foreground">Liện hệ</dt>
+                            <dd className="flex items-center gap-1">
+                              <Mail className="h-3.5 w-3.5" /> <a href="mailto:">{data?.to.email}</a>
+                            </dd>
+                            <dd className="flex items-center gap-1">
+                              <Phone className="h-3.5 w-3.5" /> <a href="tel:">{data?.to.directorPhone}</a>
+                            </dd>
+                          </div>
+
                         </dl>
                       </div>
+                      <Separator className="my-4" />
+
                     </CardContent>
+
                     <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
                       <div className="text-xs text-muted-foreground">
-                        Công ty may che dan tiến huy
+                        Công ty mây che đan Tiến Huy
                       </div>
                     </CardFooter>
                   </Card>

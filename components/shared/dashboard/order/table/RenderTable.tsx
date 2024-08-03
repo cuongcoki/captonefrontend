@@ -106,7 +106,9 @@ export default function RenderTableOrder() {
         setData(response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
-      } catch (error) {
+      } catch (error:any) {
+        setData([])
+        toast.error(error.response.data.message)
         console.error("Error fetching order data:", error);
       } finally {
         setLoading(false);

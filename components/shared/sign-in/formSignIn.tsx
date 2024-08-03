@@ -54,8 +54,10 @@ export default function FormSignIn() {
           router.push(`/profile/${data.data.user.id}`);
       })
       .catch((error) => {
+        const errors = error.response.data.message
         console.log(error.data)
-        toast.error('Sai tài khoản khoắc là mật khẩu')
+        toast.error(errors)
+        
       })
       .finally(() => {
         setLoading(false);

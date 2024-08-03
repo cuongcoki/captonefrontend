@@ -159,7 +159,7 @@ export default function SalaryDetailEm({
             </Card>
             <Card x-chunk="dashboard-05-chunk-1">
               <CardHeader className="pb-2">
-                <CardDescription>Tông số công</CardDescription>
+                <CardDescription>Tổng số công</CardDescription>
                 <CardTitle className="text-4xl text-primary">
                   {data.totalWorkingDays}
                 </CardTitle>

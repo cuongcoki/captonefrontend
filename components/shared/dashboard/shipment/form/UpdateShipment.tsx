@@ -388,7 +388,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                     })
                 );
 
-
                 setDataM(updatedData);
                 setCurrentPageM(response.data.data.currentPage);
                 setTotalPagesM(response.data.data.totalPages);
@@ -880,7 +879,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                             }
                                                         </div>
                                                     </CardContent>
-                                                    <CardFooter className="flex justify-end w-3 h-3">
+                                                    <CardFooter className="flex justify-end">
                                                         <Button onClick={handleClear}>Bỏ chọn tất cả</Button>
                                                     </CardFooter>
                                                 </Card>
@@ -952,7 +951,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                         )}
                                                                     </TableCell>
                                                                     <TableCell>
-                                                                        <input
+                                                                        <Input
+                                                                            min={0}
                                                                             type="number"
                                                                             name="quantity"
                                                                             value={
@@ -1111,7 +1111,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                                         {item.directorName}
                                                                                                     </span>
                                                                                                     <span className="text-sm text-gray-500">
-                                                                                                        {item.directorPhone}-{item.email}
+                                                                                                        {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
                                                                                                     </span>
                                                                                                 </div>
                                                                                             </span>
@@ -1168,7 +1168,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                                         {item.directorName}
                                                                                                     </span>
                                                                                                     <span className="text-sm text-gray-500">
-                                                                                                        {item.directorPhone}-{item.email}
+                                                                                                        {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
                                                                                                     </span>
                                                                                                 </div>
                                                                                             </span>

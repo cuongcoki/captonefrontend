@@ -290,6 +290,12 @@ export const ProductForm = () => {
         if (errors.Code) {
           toast.error(errors.Code);
         }
+
+        // Sử dụng dấu ngoặc vuông để truy cập thuộc tính có dấu chấm trong tên
+        if (errors['UpdateProductRequest.PriceFinished']) {
+          toast.error(errors['UpdateProductRequest.PriceFinished']);
+        }
+        console.log(error.UpdateProductRequest.PriceFinished)
       } else {
         console.error("Lỗi khi gửi biểu mẫu:", error);
       }

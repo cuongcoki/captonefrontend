@@ -68,6 +68,7 @@ export default function SalaryHistorySalaryByOverTime({ id }: { id: string }) {
     <Card className="overflow-hidden">
       <CardHeader>
         <CardTitle className="text-primary">Lịch sử tăng ca</CardTitle>
+        <CardDescription>Lịch sử lương tăng ca chi tiết</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>

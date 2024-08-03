@@ -193,7 +193,8 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         setSearchResultsSet(updatedImages);
       })
       .catch((error) => {
-        toast.error("Không tìm thấy bộ sản phẩm");
+        setSearchResultsSet([])
+        // toast.error("Không tìm thấy bộ sản phẩm");
       })
       .finally(() => { });
   };
@@ -207,7 +208,8 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         setSearchResults(data.data);
       })
       .catch((error) => {
-        toast.error("Không tìm thấy sản phẩm");
+        // toast.error("Không tìm thấy sản phẩm");
+        setSearchResults([])
       })
       .finally(() => { });
   };
@@ -216,13 +218,13 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     if (debouncedSearchTermSet) {
       handleSearchSet();
     }
-  }, [debouncedSearchTermSet]);
+  }, [debouncedSearchTermSet, searchTermSet]);
 
   useEffect(() => {
     if (debouncedSearchTerm) {
       handleSearch();
     }
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, searchTerm]);
 
   //  ========================================================= các hàm để thêm sản phẩm  và số lượng vào bộ sản phẩm  =========================================================
 
@@ -280,6 +282,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       code: set.setCode,
       name: set.setName,
     }));
+
     const combinedRequestsPro = [...productRequestsPro, ...setRequestsPro];
     setGetDetailsPro(combinedRequestsPro);
   }, [orderId, fetchTrigger]);
@@ -379,9 +382,16 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   // ========================================================= Xử lý khi người dùng gửi form =========================================================
 
   const handleSubmit = async () => {
+    const productsRequestTrimmed = productsRequest.map((product) => ({
+      productIdOrSetId: product.productIdOrSetId,
+      quantity: product.quantity,
+      unitPrice: product.unitPrice,
+      note: product.note.trim(), // Sử dụng trim() để loại bỏ khoảng trắng ở đầu và cuối
+      isProductId: product.isProductId,
+    }));
     const requestBody = {
       orderId: orderId.orderId,
-      orderDetailRequests: productsRequest,
+      orderDetailRequests: productsRequestTrimmed,
     };
 
     console.log("requestBody", requestBody);
@@ -622,6 +632,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                   <TableHead className="w-[100px]">
                                     Sản phẩm
                                   </TableHead>
+                                  <TableHead>Loại sản phẩm</TableHead>
                                   <TableHead>Số lượng</TableHead>
                                   <TableHead>Đơn vị giá</TableHead>
                                   <TableHead>Ghi chú</TableHead>
@@ -656,7 +667,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                         </div>
                                       </div>
                                     </TableCell>
-
+                                    <TableCell>{product.isProductId === true ? "Sản phẩm" : "Bộ sản phẩm"}</TableCell>
                                     <TableCell className="font-medium">
                                       <Input
                                         name="quantity"

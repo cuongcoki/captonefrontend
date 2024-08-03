@@ -191,7 +191,7 @@ export default function RenderTableOrderShipment() {
 
       <MyContext.Provider value={{ forceUpdate }}>
         <div className="overflow-x-auto">
-          {/* <DataTable columns={columns} data={data} /> */}
+          <DataTable columns={columns} data={data} />
           <DataTablePagination
             currentPage={currentPage}
             totalPages={totalPages}

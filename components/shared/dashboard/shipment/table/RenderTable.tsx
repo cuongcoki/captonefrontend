@@ -78,15 +78,16 @@ export default function RenderTableShipment() {
         console.log("DATA SHIPMENT", response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
-      } catch (error) {
-        console.error("Error fetching order data:", error);
+      } catch (error:any) {
+        console.error("Error fetching shipmeent data:", error);
+        toast.error(error.response.data.message)
       } finally {
         setLoading(false);
       }
     };
 
     fetchDataShipment();
-  }, [currentPage, pageSize, searchTerm, status, force]);
+  }, [currentPage, pageSize, searchTerm, data,status, force]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);

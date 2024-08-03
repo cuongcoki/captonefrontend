@@ -57,6 +57,7 @@ export type Shipment = {
   id: string;
   statusDescription: string;
   status: number;
+  isAccepted: boolean
 };
 const limitLength = (text: any, maxLength: any) => {
   if (text.length > maxLength) {
@@ -90,16 +91,14 @@ const OrderStatus = [
 
 function formatDate(isoString: string) {
   // Tách chuỗi thành các phần
-  const parts = isoString.split("T")[0].split("-");
+  const [datePart, timePart] = isoString.split("T");
+  const [year, month, day] = datePart.split("-");
+  const [hour, minute, second] = timePart.split(":");
 
-  // parts[0] là năm, parts[1] là tháng, parts[2] là ngày
-  const year = parts[0];
-  const month = parts[1];
-  const day = parts[2];
-
-  // Trả về chuỗi theo định dạng dd/MM/yyyy
-  return `${day}/${month}/${year}`;
+  // Trả về chuỗi theo định dạng dd/MM/yyyy HH:mm:ss
+  return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
 }
+
 export const columns: ColumnDef<Shipment>[] = [
   {
     accessorKey: "from.companyTypeDescription",
@@ -285,14 +284,26 @@ export const columns: ColumnDef<Shipment>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" className=" ">
-          Ngày nhận hàng
+          Trạng thái đơn
         </Button>
       );
     },
-    cell: ({ row }) => <span>
-      <ChangeStatusShipment shipmentID={row.original} />
-      {/* {limitLength(row.original.statusDescription, 30)} */}
-    </span>,
+    cell: ({ row }) => {
+    
+
+      return <>
+        {
+          row.original.status !== 2 && row.original.status !== 3 ? (
+            <span>
+              <ChangeStatusShipment shipmentID={row.original} />
+              {/* {limitLength(row.original.statusDescription, 30)} */}
+            </span>
+          ) : (
+            <span>{row.original.statusDescription}</span>
+          )
+        }
+      </>
+    }
   },
 
   {
@@ -317,25 +328,33 @@ export const columns: ColumnDef<Shipment>[] = [
       }
 
       return (
-        <span>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button className="bg-yellow-500 hover:bg-yellow-500/80">Xác nhận</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có hoàn toàn chắc chắn không?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Bạn sẽ không thể chỉnh sửa hay bất kỳ thao tác gì cho đơn hàng này nữa, bạn chắc chắn chứ
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleAcceptShipment}>Xác nhận</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </span>
+        <>
+          {
+            row.original.isAccepted === false ? (
+              <span>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="bg-yellow-500 hover:bg-yellow-500/80">Xác nhận</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Bạn có hoàn toàn chắc chắn không?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Bạn sẽ không thể chỉnh sửa hay bất kỳ thao tác gì cho đơn hàng này nữa, bạn chắc chắn chứ
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleAcceptShipment}>Xác nhận</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </span>
+            ) : (
+              <span>{row.original.isAccepted === true ? "Đã xác nhận đơn hàng" : "Chưa xác nhận đơn hàng"}</span>
+            )
+          }
+        </>
       )
     },
   },
@@ -343,7 +362,7 @@ export const columns: ColumnDef<Shipment>[] = [
   {
     id: "actions",
     cell: ({ row }) =>
-    <DataTableRowActions row={row}/>
+      <DataTableRowActions row={row} />
     ,
   },
 

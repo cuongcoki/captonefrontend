@@ -113,6 +113,7 @@ export function DataTableForMaterial<TData, TValue>({
         setTotalPages(data.data.data.totalPages);
       } catch (error) {
         console.log(error);
+        setData([])
       } finally {
         router.push(
           `${pathname}?searchTerm=${searchTerm || ""}&pageIndex=${pageIndex}`

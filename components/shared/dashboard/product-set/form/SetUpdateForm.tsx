@@ -27,6 +27,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 
 // ** import ICON
 import {
+  Check,
   Eye,
   ImageUp,
   Minus,
@@ -474,7 +475,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       removeProductIds: removeProductIds,
     };
 
-    console.log("requestBodyrequestBodyrequestBody",requestBody)
+    console.log("requestBodyrequestBodyrequestBody", requestBody)
     setApi
       .updateSet(requestBody, setProductId.id)
       .then((res) => {
@@ -538,8 +539,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
             <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1000px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-            <Dialog.Title className="hidden visible"></Dialog.Title>
-            <Dialog.Description className="hidden visible"></Dialog.Description>
+              <Dialog.Title className="hidden visible"></Dialog.Title>
+              <Dialog.Description className="hidden visible"></Dialog.Description>
               <div className="bg-white flex flex-col rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">Chỉnh Sửa Thông Tin Bộ Sản Phẩm</h2>
@@ -581,6 +582,23 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                           images={product}
                                         />
                                       </div>
+                                      <Check
+                                        className={`w-5 h-5 ${productsRequest.some(
+                                          (item1) => item1.productId === product.id
+                                        )
+                                          ? "absolute top-0 right-0 bg-primary text-white"
+                                          : "hidden"
+                                          }`}
+                                      />
+                                      <Check
+                                        className={`w-5 h-5 ${getDetailsProUpdate.some(
+                                          (item1) => item1.productId === product.id
+                                        )
+                                          ? "absolute top-0 right-0 bg-primary text-white"
+                                          : "hidden"
+                                          }`}
+                                      />
+
                                       <div>
                                         <Button
                                           variant={"ghost"}

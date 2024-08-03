@@ -39,6 +39,7 @@ import { SetSchema } from "@/schema/set";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import {
+  Check,
   Minus,
   PackagePlus,
   Phone,
@@ -480,6 +481,14 @@ export const SetForm = () => {
                                           images={product}
                                         />
                                       </div>
+                                      <Check
+                                        className={`w-5 h-5 ${productsRequest.some(
+                                          (item1) => item1.productId === product.id
+                                        )
+                                          ? "absolute top-0 right-0 bg-primary text-white"
+                                          : "hidden"
+                                          }`}
+                                      />
                                       <div>
                                         <Button
                                           variant={"ghost"}

@@ -15,8 +15,8 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 interface OrderData {
-  id: string;
-  status: string;
+  shipOrderId: string;
+  status: any;
   // Các thuộc tính khác của dữ liệu nếu có
 }
 

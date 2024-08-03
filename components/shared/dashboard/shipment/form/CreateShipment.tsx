@@ -873,7 +873,7 @@ export default function CreateShipment() {
                                   <Button
                                     variant={"ghost"}
                                     size={"icon"}
-                                  className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary "
+                                    className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary "
                                     onClick={() => {
                                       const mainImage =
                                         item?.imageResponses.find(
@@ -1013,6 +1013,7 @@ export default function CreateShipment() {
                                 </TableCell>
                                 <TableCell>
                                   <Input
+                                    min={0}
                                     type="number"
                                     name="quantity"
                                     value={
@@ -1191,8 +1192,7 @@ export default function CreateShipment() {
                                                     {item.directorName}
                                                   </span>
                                                   <span className="text-sm text-gray-500">
-                                                    {item.directorPhone}-
-                                                    {item.email}
+                                                    {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
                                                   </span>
                                                 </div>
                                               </span>
@@ -1272,8 +1272,7 @@ export default function CreateShipment() {
                                                     {item.directorName}
                                                   </span>
                                                   <span className="text-sm text-gray-500">
-                                                    {item.directorPhone}-
-                                                    {item.email}
+                                                    {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
                                                   </span>
                                                 </div>
                                               </span>

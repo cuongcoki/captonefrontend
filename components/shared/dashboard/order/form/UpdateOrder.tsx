@@ -77,6 +77,7 @@ import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
 import { companyApi } from "@/apis/company.api";
 import { OrderStore } from "../order-store";
+import { shipOrderApi } from "@/apis/shipOrder.api";
 
 interface OrderId {
   orderId?: orderIds;
@@ -139,6 +140,19 @@ type Company = {
   companyTypeDescription: string;
   companyEnum: string; // Nếu có nhiều loại công ty khác nhau, bạn có thể thêm vào đây
 };
+
+interface ShipOrder {
+  shipOrderId: string;
+  shipperId: string;
+  shipperName: string;
+  shipDate: string;
+  status: number;
+  statusDescription: string;
+  deliveryMethod: number;
+  deliveryMethodDescription: string;
+
+}
+
 
 export default function UpdateOrder({ orderId }: OrderId) {
   //state
@@ -207,6 +221,25 @@ export default function UpdateOrder({ orderId }: OrderId) {
       });
     }
   }, [orderId, currentPage, pageSize, searchTermAll, form, fetchTrigger]);
+
+  const [dataShipOrder,setDataShipOrder] =  useState<ShipOrder[]>([]);
+  useEffect(() => {
+    setLoading(true);
+    if (orderId) {
+      shipOrderApi
+        .getShipOrderID(orderId.id)
+        .then(({ data }) => {
+          setDataShipOrder(data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching ship order data:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [orderId,]);
+  console.log('orderIddataShipOrderdataShipOrderdataShipOrder===dataShipOrder', dataShipOrder)
 
   // console.log('orderId', orderId)
 
@@ -298,6 +331,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
+                                    disabled={dataShipOrder.some((item) => item.status === 2)}
                                   >
                                     <FormControl>
                                       <SelectTrigger>

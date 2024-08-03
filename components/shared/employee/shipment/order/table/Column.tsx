@@ -8,6 +8,7 @@ import { DataTableRowActions } from "./data-table-row-actions";
 import Image from "next/image";
 import { IsInProcessing, StatusOrder } from "./data/data";
 import { ArrowUpDown } from "lucide-react";
+import { ShipperOrderDetail } from "../orderID/shipperOrderDetail";
 export type ShipOrderShipper = {
   deliveryMethod: number;
   deliveryMethodDescription: string;
@@ -23,56 +24,32 @@ const limitLength = (text: any, maxLength: any) => {
   return text;
 };
 
-const formatDate = (date: string) => {
-  const data = date.split("-");
-  return `${data[2]}/${data[1]}/${data[0]}`;
-};
+function formatDate(isoString: string) {
+  // Tách chuỗi thành các phần
+  const parts = isoString.split("T")[0].split("-");
+
+  // parts[0] là năm, parts[1] là tháng, parts[2] là ngày
+  const year = parts[0];
+  const month = parts[1];
+  const day = parts[2];
+
+  // Trả về chuỗi theo định dạng dd/MM/yyyy
+  return `${day}/${month}/${year}`;
+}
 export const columns: ColumnDef<ShipOrderShipper>[] = [
   {
-    accessorKey: "company.name",
+    accessorKey: "shipOrderId",
     header: ({ column }) => {
-      return (
-        <Button variant="ghost" className=" ">
-          Tên Công Ty
-        </Button>
-      );
+      return <Button variant="ghost" className=" ">Chi tiết</Button>;
     },
     cell: ({ row }) => {
       return (
         <span className="flex justify-center ">
+          <ShipperOrderDetail ShipOrderID={row.original.shipOrderId}/>
         </span>
       );
     },
   },
-
-  {
-    accessorKey: "company.directorName",
-    header: ({ column }) => {
-      return <Button variant="ghost">Tên Giám Đốc</Button>;
-    },
-  },
-
-  // {
-  //  accessorKey: "company.email",
-  //  header: ({ column }) => {
-  //   return (
-  //    <Button variant="ghost" >
-  //     @mail
-  //    </Button>
-  //   )
-  //  },
-  // },
-
-  // {
-  //  accessorKey: "company.directorPhone",
-  //  header: ({ column }) => {
-  //   return (
-  //    <Button variant="ghost" >
-  //     Điện thoại giám đốc
-  //    </Button>
-  //   )
-  //  },
-  // },
 
   {
     accessorKey: "status",
@@ -119,21 +96,14 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
     },
   },
 
-  {
-    accessorKey: "startOrder",
-    header: ({ column }) => {
-      return <Button variant="ghost">Ngày Bắt Đầu</Button>;
-    },
-    cell: ({ row }) => {
-    },
-  },
 
   {
-    accessorKey: "endOrder",
+    accessorKey: "shipDate",
     header: ({ column }) => {
-      return <Button variant="ghost">Ngày Kết Thúc</Button>;
+      return <Button variant="ghost">Ngày Giao Hàng</Button>;
     },
     cell: ({ row }) => {
+      return <span>{formatDate(row.original.shipDate)}</span>;
     },
   },
 

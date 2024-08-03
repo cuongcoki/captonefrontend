@@ -157,6 +157,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
     } catch (error) {
       console.log("Error in Up Image", error);
     }
+    
     materialApi
       .updateMaterial(form.getValues())
       .then(({ data }) => {
@@ -167,6 +168,16 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       })
       .catch((error) => {
         console.log("ERROR IN UPDATE MATERIAL", error);
+        const errors = error.response.data.error;
+        if(errors.Name){
+          toast.error(errors.Name[0]);
+        }
+        if(errors.Unit){
+          toast.error(errors.Unit[0]);
+        }
+        if(errors.QuantityPerUnit){
+          toast.error(errors.QuantityPerUnit[0]);
+        }
         toast.error(error.response.data.message);
       })
       .finally(() => {

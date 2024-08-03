@@ -404,13 +404,12 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                         height={900}
                       />
                       <Check
-                        className={`${
-                          shipOrderDetailRequests.some(
-                            (item) => item.itemId === pro.productId
-                          )
+                        className={`${shipOrderDetailRequests.some(
+                          (item) => item.itemId === pro.productId
+                        )
                             ? "absolute top-0 right-0 bg-primary text-white"
                             : "hidden"
-                        }`}
+                          }`}
                       />
                       <Button
                         variant={"ghost"}
@@ -441,13 +440,12 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                         height={900}
                       />
                       <Check
-                        className={`${
-                          shipOrderDetailRequests.some(
-                            (item) => item.itemId === pro.setId
-                          )
+                        className={`${shipOrderDetailRequests.some(
+                          (item) => item.itemId === pro.setId
+                        )
                             ? "absolute top-0 right-0 bg-primary text-white"
                             : "hidden"
-                        }`}
+                          }`}
                       />
                       <Button
                         variant={"ghost"}
@@ -660,9 +658,14 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                                     ? parseISO(field.value)
                                     : undefined
                                 }
-                                onSelect={(date: any) =>
-                                  field.onChange(date.toISOString())
-                                }
+                                onSelect={(date: any) => {
+                                  if (date) {
+                                    const formattedDate = new Date(
+                                      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                                    ).toISOString().split("T")[0] + "T23:59:59Z";
+                                    field.onChange(formattedDate);
+                                  }
+                                }}
                                 initialFocus
                               />
                             </PopoverContent>
@@ -671,6 +674,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                         </FormItem>
                       )}
                     />
+
 
                     <Separator className="h-1 my-1" />
                     <Button

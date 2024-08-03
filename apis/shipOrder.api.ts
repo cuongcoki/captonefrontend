@@ -57,5 +57,9 @@ export const shipOrderApi = {
         if (ShipDate !== null && ShipDate !== undefined) url += `&ShipDate=${ShipDate}`;
         return axiosClient.get(url);
     },
+
+    getShipOrderIDByShipper: (shipOrderId: string) =>
+        axiosClient.get(`${endPointConstant.BASE_URL}/ship-orders/detail/${shipOrderId}`),
+
 }
 
