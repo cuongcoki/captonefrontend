@@ -48,6 +48,7 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
   const [index, setIndex] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [salaryHistoryDelete, setSalaryHistoryDelete] =
     useState<SalaryHistoryType>({
       id: "",
@@ -71,7 +72,7 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
       .catch((e) => {
         console.log({ e });
       });
-  }, [id, force]);
+  }, [id, force, index]);
 
   const formatCurrency = (value: any): string => {
     if (!value) return "";
@@ -98,15 +99,16 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
   };
 
   const handleDelete = async () => {
+    setIsLoading(true);
     try {
       await salaryApi.deletePaidSalary(salaryHistoryDelete.id);
       setSalaryAvailiable(salaryAvailiable + salaryHistoryDelete.salary);
       forceRender();
       toast.success("Xoá lịch sử nhận lương thành công");
-      setIsOpen(false);
     } catch (error) {
       toast.error("Xoá lịch sử nhận lương thất bại");
     }
+    setIsLoading(false);
     setIsOpen(false);
   };
 
@@ -178,6 +180,7 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
                     e.preventDefault();
                     await handleDelete();
                   }}
+                  disabled={isLoading}
                 >
                   Đồng ý
                 </AlertDialogAction>
@@ -192,7 +195,9 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
                 <Button
                   size="icon"
                   variant="outline"
-                  className="h-6 w-6"
+                  className={`h-6 w-6 ${
+                    index === 1 ? "" : "bg-primary text-primary-foreground"
+                  }`}
                   disabled={index === 1}
                   onClick={() => setIndex(index - 1)}
                 >
@@ -204,7 +209,11 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
                 <Button
                   size="icon"
                   variant="outline"
-                  className="h-6 w-6"
+                  className={`h-6 w-6 ${
+                    index >= totalPage
+                      ? ""
+                      : "bg-primary text-primary-foreground"
+                  }`}
                   disabled={index >= totalPage}
                   onClick={() => setIndex(index + 1)}
                 >
