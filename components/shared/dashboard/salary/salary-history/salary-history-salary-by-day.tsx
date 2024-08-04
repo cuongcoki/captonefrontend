@@ -25,6 +25,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HistorySalaryType } from "@/types/salary.type";
 import { salaryApi } from "@/apis/salary.api";
 import { format } from "date-fns";
+import TitleComponent from "@/components/shared/common/Title";
 export default function SalaryHistorySalaryByDay({ id }: { id: string }) {
   const [tableData, setTableData] = React.useState<HistorySalaryType[]>([]);
   const [index, setIndex] = React.useState(1);
@@ -67,8 +68,10 @@ export default function SalaryHistorySalaryByDay({ id }: { id: string }) {
   return (
     <Card className="overflow-hidden">
       <CardHeader>
-        <CardTitle className="text-primary">Lịch sử lương</CardTitle>
-        <CardDescription>Lịch sử lương chi tiết</CardDescription>
+        <TitleComponent
+          title="Lịch sử lương công nhật"
+          description="Lịch sử thay đổi lương công nhật."
+        />
       </CardHeader>
       <CardContent>
         <Table>

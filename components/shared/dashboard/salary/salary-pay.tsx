@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
 import { set } from "date-fns";
+import TitleComponent from "../../common/Title";
 export default function SalaryPay({ id }: { id: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [salary, setSalary] = useState("");
@@ -111,7 +112,10 @@ export default function SalaryPay({ id }: { id: string }) {
     <>
       <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="text-primary">Trả lương</CardTitle>
+          <TitleComponent
+            title="Trả lương"
+            description="Lưu lịch sử trả lương cho nhân viên."
+          />
         </CardHeader>
         <CardContent>
           <Input
