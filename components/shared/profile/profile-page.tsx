@@ -33,7 +33,14 @@ import { Separator } from "@/components/ui/separator";
 import LoadingPage from "../loading/loading-page";
 
 // ** import icon
-import { ListCollapse, Phone, Globe, KeyRound, Contact } from "lucide-react";
+import {
+  ListCollapse,
+  Phone,
+  Globe,
+  KeyRound,
+  Contact,
+  PencilLine,
+} from "lucide-react";
 
 // ** import react
 import { useParams, useRouter } from "next/navigation";
@@ -51,6 +58,7 @@ import Image from "next/image";
 import { filesApi } from "@/apis/files.api";
 import { salaryApi } from "@/apis/salary.api";
 import { authApi } from "@/apis/auth.api";
+import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdateForm";
 
 const invoices = [
   {
@@ -281,7 +289,9 @@ export default function ProfilePage() {
             </p>
 
             <div className="mb-4 text-sm sm:text-md md:text-lg text-center sm:text-start">
-              <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary font-semibold">{userId?.address}</p>
+              <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary font-semibold">
+                {userId?.address}
+              </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
@@ -295,6 +305,13 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+          {/* <div className="absolute right-2 top-2 hover:cursor-pointer">
+            {userId.roleId === 1 && (
+              <UpdateUser userId={userId.id}>
+                <PencilLine />
+              </UpdateUser>
+            )}
+          </div> */}
         </div>
 
         {/* tính năng của người dùng, chủ .....  */}
@@ -310,7 +327,11 @@ export default function ProfilePage() {
                       <TabsList className="grid w-[300px] grid-cols-3">
                         <TabsTrigger value="status">Trạng thái</TabsTrigger>
                         <TabsTrigger value="role">Vai trò</TabsTrigger>
-                        <TabsTrigger value="edit">Chỉnh sửa</TabsTrigger>
+                        <UpdateUser userId={userId.id}>
+                          <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+                            Chỉnh sửa
+                          </div>
+                        </UpdateUser>
                       </TabsList>
                       <TabsContent value="status">
                         <div className="grid gap-3">
@@ -377,7 +398,11 @@ export default function ProfilePage() {
                           <TabsList className="grid w-[300px] grid-cols-3">
                             <TabsTrigger value="status">Trạng thái</TabsTrigger>
                             <TabsTrigger value="role">Vai trò</TabsTrigger>
-                            <TabsTrigger value="edit">Chỉnh sửa</TabsTrigger>
+                            <UpdateUser userId={userId.id}>
+                              <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+                                Chỉnh sửa
+                              </div>
+                            </UpdateUser>
                           </TabsList>
                           <TabsContent value="status">
                             <div className="grid gap-3">

@@ -46,7 +46,14 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px] ">
-        <UpdateUser userId={row._valuesCache.id} />
+        <UpdateUser userId={row._valuesCache.id}>
+          <Button
+            variant="outline"
+            className="border-none w-full flex items-center justify-start "
+          >
+            Chỉnh sửa
+          </Button>
+        </UpdateUser>
         <UserBanButton setIsOpen={setIsOpen} user={row.original as Employee} />
       </DropdownMenuContent>
     </DropdownMenu>
