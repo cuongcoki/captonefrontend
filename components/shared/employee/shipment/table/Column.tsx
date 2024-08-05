@@ -104,7 +104,7 @@ export const columns: ColumnDef<Shipment>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" className=" ">
-          Đơn vận hành từ
+          Công ty gửi
         </Button>
       );
     },
@@ -193,7 +193,7 @@ export const columns: ColumnDef<Shipment>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" className=" ">
-          Đơn vận hành đến
+          Công ty nhận
         </Button>
       );
     },
@@ -283,7 +283,7 @@ export const columns: ColumnDef<Shipment>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" className=" ">
-          Ngày nhận hàng
+          Trạng thái
         </Button>
       );
     },

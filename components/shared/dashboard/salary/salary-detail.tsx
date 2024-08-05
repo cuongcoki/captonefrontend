@@ -138,7 +138,7 @@ export default function SalaryDetail({
     <>
       <HeaderComponent
         title="Chi tiết lương"
-        description={`Thông tin lương của nhân viên tháng ${ params.month}/${ params.year}.`}
+        description={`Thông tin lương của nhân viên tháng ${params.month}/${params.year}.`}
       />
       <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
         <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
@@ -247,16 +247,18 @@ export default function SalaryDetail({
             </div>
             <TabsContent value="week">
               <Card x-chunk="dashboard-05-chunk-3">
-              <div className="flex justify-between items-center">
-                  <CardHeader className="px-7">
+                <div className="flex justify-between items-center">
+                  <CardHeader>
                     <TitleComponent
                       title="Sản phẩm tạo ra"
                       description={`Số lượng sản phẩm tạo ra trong tháng ${params.month} năm ${params.year}.`}
                     />
                   </CardHeader>
                   <div className="ml-auto p-5">
-                    Tổng lương sản phẩm:{" "}
-                    <span className="font-bold text-primary">
+                    <span className="text-sm text-muted-foreground">
+                      Tổng lương của sản phẩm:{" "}
+                    </span>
+                    <span className="font-bold text-primary text-sm">
                       {data.totalSalaryProduct === 0
                         ? 0
                         : formatCurrency(data.totalSalaryProduct)}{" "}

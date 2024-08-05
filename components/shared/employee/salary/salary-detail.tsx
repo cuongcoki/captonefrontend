@@ -249,15 +249,17 @@ export default function SalaryDetailEm({
             <TabsContent value="week">
               <Card x-chunk="dashboard-05-chunk-3">
                 <div className="flex justify-between items-center">
-                  <CardHeader className="px-7">
+                  <CardHeader>
                     <TitleComponent
                       title="Sản phẩm tạo ra"
                       description={`Số lượng sản phẩm tạo ra trong tháng ${params.month} năm ${params.year}.`}
                     />
                   </CardHeader>
                   <div className="ml-auto p-5">
-                    Tổng lương sản phẩm:{" "}
-                    <span className="font-bold text-primary">
+                    <span className="text-sm text-muted-foreground">
+                      Tổng lương của sản phẩm:{" "}
+                    </span>
+                    <span className="font-bold text-primary text-sm">
                       {data.totalSalaryProduct === 0
                         ? 0
                         : formatCurrency(data.totalSalaryProduct)}{" "}
@@ -270,7 +272,7 @@ export default function SalaryDetailEm({
                     <TableHeader>
                       <TableRow>
                         <TableHead className="hidden sm:table-cell">
-                          Hình ảnh 
+                          Hình ảnh
                         </TableHead>
                         <TableHead className="">Tên sản phẩm</TableHead>
                         <TableHead className="">Số lượng</TableHead>

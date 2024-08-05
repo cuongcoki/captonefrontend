@@ -87,8 +87,9 @@ export default function CompanyUpdate({
         // form.reset();
       })
       .catch((error) => {
-        toast.error("Cập nhật thông tin công ty thất bại");
-        console.log("Error", error);
+        for (const key in error.response.data.error) {
+          toast.error(error.response.data.error[key][0]);
+        }
       });
   };
   return (

@@ -43,7 +43,7 @@ type MaterialHistoryContextType = {
 
 export const MaterialHistoryContext =
   React.createContext<MaterialHistoryContextType>({
-    ForceRender: () => {},
+    ForceRender: () => { },
   });
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -147,8 +147,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
 
         setData(res.data.data.data as TData[]);
         router.push(
-          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${
-            searchParams.from || ""
+          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${searchParams.from || ""
           }&to=${searchParams.to || ""}&pageIndex=${searchParams.pageIndex}`
         );
       })
@@ -256,9 +255,9 @@ export function DataTableForMaterialHistory<TData, TValue>({
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </TableHead>
                     );
                   })}
@@ -306,7 +305,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
             }}
             disabled={Number(searchParams.pageIndex) === 1}
           >
-            Previous
+            Trang trước
           </Button>
           <Button
             variant="outline"
@@ -318,7 +317,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
             }}
             disabled={Number(searchParams.pageIndex) >= totalPage}
           >
-            Next
+            Trang sau
           </Button>
         </div>
       </div>
