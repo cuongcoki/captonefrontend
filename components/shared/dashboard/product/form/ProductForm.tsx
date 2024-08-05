@@ -60,9 +60,7 @@ export const ProductForm = () => {
   const handleOnDialogA = () => {
     setOpenAlert(true);
   };
-  const handleOffDialog = () => {
-    setOpenAlert(true);
-  };
+
   const handleOnDialog = () => {
     setOpen(true);
   };
@@ -260,17 +258,17 @@ export const ProductForm = () => {
 
         console.log("=====requestBody Product Form =====", requestBody);
 
-        const response = await productApi.createProduct(requestBody);
-        if (response.data.isSuccess) {
-          toast.success(response.data.message);
-          setTimeout(() => {
-            setOpen(false);
-            ForceRender();
-            // window.location.href = '/dashboard/product';
-          }, 2000);
-        } else {
-          toast.error(response.data.message);
-        }
+        // const response = await productApi.createProduct(requestBody);
+        // if (response.data.isSuccess) {
+        //   toast.success(response.data.message);
+        //   setTimeout(() => {
+        //     setOpen(false);
+        //     ForceRender();
+        //     // window.location.href = '/dashboard/product';
+        //   }, 2000);
+        // } else {
+        //   toast.error(response.data.message);
+        // }
       } else {
         toast.error("imageUrl (nameImage) không hợp lệ");
       }
@@ -340,6 +338,34 @@ export const ProductForm = () => {
     form.reset();
     setImageRequests([])
   }
+  const handleOffDialog = () => {
+    // Kiểm tra xem mảng có rỗng hay không
+    const isArrayEmpty = (arr:any) => {
+      return Array.isArray(arr) && arr.length === 0;
+    };
+    
+    // Sử dụng hàm này để kiểm tra mảng imageRequests
+    const isDetailsProEmpty = isArrayEmpty(imageRequests);
+    
+    console.log(isDetailsProEmpty);
+    console.log("form", form.getValues())
+    console.log("imageRequests",imageRequests)
+    // Kiểm tra giá trị cụ thể của form
+    const isCodeIdEmpty = form.getValues().code === "";
+    const isDescriptionEmpty = form.getValues().description === "";
+    const isNameEmpty = form.getValues().name === "";
+    const isPriceFinishedEmpty = form.getValues().priceFinished === "";
+    const isPricePhase1Empty = form.getValues().pricePhase1 === "";
+    const isPricePhase2Empty = form.getValues().pricePhase2 === "";
+    const isSizeEmpty = form.getValues().size === "";
+
+     // Nếu tất cả các trường trong form đều trống hoặc không có giá trị và các mảng rỗng
+     if (isDetailsProEmpty && isCodeIdEmpty && isDescriptionEmpty && isNameEmpty && isPriceFinishedEmpty&& isPricePhase1Empty && isPricePhase2Empty && isSizeEmpty) {
+      setOpen(false);
+    } else {
+      setOpenAlert(true);
+    }
+  };
   return (
     <>
       {

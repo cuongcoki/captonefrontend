@@ -86,7 +86,9 @@ interface SetProduct {
   quantity: number;
   product: Product;
 }
-
+let initialFormValuesSet: any = null;
+let initialFormValuesSetUpdate: any = null;
+let initialFormValuesForm: any = null;
 export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   // console.log('setId',setId)
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
@@ -100,9 +102,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   const handleOnDialogA = () => {
     setOpenAlert(true);
   };
-  const handleOffDialog = () => {
-    setOpenAlert(true);
-  };
+
   const handleOnDialog = () => {
     setOpen(true);
   };
@@ -486,6 +486,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         setProductsRequest([]);
         setGetDetailsProUpdate([]);
         setUpdateProducts([]);
+        setRemoveProductIds([])
         ForceRender();
         setOpen(false);
       })
@@ -510,7 +511,53 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     form.reset();
     setProductsRequest([]);
     setGetDetailsPro([]);
+    setUpdateProducts([]);
+    setRemoveProductIds([])
   }
+  const handleOffDialog = () => {
+
+    //add product
+    const isArrayEmptyAdd = (arr: any) => {
+      return Array.isArray(arr) && arr.length === 0;
+    };
+
+    const isAddEmpty = isArrayEmptyAdd(productsRequest);
+
+    // form
+    const currentFormValues1 = form.getValues();
+    console.log("currentFormValues1", currentFormValues1)
+    if (initialFormValuesForm === null) {
+      initialFormValuesForm = currentFormValues1;
+    }
+    console.log("initialFormValuesForm", initialFormValuesForm)
+
+    const isFormChanged1 = JSON.stringify(initialFormValuesForm) === JSON.stringify(currentFormValues1);
+
+    // update set
+    const isArrayEmptyUpdate = (arr: any) => {
+      return Array.isArray(arr) && arr.length === 0;
+    };
+
+    const isUpdateEmpty = isArrayEmptyUpdate(updateProducts);
+
+
+    // remove set
+    const isArrayEmptyRemove = (arr: any) => {
+      return Array.isArray(arr) && arr.length === 0;
+    };
+
+    const isRemoveEmpty = isArrayEmptyRemove(removeProductIds);
+    // console.log("isFormChanged", isAddEmpty)
+    // console.log("isFormChanged1", isFormChanged1)
+    // console.log("isFormChanged2", isUpdateEmpty)
+    // console.log("isFormChanged3", isRemoveEmpty)
+    if (isAddEmpty && isFormChanged1 && isUpdateEmpty && isRemoveEmpty) {
+      setOpen(false);
+    } else {
+      setOpenAlert(true);
+    }
+  };
+  // console.log("removeProductIds", removeProductIds)
   return (
     <>
       {

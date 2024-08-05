@@ -91,15 +91,23 @@ export default function RenderTableShipment() {
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
-    updatePathname();
+ 
   };
 
-  const updatePathname = () => {
-    const params = new URLSearchParams();
-    if (status) params.set("status", status);
-    params.set("page", "1");
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
+  useEffect(() => {
+    const updatePathname = () => {
+      const params = new URLSearchParams();
+      if (searchTerm) params.set("searchTerm", searchTerm);
+      if (status) params.set("status", status);
+      params.set("page", "1");
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+  
+    if (status !== null) {
+      updatePathname();
+    }
+  }, [status, searchTerm, pathname, router]);
+
 
   return (
     <div className="px-3 mt-3">

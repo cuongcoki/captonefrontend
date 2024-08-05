@@ -35,6 +35,7 @@ import toast from "react-hot-toast";
 import { ChangeStatusShipment } from "../form/ChangeStatusShipment";
 import { error } from "console";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { ShipmentStore } from "../shipment-store";
 
 export type Shipment = {
   from: {
@@ -323,11 +324,13 @@ export const columns: ColumnDef<Shipment>[] = [
       return <Button variant="ghost" className=" "></Button>;
     },
     cell: ({ row }) => {
+      const { ForceRender } = ShipmentStore();
       const handleAcceptShipment = () => {
         console.log(row.original.id);
         shipmentApi
           .isAcceptedShipment(row.original.id, true)
           .then(({ data }) => {
+            ForceRender()
             // console.log("data", data)
             toast.success(data.message);
           })

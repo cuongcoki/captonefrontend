@@ -308,6 +308,7 @@ export const UsersForm = () => {
             }
           } else {
             console.error("Tạo tài khoản không thành công");
+            toast.error("Có lỗi xảy ra khi tạo tài khoản.");
           }
         })
         .finally(() => {
