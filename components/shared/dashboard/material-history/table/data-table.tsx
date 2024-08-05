@@ -25,7 +25,10 @@ import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import AddNewMeterialHistory from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history";
 import { usePathname, useRouter } from "next/navigation";
-import { materialHistoryProp } from "@/types/material-history.type";
+import {
+  materialHistoryProp,
+  materialHistoryType,
+} from "@/types/material-history.type";
 import { materiaHistoryApi } from "@/apis/material-history.api";
 import DatePicker from "@/components/shared/common/datapicker/date-picker";
 import { format } from "date-fns";
@@ -34,8 +37,10 @@ import { materialApi } from "@/apis/material.api";
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import "./material-history.css";
 import toast from "react-hot-toast";
-import { ComboboxDemo } from "@/components/shared/common/combobox/combobox_demo";
-import HeaderComponent from "@/components/shared/common/header";
+import Image from "next/image";
+import MaterialHistoryAction from "@/components/shared/dashboard/material-history/table/material-history-action";
+import { filesApi } from "@/apis/files.api";
+import { se } from "date-fns/locale";
 
 type MaterialHistoryContextType = {
   ForceRender: () => void;
@@ -54,11 +59,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
   columns,
   searchParamsProp,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [data, setData] = React.useState<TData[]>([]);
+  const [data, setData] = React.useState<materialHistoryType[]>([]);
   const [searchParams, setSearchParams] =
     React.useState<materialHistoryProp>(searchParamsProp);
   const [totalPage, setTotalPage] = React.useState<number>(0);
@@ -70,21 +71,8 @@ export function DataTableForMaterialHistory<TData, TValue>({
   const router = useRouter();
 
   const { setListMaterial } = useMaterialHistoryStore();
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-    },
-  });
+  const [images, setImages] = React.useState<Map<string, string>>(new Map());
+  const [isloading, setIsLoading] = React.useState<boolean>(false);
 
   // Convert date format from dd/MM/yyyy to yyyy-MM-dd
   function convertDateFormat(inputDate: string) {
@@ -92,7 +80,12 @@ export function DataTableForMaterialHistory<TData, TValue>({
     let formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
     return formattedDate;
   }
-
+  // Convert date format from  yyyy-MM-dd to dd/MM/yyyy
+  function convertDateFormatToDMY(inputDate: string) {
+    let parts = inputDate.split("-");
+    let formattedDate = parts[2] + "/" + parts[1] + "/" + parts[0];
+    return formattedDate;
+  }
   useEffect(() => {
     materialApi
       .searchMaterial({
@@ -118,46 +111,61 @@ export function DataTableForMaterialHistory<TData, TValue>({
     setListMaterial;
   }, [setListMaterial]);
 
-  const validateDate = () => {
-    if (searchParams.from && searchParams.to) {
-      if (
-        new Date(convertDateFormat(searchParams.from)) >
-        new Date(convertDateFormat(searchParams.to))
-      ) {
-        toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
-        return false;
-      }
-    }
-    return true;
-  };
-
   useEffect(() => {
-    materiaHistoryApi
-      .searchMaterialHistory({
-        SearchTerms: searchParams.searchTerm || "",
-        PageIndex: searchParams.pageIndex || 1,
-        PageSize: 10,
-        StartDateImport: searchParams.from || "",
-        EndDateImport: searchParams.to || "",
-      })
-      .then((res) => {
+    const getImages = async (data: materialHistoryType[]) => {
+      try {
+        data.forEach((item) => {
+          if (item.image) {
+            filesApi
+              .getFile(item.image.trim() || "%20")
+              .then((res) => {
+                setImages((prev) => {
+                  const newImages = new Map(prev);
+                  newImages.set(item.image as string, res.data.data);
+                  return newImages;
+                });
+              })
+              .catch((error) => {
+                console.log("error in get image", error);
+              });
+          }
+        });
+      } catch (error) {
+      } finally {
+        // setImages(imagesFetch);
+        // console.log("Images", imagesFetch);
+      }
+    };
+
+    const searchMaterialHistory = async () => {
+      setIsLoading(true);
+      try {
+        const res = await materiaHistoryApi.searchMaterialHistory({
+          SearchTerms: searchParams.searchTerm || "",
+          PageIndex: searchParams.pageIndex || 1,
+          PageSize: 10,
+          StartDateImport: searchParams.from || "",
+          EndDateImport: searchParams.to || "",
+        });
         console.log("MATERIAL_HISTORY_DATA", res.data);
-
+        await getImages(res.data.data.data);
         setTotalPage(res.data.data.totalPages);
-
-        setData(res.data.data.data as TData[]);
+        setData(res.data.data.data);
         router.push(
           `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${
             searchParams.from || ""
           }&to=${searchParams.to || ""}&pageIndex=${searchParams.pageIndex}`
         );
-      })
-      .catch((err) => {
-        if (err.response?.status === 400) {
+      } catch (error: any) {
+        console.log("Error in search material history", error);
+        if (error.response?.status === 400) {
           setData([]);
         }
-        console.log("ERROR", err);
-      });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    searchMaterialHistory();
   }, [searchParams, router, pathname, force]);
 
   return (
@@ -248,38 +256,53 @@ export function DataTableForMaterialHistory<TData, TValue>({
         <MaterialHistoryContext.Provider value={{ ForceRender }}>
           <Table className="material-history-table">
             <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
+              <TableRow>
+                <TableHead className="text-center">Ảnh minh họa</TableHead>
+                <TableHead className="text-center">Tên nguyên liệu</TableHead>
+                <TableHead className="text-center">Số lượng</TableHead>
+                <TableHead className="text-center">
+                  Giá mua 1 nguyên liệu
+                </TableHead>
+                <TableHead className="text-center">Ngày mua</TableHead>
+                <TableHead className="text-center">Ghi chú</TableHead>
+                <TableHead className="text-center">Hành Động</TableHead>
+              </TableRow>
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
+              {data.length && !isloading ? (
+                data.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell>
+                      <div className="flex justify-center items-center space-x-2 max-w-[200px]">
+                        <Image
+                          className="size-20 mr-2"
+                          width={100}
+                          height={100}
+                          src={
+                            (images.has(row.image as string)
+                              ? images.get(row.image as string)
+                              : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                          }
+                          alt={row.materialName}
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {row.materialName}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {row.quantity}
+                    </TableCell>
+                    <TableCell className="text-center">{row.price}</TableCell>
+                    <TableCell className="text-center">
+                      {convertDateFormatToDMY(row.importDate)}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {row.description}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <MaterialHistoryAction id={row.id} />
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
@@ -288,7 +311,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    {isloading ? "Đang tải dữ liệu..." : "Không có dữ liệu"}
                   </TableCell>
                 </TableRow>
               )}
