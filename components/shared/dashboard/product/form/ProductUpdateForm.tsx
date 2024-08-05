@@ -79,7 +79,7 @@ interface ProductID {
 export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const [loading, setLoading] = useState(false);
   const { ForceRender } = ProductStore();
-  console.log("productId", productId);
+  // console.log("productId", productId);
   const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(
     undefined
   );

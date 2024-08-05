@@ -444,9 +444,33 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       setOpen(false);
       toast.success("Cập nhật thành công!");
       // setOpen(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating user:", error);
-      toast.error("Có lỗi xảy ra khi cập nhật.");
+      if (error.response && error.response.data && error.response.data.error) {
+        const errors = error.response.data.error;
+        if (errors.Id) {
+          toast.error(errors.Id);
+        }
+
+        if (errors.Phone) {
+          toast.error(errors.Phone);
+        }
+
+        if (errors.FirstName) {
+          toast.error(errors.FirstName);
+        }
+        if (errors.LastName) {
+          toast.error(errors.LastName);
+        }
+        if (errors.DOB && Array.isArray(errors.DOB)) {
+          errors.DOB.forEach((error: any) => {
+            toast.error(error);
+          });
+        }
+      } else {
+        toast.error("Có lỗi xảy ra khi cập nhật.");
+      }
+
     } finally {
       setLoading(false);
     }

@@ -25,7 +25,7 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => {},
+  forceUpdate: () => { },
 });
 
 const enumStatus = [
@@ -106,7 +106,7 @@ export default function RenderTableOrder() {
         setData(response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
-      } catch (error:any) {
+      } catch (error: any) {
         setData([])
         toast.error(error.response.data.message)
         console.error("Error fetching order data:", error);
@@ -136,25 +136,6 @@ export default function RenderTableOrder() {
     params.set("page", "1");
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
-
-  const handleStartDateChange = (date: Date | null) => {
-    if (date && endOrder && date > endOrder) {
-      toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
-      return;
-    }
-    setStartOrder(date);
-    setCurrentPage(1);
-  };
-
-  const handleEndDateChange = (date: Date | null) => {
-    if (startOrder && date && startOrder > date) {
-      toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
-      return;
-    }
-    setEndOrder(date);
-    setCurrentPage(1);
-  };
-
   const formatDate = (date: Date | null) => {
     if (!date) return "";
     const day = date.getDate().toString().padStart(2, "0");
@@ -162,73 +143,114 @@ export default function RenderTableOrder() {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-  console.log("startOrder", formatDate(startOrder)),
-    console.log("endOrder", formatDate(endOrder));
+
+  const handleStartDateChange = (date: Date | null) => {
+    if (!date) return;
+  
+    const formatdathi = formatDate(date);
+    const formattedStartOrder = startOrder ? formatDate(startOrder) : null;
+  
+    // So sánh chuỗi đã được định dạng
+    if (formattedStartOrder && formatdathi === formattedStartOrder) {
+      return  setStartOrder(null);
+    }
+  
+    if (date && endOrder && date.getTime() > endOrder.getTime()) {
+      toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
+      return;
+    }
+  
+    setStartOrder(date);
+    setCurrentPage(1);
+  };
+  
+
+  const handleEndDateChange = (date: Date | null) => {
+    if (!date) return;
+  
+    const formatdathi = formatDate(date);
+    const formattedStartOrder = endOrder ? formatDate(endOrder) : null;
+  
+    // So sánh chuỗi đã được định dạng
+    if (formattedStartOrder && formatdathi === formattedStartOrder) {
+      return  setEndOrder(null);
+    }
+    if (startOrder && date && startOrder > date) {
+      toast.error("Ngày kết thúc không được nhỏ hơn ngày bất đầu");
+      return;
+    }
+    setEndOrder(date);
+    setCurrentPage(1);
+  };
+
+
+  // console.log("startOrder", formatDate(startOrder)),
+  // console.log("endOrder", formatDate(endOrder));
 
   return (
     <div className=" mt-3">
       <div className="flex flex-col md:flex-row justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
-            <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
-                <Input
-                  placeholder="Tìm kiếm đơn hàng..."
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="md:w-[300px] w-full"
-                />
+          <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
+              <Input
+                placeholder="Tìm kiếm đơn hàng..."
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+                className="md:w-[300px] w-full"
+              />
 
-                <Select
-                  value={status || ""}
-                  onValueChange={(value) => handleStatusChange(value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Trạng thái" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {enumStatus.map((item, index) => (
-                      <SelectItem value={item.value} key={index}>
-                        {item.description}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="grid grid-cols-2 gap-x-4 ">
-                <DatePicker
-                  selected={startOrder}
-                  name="from"
-                  title={startOrder ? formatDate(startOrder) : "Từ ngày"}
-                  className="w-full"
-                  onDayClick={handleStartDateChange}
-                />
-
-                <DatePicker
-                  selected={endOrder}
-                  name="to"
-                  title={endOrder ? formatDate(endOrder) : "Đến ngày"}
-                  className="w-full"
-                  onDayClick={handleEndDateChange}
-                />
-              </div>
+              <Select
+                value={status || ""}
+                onValueChange={(value) => handleStatusChange(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Trạng thái" />
+                </SelectTrigger>
+                <SelectContent>
+                  {enumStatus.map((item, index) => (
+                    <SelectItem value={item.value} key={index}>
+                      {item.description}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-        </div>
+            <div className="grid grid-cols-2 gap-x-4 ">
+              <DatePicker
+                selected={startOrder}
+                name="from"
+                title={startOrder ? formatDate(startOrder) : "Từ ngày"}
+                className="w-full"
+                onDayClick={handleStartDateChange}
+              />
 
-          <div className="flex items-center justify-end">
-            <div className="flex items-center space-x-2">
-              <CreateOrder />
+              <DatePicker
+                selected={endOrder}
+                name="to"
+                title={endOrder ? formatDate(endOrder) : "Đến ngày"}
+                className="w-full"
+                onDayClick={handleEndDateChange}
+              />
             </div>
           </div>
+        </div>
+
+        <div className="flex items-center justify-end">
+          <div className="flex items-center space-x-2">
+            <CreateOrder />
+          </div>
+        </div>
       </div>
 
-        <div className="overflow-x-auto">
-          <DataTable columns={columns} data={data} />
-          <DataTablePagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            setCurrentPage={setCurrentPage}
-          />
-        </div>
+      <div className="overflow-x-auto">
+        <DataTable columns={columns} data={data} />
+        <DataTablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
     </div>
   );
 }

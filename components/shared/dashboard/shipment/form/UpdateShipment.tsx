@@ -142,7 +142,8 @@ const ProductPhaseType = [
 interface ShipmentIDProps {
     shipmentIDDes: string;
 }
-
+let initialFormValuesShipment: any = null;
+let initialFormValuesForm: any = null;
 export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
     //state 
     const [loading, setLoading] = useState<boolean>(false);
@@ -260,9 +261,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         setProductDetail([])
     }
 
-    const handleOffDialog = () => {
-        setOpenAlert(true);
-    };
+
     const handleOnDialog = () => {
         setOpen(true);
     };
@@ -428,7 +427,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         const fetchDataCompany1 = () => {
             shipmentApi.getAllCompanyByType(setCompanyType1, 1, 20)
                 .then(({ data }) => {
-                    console.log("========", data.data)
+                    // console.log("========", data.data)
                     setCompany1(data.data.data);
                 })
                 .catch(error => {
@@ -787,6 +786,39 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         setShipmentDetailRequests([]);
         setProductDetail([]);
     }
+    //     let initialFormValuesShipment: any = null;
+    // let initialFormValuesForm: any = null;
+
+    const handleOffDialog = () => {
+        const currentFormValues = shipmentDetailRequests
+        console.log("shipmentDetailRequests", currentFormValues)
+        if (initialFormValuesShipment === null) {
+            initialFormValuesShipment = currentFormValues;
+        }
+        console.log("initialFormValuesShipment", initialFormValuesShipment)
+
+        const isFormChanged = JSON.stringify(initialFormValuesShipment) === JSON.stringify(currentFormValues);
+
+
+        // form
+        const currentFormValues1 = form.getValues();
+        console.log("currentFormValues1", currentFormValues1)
+        if (initialFormValuesForm === null) {
+            initialFormValuesForm = currentFormValues1;
+        }
+        console.log("initialFormValuesForm", initialFormValuesForm)
+
+        const isFormChanged1 = JSON.stringify(initialFormValuesForm) === JSON.stringify(currentFormValues1);
+
+        console.log("isFormChanged", isFormChanged)
+        console.log("isFormChanged", isFormChanged1)
+
+        if (isFormChanged && isFormChanged1) {
+            setOpen(false);
+        } else {
+            setOpenAlert(true);
+        }
+    };
     return (
         <>
             {
@@ -815,6 +847,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                 <Dialog.Portal>
                     <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
                         <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1000px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+                            <Dialog.Title className="visible hidden"></Dialog.Title>
+                            <Dialog.Description className="visible hidden"></Dialog.Description>
                             <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                                     <h2 className="text-2xl text-white">Chỉnh sửa vận chuyển</h2>

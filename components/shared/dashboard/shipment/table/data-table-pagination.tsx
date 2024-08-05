@@ -13,8 +13,9 @@ export function DataTablePagination({
   totalPages,
   setCurrentPage,
 }: DataTablePaginationProps) {
+
   return (
-    <div className="flex items-center justify-center space-x-4 my-4 ">
+    <div className="flex items-center justify-center space-x-4 my-4">
       <Button
         variant="outline"
         onClick={() => setCurrentPage(currentPage - 1)}
@@ -29,7 +30,7 @@ export function DataTablePagination({
       <Button
         variant="outline"
         onClick={() => setCurrentPage(currentPage + 1)}
-        disabled={currentPage === totalPages}
+        disabled={currentPage >= totalPages}
         className="dark:bg-[#24d369]"
       >
         <ChevronRightIcon className="h-4 w-4" />

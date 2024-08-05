@@ -90,7 +90,7 @@ export default function ProductPhaseTable({
             value: item.name,
           }))
         );
-      } catch (error) {}
+      } catch (error) { }
     };
     const fetchData = async () => {
       try {
@@ -143,55 +143,57 @@ export default function ProductPhaseTable({
         title="Quản lý kho"
         description={`Quản lý các giai đoạn của từng sản phẩm.`}
       />
-      <div className="mb-3 grid grid-cols-10">
-        <div className="col-span-2">
-          <Combobox
-            data={companyData}
-            title="Vui lòng chọn công ty"
-            setValue={(value: string) => {
-              setParams({ ...params, SearchCompany: value });
-            }}
-            value={
-              params.SearchCompany
-                ? params.SearchCompany
-                : companyData[0]?.value
-            }
-          />
-        </div>
-        <div className="col-span-2">
-          <Select
-            value={params.SearchPhase}
-            onValueChange={(value) => {
-              if (value == "-1") {
-                setParams({ ...params, SearchPhase: "" });
-                return;
-              }
-              setParams({ ...params, SearchPhase: value });
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Chọn giai đoạn" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="PH_001">Giai đoạn tạo khung</SelectItem>
-                <SelectItem value="PH_002">Giai đoạn gia công</SelectItem>
-                <SelectItem value="PH_003">
-                  Giai đoạn hoàn thiện đóng gói
-                </SelectItem>
-                <SelectItem value="-1">Bỏ chọn</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="flex flex-col md:flex-row   gap-3 mb-5">
         <Input
-          className="col-end-11 col-span-5 "
+          className="md:w-[500px] ww-full"
           value={params.SearchProduct}
           placeholder="Tìm kiếm theo tên hoặc mã sản phẩm"
           onChange={(event) => {
             setParams({ ...params, SearchProduct: event.target.value });
           }}
         />
+        <div className="flex flex-col sm:flex-row items-start gap-3">
+          <div >
+            <Combobox
+              data={companyData}
+              title="Vui lòng chọn công ty"
+              setValue={(value: string) => {
+                setParams({ ...params, SearchCompany: value });
+              }}
+              value={
+                params.SearchCompany
+                  ? params.SearchCompany
+                  : companyData[0]?.value
+              }
+            />
+          </div>
+          <div >
+            <Select
+              value={params.SearchPhase}
+              onValueChange={(value) => {
+                if (value == "-1") {
+                  setParams({ ...params, SearchPhase: "" });
+                  return;
+                }
+                setParams({ ...params, SearchPhase: value });
+              }}
+            >
+              <SelectTrigger className="sm:w-[180px] w-full">
+                <SelectValue placeholder="Chọn giai đoạn" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="PH_001">Giai đoạn tạo khung</SelectItem>
+                  <SelectItem value="PH_002">Giai đoạn gia công</SelectItem>
+                  <SelectItem value="PH_003">
+                    Giai đoạn hoàn thiện đóng gói
+                  </SelectItem>
+                  <SelectItem value="-1">Bỏ chọn</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       </div>
       <Card>
         <CardContent className="">

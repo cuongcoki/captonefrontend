@@ -148,7 +148,6 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<shipmentID>();
   const [open, setOpen] = useState<boolean>(false);
-
   const handleOffDialog = () => {
     setOpen(false);
   };
@@ -175,7 +174,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
     };
 
     fetchDataOrderId();
-  }, [data]);
+  }, [data,shipmentIDDes]);
 
   // các hàm hiển thị sao cho oke
   function formatDate(isoString: string) {
