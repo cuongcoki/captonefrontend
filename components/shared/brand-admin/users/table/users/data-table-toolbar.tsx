@@ -23,22 +23,22 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 const dataSearch = [
-  {
-    id: 1,
-    value: "id",
-    name: "Theo CMND/CCCD",
-  },
-  {
-    id: 2,
-    value: "phone",
-    name: "Theo số điện thoại",
-  },
-  {
-    id: 3,
-    value: "firstName",
-    name: "Theo Tên nhân viên",
-  },
-];
+    {
+        id: 1,
+        value: "id",
+        name: "Theo CMND/CCCD",
+    },
+    {
+        id: 2,
+        value: "phone",
+        name: "Theo Số điện thoại",
+    },
+    {
+        id: 3,
+        value: "firstName",
+        name: "Theo Tên nhân viên",
+    }
+]
 
 export function DataTableToolbar<TData>({
   table,

@@ -192,7 +192,7 @@ export default function CountProduct({
       <DialogContent className="sm:max-w-[825px] dark:bg-[#1c1917]">
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3">
-            Cập nhật sản phẩm tạo ra
+            Cập Nhật Sản Phẩm Tạo Ra
           </DialogTitle>
           <DialogDescription className="mb-1 space-y-1">
             <div className="flex space-x-1">
@@ -236,13 +236,11 @@ export default function CountProduct({
                 {searchData.data.data.map((item, index) => (
                   <li
                     key={item.id}
-                    className={`hover:bg-gray-100 cursor-pointer dark:bg-black dark:hover:bg-[#4c4c4c] ${
-                      index === 1 ? "rounded-t-md" : ""
-                    } ${
-                      index === searchData.data.data.length - 1
+                    className={`hover:bg-gray-100 cursor-pointer dark:bg-black dark:hover:bg-[#4c4c4c] ${index === 1 ? "rounded-t-md" : ""
+                      } ${index === searchData.data.data.length - 1
                         ? "rounded-b-md"
                         : ""
-                    }`}
+                      }`}
                     onClick={async () => {
                       await AddNewProductForUser(item);
                       setSearchInput("");
@@ -256,7 +254,7 @@ export default function CountProduct({
             )}
             {searchInput !== "" && !searchData && !isSearch && (
               <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 z-1000 p-2 dark:bg-black rounded-b-md rounded-t-md">
-                No data found
+                Không có sản phẩm
               </div>
             )}
           </div>

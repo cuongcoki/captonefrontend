@@ -59,6 +59,7 @@ import { filesApi } from "@/apis/files.api";
 import { salaryApi } from "@/apis/salary.api";
 import { authApi } from "@/apis/auth.api";
 import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdateForm";
+import TitleComponent from "../common/Title";
 
 const invoices = [
   {
@@ -306,14 +307,12 @@ export default function ProfilePage() {
           </div>
 
           <div className="w-full sm:w-auto flex flex-col items-center sm:items-start">
-            <p className="font-display mb-2 text-xl dark:text-primary  font-semibold">
+            <p className="font-display mb-2 text-xl dark:text-primary font-semibold text-primary">
               {userId?.firstName} {userId?.lastName}
             </p>
 
             <div className="mb-4 text-sm sm:text-md md:text-lg text-center sm:text-start">
-              <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary font-semibold">
-                {userId?.address}
-              </p>
+              <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary">{userId?.address}</p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
@@ -487,13 +486,16 @@ export default function ProfilePage() {
       <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
         <div className="p-4 flex flex-col justify-between gap-4">
           <Card>
-            <CardHeader className="font-semibold text-xl dark:text-primary">
-              Thông Tin Cá Nhân
+            <CardHeader>
+              <TitleComponent
+                title="Thông tin cá nhân"
+                description="Thông tin cá nhân của nhân viên."
+              />
             </CardHeader>
             <CardContent className="">
               <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
                 <div>
-                  <div className="font-extralight text-[0.8rem]">Họ và Tên</div>
+                  <div className="font-extralight text-[0.8rem]">Họ và tên</div>
                   <div>
                     {userId?.firstName} {userId?.lastName}
                   </div>
@@ -518,8 +520,11 @@ export default function ProfilePage() {
           </Card>
 
           <Card>
-            <CardHeader className="font-semibold text-xl dark:text-primary">
-              Thông Tin Lương
+            <CardHeader>
+              <TitleComponent
+                title="Thông tin lương"
+                description="Thông tin lương của nhân viên."
+              />
             </CardHeader>
             <CardContent className="">
               <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
@@ -547,7 +552,7 @@ export default function ProfilePage() {
                   </div>
                   {/* accountBalance */}
                   <div>
-                  {userId?.accountBalance === 0 ? 0 : formatCurrency(userId?.accountBalance)} <span className="text-gray-400">VND</span>
+                    {userId?.accountBalance === 0 ? 0 : formatCurrency(userId?.accountBalance)} <span className="text-gray-400">VND</span>
                   </div>
                 </div>
 
@@ -562,8 +567,11 @@ export default function ProfilePage() {
           </Card>
 
           <Card>
-            <CardHeader className="font-semibold text-xl dark:text-primary">
-              Cơ Sở Làm Việc
+            <CardHeader>
+              <TitleComponent
+                title="Cơ sở làm việc"
+                description="Thông tin công ty của nhân viên."
+              />
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-y-8">
               <div>
@@ -588,11 +596,10 @@ export default function ProfilePage() {
           <div className="p-4 flex flex-col justify-between gap-4">
             <Card>
               <CardHeader>
-                <CardTitle className="dark:text-primary">Mật Khẩu</CardTitle>
-                <CardDescription>
-                  Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng
-                  xuất.
-                </CardDescription>
+                <TitleComponent
+                  title="Đổi mật khẩu"
+                  description="Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng xuất."
+                />
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="space-y-1">
