@@ -206,7 +206,7 @@ export default function ProductPhaseTable({
                 <TableHead>Giai đoạn</TableHead>
                 <TableHead>Bình thường</TableHead>
                 <TableHead>Lỗi bên mình</TableHead>
-                <TableHead>Lỗi bên thứ 3</TableHead>
+                <TableHead>Lỗi bên hợp tác</TableHead>
                 <TableHead>Hàng hỏng</TableHead>
                 {/* <TableHead className="text-center">Hành động</TableHead> */}
               </TableRow>

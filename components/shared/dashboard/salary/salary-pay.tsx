@@ -24,54 +24,55 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
 import { set } from "date-fns";
+import TitleComponent from "../../common/Title";
 export default function SalaryPay({ id }: { id: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [salary, setSalary] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const error = useRef<any>(null);
   const { forceRender, salaryAvailiable, setSalaryAvailiable } = salaryStore();
 
+  useEffect(() => {
+    console.log("SalaryPay", salary);
+  }, [salary]);
+
   const handlePay = async () => {
+    setIsLoading(true);
     salaryApi
       .paySalary({
         userId: id,
-        salary: Number(salary.replace(/\./, "")),
+        salary: Number(salary),
         note: "",
       })
       .then((res) => {
         console.log(res);
         forceRender();
-        setSalaryAvailiable(
-          salaryAvailiable - Number(salary.replace(/\./, ""))
-        );
+        setSalaryAvailiable(salaryAvailiable - Number(salary));
         toast.success("Trả lương thành công");
         setIsOpen(false);
         setSalary("");
       })
       .catch((e) => {
         toast.error("Trả lương thất bại");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
     // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
     // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
     // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
     // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
     // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
 
@@ -111,7 +112,10 @@ export default function SalaryPay({ id }: { id: string }) {
     <>
       <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="text-primary">Trả lương</CardTitle>
+          <TitleComponent
+            title="Trả lương"
+            description="Lưu lịch sử trả lương cho nhân viên."
+          />
         </CardHeader>
         <CardContent>
           <Input
@@ -122,7 +126,7 @@ export default function SalaryPay({ id }: { id: string }) {
                 console.log("Input change");
                 error.current.hidden = true;
               }
-              setSalary(e.target.value);
+              setSalary(e.target.value.replace(/\./g, ""));
             }}
           />
           <div
@@ -171,10 +175,10 @@ export default function SalaryPay({ id }: { id: string }) {
                       </AlertDialogTitle>
                     )}
 
-                    <AlertDialogDescription>
+                    {/* <AlertDialogDescription>
                       Hành động này không thể hoàn tác. Dữ liệu này sẽ không
                       thay đổi được
-                    </AlertDialogDescription>
+                    </AlertDialogDescription> */}
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Hủy</AlertDialogCancel>
@@ -183,6 +187,7 @@ export default function SalaryPay({ id }: { id: string }) {
                         e.preventDefault();
                         await handlePay();
                       }}
+                      disabled={isLoading}
                     >
                       Đồng ý
                     </AlertDialogAction>

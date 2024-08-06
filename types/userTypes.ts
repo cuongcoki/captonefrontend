@@ -17,6 +17,7 @@ export type UsersType = {
   roleDescription:string;
   companyId:string;
   companyName:string;
+  accountBalance:number;
 };
 
 export type UserSearchParams = {

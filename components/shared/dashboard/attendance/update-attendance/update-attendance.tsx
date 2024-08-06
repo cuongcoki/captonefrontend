@@ -398,7 +398,7 @@ export default function UpdateAttendance({
         title="Điểm danh nhân viên"
         description={`Điểm danh nhân viên ngày ${dateProp} - ${
           comboboxData.find((item) => item.value === slotProp)?.label
-        }`}
+        }.`}
       />
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 mb-5 flex-wrap ">
         {userData.roleId != "2" && (

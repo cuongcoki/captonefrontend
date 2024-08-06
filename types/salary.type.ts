@@ -6,7 +6,7 @@ export type SearchSalaryParams = {
     year: string;
     month: string;
     companyId: string;
-    name: string;
+    searchUser: string;
   };
 };
 
@@ -42,7 +42,7 @@ export type GetHistorySalaryParams = {
 export type GetHistorySalaryResponse = SearchResponse<HistorySalaryType[]>;
 
 export type GetSalariesParams = {
-  fullName: string;
+  searchUser: string;
   month: number;
   year: number;
   PageIndex: number;

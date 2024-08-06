@@ -10,7 +10,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <section>
             <HeaderComponent
                 title="Xem điểm danh"
-                description="Chi tiết thông tin điểm danh của nhân viên"
+                description="Lịch điểm danh - chấm công của nhân viên."
             />
             {children}
         </section>
