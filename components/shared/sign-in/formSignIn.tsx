@@ -54,6 +54,7 @@ export default function FormSignIn() {
           router.push(`/profile/${data.data.user.id}`);
       })
       .catch((error) => {
+        // console.log("===ror=r=r",error)
         const errors = error.response.data.message
         console.log(error.data)
         toast.error(errors)

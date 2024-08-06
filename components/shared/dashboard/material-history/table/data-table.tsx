@@ -41,18 +41,24 @@ import Image from "next/image";
 import MaterialHistoryAction from "@/components/shared/dashboard/material-history/table/material-history-action";
 import { filesApi } from "@/apis/files.api";
 import { se } from "date-fns/locale";
-import { ComboboxDemo } from "@/components/shared/common/combobox/combobox_demo";
-import HeaderComponent from "@/components/shared/common/header";
-import AddNewMeterialHistoryForm from "../add-new-material-history/add-new-material-history-form";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import AddNewMeterialHistoryForm from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history-form";
 type MaterialHistoryContextType = {
   ForceRender: () => void;
 };
 
 export const MaterialHistoryContext =
   React.createContext<MaterialHistoryContextType>({
-    ForceRender: () => { },
+    ForceRender: () => {},
   });
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -156,7 +162,8 @@ export function DataTableForMaterialHistory<TData, TValue>({
         setTotalPage(res.data.data.totalPages);
         setData(res.data.data.data);
         router.push(
-          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${searchParams.from || ""
+          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${
+            searchParams.from || ""
           }&to=${searchParams.to || ""}&pageIndex=${searchParams.pageIndex}`
         );
       } catch (error: any) {
@@ -173,28 +180,26 @@ export function DataTableForMaterialHistory<TData, TValue>({
 
   return (
     <div>
-      <div className="flex flex-col md:flex-row justify-between mb-4 gap-3">
-        <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
-            <Input
-              placeholder="Tìm theo tên vật liệu..."
-              className=" w-full shadow-sm"
-              value={searchParams.searchTerm}
-              onChange={(event) => {
-                setSearchParams({
-                  ...searchParams,
-                  searchTerm: event.target.value,
-                  pageIndex: 1,
-                });
-              }}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-x-4 ">
+      <div className="py-4 grid grid-row-3 md:grid-cols-2 xl:grid-cols-3">
+        <Input
+          placeholder="Tìm theo tên vật liệu..."
+          className="max-w-sm shadow-sm"
+          value={searchParams.searchTerm}
+          onChange={(event) => {
+            setSearchParams({
+              ...searchParams,
+              searchTerm: event.target.value,
+              pageIndex: 1,
+            });
+          }}
+        />
+        <div className="mt-4 md:ml-10 md:mt-0">
+          <div className="grid grid-cols-2 gap-x-6">
             <DatePicker
               selected={new Date(convertDateFormat(searchParams.from || ""))}
               name="from"
               title={searchParams.from || "Từ ngày"}
-              className="w-full md:w-[180px]"
+              className="w-full"
               value={"2024-06-16"}
               onDayClick={(event: any) => {
                 if (event > new Date(convertDateFormat(searchParams.to))) {
@@ -225,7 +230,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
               selected={new Date(convertDateFormat(searchParams.to || ""))}
               name="to"
               title={searchParams.to || "Đến ngày"}
-              className="w-full md:w-[180px]"
+              className="w-full"
               onDayClick={(event: any) => {
                 if (new Date(convertDateFormat(searchParams.from)) > event) {
                   toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
@@ -252,13 +257,9 @@ export function DataTableForMaterialHistory<TData, TValue>({
             />
           </div>
         </div>
-
         <MaterialHistoryContext.Provider value={{ ForceRender }}>
-          <div className="flex items-center justify-end">
-            <div className="flex items-center space-x-2">
-              <AddNewMeterialHistoryForm />
-            </div>
-          </div>
+          {/* <AddNewMeterialHistory /> */}
+          <AddNewMeterialHistoryForm />
         </MaterialHistoryContext.Provider>
       </div>
 
@@ -284,17 +285,40 @@ export function DataTableForMaterialHistory<TData, TValue>({
                   <TableRow key={row.id}>
                     <TableCell>
                       <div className="flex justify-center items-center space-x-2 max-w-[200px]">
-                        <Image
-                          className="size-20 mr-2"
-                          width={100}
-                          height={100}
-                          src={
-                            (images.has(row.image as string)
-                              ? images.get(row.image as string)
-                              : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
-                          }
-                          alt={row.materialName}
-                        />
+                        <Dialog>
+                          <DialogTrigger>
+                            <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
+                              <Image
+                                className="w-full h-full rounded-lg object-cover"
+                                width={900}
+                                height={900}
+                                src={
+                                  (images.has(row.image as string)
+                                    ? images.get(row.image as string)
+                                    : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                                }
+                                alt={row.materialName}
+                              />
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle></DialogTitle>
+                              <DialogDescription></DialogDescription>
+                            </DialogHeader>
+                            <Image
+                              className="w-full h-full rounded-lg object-cover"
+                              width={900}
+                              height={900}
+                              src={
+                                (images.has(row.image as string)
+                                  ? images.get(row.image as string)
+                                  : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                              }
+                              alt={row.materialName}
+                            />
+                          </DialogContent>
+                        </Dialog>
                       </div>
                     </TableCell>
                     <TableCell className="text-center">
@@ -321,7 +345,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    Không có kết quả.
+                    {isloading ? "Đang tải dữ liệu..." : "Không có dữ liệu"}
                   </TableCell>
                 </TableRow>
               )}
@@ -342,7 +366,8 @@ export function DataTableForMaterialHistory<TData, TValue>({
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <span>
-            Trang {data.length > 0 ? searchParams.pageIndex : 0} Của {data.length > 0 ? totalPage : 0}
+            Trang {data.length > 0 ? searchParams.pageIndex : 0} Của{" "}
+            {data.length > 0 ? totalPage : 0}
           </span>
           <Button
             variant="outline"

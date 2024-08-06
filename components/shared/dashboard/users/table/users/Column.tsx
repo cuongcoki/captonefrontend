@@ -68,7 +68,7 @@ export const columns: ColumnDef<Employee>[] = [
     },
     cell: ({ row }) => (
       <div className="">
-        {row.original.firstName} {row.original.lastName}
+        {row.original.lastName} {row.original.firstName}
       </div>
     ),
   },
@@ -171,9 +171,8 @@ export const columns: ColumnDef<Employee>[] = [
 
       return (
         <span
-          className={`p-2 ${
-            active.value ? "text-primary" : "text-red-500"
-          }`}
+          className={`p-2 ${active.value ? "text-primary" : "text-red-500"
+            }`}
         >
           {active.label}
         </span>

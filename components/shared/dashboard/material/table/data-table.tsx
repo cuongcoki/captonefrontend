@@ -34,7 +34,15 @@ import Image from "next/image";
 import UpdateMaterial from "@/components/shared/dashboard/material/update-material/update-material";
 import { PenLine } from "lucide-react";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 type ContexType = {
   forceUpdate: () => void;
 };
@@ -113,13 +121,13 @@ export function DataTableForMaterial<TData, TValue>({
 
         setData(tableData);
         setTotalPages(data.data.data.totalPages);
-      } catch (error) {
-        console.log(error);
-        setData([])
-      } finally {
         router.push(
           `${pathname}?searchTerm=${searchTerm || ""}&pageIndex=${pageIndex}`
         );
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -127,8 +135,8 @@ export function DataTableForMaterial<TData, TValue>({
   }, [searchTerm, pathname, router, pageIndex, force]);
 
   return (
-    <div>
-      <div className="flex flex-col sm:flex-row justify-center items-center mb-3">
+    <div className="p-2">
+      <div className="flex flex-col sm:flex-row justify-center items-center py-4">
         <Input
           placeholder="Tìm theo tên vật liệu..."
           value={searchTerm}
@@ -165,17 +173,40 @@ export function DataTableForMaterial<TData, TValue>({
                     <TableRow key={row.id}>
                       <TableCell>
                         <div className="flex justify-center items-center space-x-2 max-w-[200px]">
-                          <Image
-                            className="size-20 mr-2"
-                            width={100}
-                            height={100}
-                            src={
-                              (images.has(row.image as string)
-                                ? images.get(row.image as string)
-                                : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
-                            }
-                            alt={row.name}
-                          />
+                          <Dialog>
+                            <DialogTrigger >
+                              <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
+                                <Image
+                                  className="w-full h-full rounded-lg object-cover"
+                                  width={900}
+                                  height={900}
+                                  src={
+                                    (images.has(row.image as string)
+                                      ? images.get(row.image as string)
+                                      : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                                  }
+                                  alt={row.name}
+                                />
+                              </div>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle></DialogTitle>
+                                <DialogDescription></DialogDescription>
+                              </DialogHeader>
+                              <Image
+                                className="w-full h-full rounded-lg object-cover"
+                                width={900}
+                                height={900}
+                                src={
+                                  (images.has(row.image as string)
+                                    ? images.get(row.image as string)
+                                    : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                                }
+                                alt={row.name}
+                              />
+                            </DialogContent>
+                          </Dialog>
                         </div>
                       </TableCell>
                       <TableCell className="text-center">{row.name}</TableCell>
@@ -203,7 +234,7 @@ export function DataTableForMaterial<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    Không có kết quả.
+                    {loading ? "Loading..." : "Không có dữ liệu"}
                   </TableCell>
                 </TableRow>
               )}
