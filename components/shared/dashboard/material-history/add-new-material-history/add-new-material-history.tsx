@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import AddNewMeterialHistoryForm from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history-form";
 import { Button } from "@/components/ui/button";
 
@@ -7,7 +7,9 @@ export default function AddNewMeterialHistory() {
   const [isOpen, setIsOpen] = useState(false);
 
   const openDialog = () => setIsOpen(true);
-  const closeDialog = () => setIsOpen(false);
+  const closeDialog = () => {
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -19,9 +21,9 @@ export default function AddNewMeterialHistory() {
       </Button>
 
       {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="fixed inset-0 flex items-center justify-center z-50 ">
           <div
-            className="fixed inset-0 bg-black opacity-50"
+            className="fixed inset-0 bg-black opacity-50 blur-sm backdrop:blur-sm backdrop-blur-md"
             onClick={closeDialog}
           ></div>
           <div className="relative bg-white dark:bg-[#1c1917] p-4 rounded min-w-[425px] mx-2 shadow-lg">
@@ -33,7 +35,7 @@ export default function AddNewMeterialHistory() {
                 onClick={closeDialog}
                 className="text-black dark:text-white"
               >
-                X
+                <X className="h-4 w-4" />
               </button>
             </div>
             <AddNewMeterialHistoryForm />
