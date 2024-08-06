@@ -26,7 +26,6 @@ import { number } from "zod";
 
 import * as Dialog from "@radix-ui/react-dialog";
 
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,7 +36,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 import DatePicker from "@/components/shared/common/datapicker/date-picker";
 import {
@@ -134,27 +133,25 @@ export default function UpdateMaterialHistoryForm({
     }
     // console.log("ON SUBMIT DATA:", data);
     const requestBody = {
-      id:id,
+      id: id,
       materialId: data.materialID,
       quantity: Number(data.quantity),
       price: Number(data.price.replace(/\./g, "")),
       importDate: data.importAt,
       description: data.description,
-    }
-    materiaHistoryApi
-      .updateMaterialHistory(requestBody)
-      .then((res) => {
-        console.log("UPDATE MATERIAL HISTORY SUCCESS", res.data);
-        ForceRender();
-        toast.success("Cập nhật thành công");
-      });
+    };
+    materiaHistoryApi.updateMaterialHistory(requestBody).then((res) => {
+      console.log("UPDATE MATERIAL HISTORY SUCCESS", res.data);
+      ForceRender();
+      toast.success("Cập nhật thành công");
+    });
   };
 
   const handleClearForm = () => {
-    setOpen(false)
-    setOpenAlert(false)
+    setOpen(false);
+    setOpenAlert(false);
     form.reset();
-  }
+  };
   const { formState } = form;
 
   const handleOffDialog = () => {
@@ -202,168 +199,188 @@ export default function UpdateMaterialHistoryForm({
   };
   return (
     <>
-      {
-        openAlert && (
-          <AlertDialog open={openAlert} >
-            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-      }
-      <Dialog.Root modal={true} open={open} onOpenChange={handleOnDialog}>
-        <Dialog.Trigger className="w-full">
-          {children}
-        </Dialog.Trigger>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-            <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[500px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
-              <Dialog.Title className="hidden visible"></Dialog.Title>
-              <Dialog.Description className="hidden visible"></Dialog.Description>
-              <div className="bg-slate-100  flex flex-col ">
-                <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
-                  <h2 className="text-2xl text-white">Nhập Nguyên Vật Liệu Mới</h2>
-                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                    <X className="w-4 h-4 dark:text-white" />
-                  </Button>
-                </div>
-                <div className="grid gap-4 p-4 overflow-y-auto h-[450px] dark:bg-card">
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-7">
-                      <FormField
-                        control={form.control}
-                        name="materialID"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <ComboboxForForm
-                                title="Vui lòng chọn nguyên liệu"
-                                data={comboboxData}
-                                name="materialID"
-                                form={form}
-                              />
-                            </FormControl>
-                            <FormDescription></FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="quantity"
-                        render={({ field }) => (
-                          <FormItem>
-                            {/* <FormLabel>Đơn vị</FormLabel> */}
-                            <FormControl>
-                              {/* <Input placeholder="Nhập đơn vị ở đây" {...field} /> */}
-                              <InputAnimation
-                                nameFor="Số lượng"
-                                {...field}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                  const inputValue = event.target.value;
-                                  // Remove any characters that are not digits or a decimal point
-                                  let filteredInput = inputValue.replace(/[^\d.]/g, "");
+      {openAlert && (
+        <AlertDialog open={openAlert}>
+          <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Bạn có chắc chắn muốn tắt biểu mẫu này không ??
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
+                những dữ liệu mà bạn đã nhập
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleOffDialogA}>
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearForm}>
+                Tiếp tục
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
 
-                                  // Split by decimal point and ensure only one decimal point is present
-                                  const parts = filteredInput.split(".");
-                                  if (parts.length > 2) {
-                                    // More than one decimal point
-                                    // Join the first part with the rest of the string, excluding additional decimal points
-                                    filteredInput = `${parts[0]}.${parts.slice(1).join("")}`;
-                                  }
+      <div onClick={() => handleOnDialog()}>{children}</div>
 
-                                  field.onChange(filteredInput);
-                                }}
-                              />
-                            </FormControl>
-                            <FormDescription></FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="price"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <InputAnimation
-                                type="text"
-                                nameFor="Giá nhập"
-                                {...field}
-                                inputMode="numeric"
-                                value={formatCurrency(field.value)}
-                                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                  field.onChange(
-                                    parseCurrency(event.target.value)
-                                  )
-                                }}
-                              />
-                            </FormControl>
-                            <FormDescription></FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <InputAnimation nameFor="Ghi chú" {...field} />
-                            </FormControl>
-                            <FormDescription></FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="importAt"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <DatePicker
-                                selected={new Date(importDate || "")}
-                                title={
-                                  convertDateFormat(importDate) || "Vui lòng chọn ngày nhập"
-                                }
-                                name={"importAt"}
-                                onDayClick={(event: any) => {
-                                  setImportDate(format(event, "yyyy-MM-dd"));
-                                }}
-                              />
-                            </FormControl>
-                            <FormDescription></FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <DialogFooter>
-                        <Button className="mt-3" type="submit">
-                          Lưu thay đổi
-                        </Button>
-                      </DialogFooter>
-                    </form>
-                  </Form>
-                </div>
+      {open && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 rounded-2xl">
+          <div
+            className="fixed inset-0 bg-black opacity-50 blur-sm backdrop:blur-sm backdrop-blur-md"
+            onClick={() => handleOffDialogA()}
+          ></div>
+          <div className="relative inset-0 bg-white dark:bg-[#1c1917] rounded-2xl min-w-[525px]  shadow-lg">
+            <div className="bg-slate-100  flex flex-col rounded-2xl">
+              <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
+                <h2 className="text-2xl text-white">
+                  Nhập Nguyên Vật Liệu Mới
+                </h2>
+                <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                  <X className="w-4 h-4 dark:text-white" />
+                </Button>
               </div>
-            </Dialog.Content>
-          </Dialog.Overlay>
-        </Dialog.Portal>
-      </Dialog.Root>
+              <div className="grid gap-4 p-4 overflow-y-auto h-[450px] dark:bg-card">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-7"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="materialID"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <ComboboxForForm
+                              title="Vui lòng chọn nguyên liệu"
+                              data={comboboxData}
+                              name="materialID"
+                              form={form}
+                            />
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="quantity"
+                      render={({ field }) => (
+                        <FormItem>
+                          {/* <FormLabel>Đơn vị</FormLabel> */}
+                          <FormControl>
+                            {/* <Input placeholder="Nhập đơn vị ở đây" {...field} /> */}
+                            <InputAnimation
+                              nameFor="Số lượng"
+                              {...field}
+                              onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                              ) => {
+                                const inputValue = event.target.value;
+                                // Remove any characters that are not digits or a decimal point
+                                let filteredInput = inputValue.replace(
+                                  /[^\d.]/g,
+                                  ""
+                                );
+
+                                // Split by decimal point and ensure only one decimal point is present
+                                const parts = filteredInput.split(".");
+                                if (parts.length > 2) {
+                                  // More than one decimal point
+                                  // Join the first part with the rest of the string, excluding additional decimal points
+                                  filteredInput = `${parts[0]}.${parts
+                                    .slice(1)
+                                    .join("")}`;
+                                }
+
+                                field.onChange(filteredInput);
+                              }}
+                            />
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="price"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <InputAnimation
+                              type="text"
+                              nameFor="Giá nhập"
+                              {...field}
+                              inputMode="numeric"
+                              value={formatCurrency(field.value)}
+                              onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                              ) => {
+                                field.onChange(
+                                  parseCurrency(event.target.value)
+                                );
+                              }}
+                            />
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <InputAnimation nameFor="Ghi chú" {...field} />
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="importAt"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <DatePicker
+                              selected={new Date(importDate || "")}
+                              title={
+                                convertDateFormat(importDate) ||
+                                "Vui lòng chọn ngày nhập"
+                              }
+                              name={"importAt"}
+                              onDayClick={(event: any) => {
+                                setImportDate(format(event, "yyyy-MM-dd"));
+                              }}
+                            />
+                          </FormControl>
+                          <FormDescription></FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <DialogFooter>
+                      <Button className="mt-3" type="submit">
+                        Lưu thay đổi
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </Form>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
