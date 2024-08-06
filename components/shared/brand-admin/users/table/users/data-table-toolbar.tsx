@@ -31,7 +31,7 @@ const dataSearch = [
     {
         id: 2,
         value: "phone",
-        name: "Theo số điện thoại",
+        name: "Theo Số điện thoại",
     },
     {
         id: 3,
