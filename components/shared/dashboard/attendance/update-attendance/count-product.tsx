@@ -263,8 +263,8 @@ export default function CountProduct({
           <thead>
             <tr>
               <th className="dark:bg-[#1c1917]">Hình ảnh</th>
-              <th className="dark:bg-[#1c1917]">Tên sản phẩm</th>
               <th className="dark:bg-[#1c1917]">Mã sản phẩm</th>
+              <th className="dark:bg-[#1c1917]">Tên sản phẩm</th>
               <th className="dark:bg-[#1c1917]">Số lượng</th>
               <th className="dark:bg-[#1c1917]">Xóa</th>
             </tr>
@@ -286,9 +286,10 @@ export default function CountProduct({
                     />
                   </div>
                 </td>
+                <td className="text-center">{product.phaseName}</td>
                 <td className="text-center">{product.productName}</td>
                 {/* <td className="text-center">{product.phaseName}</td> */}
-                <td className="text-center">{product.phaseName}</td>
+             
                 <td>
                   <Input
                     type="number"

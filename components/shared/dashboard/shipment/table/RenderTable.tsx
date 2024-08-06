@@ -78,27 +78,36 @@ export default function RenderTableShipment() {
         console.log("DATA SHIPMENT", response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
-      } catch (error) {
-        console.error("Error fetching order data:", error);
+      } catch (error:any) {
+        console.error("Error fetching shipmeent data:", error);
+        toast.error(error.response.data.message)
       } finally {
         setLoading(false);
       }
     };
 
     fetchDataShipment();
-  }, [currentPage, pageSize, searchTerm, status, force]);
+  }, [currentPage, pageSize, searchTerm, data,status, force]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
-    updatePathname();
+ 
   };
 
-  const updatePathname = () => {
-    const params = new URLSearchParams();
-    if (status) params.set("status", status);
-    params.set("page", "1");
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
+  useEffect(() => {
+    const updatePathname = () => {
+      const params = new URLSearchParams();
+      if (searchTerm) params.set("searchTerm", searchTerm);
+      if (status) params.set("status", status);
+      params.set("page", "1");
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+  
+    if (status !== null) {
+      updatePathname();
+    }
+  }, [status, searchTerm, pathname, router]);
+
 
   return (
     <div className="px-3 mt-3">

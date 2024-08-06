@@ -8,14 +8,16 @@ import {
 } from "@/components/ui/card";
 
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 import { Button } from "@/components/ui/button";
 
@@ -194,6 +196,7 @@ interface ShipOrder {
   deliveryMethod: number;
   deliveryMethodDescription: string;
   shipOrderDetailResponses: ShipOrderDetailResponse[];
+  isAccepted: boolean;
 }
 
 export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
@@ -201,6 +204,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ShipOrder[]>([]);
   const [order, setOrder] = useState<OrderIdData>(orderId);
+  
   // ** callData
   useEffect(() => {
     if (orderId) {
@@ -208,7 +212,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
     }
   }, [orderId]);
   const [valueStatus, setValueStatus] = useState<any>(0);
-  const { force } = OrderStore();
+  const { force,ForceRender } = OrderStore();
 
   const handleSelectChange = (value: any, id: string) => {
     console.log("value", value);
@@ -243,7 +247,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
           setLoading(false);
         });
     }
-  }, [orderId, order, valueStatus,force]);
+  }, [orderId, order, valueStatus, force]);
 
   // ** handle render order detail
   const [indexItemShipOrder, setIndexItemShipOrder] = useState<number>(0);
@@ -259,16 +263,30 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
   // console.log('data', data)
   // console.log('vvvvvv', valueStatus)
   // console.log("checkStatus",checkStatus)
-  function formatDate(inputDate:any) {
-    const date = new Date(inputDate);
+  function formatDate(inputDate: string): string {
+    if (!inputDate) return ''; // Kiểm tra nếu giá trị đầu vào là null hoặc undefined
   
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
+    // Cắt chuỗi theo định dạng YYYY-MM-DDTHH:MM:SSZ
+    const [year, month, day] = inputDate.split('T')[0].split('-');
   
     return `${day}/${month}/${year}`;
   }
   
+  
+
+  const handleAcceptOrder = (shipOrderId:string) =>{
+
+    shipOrderApi.isAcceptedShipOrder(shipOrderId)
+      .then(({ data }) => {
+        // console.log("data", data)
+        ForceRender()
+        toast.success(data.message)
+      }).catch(error => {
+        // console.log(error)
+        toast.error(error.response.data.message)
+      })
+  }
+
 
   return (
     <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6 ">
@@ -293,6 +311,8 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                 <TableHead >Loại đơn</TableHead>
                 <TableHead >
                   Trạng thái
+                </TableHead>
+                <TableHead >
                 </TableHead>
                 <TableHead >
                 </TableHead>
@@ -378,14 +398,41 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                       </DialogContent>
                     </Dialog>
                   </TableCell>
+                  <TableCell>
+                    {
+                      item.isAccepted === false ? (
+                        <span>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button className="bg-yellow-500 hover:bg-yellow-500/80">Xác nhận</Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Bạn có hoàn toàn chắc chắn không?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Bạn sẽ không thể chỉnh sửa hay bất kỳ thao tác gì cho đơn hàng này nữa, bạn chắc chắn chứ
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+                                <AlertDialogAction onClick={() =>handleAcceptOrder(item.shipOrderId)}>Xác nhận</AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </span>
+                      ) : (
+                        <span>{item.isAccepted === true ? "Đã xác nhận đơn hàng" : "Chưa xác nhận đơn hàng"}</span>
+                      )
+                    }
+                  </TableCell>
                   <TableCell >
                     {item.status === 2 ||
                       item.status === 3 ||
                       checkStatus === false ? (
-                        <>
-                        <Button className="rounded p-2 hover:bg-gray text-black bg-gay" onClick={()=>{toast.error("Hãy chuyển sang trạng thái đang đợi giao để chỉnh sửa")}}> <PenLine /></Button>
-                        </>
-                      ) : (
+                      <>
+                        <Button className="rounded p-2 hover:bg-gray text-black bg-gay" onClick={() => { toast.error("Hãy chuyển sang trạng thái đang đợi giao để chỉnh sửa") }}> <PenLine /></Button>
+                      </>
+                    ) : (
                       <FormUpdateShipOrder
                         orderId={orderId}
                         shipOrderId={item}

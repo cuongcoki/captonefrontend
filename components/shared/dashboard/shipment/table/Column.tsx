@@ -7,11 +7,17 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { Truck } from "lucide-react"
-import { ShipmentID } from "../shipmentID/ShipmentID"
-import { UpdateShipment } from "../form/UpdateShipment"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+} from "@/components/ui/hover-card";
+import { Truck } from "lucide-react";
+import { ShipmentID } from "../shipmentID/ShipmentID";
+import { UpdateShipment } from "../form/UpdateShipment";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,13 +28,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { useState } from "react"
-import { shipmentApi } from "@/apis/shipment.api"
-import toast from "react-hot-toast"
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
+import { shipmentApi } from "@/apis/shipment.api";
+import toast from "react-hot-toast";
 import { ChangeStatusShipment } from "../form/ChangeStatusShipment";
 import { error } from "console";
 import { DataTableRowActions } from "./data-table-row-actions";
+import { ShipmentStore } from "../shipment-store";
 
 export type Shipment = {
   from: {
@@ -57,6 +64,7 @@ export type Shipment = {
   id: string;
   statusDescription: string;
   status: number;
+  isAccepted: boolean
 };
 const limitLength = (text: any, maxLength: any) => {
   if (text.length > maxLength) {
@@ -69,36 +77,39 @@ const OrderStatus = [
   {
     id: 0,
     des: "Đang đợi giao",
-    name: "PENDING"
+    name: "PENDING",
   },
   {
     id: 1,
     des: "Đang thực hiện",
-    name: "PROCESSING"
+    name: "PROCESSING",
   },
   {
     id: 2,
     des: "Đã hoàn thành",
-    name: "PROCESSING"
+    name: "PROCESSING",
   },
   {
     id: 3,
     des: "Đã hủy",
-    name: "PROCESSING"
+    name: "PROCESSING",
   },
 ];
 
 function formatDate(isoString: string) {
   // Tách chuỗi thành các phần
-  const parts = isoString.split("T")[0].split("-");
+  const [datePart, timePart] = isoString.split("T");
+  const [year, month, day] = datePart.split("-");
+  const [hour, minute, second] = timePart.split(":");
 
-  // parts[0] là năm, parts[1] là tháng, parts[2] là ngày
-  const year = parts[0];
-  const month = parts[1];
-  const day = parts[2];
+  // Trả về chuỗi theo định dạng dd/MM/yyyy HH:mm:ss
+  return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
+}
 
-  // Trả về chuỗi theo định dạng dd/MM/yyyy
-  return `${day}/${month}/${year}`;
+function convertUtcToVn(utcDateStr: string): string {
+  let utcDate = new Date(utcDateStr);
+  let vnDateStr = utcDate.toLocaleDateString("vi-VN");
+  return vnDateStr;
 }
 export const columns: ColumnDef<Shipment>[] = [
   {
@@ -274,7 +285,7 @@ export const columns: ColumnDef<Shipment>[] = [
     cell: ({ row }) => {
       return (
         <span className="flex justify-center ">
-          {formatDate(row.original.shipDate)}
+          {convertUtcToVn(row.original.shipDate)}
         </span>
       );
     },
@@ -285,57 +296,78 @@ export const columns: ColumnDef<Shipment>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" className=" ">
-          Ngày nhận hàng
+          Trạng thái đơn
         </Button>
       );
     },
-    cell: ({ row }) => <span>
-      <ChangeStatusShipment shipmentID={row.original} />
-      {/* {limitLength(row.original.statusDescription, 30)} */}
-    </span>,
+    cell: ({ row }) => {
+    
+
+      return <>
+        {
+          row.original.status !== 2 && row.original.status !== 3 ? (
+            <span>
+              <ChangeStatusShipment shipmentID={row.original} />
+              {/* {limitLength(row.original.statusDescription, 30)} */}
+            </span>
+          ) : (
+            <span>{row.original.statusDescription}</span>
+          )
+        }
+      </>
+    }
   },
 
   {
     accessorKey: "id",
     header: ({ column }) => {
-      return (
-        <Button variant="ghost" className=" ">
-        </Button>
-      );
+      return <Button variant="ghost" className=" "></Button>;
     },
     cell: ({ row }) => {
+      const { ForceRender } = ShipmentStore();
       const handleAcceptShipment = () => {
         console.log(row.original.id);
-        shipmentApi.isAcceptedShipment(row.original.id, true)
+        shipmentApi
+          .isAcceptedShipment(row.original.id, true)
           .then(({ data }) => {
+            ForceRender()
             // console.log("data", data)
-            toast.success(data.message)
-          }).catch(error => {
-            // console.log(error)
-            toast.error(error.response.data.message)
+            toast.success(data.message);
           })
-      }
+          .catch((error) => {
+            // console.log(error)
+            toast.error(error.response.data.message);
+          });
+      };
 
       return (
-        <span>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button className="bg-yellow-500 hover:bg-yellow-500/80">Xác nhận</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có hoàn toàn chắc chắn không?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Bạn sẽ không thể chỉnh sửa hay bất kỳ thao tác gì cho đơn hàng này nữa, bạn chắc chắn chứ
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleAcceptShipment}>Xác nhận</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </span>
+        <>
+          {
+            row.original.isAccepted === false ? (
+              <span>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button className="bg-yellow-500 hover:bg-yellow-500/80">Xác nhận</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Bạn có hoàn toàn chắc chắn không?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Bạn sẽ không thể chỉnh sửa hay bất kỳ thao tác gì cho đơn hàng này nữa, bạn chắc chắn chứ
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleAcceptShipment}>Xác nhận</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </span>
+            ) : (
+              <span>{row.original.isAccepted === true ? "Đã xác nhận đơn hàng" : "Chưa xác nhận đơn hàng"}</span>
+            )
+          }
+        </>
       )
     },
   },
@@ -343,8 +375,7 @@ export const columns: ColumnDef<Shipment>[] = [
   {
     id: "actions",
     cell: ({ row }) =>
-    <DataTableRowActions row={row}/>
+      <DataTableRowActions row={row} />
     ,
   },
-
-]
+];

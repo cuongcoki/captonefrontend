@@ -77,6 +77,7 @@ import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
 import { companyApi } from "@/apis/company.api";
 import { OrderStore } from "../order-store";
+import { shipOrderApi } from "@/apis/shipOrder.api";
 
 interface OrderId {
   orderId?: orderIds;
@@ -140,6 +141,19 @@ type Company = {
   companyEnum: string; // Nếu có nhiều loại công ty khác nhau, bạn có thể thêm vào đây
 };
 
+interface ShipOrder {
+  shipOrderId: string;
+  shipperId: string;
+  shipperName: string;
+  shipDate: string;
+  status: number;
+  statusDescription: string;
+  deliveryMethod: number;
+  deliveryMethodDescription: string;
+
+}
+
+let initialFormValues: any = null;
 export default function UpdateOrder({ orderId }: OrderId) {
   //state
   const [open, setOpen] = useState<boolean>(false);
@@ -147,9 +161,6 @@ export default function UpdateOrder({ orderId }: OrderId) {
   const { ForceRender } = OrderStore();
   const [openAlert, setOpenAlert] = useState<boolean>(false);
 
-  const handleOffDialog = () => {
-    setOpenAlert(true);
-  };
   const handleOnDialog = () => {
     setOpen(true);
   };
@@ -189,8 +200,8 @@ export default function UpdateOrder({ orderId }: OrderId) {
       return dateString; // Trả về giá trị gốc nếu có lỗi
     }
   };
-  console.log("data", data);
-  console.log("ordeeidddddd", orderId);
+  // console.log("data", data);
+  // console.log("ordeeidddddd", orderId);
   useEffect(() => {
     const fetchDataCompany = async () => {
       const { data } = await companyApi.getCompanyByType(1);
@@ -207,6 +218,25 @@ export default function UpdateOrder({ orderId }: OrderId) {
       });
     }
   }, [orderId, currentPage, pageSize, searchTermAll, form, fetchTrigger]);
+
+  const [dataShipOrder, setDataShipOrder] = useState<ShipOrder[]>([]);
+  useEffect(() => {
+    setLoading(true);
+    if (orderId) {
+      shipOrderApi
+        .getShipOrderID(orderId.id)
+        .then(({ data }) => {
+          setDataShipOrder(data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching ship order data:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [orderId,]);
+  // console.log('orderIddataShipOrderdataShipOrderdataShipOrder===dataShipOrder', dataShipOrder)
 
   // console.log('orderId', orderId)
 
@@ -242,6 +272,29 @@ export default function UpdateOrder({ orderId }: OrderId) {
     setFetchTrigger((prev) => prev + 1);
     form.reset();
   }
+
+
+
+
+  const handleOffDialog = () => {
+    const currentFormValues = form.getValues();
+
+    // Lưu giá trị ban đầu của form nếu chưa được lưu
+    if (initialFormValues === null) {
+      initialFormValues = currentFormValues;
+    }
+
+    // console.log("form", currentFormValues);
+    // console.log("form compare", initialFormValues);
+
+    const isFormChanged = JSON.stringify(initialFormValues) === JSON.stringify(currentFormValues);
+    // console.log("isFormChanged", isFormChanged)
+    if (isFormChanged) {
+      setOpen(false);
+    } else {
+      setOpenAlert(true);
+    }
+  };
   return (
     <>
       {
@@ -272,6 +325,8 @@ export default function UpdateOrder({ orderId }: OrderId) {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
             <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[700px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+              <Dialog.Title className="visible hidden"></Dialog.Title>
+              <Dialog.Description className="visible hidden"></Dialog.Description>
               <div className="flex flex-col space-y-4 rounded-md bg-white">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">
@@ -298,6 +353,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
+                                    disabled={dataShipOrder.some((item) => item.status === 2)}
                                   >
                                     <FormControl>
                                       <SelectTrigger>

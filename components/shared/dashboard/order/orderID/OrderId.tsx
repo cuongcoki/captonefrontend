@@ -227,7 +227,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
 
                 <div className="hidden  md:flex gap-6">
 
-                  <Card className="w-full xl:w-[200px] h-[100px] overflow-auto shadow-md shadow-primary/50">
+                  <Card className="w-full xl:w-[250px] h-[130px] overflow-auto shadow-md shadow-primary/50">
                     <div className="flex items-center justify-center flex-col gap-2 p-2">
                       <h2 className="font-semibold text-lg">Địa chỉ công ty</h2>
                       <span className="text-center">
@@ -236,7 +236,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
                     </div>
                   </Card>
 
-                  <Card className="w-full xl:w-[200px] h-[100px] overflow-auto shadow-md shadow-primary/50">
+                  <Card className="w-full xl:w-[250px] h-[130px] overflow-auto shadow-md shadow-primary/50">
                     <div className="flex items-center justify-center flex-col gap-2 p-2">
                       <h2 className="font-semibold text-lg">Loại công ty</h2>
                       <span className="text-center">
@@ -245,18 +245,20 @@ export default function OrderIdPage({ orderId }: OrderId) {
                     </div>
                   </Card>
 
-                  <Card className="w-full xl:w-[200px] h-[100px] overflow-auto shadow-md shadow-primary/50">
+                  <Card className="w-full xl:w-[250px] h-[130px] overflow-auto shadow-md shadow-primary/50">
                     <div className="flex items-center justify-center flex-col gap-2 p-2">
                       <h2 className="font-semibold text-lg">Thông tin giám đốc</h2>
-                      <span className="text-center">
-                        {data?.company.directorName}
-                      </span>
-                      <span className="text-center">
-                        {data?.company.directorPhone}
-                      </span>
-                      <span className="text-center">
-                        {data?.company.email}
-                      </span>
+                      <div className="flex flex-col overflow-auto">
+                        <span >
+                          Tên: {data?.company.directorName}
+                        </span>
+                        <span >
+                          Số điện thoại:  {data?.company.directorPhone}
+                        </span>
+                        <span >
+                          Địa chỉ Gmail: {data?.company.email === "" ? "Không có" : data?.company.email}
+                        </span>
+                      </div>
                     </div>
                   </Card>
 

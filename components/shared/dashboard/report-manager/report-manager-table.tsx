@@ -300,9 +300,8 @@ export default function ReportManagerTable({
                     </TableCell>
                     <TableCell>
                       <div
-                        className={`text-center ${
-                          ColorOfTypeStatus[report.status]
-                        }`}
+                        className={`text-center ${ColorOfTypeStatus[report.status]
+                          }`}
                       >
                         {StatusDescription[report.status]}
                       </div>
@@ -325,7 +324,7 @@ export default function ReportManagerTable({
           }}
           disabled={Number(searchParams.PageIndex) === 1}
         >
-          Previous
+          Trang trước
         </Button>
         <Button
           variant="outline"
@@ -337,7 +336,7 @@ export default function ReportManagerTable({
           }}
           disabled={Number(searchParams.PageIndex) >= totalPage}
         >
-          Next
+          Trang sau
         </Button>
       </div>
     </div>

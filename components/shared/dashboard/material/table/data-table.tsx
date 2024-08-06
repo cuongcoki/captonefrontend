@@ -29,12 +29,25 @@ import { usePathname, useRouter } from "next/navigation";
 import "./material.css";
 import { filesApi } from "@/apis/files.api";
 import { Item } from "@radix-ui/react-dropdown-menu";
-
+import { materialType } from "@/schema/material";
+import Image from "next/image";
+import UpdateMaterial from "@/components/shared/dashboard/material/update-material/update-material";
+import { PenLine } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = React.createContext<ContexType>({
-  forceUpdate: () => {},
+  forceUpdate: () => { },
 });
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,15 +60,12 @@ export function DataTableForMaterial<TData, TValue>({
   searchTermProp,
   pageIndexProp,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [pageIndex, setPageIndex] = React.useState<number>(
     (pageIndexProp as number) || 1
   );
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
+
   const [totalPages, setTotalPages] = React.useState<number>(1);
-  const [data, setData] = React.useState<TData[]>([]);
+  const [data, setData] = React.useState<materialType[]>([]);
   const [searchTerm, setSearchTerm] = React.useState<string>(
     searchTermProp || ""
   );
@@ -64,26 +74,38 @@ export function DataTableForMaterial<TData, TValue>({
 
   const pathname = usePathname();
   const router = useRouter();
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      sorting,
-      columnFilters,
-    },
-  });
+  const [images, setImages] = React.useState<Map<string, string>>(new Map());
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   useEffect(() => {
     console.log("Call API");
+    const getImages = async (data: materialType[]) => {
+      try {
+        data.forEach((item) => {
+          if (item.image) {
+            filesApi
+              .getFile(item.image.trim() || "%20")
+              .then((res) => {
+                setImages((prev) => {
+                  const newImages = new Map(prev);
+                  newImages.set(item.image as string, res.data.data);
+                  return newImages;
+                });
+              })
+              .catch((error) => {
+                console.log("error in get image", error);
+              });
+          }
+        });
+      } catch (error) {
+      } finally {
+        // setImages(imagesFetch);
+        // console.log("Images", imagesFetch);
+      }
+    };
 
     const searchMaterial = async (searchTerm: string) => {
+      setLoading(true);
       console.log("searchTerm", searchTerm);
       try {
         const data = await materialApi.searchMaterial({
@@ -92,31 +114,20 @@ export function DataTableForMaterial<TData, TValue>({
           pageIndex: pageIndex,
           pageSize: 10,
         });
+        await getImages(data.data.data.data);
 
-        data.data.data.data.forEach((item) => {
-          if (item.image === "") {
-            item.image = " ";
-          }
-        });
         const tableData = data.data.data.data;
         console.log("Table Data", tableData);
-        // const imagePromises = tableData.map(async (item) => {
 
-        //   const res = await filesApi.getFile(item.image as string);
-        //   item.image = res.data.data;
-        //   // console.log("Image" + item.name, item.image);
-        // });
-
-        // await Promise.all(imagePromises);
-
-        setData(tableData as TData[]);
+        setData(tableData);
         setTotalPages(data.data.data.totalPages);
-      } catch (error) {
-        console.log(error);
-      } finally {
         router.push(
           `${pathname}?searchTerm=${searchTerm || ""}&pageIndex=${pageIndex}`
         );
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -143,40 +154,77 @@ export function DataTableForMaterial<TData, TValue>({
         <MyContext.Provider value={{ forceUpdate }}>
           <Table className="material-table">
             <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id} className={`${header.id}`}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    );
-                  })}
-                </TableRow>
-              ))}
+              <TableRow>
+                <TableHead className="text-center">Ảnh minh họa</TableHead>
+                <TableHead className="text-center">Tên nguyên liệu</TableHead>
+                <TableHead className="text-center">
+                  Số lượng mỗi đơn vị
+                </TableHead>
+                <TableHead className="text-center">Đơn vị tính</TableHead>
+                <TableHead className="text-center">Miêu tả</TableHead>
+                <TableHead className="text-center">Số lượng</TableHead>
+                <TableHead className="text-center">Chỉnh sửa</TableHead>
+              </TableRow>
             </TableHeader>
             <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => {
-                  // console.log("row", row);
+              {data.length && !loading ? (
+                data.map((row) => {
                   return (
-                    <TableRow
-                      key={row.id}
-                      data-state={row.getIsSelected() && "selected"}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className={row.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </TableCell>
-                      ))}
+                    <TableRow key={row.id}>
+                      <TableCell>
+                        <div className="flex justify-center items-center space-x-2 max-w-[200px]">
+                          <Dialog>
+                            <DialogTrigger >
+                              <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
+                                <Image
+                                  className="w-full h-full rounded-lg object-cover"
+                                  width={900}
+                                  height={900}
+                                  src={
+                                    (images.has(row.image as string)
+                                      ? images.get(row.image as string)
+                                      : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                                  }
+                                  alt={row.name}
+                                />
+                              </div>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle></DialogTitle>
+                                <DialogDescription></DialogDescription>
+                              </DialogHeader>
+                              <Image
+                                className="w-full h-full rounded-lg object-cover"
+                                width={900}
+                                height={900}
+                                src={
+                                  (images.has(row.image as string)
+                                    ? images.get(row.image as string)
+                                    : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                                }
+                                alt={row.name}
+                              />
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">{row.name}</TableCell>
+                      <TableCell className="text-center">
+                        {row.quantityPerUnit}
+                      </TableCell>
+                      <TableCell className="text-center">{row.unit}</TableCell>
+                      <TableCell className="text-center">
+                        {row.description}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {row.quantityInStock}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <UpdateMaterial id={row.id}>
+                          <PenLine className="cursor-pointer" />
+                        </UpdateMaterial>
+                      </TableCell>
                     </TableRow>
                   );
                 })
@@ -186,14 +234,14 @@ export function DataTableForMaterial<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    {loading ? "Loading..." : "Không có dữ liệu"}
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </MyContext.Provider>
-        <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
+        <div className="flex items-center justify-center space-x-4 my-4 ">
           <Button
             variant="outline"
             size="sm"
@@ -201,15 +249,18 @@ export function DataTableForMaterial<TData, TValue>({
             disabled={Number(pageIndex) === 1}
             className=""
           >
-            Previous
+            <ChevronLeftIcon className="h-4 w-4" />
           </Button>
+          <span>
+            Trang {data.length > 0 ? pageIndex : 0} Của {data.length > 0 ? totalPages : 0}
+          </span>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setPageIndex((prev) => Number(prev) + 1)}
             disabled={pageIndex >= totalPages}
           >
-            Next
+            <ChevronRightIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>

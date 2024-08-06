@@ -73,6 +73,7 @@ interface UserData {
 
 interface UserID {
   userId?: any;
+  children?: any;
 }
 
 const enumRole = [
@@ -136,7 +137,7 @@ type User = {
   roleId: any;
 };
 
-export const UpdateUser: React.FC<UserID> = ({ userId }) => {
+export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
 
@@ -444,9 +445,33 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
       setOpen(false);
       toast.success("Cập nhật thành công!");
       // setOpen(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating user:", error);
-      toast.error("Có lỗi xảy ra khi cập nhật.");
+      if (error.response && error.response.data && error.response.data.error) {
+        const errors = error.response.data.error;
+        if (errors.Id) {
+          toast.error(errors.Id);
+        }
+
+        if (errors.Phone) {
+          toast.error(errors.Phone);
+        }
+
+        if (errors.FirstName) {
+          toast.error(errors.FirstName);
+        }
+        if (errors.LastName) {
+          toast.error(errors.LastName);
+        }
+        if (errors.DOB && Array.isArray(errors.DOB)) {
+          errors.DOB.forEach((error: any) => {
+            toast.error(error);
+          });
+        }
+      } else {
+        toast.error("Có lỗi xảy ra khi cập nhật.");
+      }
+
     } finally {
       setLoading(false);
     }
@@ -455,13 +480,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>
       <Dialog.Trigger className="w-full">
-        <Button
-          variant="outline"
-          className="border-none w-full flex items-center justify-start "
-          onClick={handleOnDialog}
-        >
-          Chỉnh sửa
-        </Button>
+        <div onClick={handleOnDialog}>{children}</div>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
@@ -850,7 +869,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                             className={cn(
                                               "w-full pl-3 text-left font-normal",
                                               !field.value &&
-                                              "text-muted-foreground"
+                                                "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -934,7 +953,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId }) => {
                                             className={cn(
                                               "w-full pl-3 text-left font-normal",
                                               !field.value &&
-                                              "text-muted-foreground"
+                                                "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (

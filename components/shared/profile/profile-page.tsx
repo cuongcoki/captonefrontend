@@ -33,7 +33,14 @@ import { Separator } from "@/components/ui/separator";
 import LoadingPage from "../loading/loading-page";
 
 // ** import icon
-import { ListCollapse, Phone, Globe, KeyRound, Contact } from "lucide-react";
+import {
+  ListCollapse,
+  Phone,
+  Globe,
+  KeyRound,
+  Contact,
+  PencilLine,
+} from "lucide-react";
 
 // ** import react
 import { useParams, useRouter } from "next/navigation";
@@ -51,6 +58,7 @@ import Image from "next/image";
 import { filesApi } from "@/apis/files.api";
 import { salaryApi } from "@/apis/salary.api";
 import { authApi } from "@/apis/auth.api";
+import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdateForm";
 
 const invoices = [
   {
@@ -255,7 +263,29 @@ export default function ProfilePage() {
   };
 
   console.log(user.user);
+  const formatCurrency = (value: any): string => {
+    if (!value) return "";
+    let valueString = value.toString();
 
+    // Remove all non-numeric characters, including dots
+    valueString = valueString.replace(/\D/g, "");
+
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+
+    if (valueString === "") return "0";
+
+    // Reverse the string to handle grouping from the end
+    let reversed = valueString.split("").reverse().join("");
+
+    // Add dots every 3 characters
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+
+    // Reverse back to original order
+    let formatted = formattedReversed.split("").reverse().join("");
+
+    return formatted;
+  };
   return (
     <div className="flex flex-col gap-6 justify-center">
       <header className=" flex justify-between">
@@ -281,7 +311,9 @@ export default function ProfilePage() {
             </p>
 
             <div className="mb-4 text-sm sm:text-md md:text-lg text-center sm:text-start">
-              <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary font-semibold">{userId?.address}</p>
+              <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary font-semibold">
+                {userId?.address}
+              </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
@@ -295,13 +327,20 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
+          {/* <div className="absolute right-2 top-2 hover:cursor-pointer">
+            {userId.roleId === 1 && (
+              <UpdateUser userId={userId.id}>
+                <PencilLine />
+              </UpdateUser>
+            )}
+          </div> */}
         </div>
 
         {/* tính năng của người dùng, chủ .....  */}
         <div className="absolute lg:relative lg:right-0 right-7 ">
           {/* giao diện desktop */}
 
-          {user.user?.roleId === 1 && (
+          {user.user.id !== params.id && user.user?.roleId === 1 && (
             <>
               <div className="hidden lg:block">
                 <Card>
@@ -310,7 +349,11 @@ export default function ProfilePage() {
                       <TabsList className="grid w-[300px] grid-cols-3">
                         <TabsTrigger value="status">Trạng thái</TabsTrigger>
                         <TabsTrigger value="role">Vai trò</TabsTrigger>
-                        <TabsTrigger value="edit">Chỉnh sửa</TabsTrigger>
+                        <UpdateUser userId={userId.id}>
+                          <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+                            Chỉnh sửa
+                          </div>
+                        </UpdateUser>
                       </TabsList>
                       <TabsContent value="status">
                         <div className="grid gap-3">
@@ -377,7 +420,11 @@ export default function ProfilePage() {
                           <TabsList className="grid w-[300px] grid-cols-3">
                             <TabsTrigger value="status">Trạng thái</TabsTrigger>
                             <TabsTrigger value="role">Vai trò</TabsTrigger>
-                            <TabsTrigger value="edit">Chỉnh sửa</TabsTrigger>
+                            <UpdateUser userId={userId.id}>
+                              <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+                                Chỉnh sửa
+                              </div>
+                            </UpdateUser>
                           </TabsList>
                           <TabsContent value="status">
                             <div className="grid gap-3">
@@ -481,7 +528,7 @@ export default function ProfilePage() {
                     Lương công nhật
                   </div>
                   <div>
-                    200.000 <span className="text-gray-400">VND/Ngày</span>
+                    {formatCurrency(userId?.salaryHistoryResponse?.salaryByDayResponses.salary)} <span className="text-gray-400">VND/Ngày</span>
                   </div>
                 </div>
 
@@ -490,7 +537,7 @@ export default function ProfilePage() {
                     Lương tăng ca
                   </div>
                   <div>
-                    30.000 <span className="text-gray-400">VND/giờ</span>
+                    {formatCurrency(userId?.salaryHistoryResponse?.salaryByOverTimeResponses.salary)} <span className="text-gray-400">VND/giờ</span>
                   </div>
                 </div>
 
@@ -498,8 +545,9 @@ export default function ProfilePage() {
                   <div className="font-extralight text-[0.8rem]">
                     Lương khả dụng
                   </div>
+                  {/* accountBalance */}
                   <div>
-                    3.500.000 <span className="text-gray-400">VND</span>
+                  {userId?.accountBalance === 0 ? 0 : formatCurrency(userId?.accountBalance)} <span className="text-gray-400">VND</span>
                   </div>
                 </div>
 

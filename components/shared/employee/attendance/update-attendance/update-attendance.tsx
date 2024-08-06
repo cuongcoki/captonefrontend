@@ -408,7 +408,7 @@ export default function UpdateAttendanceEm({
         title={`Điểm danh nhân viên - ${CheckUser.user?.companyName}`}
         description={`Điểm danh nhân viên ngày ${dateProp} - ${
           comboboxData.find((item) => item.value === slotProp)?.label
-        }`}
+        }.`}
       />
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 mb-5 flex-wrap ">
         <div className="">
@@ -463,8 +463,8 @@ export default function UpdateAttendanceEm({
               </th>
             </tr>
             <tr>
-              <th className="dark:bg-[#1c1917] dark:text-primary">Tên</th>
               <th className="dark:bg-[#1c1917] dark:text-primary">Mã</th>
+              <th className="dark:bg-[#1c1917] dark:text-primary">Tên</th>
               <th className="dark:bg-[#1c1917] dark:text-primary">Số lượng</th>
             </tr>
           </thead>
@@ -521,7 +521,7 @@ export default function UpdateAttendanceEm({
                           </td>
                         </>
                       )}
-                      <CountProduct index={index}>
+                        <CountProduct index={index}>
                         <td
                           className={
                             item.isSalaryByProduct === true
@@ -532,7 +532,7 @@ export default function UpdateAttendanceEm({
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
                         >
-                          {product.productName}
+                          {product.phaseName}
                         </td>
                       </CountProduct>
                       <CountProduct index={index}>
@@ -546,7 +546,7 @@ export default function UpdateAttendanceEm({
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
                         >
-                          {product.phaseName}
+                          {product.productName}
                         </td>
                       </CountProduct>
                       <CountProduct index={index}>

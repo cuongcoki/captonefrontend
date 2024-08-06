@@ -40,6 +40,7 @@ import { SalaryHistoryType } from "@/types/salary.type";
 import toast from "react-hot-toast";
 import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
 import { format } from "date-fns";
+import TitleComponent from "@/components/shared/common/Title";
 export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
   const [salaryHistory, setSalaryHistory] = useState<SalaryHistoryType[]>([]);
   const { force, forceRender, setSalaryAvailiable, salaryAvailiable } =
@@ -59,8 +60,8 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
     salaryApi
       .getPaidSalaries({
         UserId: id,
-        PageIndex: 1,
-        PageSize: 10,
+        PageIndex: index,
+        PageSize: 4,
       })
       .then((res) => {
         setSalaryHistory(res.data.data.data);
@@ -70,7 +71,7 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
       .catch((e) => {
         console.log({ e });
       });
-  }, [id, force]);
+  }, [id, force, index]);
 
   const formatCurrency = (value: any): string => {
     if (!value) return "";
@@ -113,14 +114,17 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
     <>
       <Card className="overflow-hidden">
         <CardHeader>
-          <CardTitle className="text-primary">Lịch sử nhận lương</CardTitle>
+          <TitleComponent
+            title="Lịch sử nhận lương"
+            description="Lịch sử nhận lương gần nhất của nhân viên."
+          />
         </CardHeader>
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Thời gian</TableHead>
-                <TableHead>Lương </TableHead>
+                <TableHead>Lương nhận</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -152,7 +156,9 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
                 <Button
                   size="icon"
                   variant="outline"
-                  className="h-6 w-6"
+                  className={`h-6 w-6 ${
+                    index === 1 ? "" : "bg-primary text-primary-foreground"
+                  }`}
                   disabled={index === 1}
                   onClick={() => setIndex(index - 1)}
                 >
@@ -164,7 +170,11 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
                 <Button
                   size="icon"
                   variant="outline"
-                  className="h-6 w-6"
+                  className={`h-6 w-6 ${
+                    index >= totalPage
+                      ? ""
+                      : "bg-primary text-primary-foreground"
+                  }`}
                   disabled={index >= totalPage}
                   onClick={() => setIndex(index + 1)}
                 >

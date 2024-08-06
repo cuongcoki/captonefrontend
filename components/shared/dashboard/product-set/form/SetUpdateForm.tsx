@@ -27,6 +27,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 
 // ** import ICON
 import {
+  Check,
   Eye,
   ImageUp,
   Minus,
@@ -85,7 +86,9 @@ interface SetProduct {
   quantity: number;
   product: Product;
 }
-
+let initialFormValuesSet: any = null;
+let initialFormValuesSetUpdate: any = null;
+let initialFormValuesForm: any = null;
 export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   // console.log('setId',setId)
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
@@ -99,9 +102,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   const handleOnDialogA = () => {
     setOpenAlert(true);
   };
-  const handleOffDialog = () => {
-    setOpenAlert(true);
-  };
+
   const handleOnDialog = () => {
     setOpen(true);
   };
@@ -474,7 +475,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       removeProductIds: removeProductIds,
     };
 
-    console.log("requestBodyrequestBodyrequestBody",requestBody)
+    console.log("requestBodyrequestBodyrequestBody", requestBody)
     setApi
       .updateSet(requestBody, setProductId.id)
       .then((res) => {
@@ -485,6 +486,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         setProductsRequest([]);
         setGetDetailsProUpdate([]);
         setUpdateProducts([]);
+        setRemoveProductIds([])
         ForceRender();
         setOpen(false);
       })
@@ -509,7 +511,53 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     form.reset();
     setProductsRequest([]);
     setGetDetailsPro([]);
+    setUpdateProducts([]);
+    setRemoveProductIds([])
   }
+  const handleOffDialog = () => {
+
+    //add product
+    const isArrayEmptyAdd = (arr: any) => {
+      return Array.isArray(arr) && arr.length === 0;
+    };
+
+    const isAddEmpty = isArrayEmptyAdd(productsRequest);
+
+    // form
+    const currentFormValues1 = form.getValues();
+    console.log("currentFormValues1", currentFormValues1)
+    if (initialFormValuesForm === null) {
+      initialFormValuesForm = currentFormValues1;
+    }
+    console.log("initialFormValuesForm", initialFormValuesForm)
+
+    const isFormChanged1 = JSON.stringify(initialFormValuesForm) === JSON.stringify(currentFormValues1);
+
+    // update set
+    const isArrayEmptyUpdate = (arr: any) => {
+      return Array.isArray(arr) && arr.length === 0;
+    };
+
+    const isUpdateEmpty = isArrayEmptyUpdate(updateProducts);
+
+
+    // remove set
+    const isArrayEmptyRemove = (arr: any) => {
+      return Array.isArray(arr) && arr.length === 0;
+    };
+
+    const isRemoveEmpty = isArrayEmptyRemove(removeProductIds);
+    // console.log("isFormChanged", isAddEmpty)
+    // console.log("isFormChanged1", isFormChanged1)
+    // console.log("isFormChanged2", isUpdateEmpty)
+    // console.log("isFormChanged3", isRemoveEmpty)
+    if (isAddEmpty && isFormChanged1 && isUpdateEmpty && isRemoveEmpty) {
+      setOpen(false);
+    } else {
+      setOpenAlert(true);
+    }
+  };
+  // console.log("removeProductIds", removeProductIds)
   return (
     <>
       {
@@ -538,8 +586,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
             <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1000px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-            <Dialog.Title className="hidden visible"></Dialog.Title>
-            <Dialog.Description className="hidden visible"></Dialog.Description>
+              <Dialog.Title className="hidden visible"></Dialog.Title>
+              <Dialog.Description className="hidden visible"></Dialog.Description>
               <div className="bg-white flex flex-col rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">Chỉnh Sửa Thông Tin Bộ Sản Phẩm</h2>
@@ -581,6 +629,23 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                           images={product}
                                         />
                                       </div>
+                                      <Check
+                                        className={`w-5 h-5 ${productsRequest.some(
+                                          (item1) => item1.productId === product.id
+                                        )
+                                          ? "absolute top-0 right-0 bg-primary text-white"
+                                          : "hidden"
+                                          }`}
+                                      />
+                                      <Check
+                                        className={`w-5 h-5 ${getDetailsProUpdate.some(
+                                          (item1) => item1.productId === product.id
+                                        )
+                                          ? "absolute top-0 right-0 bg-primary text-white"
+                                          : "hidden"
+                                          }`}
+                                      />
+
                                       <div>
                                         <Button
                                           variant={"ghost"}
