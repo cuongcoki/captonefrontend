@@ -33,6 +33,7 @@ import { filesApi } from "@/apis/files.api";
 import { companyApi } from "@/apis/company.api";
 import HeaderComponent from "@/components/shared/common/header";
 import DatePickerLimit from "@/components/shared/common/datapicker/date-picker-limit";
+import { useAuth } from "@/hooks/useAuth";
 
 const comboboxData: ComboboxDataType[] = [
   {
@@ -60,7 +61,7 @@ export default function UpdateAttendance({
   warehouseProp: string;
 }): JSX.Element {
   const userData = JSON.parse(localStorage?.getItem("userData") || "{}");
-
+  const CheckUser = useAuth();
   const colorSlaryByProduct = "bg-white";
   function formatDate(dateStr: String) {
     const [day, month, year] = dateStr.split("/");
@@ -402,7 +403,7 @@ export default function UpdateAttendance({
   return (
     <div>
       <HeaderComponent
-        title="Điểm danh nhân viên"
+        title={`Điểm danh nhân viên - ${CheckUser.user?.companyName}`}
         description={`Điểm danh nhân viên ngày ${dateProp} - ${
           comboboxData.find((item) => item.value === slotProp)?.label
         }.`}

@@ -59,7 +59,7 @@ export default function DayOfCalender({ dayData, month, year }: Props) {
           </DialogTrigger>
 
           <DialogContent
-            className=" max-w-[80vw] max-h-[80vh]  overflow-y-auto"
+            className=" max-w-[80vw] max-h-[80vh]  overflow-y-auto rounded-md"
             style={{
               msOverflowStyle: "none" /* IE, Edge */,
               scrollbarWidth: "none" /* Firefox */,
