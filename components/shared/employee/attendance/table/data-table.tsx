@@ -34,7 +34,7 @@ type ContextType = {
 };
 
 export const AttendanceContext = createContext<ContextType>({
-  ForceRender: () => {},
+  ForceRender: () => { },
 });
 
 interface DataTableProps<TData, TValue> {
@@ -145,9 +145,9 @@ export function DataTableForAttendanceEm<TData, TValue>({
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </TableHead>
                     );
                   })}
@@ -181,7 +181,7 @@ export function DataTableForAttendanceEm<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    Không có kết quả.
                   </TableCell>
                 </TableRow>
               )}
@@ -200,7 +200,7 @@ export function DataTableForAttendanceEm<TData, TValue>({
             }}
             disabled={Number(serachData.PageIndex) === 1}
           >
-            Previous
+            Trang trước
           </Button>
           <Button
             variant="outline"
@@ -213,7 +213,7 @@ export function DataTableForAttendanceEm<TData, TValue>({
             }}
             disabled={Number(serachData.PageIndex) >= Number(totalPages)}
           >
-            Next
+            Trang sau
           </Button>
         </div>
       </div>

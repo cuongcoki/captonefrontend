@@ -148,9 +148,7 @@ export default function CreateOrder() {
   const handleOnDialogA = () => {
     setOpenAlert(true);
   };
-  const handleOffDialog = () => {
-    setOpenAlert(true);
-  };
+
   const handleOnDialog = () => {
     setOpen(true);
   };
@@ -481,6 +479,26 @@ export default function CreateOrder() {
     setSearchResultsSet([]);
   }
 
+  const handleOffDialog = () => {
+    // Kiểm tra xem mảng có rỗng hay không
+    const isDetailsProEmpty = Array.isArray(getDetailsPro) && getDetailsPro.length === 0;
+    const isProductsRequestEmpty = Array.isArray(productsRequest) && productsRequest.length === 0;
+  
+    // Kiểm tra giá trị cụ thể của form
+    const isCompanyIdEmpty = form.getValues().companyId === "";
+    const isEndOrderEmpty = form.getValues().endOrder === "";
+    const isStartOrderEmpty = form.getValues().startOrder === "";
+    const isVatEmpty = form.getValues().vat === 0;
+  
+    // Nếu tất cả các trường trong form đều trống hoặc không có giá trị và các mảng rỗng
+    if (isDetailsProEmpty && isProductsRequestEmpty && isCompanyIdEmpty && isEndOrderEmpty && isStartOrderEmpty && isVatEmpty) {
+      setOpen(false);
+    } else {
+      setOpenAlert(true);
+    }
+  };
+  
+  
   const productType = 0;
   const setType = 1;
   return (

@@ -408,7 +408,7 @@ export default function UpdateAttendanceEm({
         title={`Điểm danh nhân viên - ${CheckUser.user?.companyName}`}
         description={`Điểm danh nhân viên ngày ${dateProp} - ${
           comboboxData.find((item) => item.value === slotProp)?.label
-        }`}
+        }.`}
       />
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 mb-5 flex-wrap ">
         <div className="">

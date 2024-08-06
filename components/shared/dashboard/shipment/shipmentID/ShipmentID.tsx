@@ -148,7 +148,6 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<shipmentID>();
   const [open, setOpen] = useState<boolean>(false);
-
   const handleOffDialog = () => {
     setOpen(false);
   };
@@ -175,7 +174,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
     };
 
     fetchDataOrderId();
-  }, [data]);
+  }, [data, shipmentIDDes]);
 
   // các hàm hiển thị sao cho oke
   function formatDate(isoString: string) {
@@ -379,7 +378,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">Liện hệ</dt>
                             <dd className="flex items-center gap-1">
-                              <Mail className="h-3.5 w-3.5" /> <a href="mailto:">{data?.from.email}</a>
+                              <Mail className="h-3.5 w-3.5" /> <a href="mailto:">{data?.from.email === "" ? "Không có" : data?.from.email}</a>
                             </dd>
                             <dd className="flex items-center gap-1">
                               <Phone className="h-3.5 w-3.5" /> <a href="tel:">{data?.from.directorPhone}</a>
@@ -415,7 +414,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">Liện hệ</dt>
                             <dd className="flex items-center gap-1">
-                              <Mail className="h-3.5 w-3.5" /> <a href="mailto:">{data?.to.email}</a>
+                              <Mail className="h-3.5 w-3.5" /> <a href="mailto:">{data?.to.email === "" ? "Không có" : data?.to.email}</a>
                             </dd>
                             <dd className="flex items-center gap-1">
                               <Phone className="h-3.5 w-3.5" /> <a href="tel:">{data?.to.directorPhone}</a>

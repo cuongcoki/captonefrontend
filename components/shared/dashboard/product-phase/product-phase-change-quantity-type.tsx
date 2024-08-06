@@ -110,7 +110,7 @@ export default function ProductPhaseChangeQuantityType({
                     Bình thường
                   </SelectItem>
                   <SelectItem className="hover:bg-gray-200 w-full" value="1">
-                    Lỗi bên thứ 3
+                    Lỗi bên hợp tác
                   </SelectItem>
                   <SelectItem className="hover:bg-gray-200 w-full" value="2">
                     Lỗi bên mình
@@ -137,7 +137,7 @@ export default function ProductPhaseChangeQuantityType({
                     Bình thường
                   </SelectItem>
                   <SelectItem className="hover:bg-gray-200 w-full" value="1">
-                    Lỗi bên thứ 3
+                    Lỗi bên hợp tác
                   </SelectItem>
                   <SelectItem className="hover:bg-gray-200 w-full" value="2">
                     Lỗi bên mình

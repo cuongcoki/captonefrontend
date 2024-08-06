@@ -16,7 +16,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 
-export function DataTable<TData , TValue>({
+export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -31,7 +31,7 @@ export function DataTable<TData , TValue>({
   const router = useRouter();
   const handleGotoDetail = (id: string) => {
     router.push(`/dashboard/order/${id}`);
-    console.log('id',id)
+    console.log('id', id)
   }
 
   return (
@@ -73,7 +73,7 @@ export function DataTable<TData , TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                Không có kết quả.
               </TableCell>
             </TableRow>
           )}

@@ -41,6 +41,10 @@ import Image from "next/image";
 import MaterialHistoryAction from "@/components/shared/dashboard/material-history/table/material-history-action";
 import { filesApi } from "@/apis/files.api";
 import { se } from "date-fns/locale";
+import { ComboboxDemo } from "@/components/shared/common/combobox/combobox_demo";
+import HeaderComponent from "@/components/shared/common/header";
+import AddNewMeterialHistoryForm from "../add-new-material-history/add-new-material-history-form";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 type MaterialHistoryContextType = {
   ForceRender: () => void;
@@ -48,7 +52,7 @@ type MaterialHistoryContextType = {
 
 export const MaterialHistoryContext =
   React.createContext<MaterialHistoryContextType>({
-    ForceRender: () => {},
+    ForceRender: () => { },
   });
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -152,8 +156,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
         setTotalPage(res.data.data.totalPages);
         setData(res.data.data.data);
         router.push(
-          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${
-            searchParams.from || ""
+          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${searchParams.from || ""
           }&to=${searchParams.to || ""}&pageIndex=${searchParams.pageIndex}`
         );
       } catch (error: any) {
@@ -170,26 +173,28 @@ export function DataTableForMaterialHistory<TData, TValue>({
 
   return (
     <div>
-      <div className="py-4 grid grid-row-3 md:grid-cols-2 xl:grid-cols-3">
-        <Input
-          placeholder="Tìm theo tên vật liệu..."
-          className="max-w-sm shadow-sm"
-          value={searchParams.searchTerm}
-          onChange={(event) => {
-            setSearchParams({
-              ...searchParams,
-              searchTerm: event.target.value,
-              pageIndex: 1,
-            });
-          }}
-        />
-        <div className="mt-4 md:ml-10 md:mt-0">
-          <div className="grid grid-cols-2 gap-x-6">
+      <div className="flex flex-col md:flex-row justify-between mb-4 gap-3">
+        <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
+            <Input
+              placeholder="Tìm theo tên vật liệu..."
+              className=" w-full shadow-sm"
+              value={searchParams.searchTerm}
+              onChange={(event) => {
+                setSearchParams({
+                  ...searchParams,
+                  searchTerm: event.target.value,
+                  pageIndex: 1,
+                });
+              }}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-x-4 ">
             <DatePicker
               selected={new Date(convertDateFormat(searchParams.from || ""))}
               name="from"
               title={searchParams.from || "Từ ngày"}
-              className="w-full"
+              className="w-full md:w-[180px]"
               value={"2024-06-16"}
               onDayClick={(event: any) => {
                 if (event > new Date(convertDateFormat(searchParams.to))) {
@@ -220,7 +225,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
               selected={new Date(convertDateFormat(searchParams.to || ""))}
               name="to"
               title={searchParams.to || "Đến ngày"}
-              className="w-full"
+              className="w-full md:w-[180px]"
               onDayClick={(event: any) => {
                 if (new Date(convertDateFormat(searchParams.from)) > event) {
                   toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
@@ -247,8 +252,13 @@ export function DataTableForMaterialHistory<TData, TValue>({
             />
           </div>
         </div>
+
         <MaterialHistoryContext.Provider value={{ ForceRender }}>
-          <AddNewMeterialHistory />
+          <div className="flex items-center justify-end">
+            <div className="flex items-center space-x-2">
+              <AddNewMeterialHistoryForm />
+            </div>
+          </div>
         </MaterialHistoryContext.Provider>
       </div>
 
@@ -311,14 +321,14 @@ export function DataTableForMaterialHistory<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    {isloading ? "Đang tải dữ liệu..." : "Không có dữ liệu"}
+                    Không có kết quả.
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </MaterialHistoryContext.Provider>
-        <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
+        <div className="flex items-center justify-center space-x-4 my-4 ">
           <Button
             variant="outline"
             size="sm"
@@ -329,8 +339,11 @@ export function DataTableForMaterialHistory<TData, TValue>({
             }}
             disabled={Number(searchParams.pageIndex) === 1}
           >
-            Previous
+            <ChevronLeftIcon className="h-4 w-4" />
           </Button>
+          <span>
+            Trang {data.length > 0 ? searchParams.pageIndex : 0} Của {data.length > 0 ? totalPage : 0}
+          </span>
           <Button
             variant="outline"
             size="sm"
@@ -341,7 +354,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
             }}
             disabled={Number(searchParams.pageIndex) >= totalPage}
           >
-            Next
+            <ChevronRightIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>

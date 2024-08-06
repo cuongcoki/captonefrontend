@@ -80,6 +80,7 @@ export default function RenderTableShipment() {
         
       } catch (error: any) {
         // toast.error(error.response.data.message)
+        setData([])
         console.error("Error fetching order data:", error);
       } finally {
         setLoading(false);
