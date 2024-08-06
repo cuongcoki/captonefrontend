@@ -70,7 +70,7 @@ interface ImageResponse {
     size: string;
     description: string;
     isInProcessing: boolean;
-    imageResponses: ImageResponse[];
+    image: string;
   }
   
   interface ShipOrderDetailResponse {
@@ -223,9 +223,7 @@ console.log("datadatadata",data)
                                                                                 href={`/dashboard/products/product/${item?.product?.id}`}
                                                                             >
                                                                                 {" "}
-                                                                                {/* <ImageIconShipment
-                                                                                    dataImage={item?.product?.imageResponses}
-                                                                                />{" "} */}
+                                                                              <Image alt="ảnh sản phẩm" src={item.product.image} width={900} height={900} className="w-full h-full object-cover rounded-md "/>
                                                                             </Link>
                                                                         </span>
                                                                         <span>{item?.product?.name}</span>

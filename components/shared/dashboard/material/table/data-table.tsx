@@ -29,6 +29,7 @@ import { usePathname, useRouter } from "next/navigation";
 import "./material.css";
 import { filesApi } from "@/apis/files.api";
 import { Item } from "@radix-ui/react-dropdown-menu";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
 type ContexType = {
   forceUpdate: () => void;
@@ -125,8 +126,8 @@ export function DataTableForMaterial<TData, TValue>({
   }, [searchTerm, pathname, router, pageIndex, force]);
 
   return (
-    <div className="p-2">
-      <div className="flex flex-col sm:flex-row justify-center items-center py-4">
+    <div>
+      <div className="flex flex-col sm:flex-row justify-center items-center mb-3">
         <Input
           placeholder="Tìm theo tên vật liệu..."
           value={searchTerm}
@@ -187,14 +188,14 @@ export function DataTableForMaterial<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    No results.
+                    Không có kết quả.
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </MyContext.Provider>
-        <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
+        <div className="flex items-center justify-center space-x-4 my-4 ">
           <Button
             variant="outline"
             size="sm"
@@ -202,15 +203,18 @@ export function DataTableForMaterial<TData, TValue>({
             disabled={Number(pageIndex) === 1}
             className=""
           >
-            Trang trước
+            <ChevronLeftIcon className="h-4 w-4" />
           </Button>
+          <span>
+            Trang {data.length > 0 ? pageIndex : 0} Của {data.length > 0 ? totalPages : 0}
+          </span>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setPageIndex((prev) => Number(prev) + 1)}
             disabled={pageIndex >= totalPages}
           >
-            Trang sau
+            <ChevronRightIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>

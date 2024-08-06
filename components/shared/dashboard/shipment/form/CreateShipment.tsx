@@ -1401,9 +1401,14 @@ export default function CreateShipment() {
                                       ? parseISO(field.value)
                                       : undefined
                                   }
-                                  onSelect={(date: any) =>
-                                    field.onChange(date.toISOString())
-                                  }
+                                  onSelect={(date: any) => {
+                                    if (date) {
+                                      const formattedDate = new Date(
+                                        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                                      ).toISOString().split("T")[0] + "T23:59:59Z";
+                                      field.onChange(formattedDate);
+                                    }
+                                  }}
                                   initialFocus
                                 />
                               </PopoverContent>

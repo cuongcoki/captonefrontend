@@ -69,7 +69,19 @@ export const columns: ColumnDef<Employee>[] = [
     },
     cell: ({ row }) => (
       <div className="">
-        {row.original.firstName} {row.original.lastName}
+        {row.original.firstName}
+      </div>
+    ),
+  },
+
+  {
+    accessorKey: "lastName",
+    header: ({ column }) => {
+      return <Button variant="ghost">Họ nhân viên</Button>;
+    },
+    cell: ({ row }) => (
+      <div className="">
+    {row.original.lastName}
       </div>
     ),
   },
