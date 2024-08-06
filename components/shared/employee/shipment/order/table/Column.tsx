@@ -9,6 +9,7 @@ import Image from "next/image";
 import { IsInProcessing, StatusOrder } from "./data/data";
 import { ArrowUpDown } from "lucide-react";
 import { ShipperOrderDetail } from "../orderID/shipperOrderDetail";
+import ChangeStatusShipOrderEm from "../orderID/changeStatusShipOrderEm";
 export type ShipOrderShipper = {
   deliveryMethod: number;
   deliveryMethodDescription: string;
@@ -45,7 +46,7 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
     cell: ({ row }) => {
       return (
         <span className="flex justify-center ">
-          <ShipperOrderDetail ShipOrderID={row.original.shipOrderId}/>
+          <ShipperOrderDetail ShipOrderID={row.original.shipOrderId} />
         </span>
       );
     },
@@ -90,7 +91,13 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
 
       return (
         <span className={`${statusOr.bgColour} px-2 py-1 `}>
-          {statusOr.label}
+          {
+            row.original.status === 0 || row.original.status === 1 ? (
+              <ChangeStatusShipOrderEm status={row.original} />
+            ) : (
+              <span>{statusOr.label} </span>
+            )
+          }
         </span>
       );
     },

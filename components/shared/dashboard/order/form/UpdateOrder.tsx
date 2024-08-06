@@ -258,8 +258,14 @@ export default function UpdateOrder({ orderId }: OrderId) {
         }
       })
       .catch((error) => {
-        if (error.response.data) {
-          toast.error("Ngày kết thúc phải lớn hàn ngày bất đầu");
+        const errors = error.response.data.error
+        if (errors && !errors.Status) {
+          toast.error(errors);
+        }
+        if(errors.Status){
+          errors.Status.forEach((error: any) => {
+            toast.error(error);
+          });
         }
         console.log("errordddddddddd", error);
       });

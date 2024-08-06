@@ -189,7 +189,7 @@ export default function ProductIDPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="shadow-sm gd-1">
+          <Card className="shadow-sm gd-1 ">
             <CardHeader className="text-primary">
               <div className="flex justify-between items-start">
                 <div>
@@ -200,11 +200,11 @@ export default function ProductIDPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-x-auto  ">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Tên</TableHead>
+                    <TableHead className="sm:block hidden">Tên</TableHead>
                     <TableHead>Mô tả</TableHead>
                     <TableHead>Giá tiền</TableHead>
                   </TableRow>
@@ -217,10 +217,10 @@ export default function ProductIDPage() {
                     )
                     .map((item: any) => (
                       <TableRow key={item.phaseId}>
-                        <TableCell className="font-semibold">
+                        <TableCell className="font-semibold sm:block hidden">
                           {item?.phaseName}
                         </TableCell>
-                        <TableCell className="max-w-[300px] overflow-hidden truncate">
+                        <TableCell className="w-full overflow-hidden ">
                           {item?.phaseDescription}
                         </TableCell>
                         <TableCell>

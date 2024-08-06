@@ -48,7 +48,12 @@ export default function ForgetPassword() {
       })
       .catch((error) => {
         console.log(">>> forget pass error", error);
-        toast.error(error.response.data.message);
+        const errors = error.response.data.error
+        if (errors.Password) {
+          toast.error(errors.Password)
+        }else{
+          toast.error(error.response.data.message)
+        }
       })
       .finally(() => {
         setLoading(false);

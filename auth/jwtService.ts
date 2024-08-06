@@ -35,11 +35,12 @@ axiosClient.interceptors.response.use(
   },
   async (error) => {
     // toast.error(error.response.data.message)
-    // console.log(error);
+    console.log(error);
     if (error.response) {
       // const { code } = error
       const config = error.config;
       if (error.response.status === 401) {
+        toast.error(error.response.data.message)
         return authService
           .refreshToken()
           .then((rs) => {
