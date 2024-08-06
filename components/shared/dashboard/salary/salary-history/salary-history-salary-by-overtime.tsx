@@ -88,14 +88,16 @@ export default function SalaryHistorySalaryByOverTime({ id }: { id: string }) {
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter className="flex flex-row items-center px-6 py-3">
+      <CardFooter className="flex flex-row items-center px-6">
         <Pagination className="ml-auto mr-0 w-auto">
           <PaginationContent>
             <PaginationItem>
               <Button
                 size="icon"
                 variant="outline"
-                className="h-6 w-6"
+                className={`h-6 w-6 ${
+                  index === 1 ? "" : "bg-primary text-primary-foreground"
+                }`}
                 disabled={index === 1}
                 onClick={() => setIndex(index - 1)}
               >
@@ -107,7 +109,9 @@ export default function SalaryHistorySalaryByOverTime({ id }: { id: string }) {
               <Button
                 size="icon"
                 variant="outline"
-                className="h-6 w-6"
+                className={`h-6 w-6 ${
+                  index >= totalPage ? "" : "bg-primary text-primary-foreground"
+                }`}
                 disabled={index >= totalPage}
                 onClick={() => setIndex(index + 1)}
               >
