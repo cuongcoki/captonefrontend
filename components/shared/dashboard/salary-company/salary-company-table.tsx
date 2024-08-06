@@ -259,7 +259,7 @@ export default function SalaryCompanyTable({
           }}
           disabled={Number(searchParams.PageIndex) === 1}
         >
-          Previous
+          Trang trước
         </Button>
         <Button
           variant="outline"
@@ -271,7 +271,7 @@ export default function SalaryCompanyTable({
           }}
           disabled={Number(searchParams.PageIndex) >= totalPage}
         >
-          Next
+          Trang sau
         </Button>
       </div>
     </div>

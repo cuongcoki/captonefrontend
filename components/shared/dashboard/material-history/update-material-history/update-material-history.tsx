@@ -29,7 +29,7 @@ export default function UpdateMaterialHistory({
             <DialogTitle>Cập nhật lịch sử nhập</DialogTitle>
           </DialogHeader>
           <DialogDescription></DialogDescription>
-          <UpdateMaterialHistoryForm id={id} />
+          {/* <UpdateMaterialHistoryForm id={id} /> */}
         </DialogContent>
       </Dialog>
     </>

@@ -261,7 +261,7 @@ export default function CreateShipment() {
   const [pageSizeM, setPageSizeM] = useState<number>(20);
   const [isInProcessingM, setIsInProcessingM] = useState<boolean>(true);
   const [dataM, setDataM] = useState<Material[]>([]);
-  console.log("dataM", dataM);
+  // console.log("dataM", dataM);
   // ** state Shipment
   const [shipmentDetailRequests, setShipmentDetailRequests] = useState<
     ShipmentDetailRequest[]
@@ -338,9 +338,7 @@ export default function CreateShipment() {
     setProductDetail([]);
   };
 
-  const handleOffDialog = () => {
-    setOpenAlert(true);
-  };
+
   const handleOnDialog = () => {
     setOpen(true);
   };
@@ -800,6 +798,24 @@ export default function CreateShipment() {
     setShipmentDetailRequests([]);
     setProductDetail([]);
   }
+
+  const handleOffDialog = () => {
+    // Kiểm tra xem mảng có rỗng hay không
+    const isDetailsProEmpty = Array.isArray(productDetail) && productDetail.length === 0;
+
+    // Kiểm tra giá trị cụ thể của form
+    const isFromIdIdEmpty = form.getValues().fromId === "";
+    const isShipDateEmpty = form.getValues().shipDate === "";
+    const isShipperIdEmpty = form.getValues().shipperId === "";
+    const isToIdEmpty = form.getValues().toId === "";
+
+    // Nếu tất cả các trường trong form đều trống hoặc không có giá trị và các mảng rỗng
+    if (isDetailsProEmpty && isFromIdIdEmpty && isShipDateEmpty && isShipperIdEmpty && isToIdEmpty) {
+      setOpen(false);
+    } else {
+      setOpenAlert(true);
+    }
+  };
   return (
     <>
       {
@@ -828,6 +844,8 @@ export default function CreateShipment() {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
             <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1000px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+              <Dialog.Title className="visible hidden"></Dialog.Title>
+              <Dialog.Description className="visible hidden"></Dialog.Description>
               <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">Tạo đơn vận chuyển</h2>
@@ -873,7 +891,7 @@ export default function CreateShipment() {
                                   <Button
                                     variant={"ghost"}
                                     size={"icon"}
-                                  className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary "
+                                    className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary "
                                     onClick={() => {
                                       const mainImage =
                                         item?.imageResponses.find(
@@ -1013,6 +1031,7 @@ export default function CreateShipment() {
                                 </TableCell>
                                 <TableCell>
                                   <Input
+                                    min={0}
                                     type="number"
                                     name="quantity"
                                     value={
@@ -1191,8 +1210,7 @@ export default function CreateShipment() {
                                                     {item.directorName}
                                                   </span>
                                                   <span className="text-sm text-gray-500">
-                                                    {item.directorPhone}-
-                                                    {item.email}
+                                                    {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
                                                   </span>
                                                 </div>
                                               </span>
@@ -1272,8 +1290,7 @@ export default function CreateShipment() {
                                                     {item.directorName}
                                                   </span>
                                                   <span className="text-sm text-gray-500">
-                                                    {item.directorPhone}-
-                                                    {item.email}
+                                                    {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
                                                   </span>
                                                 </div>
                                               </span>
@@ -1384,9 +1401,14 @@ export default function CreateShipment() {
                                       ? parseISO(field.value)
                                       : undefined
                                   }
-                                  onSelect={(date: any) =>
-                                    field.onChange(date.toISOString())
-                                  }
+                                  onSelect={(date: any) => {
+                                    if (date) {
+                                      const formattedDate = new Date(
+                                        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                                      ).toISOString().split("T")[0] + "T23:59:59Z";
+                                      field.onChange(formattedDate);
+                                    }
+                                  }}
                                   initialFocus
                                 />
                               </PopoverContent>

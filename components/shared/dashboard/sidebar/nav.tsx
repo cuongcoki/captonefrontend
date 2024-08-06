@@ -126,7 +126,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
       {/* logo */}
       <div className="py-3">
         {!isCollapsed ? (
-          <Link href={"/"}>
+          // <Link href={"/"}>
             <div className=" flex items-center space-x-2 px-3">
               <Image
                 src={LogoIcon}
@@ -135,9 +135,9 @@ export function Nav({ links, isCollapsed }: NavProps) {
               />
               <span className="text-sm">Tiến Huy</span>
             </div>
-          </Link>
+          // </Link>
         ) : (
-          <Link href={"/"}>
+          // <Link href={"/"}>
             <div className=" flex items-center space-x-2 px-3">
               <Image
                 src={LogoIcon}
@@ -145,7 +145,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 className="w-[30px] h-[30px]"
               />
             </div>
-          </Link>
+          // </Link>
         )}
       </div>
       {/* data sidebar */}

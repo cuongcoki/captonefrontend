@@ -45,8 +45,13 @@ export function DataTablePagination<TData>({
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            Trang {table.getState().pagination.pageIndex + 1} của{" "}
-            {table.getPageCount()}
+            {table.getPageCount() > 0 ? (
+              <>
+                Trang {table.getState().pagination.pageIndex + 1} của {table.getPageCount()}
+              </>
+            ) : (
+              <>Trang 0 của 0</>
+            )}
           </div>
           <Button
             variant="outline"

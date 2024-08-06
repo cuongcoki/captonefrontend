@@ -143,10 +143,10 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       });
   }, [id, form]);
 
-  const onSubmit = (data: materialType) => {};
+  const onSubmit = (data: materialType) => { };
 
   const formSubmit = async () => {
-    setLoading(true);
+
     console.log("DATA", form.getValues());
     const file = (await handleUploadPhoto(materialImage)) as File;
     if (file !== null && file !== undefined) {
@@ -157,6 +157,10 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
     } catch (error) {
       console.log("Error in Up Image", error);
     }
+    if (form.getValues().quantityInStock === "") {
+      return toast.error("Số lượng kho không thể bé hơn 0");
+    }
+    setLoading(true);
     materialApi
       .updateMaterial(form.getValues())
       .then(({ data }) => {
@@ -167,6 +171,16 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       })
       .catch((error) => {
         console.log("ERROR IN UPDATE MATERIAL", error);
+        const errors = error.response.data.error;
+        if (errors.Name) {
+          toast.error(errors.Name[0]);
+        }
+        if (errors.Unit) {
+          toast.error(errors.Unit[0]);
+        }
+        if (errors.QuantityPerUnit) {
+          toast.error(errors.QuantityPerUnit[0]);
+        }
         toast.error(error.response.data.message);
       })
       .finally(() => {

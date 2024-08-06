@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import jwtConfig from "@/configs/auth";
 import { authService } from "./authService";
 import { setupCache } from "axios-cache-interceptor";
+import toast from "react-hot-toast";
 const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
@@ -33,7 +34,8 @@ axiosClient.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log(error);
+    // toast.error(error.response.data.message)
+    // console.log(error);
     if (error.response) {
       // const { code } = error
       const config = error.config;
@@ -61,6 +63,7 @@ axiosClient.interceptors.response.use(
           .catch((err) => {
             console.log("loi1");
             console.log(err);
+            toast.error(err.response.data.message)
             authService.removeLocalStorageWhenLogout();
             if (window.location.pathname !== '/sign-in') {
               window.location.href = jwtConfig.loginEndpoint;
