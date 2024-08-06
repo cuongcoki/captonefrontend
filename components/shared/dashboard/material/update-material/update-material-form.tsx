@@ -22,15 +22,26 @@ import { materialApi } from "@/apis/material.api";
 import { MyContext } from "@/components/shared/dashboard/material/table/data-table";
 import toast from "react-hot-toast";
 import { filesApi } from "@/apis/files.api";
+import { UpdateMaterialContext } from "@/components/shared/dashboard/material/update-material/update-material";
 
 const linkImage =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQnXcFa9HVz9wxTvYDQRoPe76rcZuhUPbH2g&s";
 
 export default function UpdateMaterialForm({ id }: { id: string }) {
+  let { setIsUpdate } = useContext(UpdateMaterialContext);
   const [materialImage, setMaterialImage] = useState<any>("");
   const { forceUpdate } = useContext(MyContext);
   const [imageLink, setImageLink] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [firstValue, setFirstValue] = useState<materialType>({
+    id: "",
+    name: "",
+    unit: "",
+    image: "",
+    description: "",
+    quantityPerUnit: "",
+    quantityInStock: "",
+  });
 
   const fillImage = (fileURL: string) => {
     const iamgeLabel = document.querySelector(".label_image") as HTMLElement;
@@ -126,7 +137,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
           data.data.data.unit = data.data.data.unit.trim();
           data.data.data.name = data.data.data.name.trim();
           form.reset(data.data.data);
-
+          setFirstValue(data.data.data);
           filesApi
             .getFile(data.data.data.image as string)
             .then((res) => {
@@ -173,7 +184,14 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
         setLoading(false);
       });
   };
-
+  const watchedValues = form.watch();
+  useEffect(() => {
+    if (JSON.stringify(watchedValues) !== JSON.stringify(firstValue)) {
+      setIsUpdate(true);
+    } else {
+      setIsUpdate(false);
+    }
+  }, [watchedValues, firstValue, setIsUpdate]);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>

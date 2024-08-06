@@ -1,6 +1,6 @@
 import { AddMaterialSchema, AddMaterialType } from "@/schema/material";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +19,9 @@ import { materialApi } from "@/apis/material.api";
 import { MyContext } from "@/components/shared/dashboard/material/table/data-table";
 import toast from "react-hot-toast";
 import { filesApi } from "@/apis/files.api";
+import { AddNewMaterialStore } from "@/components/shared/dashboard/material/add-new-material/add-new-material-store";
+import { set } from "date-fns";
+import ConfirmAlertDialog from "@/components/shared/common/confirm-alert-dialog/confirm-alert-dialog";
 
 export default function AddNewMeterialForm() {
   const [materialImage, setMaterialImage] = useState<any>("");
@@ -27,7 +30,16 @@ export default function AddNewMeterialForm() {
   const ChangeImage = (file: any) => {
     setMaterialImage(file);
   };
-
+  const [isChange, setIsChange] = useState(false);
+  const firstValue = useRef<Omit<AddMaterialType, "id">>({
+    name: "",
+    unit: "",
+    image: "",
+    description: "",
+    quantityPerUnit: "",
+    quantityInStock: "",
+  });
+  const { isOpen, setHandleDialog, setIsOpen } = AddNewMaterialStore();
   const form = useForm<AddMaterialType>({
     resolver: zodResolver(AddMaterialSchema),
     defaultValues: {
@@ -121,6 +133,19 @@ export default function AddNewMeterialForm() {
         setLoading(false);
       });
   };
+  useEffect(() => {
+    console.log("Use Effect");
+    setHandleDialog(() => {
+      if (
+        isOpen &&
+        JSON.stringify(firstValue.current) !== JSON.stringify(form.getValues())
+      ) {
+        document.getElementById("alert-dialog-trigger")?.click();
+        return;
+      }
+      setIsOpen(!isOpen);
+    });
+  }, [setHandleDialog, setIsOpen, isOpen, form]);
 
   return (
     <Form {...form}>
@@ -251,9 +276,16 @@ export default function AddNewMeterialForm() {
               </FormItem>
             )}
           />
+          <ConfirmAlertDialog
+            handleAccept={() => {
+              setIsOpen(!isOpen);
+            }}
+          >
+            <div id="alert-dialog-trigger"></div>
+          </ConfirmAlertDialog>
         </div>
         <DialogFooter>
-          <Button className="mt-3" type="submit" disabled={loading}>
+          <Button id="submit" className="mt-3" type="submit" disabled={loading}>
             {!loading ? "Tạo mới" : "Đang xử lý"}
           </Button>
         </DialogFooter>
