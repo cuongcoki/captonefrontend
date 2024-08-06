@@ -35,7 +35,7 @@ export function DataTable<TData extends OrderData, TValue>({
   const router = useRouter();
   const handleGotoDetail = (id: string) => {
     router.push(`/dashboard/order/${id}`);
-    console.log('id',id)
+    console.log('id', id)
   }
 
   return (
@@ -75,7 +75,7 @@ export function DataTable<TData extends OrderData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                Không có dữ liệu.
               </TableCell>
             </TableRow>
           )}
