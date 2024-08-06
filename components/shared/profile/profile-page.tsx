@@ -520,8 +520,9 @@ export default function ProfilePage() {
                   <div className="font-extralight text-[0.8rem]">
                     Lương khả dụng
                   </div>
+                  {/* accountBalance */}
                   <div>
-                    3.500.000 <span className="text-gray-400">VND</span>
+                  {userId?.accountBalance === 0 ? 0 : formatCurrency(userId?.accountBalance)} <span className="text-gray-400">VND</span>
                   </div>
                 </div>
 

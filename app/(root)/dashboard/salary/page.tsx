@@ -7,7 +7,7 @@ export default function page({ searchParams }: SearchSalaryParams) {
   searchParams.year = searchParams.year || dateNow.getFullYear().toString();
   searchParams.month = searchParams.month || dateNow.getMonth().toString();
   searchParams.companyId = searchParams.companyId || "";
-  searchParams.name = searchParams.name || "";
+  searchParams.searchUser = searchParams.searchUser || "";
   searchParams.pageIndex = searchParams.pageIndex || 1;
 
   return (

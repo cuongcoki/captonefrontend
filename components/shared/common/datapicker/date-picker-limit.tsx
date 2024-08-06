@@ -60,6 +60,7 @@ const DatePickerLimit = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             mode="single"
             selected={date}
             onSelect={setDate}
+            defaultMonth={date}
             initialFocus
             {...props}
           />
