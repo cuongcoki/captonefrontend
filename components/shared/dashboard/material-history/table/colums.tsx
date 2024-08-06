@@ -7,13 +7,14 @@ import UpdateMaterialHistory from "@/components/shared/dashboard/material-histor
 import UpdateMaterial from "@/components/shared/dashboard/material/update-material/update-material";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { materialHistoryType } from "@/types/material-history.type";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -37,18 +38,39 @@ export const columnsForMaterialHistory: ColumnDef<materialHistoryType>[] = [
         console.log("error in get image", error);
       }
       return (
-        <div className="flex justify-center items-center space-x-2 max-w-[200px]">
-          <Image
-            className="size-20 mr-2"
-            width={100}
-            height={100}
-            src={
-              href ||
-              "https://images2.thanhnien.vn/528068263637045248/2024/1/25/e093e9cfc9027d6a142358d24d2ee350-65a11ac2af785880-17061562929701875684912.jpg"
-            }
-            alt={row.original.image}
-          />
-        </div>
+
+        <Dialog>
+          <DialogTrigger >
+            <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
+              <Image
+                className="w-full h-full rounded-lg object-cover"
+                width={900}
+                height={900}
+                src={
+                  href ||
+                  "https://images2.thanhnien.vn/528068263637045248/2024/1/25/e093e9cfc9027d6a142358d24d2ee350-65a11ac2af785880-17061562929701875684912.jpg"
+                }
+                alt={row.original.image}
+              />
+            </div>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle></DialogTitle>
+              <DialogDescription></DialogDescription>
+            </DialogHeader>
+            <Image
+              className="w-full h-full rounded-lg object-cover"
+              width={900}
+              height={900}
+              src={
+                href ||
+                "https://images2.thanhnien.vn/528068263637045248/2024/1/25/e093e9cfc9027d6a142358d24d2ee350-65a11ac2af785880-17061562929701875684912.jpg"
+              }
+              alt={row.original.image}
+            />
+          </DialogContent>
+        </Dialog>
       );
     },
   },

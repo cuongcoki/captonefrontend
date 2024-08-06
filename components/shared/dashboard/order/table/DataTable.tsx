@@ -66,8 +66,8 @@ export function DataTable<TData extends OrderData, TValue>({
 
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className="py-3 text-center cursor-pointer" >
-                    <Link  href={`/dashboard/order/${row.original.id}`} >
-                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <Link href={`/dashboard/order/${row.original.id}`} >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </Link>
                   </TableCell>
                 ))}
@@ -77,7 +77,7 @@ export function DataTable<TData extends OrderData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                Không có kết quả.
               </TableCell>
             </TableRow>
           )}

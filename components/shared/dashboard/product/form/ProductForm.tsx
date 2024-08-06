@@ -258,17 +258,17 @@ export const ProductForm = () => {
 
         console.log("=====requestBody Product Form =====", requestBody);
 
-        // const response = await productApi.createProduct(requestBody);
-        // if (response.data.isSuccess) {
-        //   toast.success(response.data.message);
-        //   setTimeout(() => {
-        //     setOpen(false);
-        //     ForceRender();
-        //     // window.location.href = '/dashboard/product';
-        //   }, 2000);
-        // } else {
-        //   toast.error(response.data.message);
-        // }
+        const response = await productApi.createProduct(requestBody);
+        if (response.data.isSuccess) {
+          toast.success(response.data.message);
+          setTimeout(() => {
+            setOpen(false);
+            ForceRender();
+            // window.location.href = '/dashboard/product';
+          }, 2000);
+        } else {
+          toast.error(response.data.message);
+        }
       } else {
         toast.error("imageUrl (nameImage) không hợp lệ");
       }
