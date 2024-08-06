@@ -39,6 +39,7 @@ import { SetSchema } from "@/schema/set";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import {
+  Check,
   Minus,
   PackagePlus,
   Phone,
@@ -62,7 +63,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { NoImage } from "@/constants/images";
 import { MyContext } from "../table/sets/RenderTable";
 import { Label } from "@/components/ui/label";
-
+let initialFormValuesSetProduct: any = null;
 export const SetForm = () => {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -73,9 +74,7 @@ export const SetForm = () => {
   const handleOnDialogA = () => {
     setOpenAlert(true);
   };
-  const handleOffDialog = () => {
-    setOpenAlert(true);
-  };
+
   const handleOnDialog = () => {
     setOpen(true);
   };
@@ -407,6 +406,27 @@ export const SetForm = () => {
     setImageRequests(null)
   }
 
+  const handleOffDialog = () => {
+    const currentFormValues = productsRequest;
+    // console.log("currentFormValues", initialFormValuesSetProduct)
+    // console.log("setProductsRequest", productsRequest)
+    if (initialFormValuesSetProduct === null) {
+      initialFormValuesSetProduct = currentFormValues;
+    }
+    const isFormChanged = JSON.stringify(initialFormValuesSetProduct) === JSON.stringify(productsRequest);
+    // console.log("isFormChanged", isFormChanged)
+
+    // console.log("form", form.getValues())
+    const isCodeIdEmpty = form.getValues().code === "";
+    const isDescriptionEmpty = form.getValues().description === "";
+    const isNameEmpty = form.getValues().name === "";
+
+    if (isFormChanged && isCodeIdEmpty && isDescriptionEmpty && isNameEmpty) {
+      setOpen(false);
+    } else {
+      setOpenAlert(true);
+    }
+  };
 
   const { pending } = useFormStatus();
   return (
@@ -480,6 +500,14 @@ export const SetForm = () => {
                                           images={product}
                                         />
                                       </div>
+                                      <Check
+                                        className={`w-5 h-5 ${productsRequest.some(
+                                          (item1) => item1.productId === product.id
+                                        )
+                                          ? "absolute top-0 right-0 bg-primary text-white"
+                                          : "hidden"
+                                          }`}
+                                      />
                                       <div>
                                         <Button
                                           variant={"ghost"}

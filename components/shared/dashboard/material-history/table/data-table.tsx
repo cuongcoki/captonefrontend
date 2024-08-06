@@ -41,14 +41,23 @@ import Image from "next/image";
 import MaterialHistoryAction from "@/components/shared/dashboard/material-history/table/material-history-action";
 import { filesApi } from "@/apis/files.api";
 import { se } from "date-fns/locale";
-
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 type MaterialHistoryContextType = {
   ForceRender: () => void;
 };
 
 export const MaterialHistoryContext =
   React.createContext<MaterialHistoryContextType>({
-    ForceRender: () => {},
+    ForceRender: () => { },
   });
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -152,8 +161,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
         setTotalPage(res.data.data.totalPages);
         setData(res.data.data.data);
         router.push(
-          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${
-            searchParams.from || ""
+          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${searchParams.from || ""
           }&to=${searchParams.to || ""}&pageIndex=${searchParams.pageIndex}`
         );
       } catch (error: any) {
@@ -274,17 +282,41 @@ export function DataTableForMaterialHistory<TData, TValue>({
                   <TableRow key={row.id}>
                     <TableCell>
                       <div className="flex justify-center items-center space-x-2 max-w-[200px]">
-                        <Image
-                          className="size-20 mr-2"
-                          width={100}
-                          height={100}
-                          src={
-                            (images.has(row.image as string)
-                              ? images.get(row.image as string)
-                              : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
-                          }
-                          alt={row.materialName}
-                        />
+                        <Dialog>
+                          <DialogTrigger >
+                            <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
+                              <Image
+                                className="w-full h-full rounded-lg object-cover"
+                                width={900}
+                                height={900}
+                                src={
+                                  (images.has(row.image as string)
+                                    ? images.get(row.image as string)
+                                    : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                                }
+                                alt={row.materialName}
+                              />
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle></DialogTitle>
+                              <DialogDescription></DialogDescription>
+                            </DialogHeader>
+                            <Image
+                              className="w-full h-full rounded-lg object-cover"
+                              width={900}
+                              height={900}
+                              src={
+                                (images.has(row.image as string)
+                                  ? images.get(row.image as string)
+                                  : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                              }
+                              alt={row.materialName}
+                            />
+                          </DialogContent>
+                        </Dialog>
+
                       </div>
                     </TableCell>
                     <TableCell className="text-center">
@@ -318,7 +350,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
             </TableBody>
           </Table>
         </MaterialHistoryContext.Provider>
-        <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
+        <div className="flex items-center justify-center space-x-4 my-4 ">
           <Button
             variant="outline"
             size="sm"
@@ -329,8 +361,11 @@ export function DataTableForMaterialHistory<TData, TValue>({
             }}
             disabled={Number(searchParams.pageIndex) === 1}
           >
-            Previous
+            <ChevronLeftIcon className="h-4 w-4" />
           </Button>
+          <span>
+            Trang {data.length > 0 ? searchParams.pageIndex : 0} Của {data.length > 0 ? totalPage : 0}
+          </span>
           <Button
             variant="outline"
             size="sm"
@@ -341,7 +376,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
             }}
             disabled={Number(searchParams.pageIndex) >= totalPage}
           >
-            Next
+            <ChevronRightIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>

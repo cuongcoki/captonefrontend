@@ -28,15 +28,7 @@ const idSchema = z
 const passwordSchema = z
   .string()
   .min(1, { message: "Vui lòng nhập mật khẩu của bạn" })
-  .refine((val) => /[A-Z]/.test(val), {
-    message: "Mật khẩu phải có ít nhất một chữ cái viết hoa",
-  })
-  .refine((val) => /[0-9]/.test(val), {
-    message: "Mật khẩu phải có ít nhất một chữ số",
-  })
-  .refine((val) => /[!@#$%^&*(),.?":{}|<>]/.test(val), {
-    message: "Mật khẩu phải có ít nhất một ký tự đặc biệt",
-  });
+
 
 export const SignInSchema = z.object({
   id: idSchema,
@@ -235,18 +227,7 @@ export const ChangePasswordSchema = z
     verifyCode: z.string(),
     password: z
       .string()
-      .refine(
-        (password) => {
-          return /[A-Z]/.test(password);
-        },
-        { message: "Mật khẩu phải chứa ít nhất một chữ cái viết hoa" }
-      )
-      .refine(
-        (password) => {
-          return /[!@#$%^&*(),.?":{}|<>]/.test(password);
-        },
-        { message: "Mật khẩu phải chứa ít nhất một ký tự đặc biệt" }
-      ),
+      .min(1, { message: "Vui lòng nhập mật khẩu của bạn" }),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {

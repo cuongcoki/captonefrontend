@@ -325,14 +325,23 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
 
   const onSubmit = (data: z.infer<typeof ShipOrderSchema>) => {
     console.log("data", data);
+    const originalDate = data.shipDate;
 
+    // Tạo một đối tượng Date từ chuỗi ban đầu
+    const date = new Date(originalDate);
+
+    // Cập nhật thời gian đến 23:59:59
+    date.setUTCHours(23, 59, 59, 0);
+
+    // Chuyển đổi lại thành chuỗi theo định dạng ISO và bỏ phần mili giây
+    const formattedShipDate = date.toISOString().replace('.000', '');
     // Gọi hàm kiểm tra
     validateShipOrderDetailRequests(shipOrderDetailRequests);
     const requestBody = {
       shipperId: data.shipperId,
       kindOfShipOrder: data.kindOfShipOrder,
       orderId: order.orderId,
-      shipDate: data.shipDate,
+      shipDate: formattedShipDate,
       shipOrderDetailRequests: shipOrderDetailRequests,
     };
 
@@ -404,13 +413,12 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                         height={900}
                       />
                       <Check
-                        className={`${
-                          shipOrderDetailRequests.some(
-                            (item) => item.itemId === pro.productId
-                          )
-                            ? "absolute top-0 right-0 bg-primary text-white"
-                            : "hidden"
-                        }`}
+                        className={`${shipOrderDetailRequests.some(
+                          (item) => item.itemId === pro.productId
+                        )
+                          ? "absolute top-0 right-0 bg-primary text-white"
+                          : "hidden"
+                          }`}
                       />
                       <Button
                         variant={"ghost"}
@@ -441,13 +449,12 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                         height={900}
                       />
                       <Check
-                        className={`${
-                          shipOrderDetailRequests.some(
-                            (item) => item.itemId === pro.setId
-                          )
-                            ? "absolute top-0 right-0 bg-primary text-white"
-                            : "hidden"
-                        }`}
+                        className={`${shipOrderDetailRequests.some(
+                          (item) => item.itemId === pro.setId
+                        )
+                          ? "absolute top-0 right-0 bg-primary text-white"
+                          : "hidden"
+                          }`}
                       />
                       <Button
                         variant={"ghost"}
@@ -660,9 +667,14 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                                     ? parseISO(field.value)
                                     : undefined
                                 }
-                                onSelect={(date: any) =>
-                                  field.onChange(date.toISOString())
-                                }
+                                onSelect={(date: any) => {
+                                  if (date) {
+                                    const formattedDate = new Date(
+                                      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                                    ).toISOString();
+                                    field.onChange(formattedDate);
+                                  }
+                                }}
                                 initialFocus
                               />
                             </PopoverContent>
@@ -671,6 +683,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                         </FormItem>
                       )}
                     />
+
 
                     <Separator className="h-1 my-1" />
                     <Button

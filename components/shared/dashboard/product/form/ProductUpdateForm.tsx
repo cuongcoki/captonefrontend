@@ -79,7 +79,7 @@ interface ProductID {
 export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const [loading, setLoading] = useState(false);
   const { ForceRender } = ProductStore();
-  console.log("productId", productId);
+  // console.log("productId", productId);
   const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(
     undefined
   );
@@ -501,8 +501,27 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
           error.response.data.message
         ) {
           // Xử lý lỗi từ server
-          toast.error(`Cập nhật lỗi: ${error.response.data.message}`);
-        } else if (error.request) {
+          const errors = error.response.data.error;
+          if (errors === null) {
+            toast.error(error.response.data.message);
+          }
+          if (errors.ImageRequests) {
+            toast.error(errors.ImageRequests);
+          }
+
+          if (errors.PriceFinished) {
+            toast.error(errors.PriceFinished);
+          }
+
+          if (errors.Code) {
+            toast.error(errors.Code);
+          }
+          // Sử dụng dấu ngoặc vuông để truy cập thuộc tính có dấu chấm trong tên
+          if (errors['UpdateProductRequest.PriceFinished']) {
+            toast.error(errors['UpdateProductRequest.PriceFinished']);
+          }
+          console.log(error.UpdateProductRequest.PriceFinished)
+        } else if (error.response.data.message) {
           // Xử lý lỗi khi không có phản hồi từ server
           toast.error(
             "Không có phản hồi từ máy chủ trong khi cập nhật. Vui lòng thử lại sau."

@@ -116,11 +116,11 @@ export function BreadcrumbComponent() {
           const customTitle = getCustomTitle(breadcrumb.href, breadcrumb.title);
 
           return isLast ? (
-            <BreadcrumbItem >
+            <BreadcrumbItem key={breadcrumb.title}>
               <BreadcrumbPage>{customTitle}</BreadcrumbPage>
             </BreadcrumbItem>
           ) : (
-            <BreadcrumbItem >
+            <BreadcrumbItem key={breadcrumb.title}>
                 {customTitle}
               <BreadcrumbSeparator />
             </BreadcrumbItem>

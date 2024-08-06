@@ -1,23 +1,9 @@
 
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { Row } from "@tanstack/react-table"
-
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import Link from "next/link"
 import { ScanEye, X } from "lucide-react"
-import OrderIdPage from "../orderID/OrderId"
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react"
-import { ShipOrderShipper } from "../orderID/shipOrder/ShipOrder"
-import OrderIdPageShipper from "../orderID/OrderId"
 
 
 
@@ -58,7 +44,6 @@ export function DataTableRowActions<TData extends { id: string }>({
                 </div>
                 <div className="grid p-4 overflow-y-auto h-[650px] gap-4">
 
-                  <OrderIdPageShipper orderId={row.original.id}/>
                 </div>
               </div>
             </Dialog.Content>

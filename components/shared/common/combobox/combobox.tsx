@@ -32,7 +32,12 @@ export function Combobox({
   setValue: (value: string) => void;
 }) {
   const [open, setOpen] = React.useState(false);
-
+  const limitLength = (text: any, maxLength: any) => {
+    if (text.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`;
+    }
+    return text;
+  };
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -42,7 +47,7 @@ export function Combobox({
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value ? data.find((option) => option.value === value)?.label : title}
+          {limitLength(value ? data.find((option) => option.value === value)?.label : title,15)}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

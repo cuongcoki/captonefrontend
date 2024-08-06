@@ -377,15 +377,25 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
     }, [isActive, roleId, searchTearm, currentPage, pageSize, dataEm]);
 
 
-
     const onSubmit = (data: z.infer<typeof ShipOrderSchema>) => {
         console.log('data', data)
+
+        const originalDate = data.shipDate;
+
+        // Tạo một đối tượng Date từ chuỗi ban đầu
+        const date = new Date(originalDate);
+
+        // Cập nhật thời gian đến 23:59:59
+        date.setUTCHours(23, 59, 59, 0);
+
+        // Chuyển đổi lại thành chuỗi theo định dạng ISO và bỏ phần mili giây
+        const formattedShipDate = date.toISOString().replace('.000', '');
         const requestBody = {
             id: shipOrderId.shipOrderId,
             shipperId: data.shipperId,
             kindOfShipOrder: data.kindOfShipOrder,
             orderId: order.orderId,
-            shipDate: data.shipDate,
+            shipDate: formattedShipDate,
             shipOrderDetailRequests: shipOrderDetailRequests
         };
 
@@ -603,21 +613,34 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                                                     )}
                                                                 >
                                                                     {field.value ? (
-                                                                        format(parseISO(field.value), "dd/MM/yyyy")
+                                                                        (() => {
+                                                                            const [year, month, day] = field.value.split('T')[0].split('-');
+                                                                            return `${day}/${month}/${year}`;
+                                                                        })()
                                                                     ) : (
                                                                         <span>Chọn ngày</span>
                                                                     )}
                                                                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                                 </Button>
+
                                                             </FormControl>
                                                         </PopoverTrigger>
                                                         <PopoverContent className="w-auto p-0" align="start">
                                                             <Calendar
                                                                 mode="single"
-                                                                selected={field.value ? parseISO(field.value) : undefined}
-                                                                onSelect={(date: any) => field.onChange(date.toISOString())}
+                                                                selected={field.value ? new Date(new Date(field.value).setDate(new Date(field.value).getDate() - 1)) : undefined}
+                                                                onSelect={(date: any) => {
+                                                                    if (date) {
+                                                                        // Đảm bảo giờ là 00:00:00 để tránh vấn đề múi giờ
+                                                                        date.setHours(0, 0, 0, 0);
+                                                                        const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+                                                                        const formattedDate = utcDate.toISOString().split('T')[0]; // Giữ lại chỉ phần ngày
+                                                                        field.onChange(formattedDate);
+                                                                    }
+                                                                }}
                                                                 initialFocus
                                                             />
+
                                                         </PopoverContent>
                                                     </Popover>
                                                     <FormMessage />

@@ -33,12 +33,21 @@ import { materialType } from "@/schema/material";
 import Image from "next/image";
 import UpdateMaterial from "@/components/shared/dashboard/material/update-material/update-material";
 import { PenLine } from "lucide-react";
-
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = React.createContext<ContexType>({
-  forceUpdate: () => {},
+  forceUpdate: () => { },
 });
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -164,17 +173,40 @@ export function DataTableForMaterial<TData, TValue>({
                     <TableRow key={row.id}>
                       <TableCell>
                         <div className="flex justify-center items-center space-x-2 max-w-[200px]">
-                          <Image
-                            className="size-20 mr-2"
-                            width={100}
-                            height={100}
-                            src={
-                              (images.has(row.image as string)
-                                ? images.get(row.image as string)
-                                : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
-                            }
-                            alt={row.name}
-                          />
+                          <Dialog>
+                            <DialogTrigger >
+                              <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
+                                <Image
+                                  className="w-full h-full rounded-lg object-cover"
+                                  width={900}
+                                  height={900}
+                                  src={
+                                    (images.has(row.image as string)
+                                      ? images.get(row.image as string)
+                                      : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                                  }
+                                  alt={row.name}
+                                />
+                              </div>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle></DialogTitle>
+                                <DialogDescription></DialogDescription>
+                              </DialogHeader>
+                              <Image
+                                className="w-full h-full rounded-lg object-cover"
+                                width={900}
+                                height={900}
+                                src={
+                                  (images.has(row.image as string)
+                                    ? images.get(row.image as string)
+                                    : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                                }
+                                alt={row.name}
+                              />
+                            </DialogContent>
+                          </Dialog>
                         </div>
                       </TableCell>
                       <TableCell className="text-center">{row.name}</TableCell>
@@ -209,7 +241,7 @@ export function DataTableForMaterial<TData, TValue>({
             </TableBody>
           </Table>
         </MyContext.Provider>
-        <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
+        <div className="flex items-center justify-center space-x-4 my-4 ">
           <Button
             variant="outline"
             size="sm"
@@ -217,15 +249,18 @@ export function DataTableForMaterial<TData, TValue>({
             disabled={Number(pageIndex) === 1}
             className=""
           >
-            Previous
+            <ChevronLeftIcon className="h-4 w-4" />
           </Button>
+          <span>
+            Trang {data.length > 0 ? pageIndex : 0} Của {data.length > 0 ? totalPages : 0}
+          </span>
           <Button
             variant="outline"
             size="sm"
             onClick={() => setPageIndex((prev) => Number(prev) + 1)}
             disabled={pageIndex >= totalPages}
           >
-            Next
+            <ChevronRightIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>

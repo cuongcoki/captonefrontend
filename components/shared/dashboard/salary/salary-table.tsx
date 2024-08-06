@@ -289,7 +289,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
           }}
           disabled={Number(searchParams.pageIndex) === 1}
         >
-          Previous
+          Trang trước
         </Button>
         <Button
           variant="outline"
@@ -301,7 +301,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
           }}
           disabled={Number(searchParams.pageIndex) >= totalPage}
         >
-          Next
+          Trang sau
         </Button>
       </div>
     </div>

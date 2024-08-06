@@ -29,7 +29,7 @@ type CompanyContextType = {
   ForceRender: () => void;
 };
 export const CompanyContext = React.createContext<CompanyContextType>({
-  ForceRender: () => {},
+  ForceRender: () => { },
 });
 
 export default function CompanyTable({ searchParams }: CompanyParams) {
@@ -182,7 +182,7 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
           }}
           disabled={Number(searchParams.pageIndex) === 1}
         >
-          Previous
+          Trang trước
         </Button>
         <Button
           variant="outline"
@@ -194,7 +194,7 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
           }}
           disabled={Number(searchParams.pageIndex) >= totalPage}
         >
-          Next
+          Trang sau
         </Button>
       </div>
     </div>

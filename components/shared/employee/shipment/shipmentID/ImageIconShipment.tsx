@@ -52,7 +52,7 @@ export default function ImageIconShipment({ dataImage }: ImageIconShipOrderProps
     // }
 
     const mainImage = dataImage.find(image => image.isMainImage);
-    console.log("mainImage",mainImage)
+    // console.log("mainImage",mainImage)
     return (
         <>
             {mainImage ? (
