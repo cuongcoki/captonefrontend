@@ -1,6 +1,30 @@
 import { isBefore, isEqual, parse } from "date-fns";
 import * as z from "zod";
+const isLeapYear = (year: any) => {
+  return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+};
 
+const getDaysInMonth = (month: any, year: any) => {
+  switch (month) {
+    case 1: // Tháng 1
+    case 3: // Tháng 3
+    case 5: // Tháng 5
+    case 7: // Tháng 7
+    case 8: // Tháng 8
+    case 10: // Tháng 10
+    case 12: // Tháng 12
+      return 31;
+    case 4: // Tháng 4
+    case 6: // Tháng 6
+    case 9: // Tháng 9
+    case 11: // Tháng 11
+      return 30;
+    case 2: // Tháng 2
+      return isLeapYear(year) ? 29 : 28;
+    default:
+      throw new Error("Tháng không hợp lệ");
+  }
+};
 export const RegisterSchema = z.object({
   email: z.string().email({
     message: "Vui lòng nhập địa chỉ email hợp lệ",
@@ -106,13 +130,28 @@ const salaryRequestSchemaForUpdate = z.object({
 export const UsersSchema = z.object({
   firstName: z.string().min(1, { message: "Yêu cầu nhập họ của nhân viên" }),
   lastName: z.string().min(1, { message: "Yêu cầu nhập tên của nhân viên" }),
-  dob: z.string().refine(
-    (dob) => {
-      const dobPattern = /^\d{2}\/\d{2}\/\d{4}$/;
-      return dobPattern.test(dob);
-    },
-    { message: "Ngày sinh phải có định dạng dd/MM/yyyy" }
-  ),
+  dob: z
+    .string()
+    .nonempty({ message: "Ngày sinh không được để trống" })
+    .regex(/^\d{2}\/\d{2}\/\d{4}$/, {
+      message: "Ngày sinh không hợp lệ, định dạng đúng: DD/MM/YYYY",
+    })
+    .refine((dob) => {
+      const [day, month, year] = dob.split("/").map(Number);
+      if (month < 1 || month > 12) {
+        return false;
+      }
+      if (day < 1) {
+        return false;
+      }
+      if (year <= 1900) {
+        return false;
+      }
+      const daysInMonth = getDaysInMonth(month, year);
+      return day <= daysInMonth;
+    }, {
+      message: "Ngày sinh không hợp lệ, tháng này không có ngày đó.",
+    }),
 
   gender: z.string(),
   address: z.string().min(1, { message: "Yêu cầu nhập địa chỉ của nhân viên" }),
@@ -250,6 +289,22 @@ export const UpdateUserForm = z.object({
     .nonempty({ message: "Ngày sinh không được để trống" })
     .regex(/^\d{2}\/\d{2}\/\d{4}$/, {
       message: "Ngày sinh không hợp lệ, định dạng đúng: DD/MM/YYYY",
+    })
+    .refine((dob) => {
+      const [day, month, year] = dob.split("/").map(Number);
+      if (month < 1 || month > 12) {
+        return false;
+      }
+      if (day < 1) {
+        return false;
+      }
+      if (year <= 1900) {
+        return false;
+      }
+      const daysInMonth = getDaysInMonth(month, year);
+      return day <= daysInMonth;
+    }, {
+      message: "Ngày sinh không hợp lệ, tháng này không có ngày đó.",
     }),
   roleId: z.number().int({ message: "Vai trò không hợp lệ" }),
   companyId: z.string().nonempty({ message: "Cơ sở không được để trống" }),

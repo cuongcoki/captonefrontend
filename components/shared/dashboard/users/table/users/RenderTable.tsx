@@ -138,7 +138,7 @@ export default function RenderTableUsers({ searchParams }: Props) {
         </>
       </MyContext.Provider>
 
-      <div className="w-full py-3 md:hidden">
+      <div className="w-full bg-white py-3 md:hidden">
       </div>
     </div>
   );

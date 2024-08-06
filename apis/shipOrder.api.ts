@@ -84,7 +84,7 @@ export const shipOrderApi = {
 
 
     updateStatus: (data: updateStatusShipOrder, id: string) =>
-        axiosClient.patch(`${endPointConstant.BASE_URL}/ship-orders/${id}/status`, data, {
+        axiosClient.patch(`${endPointConstant.BASE_URL}/ship-orders/${id}`, data, {
             cache: {
                 update: () => {
                     shipOrderCacheIds.forEach((cacheId) => axiosClient.storage.remove(cacheId));

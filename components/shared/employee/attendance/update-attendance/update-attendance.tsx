@@ -384,7 +384,7 @@ export default function UpdateAttendanceEm({
           console.log(data);
           updateEmployeeProduct();
 
-          toast.success(data.message);
+          // toast.success(data.message);
         })
         .catch((error) => {
           if (error.response.data.error) {
