@@ -9,12 +9,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import Image from "next/image";
 import HeaderComponent from "@/components/shared/common/header";
 import { Button } from "@/components/ui/button";
 import { SearchSalaryCompanyParams } from "@/types/salary-company.type";
 import { salaryCompanyApi } from "@/apis/salary_company.api";
 import { salaryCompanyStore } from "@/components/shared/dashboard/salary-company/salary-store";
+import { Card } from "@/components/ui/card";
 
 const dataNow = new Date();
 const YearNow = dataNow.getFullYear();
@@ -169,85 +178,53 @@ export default function SalaryCompanyTable({
           </Select>
         </div>
       </div>
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="flex flex-col">
-          <div className="-m-1.5 overflow-x-auto">
-            <div className="p-1.5 min-w-full inline-block align-middle">
-              <div className="overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Tên công ty
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Tên Chủ
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Chi phí
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-white"
-                      >
-                        Trạng thái
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 ">
-                    {tableData.length === 0 ? (
-                      <tr>
-                        <td
-                          colSpan={4}
-                          className="text-center py-4 dark:text-white"
-                        >
-                          Không có dữ liệu
-                        </td>
-                      </tr>
-                    ) : (
-                      tableData.map((item, index) => (
-                        <tr
-                          key={item.id}
-                          onClick={() => {
-                            router.push(
-                              `/dashboard/salary-company/detail?MonthlyCompanySalaryId=${item.id}&CompanyId=${item.companyId}&Year=${params.Year}&Month=${params.Month}`
-                            );
-                          }}
-                          className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer "
-                        >
-                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-white">
-                            {item.companyName}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-white">
-                            {item.directorName}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-white">
-                            {formatCurrencyWithNegative(item.salary)}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-white">
-                            {item.status === 0
-                              ? "Chưa thanh toán"
-                              : "Đã thanh toán"}
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Card className="rounded-lg border bg-card text-card-foreground shadow-sm">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Tên công ty</TableHead>
+              <TableHead>Tên Chủ</TableHead>
+              <TableHead>Chi phí</TableHead>
+              <TableHead>Trạng thái</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {tableData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center py-4">
+                  Không có dữ liệu
+                </TableCell>
+              </TableRow>
+            ) : (
+              tableData.map((item, index) => (
+                <TableRow
+                  key={item.id}
+                  onClick={() => {
+                    router.push(
+                      `/dashboard/salary-company/detail?MonthlyCompanySalaryId=${item.id}&CompanyId=${item.companyId}&Year=${params.Year}&Month=${params.Month}`
+                    );
+                  }}
+                  className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer"
+                >
+                  <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
+                    {item.companyName}
+                  </TableCell>
+                  <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
+                    {item.directorName}
+                  </TableCell>
+                  <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
+                    {formatCurrencyWithNegative(item.salary)}
+                  </TableCell>
+                  <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
+                    {item.status === 0 ? "Chưa thanh toán" : "Đã thanh toán"}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </Card>
       <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
         <Button
           variant="outline"

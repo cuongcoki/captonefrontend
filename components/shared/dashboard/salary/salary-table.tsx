@@ -9,12 +9,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
 import { SalaryType, SearchSalaryParams } from "@/types/salary.type";
 import Image from "next/image";
 import HeaderComponent from "@/components/shared/common/header";
 import { salaryApi } from "@/apis/salary.api";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 const dataNow = new Date();
 const yearNow = dataNow.getFullYear();
@@ -164,120 +173,62 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
             </SelectContent>
           </Select>
         </div>
-        {/* <div className="col-span-6 row-start-2 xl:row-start-1 xl:row-span-2 xl:col-start-11 xl:col-span-2 md:ml-2">
-          <Select
-            value={params.companyId}
-            onValueChange={(value) => {
-              setParams((prev) => {
-                return {
-                  ...prev,
-                  companyId: value,
-                };
-              });
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Chọn công ty" />
-            </SelectTrigger>
-            <SelectContent>
-              {companyData.map((item) => (
-                <SelectItem
+      </div>
+      <Card>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Ảnh đại diện</TableHead>
+              <TableHead>Tên nhân viên</TableHead>
+              <TableHead>Lương tháng</TableHead>
+              <TableHead>Lương khả dụng</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {tableData.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={4} className="text-center">
+                  Không có dữ liệu
+                </TableCell>
+              </TableRow>
+            ) : (
+              tableData.map((item, index) => (
+                <TableRow
                   key={item.id}
-                  className="hover:bg-gray-100"
-                  value={item.id.toString()}
+                  onClick={() => {
+                    router.push(
+                      `/dashboard/salary/detail/${item.userId}?year=${params.year}&month=${params.month}`
+                    );
+                  }}
+                  className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer"
                 >
-                  {item.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div> */}
-      </div>
-      <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-        <div className="flex flex-col">
-          <div className="-m-1.5 overflow-x-auto">
-            <div className="p-1.5 min-w-full inline-block align-middle">
-              <div className="overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead>
-                    <tr>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-sm font-medium text-gray-500 dark:text-white"
-                      >
-                        Ảnh đại diện
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-sm font-medium text-gray-500 dark:text-white"
-                      >
-                        Tên nhân viên
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-sm font-medium text-gray-500 dark:text-white"
-                      >
-                        Lương tháng
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-start text-sm font-medium text-gray-500 dark:text-white"
-                      >
-                        Lương khả dụng
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200 ">
-                    {tableData.length === 0 ? (
-                      <tr>
-                        <td
-                          colSpan={4}
-                          className="text-center py-4 dark:text-white"
-                        >
-                          Không có dữ liệu
-                        </td>
-                      </tr>
-                    ) : (
-                      tableData.map((item, index) => (
-                        <tr
-                          key={item.id}
-                          onClick={() => {
-                            router.push(
-                              `/dashboard/salary/detail/${item.userId}?year=${params.year}&month=${params.month}`
-                            );
-                          }}
-                          className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer "
-                        >
-                          <td className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-white">
-                            <div className="w-24 h-32 bg-gray-400">
-                              <Image
-                                src={item.avatar}
-                                alt={item.fullName}
-                                width={300}
-                                height={400}
-                                className="object-cover w-full h-full"
-                              />
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-white">
-                            {item.fullName}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-white">
-                            {formatCurrencyWithNegative(item.salary)}
-                          </td>
-                          <td className="px-6 py-4 text-sm text-gray-800 dark:text-white">
-                            {formatCurrencyWithNegative(item.accountBalance)}
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                  <TableCell className="px-4 py-4 text-sm font-medium text-gray-800 dark:text-white">
+                    <div className="w-24 h-32 bg-gray-400">
+                      <Image
+                        src={item.avatar}
+                        alt={item.fullName}
+                        width={300}
+                        height={400}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
+                    {item.fullName}
+                  </TableCell>
+                  <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
+                    {formatCurrencyWithNegative(item.salary)}
+                  </TableCell>
+                  <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
+                    {formatCurrencyWithNegative(item.accountBalance)}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </Card>
       <div className="grid grid-cols-2 w-[300px] justify-end space-x-2 py-4 ml-auto mr-5">
         <Button
           variant="outline"
