@@ -539,23 +539,23 @@ export default function UserIDPage() {
           </div>
         </header>
 
-            {/* Thông tinh cá nhân */}
-            <div className="p-4 flex flex-col justify-between gap-4">
-                <Card>
-                    <CardHeader>
-                        <TitleComponent
-                            title="Thông tin cá nhân"
-                            description="Thông tin cá nhân của nhân viên."
-                        />
-                    </CardHeader>
-                    <CardContent className="">
-                        <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
-                            <div>
-                                <div className="font-extralight text-[0.8rem]">Họ và tên</div>
-                                <div>
-                                    {userId?.firstName} {userId?.lastName}
-                                </div>
-                            </div>
+        {/* Thông tinh cá nhân */}
+        <div className="p-4 flex flex-col justify-between gap-4">
+          <Card>
+            <CardHeader>
+              <TitleComponent
+                title="Thông tin cá nhân"
+                description="Thông tin cá nhân của nhân viên."
+              />
+            </CardHeader>
+            <CardContent className="">
+              <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
+                <div>
+                  <div className="font-extralight text-[0.8rem]">Họ và tên</div>
+                  <div>
+                    {userId?.firstName} {userId?.lastName}
+                  </div>
+                </div>
 
                 <div>
                   <div className="font-extralight text-[0.8rem]">Giới tính</div>
@@ -578,9 +578,9 @@ export default function UserIDPage() {
           <Card>
             <CardHeader>
               <TitleComponent
-                            title="Thông tin lương"
-                            description="Thông tin lương của nhân viên."
-                        />
+                title="Thông tin lương"
+                description="Thông tin lương của nhân viên."
+              />
             </CardHeader>
             <CardContent className="">
               <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
@@ -635,9 +635,9 @@ export default function UserIDPage() {
           <Card>
             <CardHeader>
               <TitleComponent
-                            title="Cơ sở làm việc"
-                            description="Thông tin công ty của nhân viên."
-                        />
+                title="Cơ sở làm việc"
+                description="Thông tin công ty của nhân viên."
+              />
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-y-8">
               <div>
