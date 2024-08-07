@@ -26,7 +26,6 @@ export const productApi = {
     const requestBody = { IsInProcessing, searchTerm, PageIndex, PageSize };
     const cacheId = createCacheId("all-products", requestBody);
     cacheIds.add(cacheId);
-    console.log("Added cacheId:", cacheId);
     return axiosClient.get(`${endPointConstant.BASE_URL}/products`, {
       params: requestBody,
       id: cacheId,
@@ -37,10 +36,8 @@ export const productApi = {
     axiosClient.post(`${endPointConstant.BASE_URL}/products`, data, {
       cache: {
         update: () => {
-          console.log("Clearing cacheIds:", cacheIds);
           cacheIds.forEach((id) => axiosClient.storage.remove(id));
           cacheIds.clear();
-          console.log("cacheIds after clearing:", cacheIds);
         },
       },
     }),
@@ -69,7 +66,6 @@ export const productApi = {
             if (productCacheId) {
               axiosClient.storage.remove(productCacheId);
               productsCacheIds.delete(productId);
-              console.log("Removed productCacheId:", productCacheId);
             }
           },
         },
@@ -89,7 +85,6 @@ export const productApi = {
     const requestBody = {  searchTerm, PageIndex, PageSize };
     const cacheId = createCacheId("all-products", requestBody);
     cacheIds.add(cacheId);
-    console.log("Added cacheId:", cacheId);
     return axiosClient.get(`${endPointConstant.BASE_URL}/material`, {
       params: requestBody,
       id: cacheId,

@@ -37,25 +37,19 @@ import { useContext, useEffect, useState } from "react";
 import { SetSchema } from "@/schema/set";
 
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
 import {
   Check,
   Minus,
-  PackagePlus,
-  Phone,
   Plus,
   Upload,
   X,
-  icons,
 } from "lucide-react";
 import ImageDisplay from "./ImageDisplay";
 
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { productApi } from "@/apis/product.api";
-import { error } from "console";
 import ImageDisplayDialog from "./imageDisplayDialog";
 import Image from "next/image";
-import { Facebook, Youtube } from "lucide-react";
 import { filesApi } from "@/apis/files.api";
 import { setApi } from "@/apis/set.api";
 
@@ -65,8 +59,14 @@ import { MyContext } from "../table/sets/RenderTable";
 import { Label } from "@/components/ui/label";
 let initialFormValuesSetProduct: any = null;
 export const SetForm = () => {
+  // state
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+  const { forceUpdate } = useContext(MyContext);
+  const [loading, setLoading] = useState(false);
+  const [imageRequests, setImageRequests] = useState<string | null>(null);
+  const [imageUrls, setImageUrls] = useState<File | null>(null);
+  const [nameImage, setNameImage] = useState<string | null>(null);
 
   const handleOffDialogA = () => {
     setOpenAlert(false);
@@ -79,12 +79,6 @@ export const SetForm = () => {
     setOpen(true);
   };
 
-
-  const { forceUpdate } = useContext(MyContext);
-  const [loading, setLoading] = useState(false);
-  const [imageRequests, setImageRequests] = useState<string | null>(null);
-  const [imageUrls, setImageUrls] = useState<File | null>(null);
-  const [nameImage, setNameImage] = useState<string | null>(null);
   const form = useForm({
     resolver: zodResolver(SetSchema),
     defaultValues: {
@@ -93,8 +87,8 @@ export const SetForm = () => {
       name: "",
     },
   });
-  // ** các hàm để sử lý đăng ảnh
 
+  // ** các hàm để sử lý đăng ảnh
   const generateRandomString = (length: number = 5) => {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -144,7 +138,7 @@ export const SetForm = () => {
 
     setLoading(true);
     const formData = new FormData();
-    formData.append("receivedFiles", imageUrls); // Đảm bảo rằng tên trường tương ứng với server và chỉ đăng một ảnh
+    formData.append("receivedFiles", imageUrls); 
 
     try {
       const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
@@ -187,14 +181,10 @@ export const SetForm = () => {
     }
   };
 
-  // console.log('imageRequests', imageRequests)
-  // console.log('imageUrls', imageUrls)
 
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  // console.log('searchTerm', searchTerm)
-  // console.log("searchResults", searchResults);
 
   useEffect(() => {
     const handleSearch = () => {
@@ -281,6 +271,7 @@ export const SetForm = () => {
     }
   };
 
+  // ** hàm xóa sản phẩm khỏi danh sách
   const handleMinusProducts = (productId: string) => {
     const updatedDetailsPro = getDetailsPro.filter(
       (product) => product.id !== productId
@@ -335,7 +326,6 @@ export const SetForm = () => {
 
   const onSubmit = async (data: z.infer<typeof SetSchema>) => {
     setLoading(true);
-    // console.log('Submitted data:', data);
 
     try {
       await handlePostImage();
@@ -343,7 +333,6 @@ export const SetForm = () => {
         toast.error("Hãy chọn 1 ảnh cho bộ sản phẩm")
       }
       if (nameImage) {
-        // Thực hiện các hành động khi nameImage có giá trị
         const requestBody = {
           code: data.code,
           description: data.description,
@@ -394,8 +383,6 @@ export const SetForm = () => {
     return text;
   };
 
-  // console.log("productsRequest", productsRequest);
-  // console.log("getDetailsProgetDetailsPro=========", getDetailsPro);
 
   const handleClearForm = () => {
     setOpen(false)
@@ -408,15 +395,12 @@ export const SetForm = () => {
 
   const handleOffDialog = () => {
     const currentFormValues = productsRequest;
-    // console.log("currentFormValues", initialFormValuesSetProduct)
-    // console.log("setProductsRequest", productsRequest)
+
     if (initialFormValuesSetProduct === null) {
       initialFormValuesSetProduct = currentFormValues;
     }
     const isFormChanged = JSON.stringify(initialFormValuesSetProduct) === JSON.stringify(productsRequest);
-    // console.log("isFormChanged", isFormChanged)
 
-    // console.log("form", form.getValues())
     const isCodeIdEmpty = form.getValues().code === "";
     const isDescriptionEmpty = form.getValues().description === "";
     const isNameEmpty = form.getValues().name === "";
@@ -429,6 +413,7 @@ export const SetForm = () => {
   };
 
   const { pending } = useFormStatus();
+  
   return (
     <>
       {
@@ -491,7 +476,7 @@ export const SetForm = () => {
                               <CardHeader className="font-semibold text-xl">
                                 <span>Thông tin sản phẩm</span>
                               </CardHeader>
-                              <CardContent className="w-full grid grid-cols-5 gap-4 min-h-[100px]  overflow-y-auto ">
+                              <CardContent className="w-full grid grid-cols-3 md:grid-cols-5  gap-4 min-h-[100px]  overflow-y-auto ">
                                 {searchResults !== null ? (
                                   searchResults.map((product) => (
                                     <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
@@ -565,7 +550,7 @@ export const SetForm = () => {
                                     </div>
                                   </div>
                                   <div className="flex items-center gap-6">
-                                    <Label htmlFor="email" >Số lượng</Label>
+                                    <Label htmlFor="email" className="hidden sm:block">Số lượng</Label>
                                     <Input
                                       className="w-[60px] text-center outline-none border"
                                       type="number"

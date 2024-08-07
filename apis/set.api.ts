@@ -22,7 +22,6 @@ export const setApi = {
         const requestBody = { PageIndex, PageSize, searchTerm };
         const cacheId = createCacheId("all-sets", requestBody);
         setCacheIds.add(cacheId);
-        console.log("Added setCacheId:", cacheId);
         return axiosClient.get(`${endPointConstant.BASE_URL}/sets`, {
             params: requestBody,
             id: cacheId,
@@ -41,10 +40,8 @@ export const setApi = {
         axiosClient.post(`${endPointConstant.BASE_URL}/sets`, data, {
             cache: {
                 update: () => {
-                    console.log("Clearing setCacheIds:", setCacheIds);
                     setCacheIds.forEach((id) => axiosClient.storage.remove(id));
                     setCacheIds.clear();
-                    console.log("setCacheIds after clearing:", setCacheIds);
                 },
             },
         }),
@@ -62,7 +59,6 @@ export const setApi = {
                     if (setCacheId) {
                         axiosClient.storage.remove(setCacheId);
                         setsCacheIds.delete(setId);
-                        console.log("Removed setCacheId:", setCacheId);
                     }
                 },
             },

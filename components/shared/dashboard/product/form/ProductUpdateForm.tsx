@@ -79,7 +79,6 @@ interface ProductID {
 export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const [loading, setLoading] = useState(false);
   const { ForceRender } = ProductStore();
-  // console.log("productId", productId);
   const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(
     undefined
   );
@@ -103,7 +102,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                 console.error("Error getting file:", error);
                 return {
                   ...image,
-                  imageUrl: "", // Handle error case if needed
+                  imageUrl: "", 
                 };
               }
             })
@@ -121,7 +120,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     fetchUpdatedProduct();
   }, [productId]);
 
-  // Initialize image requests from productId if available
   const initialImageRequests =
     updatedProduct?.imageResponses.map((image) => ({
       id: image.id,
@@ -129,13 +127,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       isBluePrint: image.isBluePrint,
       isMainImage: image.isMainImage,
     })) || [];
-  // console.log('initialImageRequests', initialImageRequests)
 
-  // State to manage image requests
 
-  // console.log('imageRequests', imageRequests)
-
-  // useForm hook for managing form state and validation
   const form = useForm({
     resolver: zodResolver(ProductUpdateSchema),
     defaultValues: {
@@ -163,13 +156,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
 
   const [imageUrls, setImageUrls] = useState<any>([]);
   const [nameImage, setNameImage] = useState<string[]>([]);
-  // const [imageAddRequests, setImageAddRequests] = useState<
-  //   {
-  //     imageUrl: string;
-  //     isBluePrint: boolean;
-  //     isMainImage: boolean;
-  //   }[]
-  // >([]);
+
   const [imageAddRequests, setImageAddRequests] = useState<any[]>([]);
 
   const generateRandomString = (length: number = 5) => {
@@ -295,15 +282,11 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       });
     }
   };
-  // console.log("removeImageIds", removeImageIds);
-  // console.log("imageAddRequests", imageAddRequests);
-  // console.log("imageRequests", imageRequests);
-  // console.log("imageRequestsUpdate", imageRequestsUpdate);
+ 
   const [saveUpdateImage, setSaveUpdateImage] = useState<any[]>([]);
-  // console.log("saveUpdateImage", saveUpdateImage);
-  // Handle toggling blueprint flag for an image
+ 
+  // Handle toggling blue image flag for an image
   const handleToggleBluePrint = (imageUrl: string, id: string) => {
-    // console.log('imageUrl=', imageUrl)
     console.log("id", id);
     console.log("image=====", imageRequestsUpdate);
     setImageRequests((prevImageRequests) =>
@@ -335,7 +318,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
           (item) => item.id === id
         );
         if (existingIndex !== -1) {
-          // Update existing entry
           const updatedSaveUpdateImage = [...prevSaveUpdateImage];
           updatedSaveUpdateImage[existingIndex] = {
             ...updatedSaveUpdateImage[existingIndex],
@@ -343,7 +325,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
           };
           return updatedSaveUpdateImage;
         } else {
-          // Add new entry
           return [
             ...prevSaveUpdateImage,
             {
@@ -413,15 +394,13 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     setLoading(true);
     const formData = new FormData();
     imageUrls.forEach((imageUrl: any) => {
-      formData.append("receivedFiles", imageUrl); // Đảm bảo rằng tên trường tương ứng với server
+      formData.append("receivedFiles", imageUrl); 
     });
     try {
-      const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
+      const response = await filesApi.postFiles(formData); 
       console.log("Upload successful:", response.data);
-      // Xử lý các hành động sau khi tải lên thành công
     } catch (error) {
       console.error("Error uploading files:", error);
-      // Xử lý lỗi khi tải lên không thành công
     } finally {
       setLoading(false);
     }
@@ -430,27 +409,10 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Handle form submission
   const onSubmit = async (formData: z.infer<typeof ProductUpdateSchema>) => {
-    if (isSubmitting) return; // Ngăn chặn việc submit nhiều lần
+    if (isSubmitting) return; 
     var ImaNull = null;
-    // let isHaveMainImage = false;
-    // imageAddRequests.forEach((image) => {
-    //   if (image.isMainImage === true) {
-    //     isHaveMainImage = true;
-    //   }
-    // });
-    // if (isHaveMainImage === false) {
-    //   toast.error("Vui lòng chọn ảnh chính cho sản phẩm");
-    //   return;
-    // }
     setLoading(true);
     setIsSubmitting(true);
-    // if (saveUpdateImage.length > 0) {
-    //   // Push saveUpdateImage into imageAddRequests array
-    //   setImageAddRequests((prevImageAddRequests) => [
-    //     ...prevImageAddRequests,
-    //     ...saveUpdateImage,
-    //   ]);
-    // }
     console.log(imageAddRequests);
     try {
       await handlePostImage();
@@ -476,23 +438,13 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       };
       console.log("============requestBody", requestBody);
 
-      // productApi
-      //   .updateProduct(requestBody, formData.id)
-      //   .then(({ data }) => {
-      //     toast.success(data.message);
-      //     ForceRender();
-      //   })
-      //   .catch((error) => {
-      //     console.error("Error updating product:", error);
-      //   });
-
       try {
         const response = await productApi.updateProduct(
           requestBody,
           formData.id
         );
         ForceRender();
-        toast.success(response.data.message); // Assuming your API returns a message field in the response
+        toast.success(response.data.message); 
         console.log("Update Successful:", response);
       } catch (error: any) {
         if (
@@ -545,24 +497,12 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
 

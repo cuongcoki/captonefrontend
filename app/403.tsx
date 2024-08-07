@@ -5,7 +5,7 @@ import Link from "next/link";
 import { LogoIcon } from '@/constants/images/index.js'
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-export default function Custom404() {
+export default function Custom403() {
   const user= useAuth();
   const router = useRouter();
   const cnfpOptions = {
@@ -14,10 +14,6 @@ export default function Custom404() {
     colorlib_404_customizer_button_text1: "Liên hệ với chúng tôi",
     colorlib_404_customizer_social_facebook: "https://facebook.com",
   };
-
-  const handleRedictProfile=()=>{
-    router.push(`/profile/${user?.user?.id}`)
-  }
 
 
   return (
@@ -30,7 +26,7 @@ export default function Custom404() {
         <div className="relative h-32">
        
           <h1 className="flex justify-center items-center absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-9xl font-black uppercase tracking-widest text-primary-backgroudPrimary">
-            4<Image src={LogoIcon} width={90} height={90} alt="image logo"/>4
+            4<Image src={LogoIcon} width={90} height={90} alt="image logo"/>3
           </h1>
         </div>
         <h2 className="text-xl font-bold uppercase mt-5 mb-4 text-primary-backgroudPrimary">

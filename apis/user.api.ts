@@ -72,22 +72,15 @@ export const userApi = {
     PageIndex: any,
     PageSize: any
   ) => {
-    // Create a request body object
     const requestBody = { RoleId, searchTerm, IsActive, PageIndex, PageSize };
-
-    // Create cache ID based on the request body
     const cacheId = createCacheId("all-users", requestBody);
 
-    // Add cache ID to the cacheIds set
     cacheIds.add(cacheId);
 
-    // Log the added cache ID
-    console.log("Added cacheId:", cacheId);
 
-    // Make GET request with the request body as query parameters
     return axiosClient.get(`${endPointConstant.BASE_URL}/users`, {
-      params: requestBody, // Pass the request body as query parameters
-      id: cacheId, // Include the cache ID in the request configuration
+      params: requestBody, 
+      id: cacheId, 
     });
   },
 
@@ -103,36 +96,23 @@ export const userApi = {
     axiosClient.post(`${endPointConstant.BASE_URL}/users`, data, {
       cache: {
         update: () => {
-          console.log("Clearing cacheIds:", cacheIds); // Log trước khi xóa
-          // Xóa tất cả cache ID của searchMaterial
           cacheIds.forEach((id) => axiosClient.storage.remove(id));
           cacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
-          console.log("cacheIds after clearing:", cacheIds); // Log sau khi xóa
         },
       },
     }),
 
   changeUserStatus: (id: string, isActive: boolean) => {
-    // Create a request body object
     const requestBody = { id, isActive };
-
-    // Create cache ID based on the request body
     const cacheId = createCacheId("change-user-status", requestBody);
-
-    // Add cache ID to the cacheIds set
     cacheIds.add(cacheId);
 
-    // Log the added cache ID
-    console.log("Added cacheId:", cacheId);
-
-    // Make PUT request to change the user status
     return axiosClient.put(
       `${endPointConstant.BASE_URL}/users/${id}/status/${isActive}`,
-      null, // No request body for this PUT request
+      null, 
       {
         cache: {
           update: () => {
-            // Remove all cache entries in cacheIds
             listUserCacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
@@ -141,15 +121,12 @@ export const userApi = {
               axiosClient.storage.remove(id);
             });
 
-            // Clear the cacheIds set after removing all cache entries
             cacheIds.clear();
 
-            // Remove cache ID of getMaterial with the same user ID
             const userCacheId = userCacheIds.get(requestBody.id);
             if (userCacheId) {
               axiosClient.storage.remove(userCacheId);
               userCacheIds.delete(requestBody.id);
-              console.log("Removed materialCacheId:", userCacheId);
             }
           },
         },
@@ -167,14 +144,12 @@ export const userApi = {
             cacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
-            cacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
+            cacheIds.clear();
 
-            // Xóa cache ID của getMaterial có cùng ID
             const userCacheId = userCacheIds.get(user.id);
             if (userCacheId) {
               axiosClient.storage.remove(userCacheId);
               userCacheIds.delete(user.id);
-              console.log("Removed materialCacheId:", userCacheId); // Log cache ID sau khi xóa
             }
           },
         },
@@ -191,18 +166,16 @@ export const userApi = {
             listUserCacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
-            listUserCacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
+            listUserCacheIds.clear(); 
             cacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
-            cacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
+            cacheIds.clear(); 
 
-            // Xóa cache ID của getMaterial có cùng ID
             const userCacheId = userCacheIds.get(user.id);
             if (userCacheId) {
               axiosClient.storage.remove(userCacheId);
               userCacheIds.delete(user.id);
-              console.log("Removed materialCacheId:", userCacheId); // Log cache ID sau khi xóa
             }
           },
         },
@@ -219,19 +192,23 @@ export const userApi = {
             cacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
-            cacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
+            cacheIds.clear(); 
           },
         },
       }
     );
   },
 
-   getUserCompany: (companyId:string) => {
+  getUserCompany: (companyId: string) => {
     return axiosClient.get(`${endPointConstant.BASE_URL}/users/Company`, {
       params: {
         CompanyId: companyId
       }
     });
-  }
+  },
+
+  getMe: () =>
+    axiosClient.get(`${endPointConstant.BASE_URL}/users/me`)
+
 
 };

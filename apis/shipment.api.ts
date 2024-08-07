@@ -54,14 +54,13 @@ export const shipmentApi = {
     const requestBody = { PageIndex, PageSize, Status, SearchTerm };
     const cacheId = createCacheId("get-shipments", requestBody);
     shipmentCacheIds.add(cacheId);
-    console.log("Added cacheId:", cacheId);
 
     let url = `${endPointConstant.BASE_URL}/shipments?`;
     if (PageIndex !== undefined) url += `PageIndex=${PageIndex}&`;
     if (PageSize !== undefined) url += `PageSize=${PageSize}&`;
     if (Status) url += `Status=${Status}&`;
     if (SearchTerm) url += `SearchTerm=${SearchTerm}&`;
-    // Remove trailing '&' or '?' if no parameters were added
+
     url = url.slice(-1) === '&' || url.slice(-1) === '?' ? url.slice(0, -1) : url;
 
     return axiosClient.get(url, { id: cacheId });
@@ -79,10 +78,8 @@ export const shipmentApi = {
     axiosClient.post(`${endPointConstant.BASE_URL}/shipments`, data, {
       cache: {
         update: () => {
-          console.log("Clearing shipmentCacheIds:", shipmentCacheIds);
           shipmentCacheIds.forEach((id) => axiosClient.storage.remove(id));
           shipmentCacheIds.clear();
-          console.log("shipmentCacheIds after clearing:", shipmentCacheIds);
         },
       },
     }),
@@ -98,7 +95,6 @@ export const shipmentApi = {
           if (shipmentCacheId) {
             axiosClient.storage.remove(shipmentCacheId);
             shipmentsCacheIds.delete(id);
-            console.log("Removed shipmentCacheId:", shipmentCacheId);
           }
         },
       },
@@ -120,7 +116,6 @@ export const shipmentApi = {
           if (shipmentCacheId) {
             axiosClient.storage.remove(shipmentCacheId);
             shipmentsCacheIds.delete(id);
-            console.log("Removed shipmentCacheId:", shipmentCacheId);
           }
         },
       },
@@ -142,7 +137,6 @@ export const shipmentApi = {
           if (shipmentCacheId) {
             axiosClient.storage.remove(shipmentCacheId);
             shipmentsCacheIds.delete(id);
-            console.log("Removed shipmentCacheId:", shipmentCacheId);
           }
         },
       },
@@ -157,14 +151,13 @@ export const shipmentApi = {
     const requestBody = { PageIndex, PageSize, Status, SearchTerm };
     const cacheId = createCacheId("get-shipments", requestBody);
     shipmentCacheIds.add(cacheId);
-    console.log("Added cacheId:", cacheId);
 
     let url = `${endPointConstant.BASE_URL}/shipments/get-by-shipper?`;
     if (PageIndex !== undefined) url += `PageIndex=${PageIndex}&`;
     if (PageSize !== undefined) url += `PageSize=${PageSize}&`;
     if (Status) url += `Status=${Status}&`;
     if (SearchTerm) url += `SearchTerm=${SearchTerm}&`;
-    // Remove trailing '&' or '?' if no parameters were added
+    
     url = url.slice(-1) === '&' || url.slice(-1) === '?' ? url.slice(0, -1) : url;
     return axiosClient.get(url, { id: cacheId });
   },

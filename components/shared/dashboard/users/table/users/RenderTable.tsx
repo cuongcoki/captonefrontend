@@ -1,27 +1,16 @@
 "use client";
 
-import { userApi } from "@/apis/user.api";
+import { useEffect, useState, createContext } from "react";
+
 import { Employee, columns } from "./Column";
 import { DataTable } from "./DataTable";
 import { DataTablePagination } from "./data-table-pagination";
-import { useEffect, useState, createContext } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { EllipsisVertical, Plus } from "lucide-react";
 import { UsersForm } from "../../form/UsersForm";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Separator } from "@/components/ui/separator";
 import { UserSearchParams } from "@/types/userTypes";
 import TableUserFeature from "@/components/shared/dashboard/users/table/users/user-table-feature";
-import toast from "react-hot-toast";
-import LoadingPage from "@/components/shared/loading/loading-page";
+
 import { roleApi } from "@/apis/roles.api";
+import { userApi } from "@/apis/user.api";
 
 type Props = {
   searchParams: UserSearchParams;
@@ -39,7 +28,6 @@ export default function RenderTableUsers({ searchParams }: Props) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(11);
-  const [open, setOpen] = useState<boolean>(false);
 
   const [force, setForce] = useState<number>(1);
   const forceUpdate = () => setForce((prev) => prev + 1);
@@ -63,7 +51,6 @@ export default function RenderTableUsers({ searchParams }: Props) {
             setRoles(data.data);
           })
           .catch((error) => {
-            console.error("Error fetching roles data:", error);
           })
           .finally(() => {
             setLoading(false);
@@ -81,14 +68,13 @@ export default function RenderTableUsers({ searchParams }: Props) {
         setData(res.data.data.data);
         setCurrentPage(res.data.data.currentPage);
         setTotalPages(res.data.data.totalPages);
-        console.log("Response:", res);
+        // console.log("Response:", res);
       } catch (error: any) {
         console.error("Error fetching user data:");
         if (
           error?.response.data.status === 404 ||
           error?.response.data.status === 400
         ) {
-          // toast.error(error?.response.data.message);
           setData([]);
         }
       } finally {
@@ -99,7 +85,6 @@ export default function RenderTableUsers({ searchParams }: Props) {
     fetchData();
   }, [searchParams, currentPage, pageSize, force, roles]);
 
-  console.log("Data:", data);
   const setCurrendPageToOne = () => {
     setCurrentPage(1);
   };

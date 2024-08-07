@@ -25,7 +25,6 @@ import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 
-import { Label } from "@/components/ui/label";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -34,7 +33,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -42,9 +40,7 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -70,40 +66,41 @@ import * as Dialog from "@radix-ui/react-dialog";
 // ** import REACT
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
+
+import { format, parseISO } from "date-fns";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { cn } from "@/lib/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ShipmentSchema } from "@/schema/shipment";
 
 // ** import Components
 import { NoImage } from "@/constants/images";
-import { Badge } from "@/components/ui/badge";
 import {
   CalendarIcon,
   Check,
-  CirclePlus,
   CircleX,
-  MoreVertical,
   Plus,
   Truck,
   X,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { shipmentApi } from "@/apis/shipment.api";
-import { format, parse, parseISO } from "date-fns";
-import Link from "next/link";
-import { companyApi } from "@/apis/company.api";
-import { userApi } from "@/apis/user.api";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ShipmentSchema } from "@/schema/shipment";
-import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
+import toast from "react-hot-toast";
+
+
+import ImageIconShipmentForm from "./ImageIconShipmentForm";
+import ImageIconMaterial from "./ImageIconMaterial";
+
+import { ShipmentStore } from "../shipment-store";
+
+// ** import API
+import { phaseApi } from "@/apis/phase.api";
 import { productApi } from "@/apis/product.api";
 import { filesApi } from "@/apis/files.api";
-import ImageIconShipmentForm from "./ImageIconShipmentForm";
-import { phaseApi } from "@/apis/phase.api";
-import { materialApi } from "@/apis/material.api";
-import ImageIconMaterial from "./ImageIconMaterial";
-import { ShipmentStore } from "../shipment-store";
+import { companyApi } from "@/apis/company.api";
+import { shipmentApi } from "@/apis/shipment.api";
+import { userApi } from "@/apis/user.api";
 
 const enumCompany = [
   {
@@ -228,6 +225,7 @@ export default function CreateShipment() {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const { ForceRender } = ShipmentStore();
+
   //state ** company
   const [company, setCompany] = useState<Company[]>([]);
   const [companyType, setCompanyType] = useState<number>(0);
@@ -261,25 +259,18 @@ export default function CreateShipment() {
   const [pageSizeM, setPageSizeM] = useState<number>(20);
   const [isInProcessingM, setIsInProcessingM] = useState<boolean>(true);
   const [dataM, setDataM] = useState<Material[]>([]);
-  // console.log("dataM", dataM);
   // ** state Shipment
   const [shipmentDetailRequests, setShipmentDetailRequests] = useState<
     ShipmentDetailRequest[]
   >([]);
   const [productDetail, setProductDetail] = useState<any[]>([]);
+
   // Hàm thêm sản phẩm
   const handleAddProducts = (
     imgProducts: string,
     itemId: string,
     itemKind: number
   ) => {
-    console.log("mainImage", imgProducts);
-    // check id
-    // const itemExists = shipmentDetailRequests.some((item) => item.itemId === itemId);
-    // if (itemExists) {
-    //     toast.error("sản phẩm này đã thêm");
-    //     return;
-    // }
     setShipmentDetailRequests((prev: any) => [
       ...prev,
       {
@@ -342,9 +333,11 @@ export default function CreateShipment() {
   const handleOnDialog = () => {
     setOpen(true);
   };
+
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
+
   const handleOnDialogA = () => {
     setOpenAlert(true);
   };
@@ -356,6 +349,7 @@ export default function CreateShipment() {
   const handleStatusChange1 = (value: number) => {
     setCompanyType1(value);
   };
+
   //call data material
   useEffect(() => {
     const fetchDataMaterial = async () => {
@@ -449,7 +443,6 @@ export default function CreateShipment() {
       } catch (error: any) {
         console.error("Error fetching user data:");
         if (error?.response.data.status === 400) {
-          // toast.error(error?.response.data.message);
           setDataEm([]);
         }
       } finally {
@@ -530,13 +523,13 @@ export default function CreateShipment() {
       return toast.error("2 Công ty không được trùng nhau");
     }
 
-    // check data shipmentDetailRequests
-    // Kiểm tra dữ liệu của shipmentDetailRequests
     if (shipmentDetailRequests.length === 0) {
       console.error("Không tìm thấy yêu cầu chi tiết lô hàng");
       return;
     }
+
     let hasError = false;
+
     shipmentDetailRequests.forEach((request, index) => {
       if (!request.itemId) {
         console.error(
@@ -707,13 +700,19 @@ export default function CreateShipment() {
     if (hasError) {
       return;
     }
-
+    
+    // check time UTC
+    const originalDate = data.shipDate;
+    const date = new Date(originalDate);
+    date.setUTCHours(23, 59, 59, 0);
+    const formattedShipDate = date.toISOString().replace('.000', '');
+ 
     // Gọi hàm kiểm tra
     const requestBody = {
       fromId: data.fromId,
       toId: data.toId,
       shipperId: data.shipperId,
-      shipDate: data.shipDate,
+      shipDate: formattedShipDate,
       shipmentDetailRequests: shipmentDetailRequests,
     };
 
@@ -760,9 +759,7 @@ export default function CreateShipment() {
   };
   const productType = 0;
   const materialType = 1;
-  //consolo.log
-  // console.log("dataP", dataP)
-  // console.log("shipmentDetailRequests", shipmentDetailRequests);
+
   const formatCurrency = (value: any): string => {
     if (!value) return "0";
     let valueString = value.toString();
@@ -785,9 +782,7 @@ export default function CreateShipment() {
   };
 
   const parseCurrency = (value: any) => {
-    // Loại bỏ các dấu chấm ngăn cách hàng nghìn
     const cleanedValue = value.replace(/\./g, "");
-
     return parseInt(cleanedValue);
   };
   const handleClearForm = () => {
@@ -1393,21 +1388,21 @@ export default function CreateShipment() {
                                 align="start"
                               >
                                 <Calendar
-                                  mode="single"
-                                  selected={
-                                    field.value
-                                      ? parseISO(field.value)
-                                      : undefined
-                                  }
-                                  onSelect={(date: any) => {
-                                    if (date) {
-                                      const formattedDate = new Date(
-                                        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-                                      ).toISOString().split("T")[0] + "T23:59:59Z";
-                                      field.onChange(formattedDate);
-                                    }
-                                  }}
-                                  initialFocus
+                                   mode="single"
+                                   selected={
+                                     field.value
+                                       ? parseISO(field.value)
+                                       : undefined
+                                   }
+                                   onSelect={(date: any) => {
+                                     if (date) {
+                                       const formattedDate = new Date(
+                                         Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                                       ).toISOString();
+                                       field.onChange(formattedDate);
+                                     }
+                                   }}
+                                   initialFocus
                                 />
                               </PopoverContent>
                             </Popover>

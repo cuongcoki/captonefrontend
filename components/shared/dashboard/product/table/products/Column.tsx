@@ -34,7 +34,7 @@ export const columns: ColumnDef<Product>[] = [
           href={`/dashboard/products/product/${row.original.id}`}
           className="flex justify-center items-center"
         >
-          <div className="w-[50px] h-[50px] rounded-lg shadow-md">
+          <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
             <Image
               src={`${firstImage.imageUrl}`}
               width={100}

@@ -5,13 +5,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
+
 import { Calendar } from "@/components/ui/calendar";
 
 import {
@@ -23,7 +18,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -60,10 +54,7 @@ import { format, parse } from "date-fns";
 // ** import ICON
 import {
   CalendarIcon,
-  PencilLine,
   PenLine,
-  Plus,
-  Truck,
   X,
 } from "lucide-react";
 
@@ -172,7 +163,6 @@ export default function UpdateOrder({ orderId }: OrderId) {
   };
   //state
   const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<orderIds>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTermAll, setSearchTermAll] = useState<string>("");
   const [pageSize, setPageSize] = useState<number>(10);
@@ -197,11 +187,10 @@ export default function UpdateOrder({ orderId }: OrderId) {
       return `${formattedDay}/${formattedMonth}/${year}`;
     } catch (error) {
       console.error("Error formatting date:", error);
-      return dateString; // Trả về giá trị gốc nếu có lỗi
+      return dateString; 
     }
   };
-  // console.log("data", data);
-  // console.log("ordeeidddddd", orderId);
+
   useEffect(() => {
     const fetchDataCompany = async () => {
       const { data } = await companyApi.getCompanyByType(1);
@@ -236,9 +225,6 @@ export default function UpdateOrder({ orderId }: OrderId) {
         });
     }
   }, [orderId,]);
-  // console.log('orderIddataShipOrderdataShipOrderdataShipOrder===dataShipOrder', dataShipOrder)
-
-  // console.log('orderId', orderId)
 
   const onSubmit = async (formData: z.infer<typeof UpdateOrderSchema>) => {
     console.log("formData", formData);
@@ -280,27 +266,21 @@ export default function UpdateOrder({ orderId }: OrderId) {
   }
 
 
-
-
   const handleOffDialog = () => {
     const currentFormValues = form.getValues();
 
-    // Lưu giá trị ban đầu của form nếu chưa được lưu
     if (initialFormValues === null) {
       initialFormValues = currentFormValues;
     }
 
-    // console.log("form", currentFormValues);
-    // console.log("form compare", initialFormValues);
-
     const isFormChanged = JSON.stringify(initialFormValues) === JSON.stringify(currentFormValues);
-    // console.log("isFormChanged", isFormChanged)
     if (isFormChanged) {
       setOpen(false);
     } else {
       setOpenAlert(true);
     }
   };
+
   return (
     <>
       {
