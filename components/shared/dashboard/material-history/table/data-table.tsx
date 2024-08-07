@@ -62,12 +62,10 @@ export const MaterialHistoryContext =
     ForceRender: () => {},
   });
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
   searchParamsProp: materialHistoryProp;
 }
 
 export function DataTableForMaterialHistory<TData, TValue>({
-  columns,
   searchParamsProp,
 }: DataTableProps<TData, TValue>) {
   const [data, setData] = React.useState<materialHistoryType[]>([]);
@@ -347,10 +345,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
+                  <TableCell colSpan={7} className="h-24 text-center">
                     {isloading ? "Đang tải dữ liệu..." : "Không có dữ liệu"}
                   </TableCell>
                 </TableRow>
