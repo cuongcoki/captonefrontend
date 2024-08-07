@@ -9,6 +9,17 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -81,6 +92,10 @@ export default function ProfilePage() {
   const [avatar, setAvatar] = useState<string>("");
   const [lastDay, setLastDay] = useState<string>("");
   const router = useRouter();
+  const [isAlertChangeStatus, setIsAlertChangeStatus] =
+    useState<boolean>(false);
+  const [isAlertChnageRole, setIsAlertChangeRole] = useState<boolean>(false);
+  const [roleChosed, setRoleChosed] = useState<string>("");
 
   // ** hooks
   const user = useAuth();
@@ -288,368 +303,446 @@ export default function ProfilePage() {
     return formatted;
   };
   return (
-    <div className="flex flex-col gap-6 justify-center">
-      <header className=" flex justify-between">
-        {/* Card User  */}
-        <div className=" relative w-full max-w-2xl flex flex-col items-start space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6 px-4 py-8 border-2 border-dashed border-primary-backgroudPrimary dark:border-gray-400 shadow-lg rounded-lg">
-          <span className="absolute text-xs font-medium top-0 left-0 rounded-br-lg rounded-tl-lg px-2 py-1 bg-primary-100 dark:bg-gray-900 dark:text-gray-300 border-primary-backgroudPrimary dark:border-gray-400 border-b-2 border-r-2 border-dashed ">
-            {Role.find((role) => role.value === userId.roleId)?.label}
-          </span>
+    <>
+      <AlertDialog
+        open={isAlertChangeStatus}
+        onOpenChange={setIsAlertChangeStatus}
+      >
+        <AlertDialogTrigger>
+          <div></div>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Bạn có chắc chắn thay đổi trạng thái của nhân viên này?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {/* This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers. */}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction onClick={handleChangeActive}>
+              Tiếp tục
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
-          <div className="w-full flex justify-center sm:justify-start sm:w-auto">
-            <Image
-              alt="avatar"
-              width={80}
-              height={80}
-              className="object-cover w-20 h-20 mt-3 mr-3 rounded-full"
-              src={avatar}
-            />
-          </div>
+      <AlertDialog open={isAlertChnageRole} onOpenChange={setIsAlertChangeRole}>
+        <AlertDialogTrigger>
+          <div></div>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Bạn có chắc chắn thay đổi vai trò của nhân viên này?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {/* This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers. */}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction onClick={() => handleChangeRole(roleChosed)}>
+              Tiếp tục
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
-          <div className="w-full sm:w-auto flex flex-col items-center sm:items-start">
-            <p className="font-display mb-2 text-xl dark:text-primary font-semibold text-primary">
-              {userId?.firstName} {userId?.lastName}
-            </p>
+      <div className="flex flex-col gap-6 justify-center">
+        <header className=" flex justify-between">
+          {/* Card User  */}
+          <div className=" relative w-full max-w-2xl flex flex-col items-start space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6 px-4 py-8 border-2 border-dashed border-primary-backgroudPrimary dark:border-gray-400 shadow-lg rounded-lg">
+            <span className="absolute text-xs font-medium top-0 left-0 rounded-br-lg rounded-tl-lg px-2 py-1 bg-primary-100 dark:bg-gray-900 dark:text-gray-300 border-primary-backgroudPrimary dark:border-gray-400 border-b-2 border-r-2 border-dashed ">
+              {Role.find((role) => role.value === userId.roleId)?.label}
+            </span>
 
-            <div className="mb-4 text-sm sm:text-md md:text-lg text-center sm:text-start">
-              <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary">{userId?.address}</p>
+            <div className="w-full flex justify-center sm:justify-start sm:w-auto">
+              <Image
+                alt="avatar"
+                width={80}
+                height={80}
+                className="object-cover w-20 h-20 mt-3 mr-3 rounded-full"
+                src={avatar}
+              />
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
-              <div className="flex gap-4 text-sm sm:text-base">
-                <Phone size={23} />
-                {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}
+            <div className="w-full sm:w-auto flex flex-col items-center sm:items-start">
+              <p className="font-display mb-2 text-xl dark:text-primary font-semibold text-primary">
+                {userId?.firstName} {userId?.lastName}
+              </p>
+
+              <div className="mb-4 text-sm sm:text-md md:text-lg text-center sm:text-start">
+                <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary">
+                  {userId?.address}
+                </p>
               </div>
-              <div className="flex gap-4  text-sm sm:text-base">
-                <Contact size={23} />
-                {userId?.id === "" ? "Chưa cập nhật" : userId?.id}
+
+              <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
+                <div className="flex gap-4 text-sm sm:text-base">
+                  <Phone size={23} />
+                  {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}
+                </div>
+                <div className="flex gap-4  text-sm sm:text-base">
+                  <Contact size={23} />
+                  {userId?.id === "" ? "Chưa cập nhật" : userId?.id}
+                </div>
               </div>
             </div>
-          </div>
-          {/* <div className="absolute right-2 top-2 hover:cursor-pointer">
+            {/* <div className="absolute right-2 top-2 hover:cursor-pointer">
             {userId.roleId === 1 && (
               <UpdateUser userId={userId.id}>
                 <PencilLine />
               </UpdateUser>
             )}
           </div> */}
-        </div>
+          </div>
 
-        {/* tính năng của người dùng, chủ .....  */}
-        <div className="absolute lg:relative lg:right-0 right-7 ">
-          {/* giao diện desktop */}
+          {/* tính năng của người dùng, chủ .....  */}
+          <div className="absolute lg:relative lg:right-0 right-7 ">
+            {/* giao diện desktop */}
 
-          {user.user.id !== params.id && user.user?.roleId === 1 && (
-            <>
-              <div className="hidden lg:block">
-                <Card>
-                  <CardContent className="p-4 flex flex-col justify-between gap-4">
-                    <Tabs defaultValue="status">
-                      <TabsList className="grid w-[300px] grid-cols-3">
-                        <TabsTrigger value="status">Trạng thái</TabsTrigger>
-                        <TabsTrigger value="role">Vai trò</TabsTrigger>
-                        <UpdateUser userId={userId.id}>
-                          <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-                            Chỉnh sửa
-                          </div>
-                        </UpdateUser>
-                      </TabsList>
-                      <TabsContent value="status">
-                        <div className="grid gap-3">
-                          <Select
-                            value={userId.isActive?.toString()}
-                            onValueChange={handleChangeActive}
-                          >
-                            <SelectTrigger
-                              id="status"
-                              aria-label="Select status"
-                            >
-                              <SelectValue placeholder="Chọn trạng thái" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="true">Đang làm </SelectItem>
-                              <SelectItem value="false">Nghỉ việc</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </TabsContent>
-                      <TabsContent value="role">
-                        <Select
-                          value={userId.roleId?.toString()}
-                          onValueChange={(value) => {
-                            handleChangeRole(value);
-                          }}
-                        >
-                          <SelectTrigger id="role" aria-label="Select role">
-                            <SelectValue placeholder="Chọn vai trò" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Role.map((role) => (
-                              <SelectItem
-                                key={role.value}
-                                value={role.value.toString()}
-                              >
-                                {role.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </TabsContent>
-                      <TabsContent value="edit"></TabsContent>
-                    </Tabs>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <div className="block lg:hidden ">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="bg-primary text-white m-2 "
-                    >
-                      <ListCollapse className="h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-100" align="end">
-                    <Card>
-                      <CardContent className="p-4 flex flex-col justify-between gap-4">
-                        <Tabs defaultValue="status">
-                          <TabsList className="grid w-[300px] grid-cols-3">
-                            <TabsTrigger value="status">Trạng thái</TabsTrigger>
-                            <TabsTrigger value="role">Vai trò</TabsTrigger>
-                            <UpdateUser userId={userId.id}>
-                              <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-                                Chỉnh sửa
-                              </div>
-                            </UpdateUser>
-                          </TabsList>
-                          <TabsContent value="status">
-                            <div className="grid gap-3">
-                              <Select
-                                value={userId.isActive?.toString()}
-                                onValueChange={handleChangeActive}
-                              >
-                                <SelectTrigger
-                                  id="status"
-                                  aria-label="Select status"
-                                >
-                                  <SelectValue placeholder="Chọn trạng thái" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="true">
-                                    Đang làm{" "}
-                                  </SelectItem>
-                                  <SelectItem value="false">Nghỉ việc</SelectItem>
-                                </SelectContent>
-                              </Select>
+            {user.user.id !== params.id && user.user?.roleId === 1 && (
+              <>
+                <div className="hidden lg:block">
+                  <Card>
+                    <CardContent className="p-4 flex flex-col justify-between gap-4">
+                      <Tabs defaultValue="status">
+                        <TabsList className="grid w-[300px] grid-cols-3">
+                          <TabsTrigger value="status">Trạng thái</TabsTrigger>
+                          <TabsTrigger value="role">Vai trò</TabsTrigger>
+                          <UpdateUser userId={userId.id}>
+                            <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+                              Chỉnh sửa
                             </div>
-                          </TabsContent>
-                          <TabsContent value="role">
+                          </UpdateUser>
+                        </TabsList>
+                        <TabsContent value="status">
+                          <div className="grid gap-3">
                             <Select
-                              value={userId.roleId?.toString()}
-                              onValueChange={(value) => {
-                                handleChangeRole(value);
-                              }}
+                              value={userId.isActive?.toString()}
+                              onValueChange={() => setIsAlertChangeStatus(true)}
                             >
-                              <SelectTrigger id="role" aria-label="Select role">
-                                <SelectValue placeholder="Chọn vai trò" />
+                              <SelectTrigger
+                                id="status"
+                                aria-label="Select status"
+                              >
+                                <SelectValue placeholder="Chọn trạng thái" />
                               </SelectTrigger>
                               <SelectContent>
-                                {Role.map((role) => (
-                                  <SelectItem
-                                    key={role.value}
-                                    value={role.value.toString()}
-                                  >
-                                    {role.label}
-                                  </SelectItem>
-                                ))}
+                                <SelectItem value="true">Đang làm </SelectItem>
+                                <SelectItem value="false">Nghỉ việc</SelectItem>
                               </SelectContent>
                             </Select>
-                          </TabsContent>
-                          <TabsContent value="edit"></TabsContent>
-                        </Tabs>
-                      </CardContent>
-                    </Card>
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </>
-          )}
-
-          {/* giao diện mobile */}
-        </div>
-      </header>
-
-      {/* Thông tinh cá nhân */}
-      <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
-        <div className="p-4 flex flex-col justify-between gap-4">
-          <Card>
-            <CardHeader>
-              <TitleComponent
-                title="Thông tin cá nhân"
-                description="Thông tin cá nhân của nhân viên."
-              />
-            </CardHeader>
-            <CardContent className="">
-              <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
-                <div>
-                  <div className="font-extralight text-[0.8rem]">Họ và tên</div>
-                  <div>
-                    {userId?.firstName} {userId?.lastName}
-                  </div>
+                          </div>
+                        </TabsContent>
+                        <TabsContent value="role">
+                          <Select
+                            value={userId.roleId?.toString()}
+                            onValueChange={(value) => {
+                              setRoleChosed(value);
+                              setIsAlertChangeRole(true);
+                            }}
+                          >
+                            <SelectTrigger id="role" aria-label="Select role">
+                              <SelectValue placeholder="Chọn vai trò" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Role.map((role) => (
+                                <SelectItem
+                                  key={role.value}
+                                  value={role.value.toString()}
+                                >
+                                  {role.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </TabsContent>
+                        <TabsContent value="edit"></TabsContent>
+                      </Tabs>
+                    </CardContent>
+                  </Card>
                 </div>
 
-                <div>
-                  <div className="font-extralight text-[0.8rem]">Giới tính</div>
-                  <div>{userId?.gender === "Male" ? "Nam" : "Nữ"}</div>
+                <div className="block lg:hidden ">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="bg-primary text-white m-2 "
+                      >
+                        <ListCollapse className="h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-100" align="end">
+                      <Card>
+                        <CardContent className="p-4 flex flex-col justify-between gap-4">
+                          <Tabs defaultValue="status">
+                            <TabsList className="grid w-[300px] grid-cols-3">
+                              <TabsTrigger value="status">
+                                Trạng thái
+                              </TabsTrigger>
+                              <TabsTrigger value="role">Vai trò</TabsTrigger>
+                              <UpdateUser userId={userId.id}>
+                                <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+                                  Chỉnh sửa
+                                </div>
+                              </UpdateUser>
+                            </TabsList>
+                            <TabsContent value="status">
+                              <div className="grid gap-3">
+                                <Select
+                                  value={userId.isActive?.toString()}
+                                  onValueChange={handleChangeActive}
+                                >
+                                  <SelectTrigger
+                                    id="status"
+                                    aria-label="Select status"
+                                  >
+                                    <SelectValue placeholder="Chọn trạng thái" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="true">
+                                      Đang làm{" "}
+                                    </SelectItem>
+                                    <SelectItem value="false">
+                                      Nghỉ việc
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </TabsContent>
+                            <TabsContent value="role">
+                              <Select
+                                value={userId.roleId?.toString()}
+                                onValueChange={(value) => {
+                                  handleChangeRole(value);
+                                }}
+                              >
+                                <SelectTrigger
+                                  id="role"
+                                  aria-label="Select role"
+                                >
+                                  <SelectValue placeholder="Chọn vai trò" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Role.map((role) => (
+                                    <SelectItem
+                                      key={role.value}
+                                      value={role.value.toString()}
+                                    >
+                                      {role.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </TabsContent>
+                            <TabsContent value="edit"></TabsContent>
+                          </Tabs>
+                        </CardContent>
+                      </Card>
+                    </PopoverContent>
+                  </Popover>
                 </div>
+              </>
+            )}
 
-                <div>
-                  <div className="font-extralight text-[0.8rem]">Ngày sinh</div>
-                  <div>{formatDate(userId?.dob)}</div>
-                </div>
+            {/* giao diện mobile */}
+          </div>
+        </header>
 
-                <div>
-                  <div className="font-extralight text-[0.8rem]">Địa chỉ</div>
-                  <div>{userId?.address}</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <TitleComponent
-                title="Thông tin lương"
-                description="Thông tin lương của nhân viên."
-              />
-            </CardHeader>
-            <CardContent className="">
-              <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
-                <div>
-                  <div className="font-extralight text-[0.8rem]">
-                    Lương công nhật
-                  </div>
-                  <div>
-                    {formatCurrency(userId?.salaryHistoryResponse?.salaryByDayResponses.salary)} <span className="text-gray-400">VND/Ngày</span>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="font-extralight text-[0.8rem]">
-                    Lương tăng ca
-                  </div>
-                  <div>
-                    {formatCurrency(userId?.salaryHistoryResponse?.salaryByOverTimeResponses.salary)} <span className="text-gray-400">VND/giờ</span>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="font-extralight text-[0.8rem]">
-                    Lương khả dụng
-                  </div>
-                  {/* accountBalance */}
-                  <div>
-                    {userId?.accountBalance === 0 ? 0 : formatCurrency(userId?.accountBalance)} <span className="text-gray-400">VND</span>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="font-extralight text-[0.8rem]">
-                    Ngày nhận lương gần nhất
-                  </div>
-                  <div>{lastDay ? formatDate(lastDay) : "Không có"}</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <TitleComponent
-                title="Cơ sở làm việc"
-                description="Thông tin công ty của nhân viên."
-              />
-            </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-y-8">
-              <div>
-                <div className="font-extralight text-[0.8rem]">Cơ sở</div>
-                <div>{userId.companyName}</div>
-              </div>
-
-              <div>
-                <div className="font-extralight text-[0.8rem]">Vai trò</div>
-                <div>
-                  {Role.find((role) => role.value === userId.roleId)?.label}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Thông tin tài khoản */}
-      {getMe && (
+        {/* Thông tinh cá nhân */}
         <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
           <div className="p-4 flex flex-col justify-between gap-4">
             <Card>
               <CardHeader>
                 <TitleComponent
-                  title="Đổi mật khẩu"
-                  description="Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng xuất."
+                  title="Thông tin cá nhân"
+                  description="Thông tin cá nhân của nhân viên."
                 />
               </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="space-y-1">
-                  <Label htmlFor="current">Mật khẩu hiện tại</Label>
-                  <Input
-                    value={currentPassword}
-                    onChange={(e) => {
-                      setCurrentPassword(e.target.value);
-                    }}
-                    id="current"
-                    type="password"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="new">Mật khẩu mới</Label>
-                  <Input
-                    id="new"
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => {
-                      setNewPassword(e.target.value);
-                    }}
-                  />
-                  <div id="error" className="text-destructive"></div>
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="confirm">Nhập lại mật khẩu mới</Label>
-                  <Input
-                    id="confirm"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => {
-                      setConfirmPassword(e.target.value);
-                    }}
-                  />
-                  <div id="errorConfirm" className="text-destructive"></div>
+              <CardContent className="">
+                <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
+                  <div>
+                    <div className="font-extralight text-[0.8rem]">
+                      Họ và tên
+                    </div>
+                    <div>
+                      {userId?.firstName} {userId?.lastName}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-extralight text-[0.8rem]">
+                      Giới tính
+                    </div>
+                    <div>{userId?.gender === "Male" ? "Nam" : "Nữ"}</div>
+                  </div>
+
+                  <div>
+                    <div className="font-extralight text-[0.8rem]">
+                      Ngày sinh
+                    </div>
+                    <div>{formatDate(userId?.dob)}</div>
+                  </div>
+
+                  <div>
+                    <div className="font-extralight text-[0.8rem]">Địa chỉ</div>
+                    <div>{userId?.address}</div>
+                  </div>
                 </div>
               </CardContent>
-              <CardFooter>
-                <Button
-                  className="bg-primary hover:bg-primary/90"
-                  onClick={handleChangePassword}
-                >
-                  Xác nhận thay đổi
-                </Button>
-              </CardFooter>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <TitleComponent
+                  title="Thông tin lương"
+                  description="Thông tin lương của nhân viên."
+                />
+              </CardHeader>
+              <CardContent className="">
+                <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
+                  <div>
+                    <div className="font-extralight text-[0.8rem]">
+                      Lương công nhật
+                    </div>
+                    <div>
+                      {formatCurrency(
+                        userId?.salaryHistoryResponse?.salaryByDayResponses
+                          .salary
+                      )}{" "}
+                      <span className="text-gray-400">VND/Ngày</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-extralight text-[0.8rem]">
+                      Lương tăng ca
+                    </div>
+                    <div>
+                      {formatCurrency(
+                        userId?.salaryHistoryResponse?.salaryByOverTimeResponses
+                          .salary
+                      )}{" "}
+                      <span className="text-gray-400">VND/giờ</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-extralight text-[0.8rem]">
+                      Lương khả dụng
+                    </div>
+                    {/* accountBalance */}
+                    <div>
+                      {userId?.accountBalance === 0
+                        ? 0
+                        : formatCurrency(userId?.accountBalance)}{" "}
+                      <span className="text-gray-400">VND</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-extralight text-[0.8rem]">
+                      Ngày nhận lương gần nhất
+                    </div>
+                    <div>{lastDay ? formatDate(lastDay) : "Không có"}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <TitleComponent
+                  title="Cơ sở làm việc"
+                  description="Thông tin công ty của nhân viên."
+                />
+              </CardHeader>
+              <CardContent className="grid grid-cols-2 gap-y-8">
+                <div>
+                  <div className="font-extralight text-[0.8rem]">Cơ sở</div>
+                  <div>{userId.companyName}</div>
+                </div>
+
+                <div>
+                  <div className="font-extralight text-[0.8rem]">Vai trò</div>
+                  <div>
+                    {Role.find((role) => role.value === userId.roleId)?.label}
+                  </div>
+                </div>
+              </CardContent>
             </Card>
           </div>
         </div>
-      )}
-    </div>
+
+        {/* Thông tin tài khoản */}
+        {getMe && (
+          <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
+            <div className="p-4 flex flex-col justify-between gap-4">
+              <Card>
+                <CardHeader>
+                  <TitleComponent
+                    title="Đổi mật khẩu"
+                    description="Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng xuất."
+                  />
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="space-y-1">
+                    <Label htmlFor="current">Mật khẩu hiện tại</Label>
+                    <Input
+                      value={currentPassword}
+                      onChange={(e) => {
+                        setCurrentPassword(e.target.value);
+                      }}
+                      id="current"
+                      type="password"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="new">Mật khẩu mới</Label>
+                    <Input
+                      id="new"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => {
+                        setNewPassword(e.target.value);
+                      }}
+                    />
+                    <div id="error" className="text-destructive"></div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label htmlFor="confirm">Nhập lại mật khẩu mới</Label>
+                    <Input
+                      id="confirm"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => {
+                        setConfirmPassword(e.target.value);
+                      }}
+                    />
+                    <div id="errorConfirm" className="text-destructive"></div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button
+                    className="bg-primary hover:bg-primary/90"
+                    onClick={handleChangePassword}
+                  >
+                    Xác nhận thay đổi
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
   );
 }
