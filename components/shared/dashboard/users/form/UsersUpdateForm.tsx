@@ -477,7 +477,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                           <CardContent className="relative mt-5">
                             <div className="grid grid-cols-1 gap-2">
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
-                                {/* lastName */}
+                                {/* firstName */}
                                 <FormField
                                   control={form.control}
                                   name="firstName"
@@ -495,7 +495,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                     );
                                   }}
                                 />
-                                {/* firstName */}
+                                {/* lastName */}
                                 <FormField
                                   control={form.control}
                                   name="lastName"

@@ -94,7 +94,7 @@ export default function TableUserFeature({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="true">Đang làm</SelectItem>
-          <SelectItem value="false">Đã nghỉ</SelectItem>
+          <SelectItem value="false">Nghỉ việc</SelectItem>
         </SelectContent>
       </Select>
     </div>

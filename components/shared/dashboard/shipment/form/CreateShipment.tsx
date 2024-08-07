@@ -1196,8 +1196,7 @@ export default function CreateShipment() {
                                           >
                                             <div className="flex flex-col items-start  ">
                                               <span>
-                                                {limitLength(item.name, 30)}-
-                                                {limitLength(item.address, 30)}
+                                                {`${limitLength(item.name, 30)} - ${limitLength(item.address, 30)}`}
                                               </span>
                                               <span className="text-sm text-gray-500">
                                                 <div className="flex flex-col items-start">
@@ -1276,8 +1275,7 @@ export default function CreateShipment() {
                                           >
                                             <div className="flex flex-col items-start  ">
                                               <span>
-                                                {limitLength(item.name, 30)}-
-                                                {limitLength(item.address, 30)}
+                                                {`${limitLength(item.name, 30)} - ${limitLength(item.address, 30)}`}
                                               </span>
                                               <span className="text-sm text-gray-500">
                                                 <div className="flex flex-col items-start">

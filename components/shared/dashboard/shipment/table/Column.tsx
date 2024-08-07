@@ -105,7 +105,6 @@ function formatDate(isoString: string) {
   // Trả về chuỗi theo định dạng dd/MM/yyyy HH:mm:ss
   return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
 }
-
 function convertUtcToVn(utcDateStr: string): string {
   let utcDate = new Date(utcDateStr);
   let vnDateStr = utcDate.toLocaleDateString("vi-VN");
@@ -388,8 +387,6 @@ export const columns: ColumnDef<Shipment>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) =>
-      <DataTableRowActions row={row} />
-    ,
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

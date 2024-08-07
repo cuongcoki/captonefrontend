@@ -359,7 +359,7 @@ export const UsersForm = () => {
                                     return (
                                       <FormItem>
                                         <FormLabel className="text-primary">
-                                          Tên nhân viên *
+                                          Họ nhân viên *
                                         </FormLabel>
                                         <FormControl>
                                           <Input type="text" {...field} />
@@ -378,7 +378,7 @@ export const UsersForm = () => {
                                     return (
                                       <FormItem>
                                         <FormLabel className="text-primary">
-                                          Họ nhân viên *
+                                          Tên nhân viên *
                                         </FormLabel>
                                         <FormControl>
                                           <Input type="text" {...field} />

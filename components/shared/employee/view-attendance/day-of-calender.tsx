@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import EmployeeAttendanceDetail from "@/components/shared/employee/view-attendance/employee-attendance-detail";
+import TitleComponent from "../../common/Title";
 
 type Props = {
   dayData: AttendanceDateData;
@@ -59,7 +60,7 @@ export default function DayOfCalender({ dayData, month, year }: Props) {
           </DialogTrigger>
 
           <DialogContent
-            className=" max-w-[80vw] max-h-[80vh]  overflow-y-auto"
+            className=" max-w-[80vw] max-h-[80vh]  overflow-y-auto rounded-md"
             style={{
               msOverflowStyle: "none" /* IE, Edge */,
               scrollbarWidth: "none" /* Firefox */,
@@ -71,7 +72,10 @@ export default function DayOfCalender({ dayData, month, year }: Props) {
               }
             `}</style>
             <DialogHeader>
-              <DialogTitle className="mb-5">Chi tiết điểm danh</DialogTitle>
+            <TitleComponent
+                  title="Thông tin điểm danh trong ngày"
+                  description="Thông tin chi tiết điểm danh trong ngày, số lượng sản phẩm làm được, số giờ tăng ca, buổi đi làm."
+                />
             </DialogHeader>
             <EmployeeAttendanceDetail
               Date={`${day.getDate()}/${

@@ -366,8 +366,12 @@ export default function UpdateAttendanceEm({
           setIsCreated(true);
         })
         .catch((error) => {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+          if (error.response.data.error) {
+            toast.error(error.response.data.message);
+          } else {
+            for (const key in error.response.data.error) {
+              toast.error(error.response.data.error[key][0]);
+            }
           }
         })
         .finally(() => {
@@ -383,8 +387,12 @@ export default function UpdateAttendanceEm({
           // toast.success(data.message);
         })
         .catch((error) => {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+          if (error.response.data.error) {
+            toast.error(error.response.data.message);
+          } else {
+            for (const key in error.response.data.error) {
+              toast.error(error.response.data.error[key][0]);
+            }
           }
         })
         .finally(() => {
@@ -521,7 +529,7 @@ export default function UpdateAttendanceEm({
                           </td>
                         </>
                       )}
-                        <CountProduct index={index}>
+                      <CountProduct index={index}>
                         <td
                           className={
                             item.isSalaryByProduct === true

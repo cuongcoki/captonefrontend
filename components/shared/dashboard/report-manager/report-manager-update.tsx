@@ -86,7 +86,7 @@ export function ReportManagerUpdate({
       <DialogContent className="sm:max-w-[40vw] dark:bg-[#1c1917]">
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3">
-            Cập nhật đơn khiếu nại
+            Phản Hồi Đơn Khiếu Nại
           </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
@@ -143,7 +143,7 @@ export function ReportManagerUpdate({
             </div>
             <DialogFooter>
               <Button className="mt-3" type="submit">
-                Lưu phản hồi
+                Gửi phản hồi
               </Button>
             </DialogFooter>
           </form>
