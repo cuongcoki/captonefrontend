@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MoveRight } from "lucide-react";
+import { MoveDown, MoveRight } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
@@ -91,7 +91,7 @@ export default function ProductPhaseChangeQuantityType({
           </div> */}
           {children}
         </DialogTrigger>
-        <DialogContent className="min-w-[700px]">
+        <DialogContent className="max-w-[80vw] md:max-w-[750px] rounded-lg">
           <DialogHeader>
             <DialogTitle className="text-primary">
               Cập nhật sản phẩm
@@ -99,23 +99,27 @@ export default function ProductPhaseChangeQuantityType({
             <DialogDescription></DialogDescription>
           </DialogHeader>
           <Separator />
-          <div className="grid grid-cols-12">
-            <div className="space-y-2 col-span-5">
+          {/* -------------------------------------------------------------------------------------------------------------------------------- */}
+          <div className="text-sm text-primary italic text-center">
+            Thay đổi loại hàng
+          </div>
+          <div className="md:grid md:grid-cols-12 space-y-2">
+            <div className="md:space-y-2 md:col-span-5">
               <Select value={from} onValueChange={setFrom}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Loại hạng sẽ chuyển" />
                 </SelectTrigger>
-                <SelectContent className="">
-                  <SelectItem className="hover:bg-gray-200 w-full" value="0">
+                <SelectContent className="w-full">
+                  <SelectItem className="hover:bg-gray-200 " value="0">
                     Bình thường
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200 w-full" value="1">
+                  <SelectItem className="hover:bg-gray-200 " value="1">
                     Lỗi bên hợp tác
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200 w-full" value="2">
+                  <SelectItem className="hover:bg-gray-200 " value="2">
                     Lỗi bên mình
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200 w-full" value="3">
+                  <SelectItem className="hover:bg-gray-200 " value="3">
                     Hỏng
                   </SelectItem>
                 </SelectContent>
@@ -124,25 +128,26 @@ export default function ProductPhaseChangeQuantityType({
                 {/* Số lượng: {productPhase[ProductPhaseQuantityType[Number(from)]]} */}
               </div>
             </div>
-            <div className="flex items-center justify-center col-span-2">
-              <MoveRight className="w-10" />
+            <div className="flex items-center justify-center md:col-span-2">
+              <MoveRight className="w-10 hidden md:block" />
+              <MoveDown className="w-10 md:hidden" />
             </div>
-            <div className="space-y-2 col-span-5">
+            <div className="md:space-y-2 md:col-span-5">
               <Select value={to} onValueChange={setTo}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Loại hạng được chuyển" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem className="hover:bg-gray-200 w-full" value="0">
+                  <SelectItem className="hover:bg-gray-200 " value="0">
                     Bình thường
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200 w-full" value="1">
+                  <SelectItem className="hover:bg-gray-200 " value="1">
                     Lỗi bên hợp tác
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200 w-full" value="2">
+                  <SelectItem className="hover:bg-gray-200 " value="2">
                     Lỗi bên mình
                   </SelectItem>
-                  <SelectItem className="hover:bg-gray-200 w-full" value="3">
+                  <SelectItem className="hover:bg-gray-200 " value="3">
                     Hỏng
                   </SelectItem>
                 </SelectContent>
@@ -154,8 +159,11 @@ export default function ProductPhaseChangeQuantityType({
           </div>
           {/* <Separator className="my-1" /> */}
           {/* -------------------------------------------------------------------------------------------------------------------------------- */}
-          <div className="grid grid-cols-12 ">
-            <div className="space-y-2 col-span-5">
+          <div className="text-sm text-primary italic text-center">
+            Thay đổi giai đoạn
+          </div>
+          <div className="md:grid md:grid-cols-12 space-y-2">
+            <div className="md:space-y-2 md:col-span-5">
               <Select disabled={true} value={productPhase.phaseId}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Giai đoạn sẽ chuyển" />
@@ -180,7 +188,8 @@ export default function ProductPhaseChangeQuantityType({
               </div>
             </div>
             <div className="flex items-center justify-center col-span-2">
-              <MoveRight className="w-10" />
+              <MoveRight className="w-10 hidden md:block" />
+              <MoveDown className="w-10 md:hidden" />
             </div>
             <div className="space-y-2 col-span-5">
               <Select value={phaseTo} onValueChange={setPhaseTo}>
@@ -204,22 +213,24 @@ export default function ProductPhaseChangeQuantityType({
             </div>
           </div>
           <Separator />
-          <div className="flex gap-x-5">
-            <div className="flex justify-start items-center">Số lượng</div>
-            <Input
-              value={quantity}
-              type="number"
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === "" || parseInt(value) <= 1) {
-                  setQuantity(1);
-                  return;
-                }
-                setQuantity(parseInt(value));
-              }}
-              className="w-[450px]"
-              placeholder="Nhập số lượng muốn đổi"
-            />
+          <div className="flex gap-x-5 flex-col md:flex-row">
+            <div className="flex justify-start ">
+              <div className="mr-5 w-max flex items-center ">Số lượng</div>
+              <Input
+                value={quantity}
+                type="number"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "" || parseInt(value) <= 1) {
+                    setQuantity(1);
+                    return;
+                  }
+                  setQuantity(parseInt(value));
+                }}
+                className="w-full md:w-[400px]"
+                placeholder="Nhập số lượng muốn đổi"
+              />
+            </div>
             <Button
               className="ml-auto"
               onClick={handleChange}
