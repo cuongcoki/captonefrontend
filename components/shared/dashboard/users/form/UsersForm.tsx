@@ -40,7 +40,7 @@ import { Separator } from "@/components/ui/separator";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { CalendarIcon, Plus, Upload, X } from "lucide-react";
-import { Card, CardContent} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 // ** import React
 import { MyContext } from "../table/users/RenderTable";
@@ -97,7 +97,7 @@ export const UsersForm = () => {
       isActive: true,
       companyId: "",
       id: "",
-      avatar: "", 
+      avatar: "",
       salaryByDayRequest: {
         salary: "",
         startDate: "",
@@ -262,6 +262,13 @@ export const UsersForm = () => {
                 toast.error(error);
               });
             }
+            if (errors['SalaryByDayRequest.Salary']) {
+              toast.error(errors['SalaryByDayRequest.Salary'][0]);
+            }
+
+            if (errors['SalaryOverTimeRequest.Salary']) {
+              toast.error(errors['SalaryOverTimeRequest.Salary'][0]);
+            }
           } else {
             console.error("Tạo tài khoản không thành công");
             toast.error("Có lỗi xảy ra khi tạo tài khoản.");
@@ -294,8 +301,8 @@ export const UsersForm = () => {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
           <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow ">
-          <Dialog.Title className="hidden visible"></Dialog.Title>
-          <Dialog.Description className="hidden visible"></Dialog.Description>
+            <Dialog.Title className="hidden visible"></Dialog.Title>
+            <Dialog.Description className="hidden visible"></Dialog.Description>
             <div className="bg-slate-100  flex flex-col rounded-md">
               <div className="p-4 flex items-center justify-between bg-primary rounded-md">
                 <h2 className="text-2xl text-white ">Thêm nhân viên</h2>
@@ -834,7 +841,7 @@ export const UsersForm = () => {
                                 )}
                               />
                             </div>
-                            
+
                           </CardContent>
                         </Card>
                       </div>
