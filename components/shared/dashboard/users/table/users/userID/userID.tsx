@@ -654,68 +654,6 @@ export default function UserIDPage() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Thông tin tài khoản */}
-        {getMe && (
-          <div className="w-full h-full bg-white p-2 rounded-lg shadow-md dark:bg-card">
-            <div className="p-4 flex flex-col justify-between gap-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="dark:text-primary">Mật Khẩu</CardTitle>
-                  <CardDescription>
-                    Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng
-                    xuất.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <div className="space-y-1">
-                    <Label htmlFor="current">Mật khẩu hiện tại</Label>
-                    <Input
-                      value={currentPassword}
-                      onChange={(e) => {
-                        setCurrentPassword(e.target.value);
-                      }}
-                      id="current"
-                      type="password"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="new">Mật khẩu mới</Label>
-                    <Input
-                      id="new"
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => {
-                        setNewPassword(e.target.value);
-                      }}
-                    />
-                    <div id="error" className="text-destructive"></div>
-                  </div>
-                  <div className="space-y-1">
-                    <Label htmlFor="confirm">Nhập lại mật khẩu mới</Label>
-                    <Input
-                      id="confirm"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value);
-                      }}
-                    />
-                    <div id="errorConfirm" className="text-destructive"></div>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button
-                    className="bg-primary hover:bg-primary/90"
-                    onClick={handleChangePassword}
-                  >
-                    Xác nhận thay đổi
-                  </Button>
-                </CardFooter>
-              </Card>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );
