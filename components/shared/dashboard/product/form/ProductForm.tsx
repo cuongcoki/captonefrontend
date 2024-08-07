@@ -213,15 +213,15 @@ export const ProductForm = () => {
     setLoading(true);
     const formData = new FormData();
     imageUrls.forEach((imageUrl: any) => {
-      formData.append("receivedFiles", imageUrl); 
+      formData.append("receivedFiles", imageUrl);
     });
     try {
-      const response = await filesApi.postFiles(formData); 
+      const response = await filesApi.postFiles(formData);
       console.log("Upload successful:", response.data);
-   
+
     } catch (error) {
       console.error("Error uploading files:", error);
-     
+
     } finally {
       setLoading(false);
     }
@@ -318,16 +318,16 @@ export const ProductForm = () => {
   }
   const handleOffDialog = () => {
     // Kiểm tra xem mảng có rỗng hay không
-    const isArrayEmpty = (arr:any) => {
+    const isArrayEmpty = (arr: any) => {
       return Array.isArray(arr) && arr.length === 0;
     };
-    
+
     // Sử dụng hàm này để kiểm tra mảng imageRequests
     const isDetailsProEmpty = isArrayEmpty(imageRequests);
-    
+
     console.log(isDetailsProEmpty);
     console.log("form", form.getValues())
-    console.log("imageRequests",imageRequests)
+    console.log("imageRequests", imageRequests)
     // Kiểm tra giá trị cụ thể của form
     const isCodeIdEmpty = form.getValues().code === "";
     const isDescriptionEmpty = form.getValues().description === "";
@@ -337,8 +337,8 @@ export const ProductForm = () => {
     const isPricePhase2Empty = form.getValues().pricePhase2 === "";
     const isSizeEmpty = form.getValues().size === "";
 
-     // Nếu tất cả các trường trong form đều trống hoặc không có giá trị và các mảng rỗng
-     if (isDetailsProEmpty && isCodeIdEmpty && isDescriptionEmpty && isNameEmpty && isPriceFinishedEmpty&& isPricePhase1Empty && isPricePhase2Empty && isSizeEmpty) {
+    // Nếu tất cả các trường trong form đều trống hoặc không có giá trị và các mảng rỗng
+    if (isDetailsProEmpty && isCodeIdEmpty && isDescriptionEmpty && isNameEmpty && isPriceFinishedEmpty && isPricePhase1Empty && isPricePhase2Empty && isSizeEmpty) {
       setOpen(false);
     } else {
       setOpenAlert(true);
@@ -505,6 +505,90 @@ export const ProductForm = () => {
                                   </FormItem>
                                 )}
                               />
+                              <div className="md:flex flex-row gap-4">
+                                {/* price */}
+                                <FormField
+                                  control={form.control}
+                                  name="pricePhase1"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center text-primary">
+                                        Giá giai đoạn 1 *
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="text"
+                                          inputMode="numeric"
+                                          {...field}
+                                          value={formatCurrency(field.value)}
+                                          onChange={(e) =>
+                                            field.onChange(
+                                              parseCurrency(e.target.value)
+                                            )
+                                          }
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                {/* price */}
+                                <FormField
+                                  control={form.control}
+                                  name="pricePhase2"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center text-primary">
+                                        Giá giai đoạn 2 *
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="text"
+                                          inputMode="numeric"
+                                          {...field}
+                                          value={formatCurrency(field.value)}
+                                          onChange={(e) => {
+                                            const rawValue = e.target.value.replace(
+                                              /[^\d.]/g,
+                                              ""
+                                            ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                            field.onChange(rawValue);
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                {/* priceFinished */}
+                                <FormField
+                                  control={form.control}
+                                  name="priceFinished"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center text-primary">
+                                        Giá hoàn thiện *
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="text"
+                                          inputMode="numeric"
+                                          {...field}
+                                          value={formatCurrency(field.value)}
+                                          onChange={(e) => {
+                                            const rawValue = e.target.value.replace(
+                                              /[^\d.]/g,
+                                              ""
+                                            ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                            field.onChange(rawValue);
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
                               {/* description */}
                               <FormField
                                 control={form.control}
@@ -525,90 +609,7 @@ export const ProductForm = () => {
                                 )}
                               />
                             </div>
-                            <div className="md:flex flex-row gap-4">
-                              {/* price */}
-                              <FormField
-                                control={form.control}
-                                name="pricePhase1"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center text-primary">
-                                      Giá giai đoạn 1 *
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        type="text"
-                                        inputMode="numeric"
-                                        {...field}
-                                        value={formatCurrency(field.value)}
-                                        onChange={(e) =>
-                                          field.onChange(
-                                            parseCurrency(e.target.value)
-                                          )
-                                        }
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              {/* price */}
-                              <FormField
-                                control={form.control}
-                                name="pricePhase2"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center text-primary">
-                                      Giá giai đoạn 2 *
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        type="text"
-                                        inputMode="numeric"
-                                        {...field}
-                                        value={formatCurrency(field.value)}
-                                        onChange={(e) => {
-                                          const rawValue = e.target.value.replace(
-                                            /[^\d.]/g,
-                                            ""
-                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                                          field.onChange(rawValue);
-                                        }}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              {/* priceFinished */}
-                              <FormField
-                                control={form.control}
-                                name="priceFinished"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center text-primary">
-                                      Giá hoàn thiện *
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        type="text"
-                                        inputMode="numeric"
-                                        {...field}
-                                        value={formatCurrency(field.value)}
-                                        onChange={(e) => {
-                                          const rawValue = e.target.value.replace(
-                                            /[^\d.]/g,
-                                            ""
-                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                                          field.onChange(rawValue);
-                                        }}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
+
                             {/* <Separator className="h-1" /> */}
                             <Button
                               type="submit"
