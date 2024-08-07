@@ -60,6 +60,7 @@ import { salaryApi } from "@/apis/salary.api";
 import { authApi } from "@/apis/auth.api";
 import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdateForm";
 import LoadingPage from "@/components/shared/loading/loading-page";
+import TitleComponent from "@/components/shared/common/Title";
 
 export default function UserIDPage() {
     // ** state
@@ -300,14 +301,12 @@ export default function UserIDPage() {
                     </div>
 
                     <div className="w-full sm:w-auto flex flex-col items-center sm:items-start">
-                        <p className="font-display mb-2 text-xl dark:text-primary  font-semibold">
+                        <p className="font-display mb-2 text-xl dark:text-primary font-semibold text-primary">
                             {userId?.firstName} {userId?.lastName}
                         </p>
 
                         <div className="mb-4 text-sm sm:text-md md:text-lg text-center sm:text-start">
-                            <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary font-semibold">
-                                {userId?.address}
-                            </p>
+                            <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary">{userId?.address}</p>
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
@@ -321,13 +320,6 @@ export default function UserIDPage() {
                             </div>
                         </div>
                     </div>
-                    {/* <div className="absolute right-2 top-2 hover:cursor-pointer">
-              {userId.roleId === 1 && (
-                <UpdateUser userId={userId.id}>
-                  <PencilLine />
-                </UpdateUser>
-              )}
-            </div> */}
                 </div>
 
                 {/* tính năng của người dùng, chủ .....  */}
@@ -480,8 +472,11 @@ export default function UserIDPage() {
             {/* Thông tinh cá nhân */}
             <div className="p-4 flex flex-col justify-between gap-4">
                 <Card>
-                    <CardHeader className="font-semibold text-xl dark:text-primary">
-                        Thông Tin Cá Nhân
+                    <CardHeader>
+                        <TitleComponent
+                            title="Thông tin cá nhân"
+                            description="Thông tin cá nhân của nhân viên."
+                        />
                     </CardHeader>
                     <CardContent className="">
                         <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
@@ -511,8 +506,11 @@ export default function UserIDPage() {
                 </Card>
 
                 <Card>
-                    <CardHeader className="font-semibold text-xl dark:text-primary">
-                        Thông Tin Lương
+                    <CardHeader>
+                        <TitleComponent
+                            title="Thông tin lương"
+                            description="Thông tin lương của nhân viên."
+                        />
                     </CardHeader>
                     <CardContent className="">
                         <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
@@ -555,8 +553,11 @@ export default function UserIDPage() {
                 </Card>
 
                 <Card>
-                    <CardHeader className="font-semibold text-xl dark:text-primary">
-                        Cơ Sở Làm Việc
+                    <CardHeader>
+                        <TitleComponent
+                            title="Cơ sở làm việc"
+                            description="Thông tin công ty của nhân viên."
+                        />
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-y-8">
                         <div>
