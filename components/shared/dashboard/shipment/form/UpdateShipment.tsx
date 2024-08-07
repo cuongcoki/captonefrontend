@@ -25,8 +25,6 @@ import { Button } from "@/components/ui/button"
 
 import { Input } from "@/components/ui/input"
 
-import { Label } from "@/components/ui/label"
-
 import {
     Tabs,
     TabsContent,
@@ -39,7 +37,6 @@ import {
     SelectContent,
     SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
@@ -47,9 +44,7 @@ import {
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -70,6 +65,8 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
+import { Calendar } from "@/components/ui/calendar"
+import { Separator } from "@/components/ui/separator"
 
 import * as Dialog from "@radix-ui/react-dialog";
 
@@ -78,30 +75,31 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 
+// ** import Icon
+import { CalendarIcon, Check, CirclePlus, CircleX, PencilLine, Plus, Truck, X } from "lucide-react"
+
 // ** import Components
 import { NoImage } from "@/constants/images"
-import { Badge } from "@/components/ui/badge"
-import { CalendarIcon, Check, CirclePlus, CircleX, MoreVertical, PencilLine, Plus, Truck, X } from "lucide-react"
-import { Separator } from "@/components/ui/separator"
-import { shipmentApi } from "@/apis/shipment.api"
-import { format, parse, parseISO } from 'date-fns';
-import Link from "next/link"
-import { companyApi } from "@/apis/company.api"
-import { userApi } from "@/apis/user.api"
+
 import { useForm } from "react-hook-form";
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ShipmentSchema } from "@/schema/shipment"
 import { cn } from "@/lib/utils"
-import { Calendar } from "@/components/ui/calendar"
-import { productApi } from "@/apis/product.api"
-import { filesApi } from "@/apis/files.api"
+
+
 import ImageIconShipmentForm from "./ImageIconShipmentForm"
-import { phaseApi } from "@/apis/phase.api"
-import { materialApi } from "@/apis/material.api";
+
 import { Phase, Product, Company, Employee, Material, ShipmentDetailRequest, shipmentID, ImageResponse, Detail } from "@/types/shipment.type"
 import ImageIconMaterial from "./ImageIconMaterial"
 import { ShipmentStore } from "../shipment-store"
+
+// ** import API
+import { phaseApi } from "@/apis/phase.api"
+import { filesApi } from "@/apis/files.api"
+import { productApi } from "@/apis/product.api"
+import { userApi } from "@/apis/user.api"
+import { shipmentApi } from "@/apis/shipment.api"
 
 const enumCompany = [
     {
@@ -117,8 +115,6 @@ const enumCompany = [
     },
 
 ];
-
-
 
 const ProductPhaseType = [
     {
@@ -182,7 +178,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     const [searchTermM, setSearchTermM] = useState<string>("");
     const [totalPagesM, setTotalPagesM] = useState<number>(1);
     const [pageSizeM, setPageSizeM] = useState<number>(20);
-    const [isInProcessingM, setIsInProcessingM] = useState<boolean>(true);
     const [dataM, setDataM] = useState<Material[]>([]);
     // ** state Shipment
     const [shipmentDetailRequests, setShipmentDetailRequests] = useState<ShipmentDetailRequest[]>([]);
@@ -196,13 +191,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         itemId: string,
         itemKind: number
     ) => {
-        console.log("mainImage", imgProducts);
-        // check id
-        // const itemExists = shipmentDetailRequests.some((item) => item.itemId === itemId);
-        // if (itemExists) {
-        //     toast.error("sản phẩm này đã thêm");
-        //     return;
-        // }
+       
         setShipmentDetailRequests((prev: any) => [
             ...prev,
             {
@@ -318,7 +307,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
 
                 setDataSID(orderData);
             } catch (error) {
-                // toast.error("Không tìm thấy đơn hàng");
             } finally {
                 setLoading(false);
             }
@@ -379,7 +367,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                 console.error("Error getting file:", error);
                                 return {
                                     ...item,
-                                    image: "", // Xử lý trường hợp lỗi nếu cần thiết
+                                    image: "", 
                                 };
                             }
                         }
@@ -391,7 +379,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                 setCurrentPageM(response.data.data.currentPage);
                 setTotalPagesM(response.data.data.totalPages);
             } catch (error) {
-                console.error("Error fetching product data:", error);
                 setDataM([]);
             } finally {
                 setLoading(false);
@@ -421,7 +408,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                     setCompany(data.data.data);
                 })
                 .catch(error => {
-                    console.error('Error fetching companies:', error);
                 });
         };
         const fetchDataCompany1 = () => {
@@ -437,7 +423,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         fetchDataCompany1();
         fetchDataCompany()
     }, [company, companyType, company1, companyType1]);
-    // console.log('company=====',company)
+
     // call data employyee
     useEffect(() => {
         const fetchData = async () => {
@@ -457,7 +443,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
             } catch (error: any) {
                 console.error("Error fetching user data:");
                 if (error?.response.data.status === 400) {
-                    // toast.error(error?.response.data.message);
                     setDataEm([]);
                 }
             } finally {
@@ -496,7 +481,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                     console.error("Error getting file:", error);
                                     return {
                                         ...image,
-                                        imageUrl: "", // Handle error case if needed
+                                        imageUrl: "",
                                     };
                                 }
                             })
@@ -512,7 +497,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                 setCurrentPageP(response.data.data.currentPage);
                 setTotalPagesP(response.data.data.totalPages);
             } catch (error) {
-                console.error("Error fetching product data:", error);
                 setDataP([]);
             } finally {
                 setLoading(false);
@@ -529,8 +513,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
             return toast.error("2 Công ty không được trùng nhau")
         }
 
-        // check data shipmentDetailRequests
-        // Kiểm tra dữ liệu của shipmentDetailRequests
         if (shipmentDetailRequests.length === 0) {
             console.error("Không tìm thấy yêu cầu chi tiết lô hàng");
             return;
@@ -695,14 +677,17 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
             return;
         }
 
-
+        const originalDate = data.shipDate;
+        const date = new Date(originalDate);
+        date.setUTCHours(23, 59, 59, 0);
+        const formattedShipDate = date.toISOString().replace('.000', '');
         // Gọi hàm kiểm tra
         const requestBody = {
             shipmentId: shipmentIDDes,
             fromId: data.fromId,
             toId: data.toId,
             shipperId: data.shipperId,
-            shipDate: data.shipDate,
+            shipDate: formattedShipDate,
             shipmentDetailRequests: shipmentDetailRequests
         };
 
@@ -745,37 +730,20 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     };
     const productType = 0;
     const materialType = 1;
-    //consolo.log
-    // console.log("dataP", dataP)
-    // console.log("dataM", dataM);
-    // console.log("=========shipmentDetailRequests", shipmentDetailRequests)
-    // console.log("=========productDetailUpdateeeee", productDetail)
-    // console.log("=========dataShipID", dataSID);
+
     const formatCurrency = (value: any): string => {
         if (!value) return "0";
         let valueString = value.toString();
-
-        // Remove all non-numeric characters except dots
         valueString = valueString.replace(/[^0-9]/g, "");
-
-        // Remove leading zeros
         valueString = valueString.replace(/^0+/, "");
-
         if (valueString === "") return "0";
-
-        // Convert to number to format with toLocaleString
         let numberValue = parseInt(valueString, 10);
-
-        // Format number with commas as thousands separators
         let formatted = numberValue.toLocaleString("vi-VN");
-
         return formatted;
     };
 
     const parseCurrency = (value: any) => {
-        // Loại bỏ các dấu chấm ngăn cách hàng nghìn
         const cleanedValue = value.replace(/\./g, "");
-
         return parseInt(cleanedValue);
     };
     const handleClearForm = () => {
@@ -786,8 +754,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         setShipmentDetailRequests([]);
         setProductDetail([]);
     }
-    //     let initialFormValuesShipment: any = null;
-    // let initialFormValuesForm: any = null;
 
     const handleOffDialog = () => {
         const currentFormValues = shipmentDetailRequests
@@ -867,9 +833,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                 <Card>
                                                     <CardHeader>
                                                         <CardTitle>Sản phẩm</CardTitle>
-                                                        <CardDescription>
-                                                            {/* <Input type="number"  onChange={(e) => setPageSizeP(Number(e.target.value))} /> */}
-                                                        </CardDescription>
                                                     </CardHeader>
                                                     <CardContent className="space-y-2">
                                                         <div className=" w-full grid grid-cols-3 md:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
@@ -1272,7 +1235,10 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                         )}
                                                                     >
                                                                         {field.value ? (
-                                                                            format(parseISO(field.value), "dd/MM/yyyy")
+                                                                            (() => {
+                                                                                const [year, month, day] = field.value.split('T')[0].split('-');
+                                                                                return `${day}/${month}/${year}`;
+                                                                            })()
                                                                         ) : (
                                                                             <span>Chọn ngày</span>
                                                                         )}
@@ -1283,8 +1249,16 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                             <PopoverContent className="w-auto p-0" align="start">
                                                                 <Calendar
                                                                     mode="single"
-                                                                    selected={field.value ? parseISO(field.value) : undefined}
-                                                                    onSelect={(date: any) => field.onChange(date.toISOString())}
+                                                                    selected={field.value ? new Date(new Date(field.value).setDate(new Date(field.value).getDate() - 1)) : undefined}
+                                                                    onSelect={(date: any) => {
+                                                                        if (date) {
+                                                                            // Đảm bảo giờ là 00:00:00 để tránh vấn đề múi giờ
+                                                                            date.setHours(0, 0, 0, 0);
+                                                                            const utcDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+                                                                            const formattedDate = utcDate.toISOString().split('T')[0]; // Giữ lại chỉ phần ngày
+                                                                            field.onChange(formattedDate);
+                                                                        }
+                                                                    }}
                                                                     initialFocus
                                                                 />
                                                             </PopoverContent>

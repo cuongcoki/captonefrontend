@@ -55,7 +55,7 @@ export const columns: ColumnDef<Employee>[] = [
     accessorKey: "id",
     header: ({ column }) => <Button variant="ghost">CMND/CCCD</Button>,
     cell: ({ row }) => (
-      <Link href={`/profile/${row.getValue("id")}`}>
+      <Link href={`/dashboard/user/${row.getValue("id")}`}>
         <div>{row.getValue("id")}</div>
       </Link>
     ),

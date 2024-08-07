@@ -620,7 +620,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                               <CardHeader className="font-semibold text-xl">
                                 <span>Thông tin sản phẩm</span>
                               </CardHeader>
-                              <CardContent className="w-full grid grid-cols-5 gap-4 min-h-[100px]  overflow-y-auto ">
+                              <CardContent className="w-full grid grid-cols-3 md:grid-cols-5 gap-4 min-h-[100px]  overflow-y-auto ">
                                 {searchResults !== null ? (
                                   searchResults.map((product) => (
                                     <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
@@ -703,7 +703,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                     </div>
                                   </div>
                                   <div className="flex items-center gap-6">
-                                    <Label htmlFor="email" >Số lượng</Label>
+                                    <Label htmlFor="email" className="hidden sm:block">Số lượng</Label>
                                     <Input
                                       className="w-[60px] text-center outline-none border"
                                       type="number"
@@ -752,7 +752,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                             className="flex items-start justify-between gap-2 py-4"
                             key={product.productId}
                           >
-                            <div className="flex flex-col gap-2">
+                            <div className="flex items-start gap-6">
                               {product.product.imageResponses.length > 0 && (
                                 <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
                                   <Image
@@ -767,15 +767,15 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                 </div>
                               )}
                               <div className="font-medium dark:text-white">
-                                <div>
+                                <div className="hidden sm:block">
                                   <b>Tên Sản Phẩm: </b>
                                   {limitLength(product?.product.name, 50)}
                                 </div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400">
-                                  <b>Mã: </b>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 ">
+                                  <b className="hidden sm:block">Mã: </b>
                                   {limitLength(product?.product.code, 50)}
                                 </div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400">
+                                <div className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
                                   <i>
                                     {limitLength(
                                       product?.product.description,
@@ -786,7 +786,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                               </div>
                             </div>
                             <div className="flex items-center gap-6">
-                              <Label htmlFor="email" >Số lượng</Label>
+                              <Label htmlFor="email" className="hidden sm:block" >Số lượng</Label>
 
                               <Input
                                 className="col-span-2 w-16 text-center outline-none"

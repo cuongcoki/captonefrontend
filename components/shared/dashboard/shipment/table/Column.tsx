@@ -283,9 +283,17 @@ export const columns: ColumnDef<Shipment>[] = [
       );
     },
     cell: ({ row }) => {
+      function formatDate(isoString:string) {
+        const date = new Date(isoString);
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const year = date.getUTCFullYear();
+      
+        return `${day}/${month}/${year}`;
+      }
       return (
         <span className="flex justify-center ">
-          {convertUtcToVn(row.original.shipDate)}
+          {formatDate(row.original.shipDate)}
         </span>
       );
     },
@@ -301,7 +309,7 @@ export const columns: ColumnDef<Shipment>[] = [
       );
     },
     cell: ({ row }) => {
-    
+
 
       return <>
         {
@@ -336,7 +344,13 @@ export const columns: ColumnDef<Shipment>[] = [
           })
           .catch((error) => {
             // console.log(error)
-            toast.error(error.response.data.message);
+            if (error.response.data.error) {
+              toast.error(error.response.data.message);
+            } else {
+              for (const key in error.response.data.error) {
+                toast.error(error.response.data.error[key][0]);
+              }
+            }
           });
       };
 

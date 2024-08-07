@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { ProductSchema } from "@/schema";
 
 import {
@@ -29,11 +29,10 @@ import {
 } from "@/components/ui/alert-dialog"
 
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
-import { PencilLine, Plus, Upload, X } from "lucide-react";
+import { Plus, Upload, X } from "lucide-react";
 import ImageDisplay from "./ImageDisplay";
 
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import { productApi } from "@/apis/product.api";
 import { filesApi } from "@/apis/files.api";
@@ -92,10 +91,6 @@ export const ProductForm = () => {
     }[]
   >([]);
 
-  //    console.log('imageRequests',imageRequests)
-  // console.log("imageUrls", imageUrls);
-
-  // console.log("imageRequests", imageRequests);
 
   const generateRandomString = (length: number = 5) => {
     const characters =
@@ -218,28 +213,26 @@ export const ProductForm = () => {
     setLoading(true);
     const formData = new FormData();
     imageUrls.forEach((imageUrl: any) => {
-      formData.append("receivedFiles", imageUrl); // Đảm bảo rằng tên trường tương ứng với server
+      formData.append("receivedFiles", imageUrl); 
     });
     try {
-      const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
+      const response = await filesApi.postFiles(formData); 
       console.log("Upload successful:", response.data);
-      // Xử lý các hành động sau khi tải lên thành công
+   
     } catch (error) {
       console.error("Error uploading files:", error);
-      // Xử lý lỗi khi tải lên không thành công
+     
     } finally {
       setLoading(false);
     }
   };
 
-  // console.log("nameImage", nameImage);
 
   const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
     setLoading(true);
     try {
       await handlePostImage();
 
-      // Ensure `nameImage` has been updated
       if (imageRequests && nameImage) {
         const requestBody = {
           code: data.code.trim(),
@@ -264,7 +257,6 @@ export const ProductForm = () => {
           setTimeout(() => {
             setOpen(false);
             ForceRender();
-            // window.location.href = '/dashboard/product';
           }, 2000);
         } else {
           toast.error(response.data.message);
@@ -273,7 +265,6 @@ export const ProductForm = () => {
         toast.error("imageUrl (nameImage) không hợp lệ");
       }
     } catch (error: any) {
-      // Handle errors from form submission or API calls
       if (error.response && error.response.data && error.response.data.error) {
         const errors = error.response.data.error;
 
@@ -289,7 +280,6 @@ export const ProductForm = () => {
           toast.error(errors.Code);
         }
 
-        // Sử dụng dấu ngoặc vuông để truy cập thuộc tính có dấu chấm trong tên
         if (errors['UpdateProductRequest.PriceFinished']) {
           toast.error(errors['UpdateProductRequest.PriceFinished']);
         }
@@ -305,24 +295,12 @@ export const ProductForm = () => {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
 

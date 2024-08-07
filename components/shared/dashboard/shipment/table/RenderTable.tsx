@@ -21,7 +21,7 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => {},
+  forceUpdate: () => { },
 });
 
 const enumStatus = [
@@ -78,20 +78,26 @@ export default function RenderTableShipment() {
         console.log("DATA SHIPMENT", response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
-      } catch (error:any) {
+      } catch (error: any) {
         console.error("Error fetching shipmeent data:", error);
-        toast.error(error.response.data.message)
+        if (error.response.data.error) {
+          toast.error(error.response.data.message);
+        } else {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchDataShipment();
-  }, [currentPage, pageSize, searchTerm, data,status, force]);
+  }, [currentPage, pageSize, searchTerm, data, status, force]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
- 
+
   };
 
   useEffect(() => {
@@ -102,7 +108,7 @@ export default function RenderTableShipment() {
       params.set("page", "1");
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     };
-  
+
     if (status !== null) {
       updatePathname();
     }
@@ -110,52 +116,52 @@ export default function RenderTableShipment() {
 
 
   return (
-    <div className="px-3 mt-3">
+    <div className="">
       <div className="flex flex-col md:flex-row justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
-            <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
-                <Input
-                  placeholder="Tìm kiếm đơn hàng..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="md:w-[300px] w-full"
-                />
+          <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
+              <Input
+                placeholder="Tìm kiếm đơn hàng..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="md:w-[300px] w-full"
+              />
 
-                <Select
-                  value={status || ""}
-                  onValueChange={(value) => handleStatusChange(value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Trạng thái" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {enumStatus.map((item, index) => (
-                      <SelectItem value={item.value} key={item.id}>
-                        {item.description}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-        </div>
-
-          <div className="flex items-center justify-end">
-            <div className="flex items-center space-x-2">
-              <CreateShipment />
+              <Select
+                value={status || ""}
+                onValueChange={(value) => handleStatusChange(value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Trạng thái" />
+                </SelectTrigger>
+                <SelectContent>
+                  {enumStatus.map((item, index) => (
+                    <SelectItem value={item.value} key={item.id}>
+                      {item.description}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
+        </div>
+
+        <div className="flex items-center justify-end">
+          <div className="flex items-center space-x-2">
+            <CreateShipment />
+          </div>
+        </div>
       </div>
 
-        <div className="overflow-x-auto">
-          <DataTable columns={columns} data={data} />
-          <DataTablePagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            setCurrentPage={setCurrentPage}
-          />
-        </div>
+      <div className="overflow-x-auto">
+        <DataTable columns={columns} data={data} />
+        <DataTablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
     </div>
   );
 }

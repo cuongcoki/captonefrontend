@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronDown, LucideIcon, Plus } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -10,23 +10,10 @@ import {
     TooltipProvider,
 } from "@/components/ui/tooltip";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
-import { LogoIcon } from "@/constants/images";
-import Image from "next/image";
-import { ModeToggle } from "@/components/shared/common/mode-toggle";
-import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { authApi } from "@/apis/auth.api";
-import toast from "react-hot-toast";
+
 interface NavProps {
     isCollapsed: boolean;
     links: {
@@ -48,27 +35,7 @@ export function NavMobile({ links, isCollapsed }: NavProps) {
     const params = useParams<{ id: string }>();
     const router = useRouter();
     useEffect(() => { }, [params]);
-    // console.log("sidebarrrrrrrrrrrrrrrrrrrr", params)
-    // console.log("pathnamepathname", pathname)
-    const handleLogout = () => {
-        setLoading(true);
-        const id: any = user.user?.id;
 
-        authApi
-            .logout(id)
-            .then(({ data }) => {
-                console.log("dataLogout", data);
-                user.logout();
-                router.push("/sign-in");
-                toast.success(data.message);
-            })
-            .catch((error) => {
-                toast.error(error.message);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    };
 
     const [isOpen, setIsOpen] = useState(false);
     const [checkLink, setCheckLink] = useState("");
@@ -94,9 +61,6 @@ export function NavMobile({ links, isCollapsed }: NavProps) {
         }
     };
 
-    const closeDropdown = (nameLink: string) => {
-        setIsOpen(false);
-    };
 
     const checkActiveLink = (link: any) => {
         return (
@@ -115,7 +79,6 @@ export function NavMobile({ links, isCollapsed }: NavProps) {
     };
     useEffect(() => { }, [checkActiveLink]);
 
-    // console.log("user", user.user?.roleId);
     const userRoleId = user.user?.roleId;
 
     const checkAccess = (checkRoll: { id: number }[]) => {
@@ -127,10 +90,10 @@ export function NavMobile({ links, isCollapsed }: NavProps) {
             <div className="group flex items-center justify-center gap-4 py-2 " >
                 <nav className=" grid grid-cols-4 gap-4">
                     {links.map((link, index) => {
-                        // Check if the link should be rendered based on user role
                         if (!checkAccess(link.checkRoll)) {
-                            return null; // Không render liên kết nếu không có quyền truy cập
+                            return null;
                         }
+
                         return (
                             <Tooltip key={index} delayDuration={0}>
                                 <TooltipTrigger asChild>

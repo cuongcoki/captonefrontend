@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MyContext } from "./RenderTable";
 import { useContext } from "react";
+import toast from "react-hot-toast";
 
 type Props = {
   user: Employee;
@@ -35,6 +36,13 @@ export default function UserBanButton({ user, setIsOpen }: Props) {
       })
       .catch((error) => {
         console.log("changeUserStatus", error);
+        if (error.response.data.error) {
+          toast.error(error.response.data.message);
+        } else {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
+        }
       });
   };
 
