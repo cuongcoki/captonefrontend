@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronDown, LucideIcon, Plus } from "lucide-react";
+import {LucideIcon} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -9,24 +9,14 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useParams, usePathname } from "next/navigation";
+
 
 import { LogoIcon } from "@/constants/images";
 import Image from "next/image";
 import { ModeToggle } from "@/components/shared/common/mode-toggle";
-import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { authApi } from "@/apis/auth.api";
-import toast from "react-hot-toast";
 interface NavProps {
   isCollapsed: boolean;
   links: {
@@ -42,33 +32,11 @@ interface NavProps {
 
 export function Nav({ links, isCollapsed }: NavProps) {
   const pathname = usePathname();
-  const [loading, setLoading] = useState<boolean>(false);
   // ** hooks
   const user = useAuth();
   const params = useParams<{ id: string }>();
-  const router = useRouter();
   useEffect(() => { }, [params]);
-  // console.log("sidebarrrrrrrrrrrrrrrrrrrr", params)
-  // console.log("pathnamepathname", pathname)
-  const handleLogout = () => {
-    setLoading(true);
-    const id: any = user.user?.id;
 
-    authApi
-      .logout(id)
-      .then(({ data }) => {
-        console.log("dataLogout", data);
-        user.logout();
-        router.push("/sign-in");
-        toast.success(data.message);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
 
   const [isOpen, setIsOpen] = useState(false);
   const [checkLink, setCheckLink] = useState("");
@@ -115,7 +83,6 @@ export function Nav({ links, isCollapsed }: NavProps) {
   };
   useEffect(() => { }, [checkActiveLink]);
 
-  // console.log("user", user.user?.roleId);
   const userRoleId = user.user?.roleId;
 
   const checkAccess = (checkRoll: { id: number }[]) => {
@@ -126,7 +93,6 @@ export function Nav({ links, isCollapsed }: NavProps) {
       {/* logo */}
       <div className="py-3">
         {!isCollapsed ? (
-          // <Link href={"/"}>
             <div className=" flex items-center space-x-2 px-3">
               <Image
                 src={LogoIcon}
@@ -135,9 +101,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
               />
               <span className="text-sm">Tiến Huy</span>
             </div>
-          // </Link>
         ) : (
-          // <Link href={"/"}>
             <div className=" flex items-center space-x-2 px-3">
               <Image
                 src={LogoIcon}
@@ -145,7 +109,6 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 className="w-[30px] h-[30px]"
               />
             </div>
-          // </Link>
         )}
       </div>
       {/* data sidebar */}
@@ -155,9 +118,8 @@ export function Nav({ links, isCollapsed }: NavProps) {
       >
         <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
           {links.map((link, index) => {
-            // Check if the link should be rendered based on user role
             if (!checkAccess(link.checkRoll)) {
-              return null; // Không render liên kết nếu không có quyền truy cập
+              return null; 
             }
 
             return isCollapsed ? (

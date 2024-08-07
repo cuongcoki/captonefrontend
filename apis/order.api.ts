@@ -72,7 +72,6 @@ export const orderApi = {
     const requestBody = { PageIndex, PageSize, Status, StartOrder,EndOrder ,CompanyName};
     const cacheId = createCacheId("search-order", requestBody);
     orderCacheIds.add(cacheId);
-    console.log("Added cacheId:", cacheId);
 
     let url = `${endPointConstant.BASE_URL}/orders?PageIndex=${PageIndex}&PageSize=${PageSize}`;
     if (Status) url += `&Status=${Status}`;
@@ -97,7 +96,6 @@ export const orderApi = {
         if (orderCacheId) {
           axiosClient.storage.remove(orderCacheId);
           ordersCacheIds.delete(String(data.orderId));
-          console.log("Removed orderCacheId:", orderCacheId);
         }
       },
     },

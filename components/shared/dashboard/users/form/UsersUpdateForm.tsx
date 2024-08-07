@@ -38,7 +38,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Separator } from "@/components/ui/separator";
 
 // ** import REACT
@@ -49,60 +49,19 @@ import { z } from "zod";
 
 import { UpdateUserForm } from "@/schema";
 import { roleApi } from "@/apis/roles.api";
-import { error } from "console";
-import { orderApi } from "@/apis/order.api";
 import { filesApi } from "@/apis/files.api";
 import ImageDisplayAvatar from "./ImageDisplay";
-import { CalendarIcon, Plus, Upload, X } from "lucide-react";
+import { CalendarIcon, Upload, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { companyApi } from "@/apis/company.api";
 import { MyContext } from "@/components/shared/dashboard/users/table/users/RenderTable";
 
 // ** type
-interface UserData {
-  id: string;
-  firstName: string;
-  lastName: string;
-  dob: string;
-  address: string;
-  gender: string;
-  phone: string;
-  companyId: string;
-  roleId: number;
-}
 
 interface UserID {
   userId?: any;
   children?: any;
 }
-
-const enumRole = [
-  {
-    roleName: "COUNTER",
-    decription: "Quản lý số lượng",
-    id: "3",
-  },
-  {
-    roleName: "DRIVER",
-    decription: "Người vận chuyển",
-    id: "4",
-  },
-  {
-    roleName: "USER",
-    decription: "Nhân viên",
-    id: "5",
-  },
-  {
-    roleName: "BRANCH_ADMIN",
-    decription: "Quản lý cơ sở",
-    id: "2",
-  },
-  {
-    roleName: "MAIN_ADMIN",
-    decription: "Quản lý hệ thống",
-    id: "1",
-  },
-];
 
 type Company = {
   id: string;
@@ -141,13 +100,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
 
-  const handleOffDialog = () => {
-    setOpen(false);
-    setFetchTrigger((prev) => prev + 1);
-  };
-  const handleOnDialog = () => {
-    setOpen(true);
-  };
   const { forceUpdate } = useContext(MyContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<User>();
@@ -158,17 +110,21 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       id: string;
     }>
   >([]);
-  // console.log("user====", user);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [totalPages, setTotalPages] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+
   const [company, setCompany] = useState<Company[]>([]);
   const [imageRequests, setImageRequests] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<File | null>(null);
   const [nameImage, setNameImage] = useState<string | null>(null);
-  // ** các hàm để sử lý đăng ảnh
 
+  const handleOffDialog = () => {
+    setOpen(false);
+    setFetchTrigger((prev) => prev + 1);
+  };
+  const handleOnDialog = () => {
+    setOpen(true);
+  };
+
+  // ** các hàm để sử lý đăng ảnh
   const generateRandomString = (length: number = 5) => {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -179,6 +135,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
     }
     return result;
   };
+
   // ** Xử lý khi người dùng tải lên hình ảnh mới
   const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -205,7 +162,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       const newFile = new File([file], changedFileName, { type: file.type });
       setImageUrls(newFile);
       setNameImage(changedFileName);
-      console.log("imageUrls", imageUrls);
+      // console.log("imageUrls", imageUrls);
     }
   };
 
@@ -214,10 +171,11 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
     setImageRequests(null);
     setImageUrls(null);
   };
+
   // ** Xử lý khi đăng ảnh
   const handlePostImage = async () => {
     if (!imageUrls) {
-      console.error("No image selected");
+      // console.error("No image selected");
       return;
     }
 
@@ -248,18 +206,14 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       const parsedDate = parseISO(dateString);
       return format(parsedDate, "dd/MM/yyyy");
     } catch (error) {
-      console.error("Error formatting date:", error);
-      return ""; // Hoặc xử lý lỗi khác tùy theo trường hợp
+      // console.error("Error formatting date:", error);
+      return "";
     }
   };
-  // Hàm chuyển đổi ngày tháng từ yyyy-MM-dd sang dd/MM/yyyy
+
   function formatDate2(inputDate: string) {
-    // Tách các phần của ngày tháng từ chuỗi nhập vào
     const [year, month, day] = inputDate.split("-");
-
-    // Chuyển đổi thành định dạng dd/MM/yyyy
     const formattedDate = `${day}/${month}/${year}`;
-
     return formattedDate;
   }
 
@@ -303,7 +257,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           // setFormattedValue(formatCurrency(userData.salaryByDay.toString()));
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
+          // console.error("Error fetching user data:", error);
         })
         .finally(() => {
           setLoading(false);
@@ -316,8 +270,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       fetchDataUserId();
     }
   }, [userId, fetchTrigger]);
-  // console.log('imageRequests', imageRequests)
-  // console.log('userData', user)
 
   const form = useForm({
     resolver: zodResolver(UpdateUserForm),
@@ -351,13 +303,11 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   });
 
   const formatDateData = (dateString: any) => {
-    // Kiểm tra và chuyển đổi dateString sang định dạng 'yyyy-MM-dd' nếu cần thiết
     const formattedDate =
       typeof dateString === "string"
         ? dateString.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
         : dateString;
 
-    // Phân tích và định dạng lại ngày tháng
     const parsedDate = parse(formattedDate, "yyyy-MM-dd", new Date());
     return format(parsedDate, "dd/MM/yyyy");
   };
@@ -365,24 +315,12 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
 
@@ -429,10 +367,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       roleId: data.roleId,
     };
 
-    console.log(
-      "formattedDataformatte=============dDataformattedDataformattedData",
-      formattedData
-    );
+    console.log("========= =========> UpdateUser", formattedData);
 
     try {
       setLoading(true);
@@ -440,13 +375,13 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       await handlePostImage();
       // Sau khi ảnh đã được tải lên, gửi yêu cầu cập nhật người dùng
       const response = await userApi.userUpdate(formattedData);
-      console.log("Response data:", response.data);
+      // console.log("Response data:", response.data);
       forceUpdate();
       setOpen(false);
       toast.success("Cập nhật thành công!");
       // setOpen(false);
     } catch (error: any) {
-      console.error("Error updating user:", error);
+      // console.error("Error updating user:", error);
       if (error.response && error.response.data && error.response.data.error) {
         const errors = error.response.data.error;
         if (errors.Id) {
@@ -869,7 +804,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                             className={cn(
                                               "w-full pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -953,7 +888,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                             className={cn(
                                               "w-full pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (

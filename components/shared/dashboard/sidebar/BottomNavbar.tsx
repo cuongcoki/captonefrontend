@@ -3,27 +3,22 @@ import React, { useEffect, useState } from "react";
 import { NavMobile } from "./navMobile";
 import {
   ShoppingCart,
-  LayoutDashboard,
   UserRound,
-  Settings,
   ChevronRight,
   ChevronLeft,
   PackageSearch,
   InspectionPanel,
   CalendarSearch,
-  PackagePlus,
   Building,
   MessageSquareWarning,
   MessageSquareMore,
   Truck,
-  LogOut,
   Coins,
   Warehouse,
   HandCoins,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
-import { ModeToggle } from "@/components/shared/common/mode-toggle";
 import { useAuth } from "@/hooks/useAuth";
 
 type Props = {};
@@ -58,12 +53,6 @@ export default function BottomNavbar({ }: Props) {
           <NavMobile
              isCollapsed={mobileWidth ? true : isCollapsed}
              links={[
-               // {
-               //   title: "Thống kê",
-               //   href: "/dashboard/home",
-               //   icon: LayoutDashboard,
-               //   variant: "colorCompany",
-               // },
                {
                  title: "Nhân Viên",
                  href: "/dashboard/user",

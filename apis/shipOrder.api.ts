@@ -57,10 +57,8 @@ export const shipOrderApi = {
         axiosClient.post(`${endPointConstant.BASE_URL}/ship-orders`, data, {
             cache: {
                 update: () => {
-                    console.log("Clearing shipOrderCacheIds:", shipOrderCacheIds);
                     shipOrderCacheIds.forEach((cacheId) => axiosClient.storage.remove(cacheId));
                     shipOrderCacheIds.clear();
-                    console.log("shipOrderCacheIds after clearing:", shipOrderCacheIds);
                 },
             },
         }),
@@ -76,7 +74,6 @@ export const shipOrderApi = {
                     if (shipOrderCacheId) {
                         axiosClient.storage.remove(shipOrderCacheId);
                         shipOrdersCacheIds.delete(id);
-                        console.log("Removed shipOrderCacheId:", shipOrderCacheId);
                     }
                 },
             },
@@ -94,7 +91,6 @@ export const shipOrderApi = {
                     if (shipOrderCacheId) {
                         axiosClient.storage.remove(shipOrderCacheId);
                         shipOrdersCacheIds.delete(id);
-                        console.log("Removed shipmentCacheId:", shipOrderCacheId);
                     }
                 },
             },
@@ -109,7 +105,6 @@ export const shipOrderApi = {
         const requestBody = { PageIndex, PageSize, Status, ShipDate };
         const cacheId = createCacheId("get-shiporders", requestBody);
         shipOrderCacheIds.add(cacheId);
-        console.log("Added cacheId:", cacheId);
 
         let url = `${endPointConstant.BASE_URL}/ship-orders/by-shipper?PageIndex=${PageIndex}&PageSize=${PageSize}`;
         if (Status !== null && Status !== undefined) url += `&Status=${Status}`;

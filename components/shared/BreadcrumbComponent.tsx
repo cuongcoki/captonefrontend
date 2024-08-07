@@ -79,6 +79,8 @@ export function BreadcrumbComponent() {
         return "Kho";
       case `/dashboard/salary/detail`:
         return `Nhân viên ID: ${params.id}`;
+      case `/dashboard/user/${params.id}`:
+        return `Nhân viên ID: ${params.id}`;
       // nhân viên
       case "/employee":
         return "Nhân viên";
@@ -120,12 +122,10 @@ export function BreadcrumbComponent() {
               <BreadcrumbPage>{customTitle}</BreadcrumbPage>
             </BreadcrumbItem>
           ) : (
-            <>
-              <BreadcrumbItem key={breadcrumb.title}>
-                <BreadcrumbPage>{customTitle}</BreadcrumbPage>
-              </BreadcrumbItem>
+            <BreadcrumbItem key={breadcrumb.title}>
+              {customTitle}
               <BreadcrumbSeparator />
-            </>
+            </BreadcrumbItem>
           );
         })}
       </BreadcrumbList>

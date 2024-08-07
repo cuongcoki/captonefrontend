@@ -5,8 +5,6 @@ import * as Dialog from "@radix-ui/react-dialog";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -23,7 +21,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -38,12 +35,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -54,8 +49,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -76,27 +69,24 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { format, parse, set } from "date-fns";
+import { format, parse } from "date-fns";
 
 // ** import ICON
-import { CalendarIcon, Plus, Truck, X } from "lucide-react";
-import { ChevronDown, Minus, PackagePlus, Pencil, Search } from "lucide-react";
+import { CalendarIcon, Check, Plus, X } from "lucide-react";
+import { ChevronDown, Minus, Search } from "lucide-react";
 
 // ** import TYPE & SCHEMA
 import { OrderSchema, CompanyRequestSchema } from "@/schema/order";
-import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
 import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
 import { companyApi } from "@/apis/company.api";
-import { CreateOrderDetails } from "./CreateOrderDetail";
 import { productApi } from "@/apis/product.api";
 import { filesApi } from "@/apis/files.api";
 import useDebounce from "./useDebounce";
 import { setApi } from "@/apis/set.api";
 import ImageDisplayDialog from "./imageDisplayDialog";
 import Image from "next/image";
-import { Label } from "@/components/ui/label";
 import { NoImage } from "@/constants/images";
 import { OrderStore } from "../order-store";
 
@@ -113,29 +103,7 @@ type Company = {
   companyEnum: string; // Nếu có nhiều loại công ty khác nhau, bạn có thể thêm vào đây
 };
 
-// Define Status Enum
-const OrderStatus = [
-  {
-    id: 0,
-    des: "Đã nhận đơn hàng",
-    name: "PENDING",
-  },
-  {
-    id: 1,
-    des: "Đang thực hiện",
-    name: "PROCESSING",
-  },
-  {
-    id: 2,
-    des: "Đã hoàn thành",
-    name: "COMPLETED",
-  },
-  {
-    id: 3,
-    des: "Đã hủy đơn hàng",
-    name: "CANCELED",
-  },
-];
+
 
 export default function CreateOrder() {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
@@ -170,7 +138,6 @@ export default function CreateOrder() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTermAll, setSearchTermAll] = useState<string>("");
-  const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [company, setCompany] = useState<Company[]>([]);
   const [nextStep, setNextStep] = useState<boolean>(false);
@@ -184,33 +151,6 @@ export default function CreateOrder() {
     };
     fetchDataCompany();
   }, [currentPage, pageSize, searchTermAll]);
-  // console.log(company);
-
-  // ********************************************* Xữ Lý Thêm Công Ty ********************************************* //
-
-  const [openCompanyForm, setOpenCompanyForm] = useState<boolean>(false);
-
-  const handleToggelCompanyForm = () => {
-    setOpenCompanyForm(!openCompanyForm);
-  };
-
-  const formCompany = useForm({
-    resolver: zodResolver(CompanyRequestSchema),
-    defaultValues: {
-      name: "",
-      address: "",
-      directorName: "",
-      directorPhone: "",
-      email: "",
-      companyType: 1,
-    },
-  });
-
-  const onSubmitCompany = async (
-    data: z.infer<typeof CompanyRequestSchema>
-  ) => {
-    console.log("data", data);
-  };
 
   // ========================================================= các hàm để tìm kiếm sp và thêm =========================================================
 
@@ -225,11 +165,9 @@ export default function CreateOrder() {
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
   const [searchTerm, setSearchTerm] = useState<string>();
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  // console.log("searchResults", searchResults);
 
   const [searchTermSet, setSearchTermSet] = useState<string>();
   const [searchResultsSet, setSearchResultsSet] = useState<any[]>([]);
-  // console.log("searchResultsSet==============", searchResultsSet);
 
   const debouncedSearchTermSet = useDebounce(searchTermSet, 500);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -246,14 +184,14 @@ export default function CreateOrder() {
               .then(({ data }) => {
                 return {
                   ...image,
-                  imageUrl: data.data, // Assuming data.data is the updated image URL
+                  imageUrl: data.data,
                 };
               })
               .catch((error) => {
                 console.error("Error getting file:", error);
                 return {
                   ...image,
-                  imageUrl: "NoImage", // Example fallback if there's an error
+                  imageUrl: "NoImage",
                 };
               });
           })
@@ -264,7 +202,6 @@ export default function CreateOrder() {
       })
       .catch((error) => {
         setSearchResultsSet([])
-        // toast.error("Không tìm thấy bộ sản phẩm");
       })
       .finally(() => { });
   };
@@ -309,7 +246,6 @@ export default function CreateOrder() {
       isProductId: boolean;
     }[]
   >([]);
-  // console.log('getDetailsProgetDetailsPro=========', getDetailsPro)
   const [getDetailsProUpdate, setGetDetailsProUpdate] = useState<any[]>([]);
 
   console.log("productsRequest", productsRequest);
@@ -410,7 +346,7 @@ export default function CreateOrder() {
       productIdOrSetId: product.productIdOrSetId,
       quantity: product.quantity,
       unitPrice: product.unitPrice,
-      note: product.note.trim(), // Sử dụng trim() để loại bỏ khoảng trắng ở đầu và cuối
+      note: product.note.trim(),
       isProductId: product.isProductId,
     }));
     const requestBody = {
@@ -433,40 +369,34 @@ export default function CreateOrder() {
         setOpen(false)
         setNextStep(true);
       }
-    } catch (error) {
-      toast.error("Tạo đơn hàng không thành công");
+    } catch (error: any) {
+      if (error.response.data.error) {
+        toast.error(error.response.data.message);
+      } else {
+        for (const key in error.response.data.error) {
+          toast.error(error.response.data.error[key][0]);
+        }
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const { pending } = useFormStatus();
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
 
   const productCheck = 0;
   const setCheck = 1;
+
   const handleClearForm = () => {
     setOpen(false)
     setOpenAlert(false)
@@ -483,13 +413,13 @@ export default function CreateOrder() {
     // Kiểm tra xem mảng có rỗng hay không
     const isDetailsProEmpty = Array.isArray(getDetailsPro) && getDetailsPro.length === 0;
     const isProductsRequestEmpty = Array.isArray(productsRequest) && productsRequest.length === 0;
-  
+
     // Kiểm tra giá trị cụ thể của form
     const isCompanyIdEmpty = form.getValues().companyId === "";
     const isEndOrderEmpty = form.getValues().endOrder === "";
     const isStartOrderEmpty = form.getValues().startOrder === "";
     const isVatEmpty = form.getValues().vat === 0;
-  
+
     // Nếu tất cả các trường trong form đều trống hoặc không có giá trị và các mảng rỗng
     if (isDetailsProEmpty && isProductsRequestEmpty && isCompanyIdEmpty && isEndOrderEmpty && isStartOrderEmpty && isVatEmpty) {
       setOpen(false);
@@ -497,8 +427,8 @@ export default function CreateOrder() {
       setOpenAlert(true);
     }
   };
-  
-  
+
+
   const productType = 0;
   const setType = 1;
   return (
@@ -608,6 +538,14 @@ export default function CreateOrder() {
                                               images={product}
                                               checkProduct={productCheck}
                                             />
+                                            <Check
+                                              className={`w-5 h-5 ${productsRequest.some(
+                                                (item1) => item1.productIdOrSetId === product.id
+                                              )
+                                                ? "absolute top-0 right-0 bg-primary text-white"
+                                                : "hidden"
+                                                }`}
+                                            />
                                           </div>
                                           <div>
                                             <Button
@@ -649,6 +587,14 @@ export default function CreateOrder() {
                                             <ImageDisplayDialog
                                               images={product}
                                               checkProduct={setCheck}
+                                            />
+                                            <Check
+                                              className={`w-5 h-5 ${productsRequest.some(
+                                                (item1) => item1.productIdOrSetId === product.id
+                                              )
+                                                ? "absolute top-0 right-0 bg-primary text-white"
+                                                : "hidden"
+                                                }`}
                                             />
                                           </div>
                                           <div>
