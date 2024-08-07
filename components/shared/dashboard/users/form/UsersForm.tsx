@@ -35,17 +35,16 @@ import { Calendar } from "@/components/ui/calendar";
 import { format, parse } from "date-fns";
 
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Separator } from "@/components/ui/separator";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { CalendarIcon, Plus, Upload, X } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent} from "@/components/ui/card";
 
 // ** import React
-import { useRouter } from "next/navigation";
 import { MyContext } from "../table/users/RenderTable";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,7 +52,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 // ** import Api
 import { filesApi } from "@/apis/files.api";
 import { userApi } from "@/apis/user.api";
-import { orderApi } from "@/apis/order.api";
 
 // ** import Component
 import { UsersSchema } from "@/schema";
@@ -61,15 +59,7 @@ import ImageDisplayAvatar from "./ImageDisplay";
 import { cn } from "@/lib/utils";
 import { companyApi } from "@/apis/company.api";
 
-interface UsersFormProps {
-  setOpen: (open: boolean) => void;
-}
-
-type SalaryRequest = {
-  salary: number;
-  startDate: string;
-};
-
+// ** import Type
 type Company = {
   id: string;
   name: string;
@@ -81,49 +71,16 @@ type Company = {
   companyTypeDescription: string;
 };
 
-const enumRole = [
-  {
-    roleName: "COUNTER",
-    decription: "Quản lý số lượng",
-    id: "3",
-  },
-  {
-    roleName: "DRIVER",
-    decription: "Người vận chuyển",
-    id: "4",
-  },
-  {
-    roleName: "USER",
-    decription: "Nhân viên",
-    id: "5",
-  },
-  {
-    roleName: "BRANCH_ADMIN",
-    decription: "Quản lý cơ sở",
-    id: "2",
-  },
-  {
-    roleName: "MAIN_ADMIN",
-    decription: "Quản lý hệ thống",
-    id: "1",
-  },
-];
-
 export const UsersForm = () => {
   const [open, setOpen] = useState<boolean>(false);
 
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [totalPages, setTotalPages] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
   const [company, setCompany] = useState<Company[]>([]);
   const [imageRequests, setImageRequests] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<File | null>(null);
   const [nameImage, setNameImage] = useState<string | null>(null);
 
   // ** Hooks
-  const router = useRouter();
   const { forceUpdate } = useContext(MyContext);
 
   const form = useForm({
@@ -140,7 +97,7 @@ export const UsersForm = () => {
       isActive: true,
       companyId: "",
       id: "",
-      avatar: "", // Nếu bạn muốn có giá trị mặc định cho avatar
+      avatar: "", 
       salaryByDayRequest: {
         salary: "",
         startDate: "",
@@ -158,8 +115,8 @@ export const UsersForm = () => {
   const handleOnDialog = () => {
     setOpen(true);
   };
-  // ** các hàm để sử lý đăng ảnh
 
+  // ** các hàm để sử lý đăng ảnh
   const generateRandomString = (length: number = 5) => {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -170,6 +127,7 @@ export const UsersForm = () => {
     }
     return result;
   };
+
   // ** Xử lý khi người dùng tải lên hình ảnh mới
   const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -191,7 +149,7 @@ export const UsersForm = () => {
       const newFile = new File([file], changedFileName, { type: file.type });
       setImageUrls(newFile);
       setNameImage(changedFileName);
-      console.log("imageUrls", imageUrls);
+      // console.log("imageUrls", imageUrls);
     }
   };
 
@@ -200,6 +158,7 @@ export const UsersForm = () => {
     setImageRequests(null);
     setImageUrls(null);
   };
+
   // ** Xử lý khi đăng ảnh
   const handlePostImage = async () => {
     if (!imageUrls) {
@@ -238,7 +197,6 @@ export const UsersForm = () => {
 
     fetchDataCompany();
   }, []);
-  console.log("compalylll", company);
 
   const onSubmit = (data: z.infer<typeof UsersSchema>) => {
     // Đảm bảo handlePostImage đã hoàn thành và lấy được nameImage
@@ -267,11 +225,9 @@ export const UsersForm = () => {
         avatar: avatar,
       };
 
-      console.log("requestBody", requestBody);
+      console.log("======== ========> RequestBodyCreateUser", requestBody);
 
       setLoading(true);
-      // console.log("dataCreateUser", data);
-
       userApi
         .createUser(requestBody)
         .then(({ data }) => {
@@ -321,26 +277,15 @@ export const UsersForm = () => {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
+
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>
       <Dialog.Trigger className="rounded p-2 hover:bg-[#2bff7e] bg-[#24d369] ">
@@ -349,6 +294,8 @@ export const UsersForm = () => {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
           <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow ">
+          <Dialog.Title className="hidden visible"></Dialog.Title>
+          <Dialog.Description className="hidden visible"></Dialog.Description>
             <div className="bg-slate-100  flex flex-col rounded-md">
               <div className="p-4 flex items-center justify-between bg-primary rounded-md">
                 <h2 className="text-2xl text-white ">Thêm nhân viên</h2>
@@ -358,7 +305,6 @@ export const UsersForm = () => {
               </div>
               <div className="grid gap-4 p-4 overflow-y-auto h-[600px] dark:bg-black">
                 <Form {...form}>
-                  {/* <Toaster /> */}
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="w-full flex flex-col gap-4"
@@ -404,30 +350,11 @@ export const UsersForm = () => {
                           <CardContent className="relative mt-5">
                             <div className="grid grid-cols-1 gap-2">
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
-                                {/* firstName */}
 
+                                {/* firstName */}
                                 <FormField
                                   control={form.control}
                                   name="firstName"
-                                  render={({ field }) => {
-                                    return (
-                                      <FormItem>
-                                        <FormLabel className="text-primary">
-                                          Tên nhân viên *
-                                        </FormLabel>
-                                        <FormControl>
-                                          <Input type="text" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                      </FormItem>
-                                    );
-                                  }}
-                                />
-                                {/* lastName */}
-
-                                <FormField
-                                  control={form.control}
-                                  name="lastName"
                                   render={({ field }) => {
                                     return (
                                       <FormItem>
@@ -442,8 +369,29 @@ export const UsersForm = () => {
                                     );
                                   }}
                                 />
+
+                                {/* lastName */}
+                                <FormField
+                                  control={form.control}
+                                  name="lastName"
+                                  render={({ field }) => {
+                                    return (
+                                      <FormItem>
+                                        <FormLabel className="text-primary">
+                                          Tên nhân viên *
+                                        </FormLabel>
+                                        <FormControl>
+                                          <Input type="text" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                      </FormItem>
+                                    );
+                                  }}
+                                />
                               </div>
+
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
+
                                 {/* CMND/CCCD */}
                                 <FormField
                                   control={form.control}
@@ -469,7 +417,8 @@ export const UsersForm = () => {
                                     </FormItem>
                                   )}
                                 />
-                                {/* gender */}
+
+                                {/* Gender */}
                                 <FormField
                                   control={form.control}
                                   name="gender"
@@ -507,8 +456,10 @@ export const UsersForm = () => {
                                   )}
                                 />
                               </div>
+
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
-                                {/* dob */}
+
+                                {/* Dob */}
                                 <FormField
                                   control={form.control}
                                   name="dob"
@@ -528,7 +479,8 @@ export const UsersForm = () => {
                                     </FormItem>
                                   )}
                                 />
-                                {/* password */}
+
+                                {/* Password */}
                                 <FormField
                                   control={form.control}
                                   name="password"
@@ -551,10 +503,12 @@ export const UsersForm = () => {
                           </CardContent>
                         </Card>
                       </div>
+
                       <div className="flex flex-col sm:flex-row gap-y-5 sm:gap-x-5 ">
                         <Card className="sm:w-[50%] w-full">
                           <CardContent className="mt-5 flex flex-col gap-2">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                               {/* address */}
                               <FormField
                                 control={form.control}
@@ -595,6 +549,7 @@ export const UsersForm = () => {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                               {/* companyId */}
                               <FormField
                                 control={form.control}
@@ -633,6 +588,7 @@ export const UsersForm = () => {
                                   );
                                 }}
                               />
+
                               {/* role */}
                               <FormField
                                 control={form.control}
@@ -702,6 +658,7 @@ export const UsersForm = () => {
                         {/* tính lương  */}
                         <Card className="sm:w-[50%] w-full">
                           <CardContent className="mt-5 flex flex-col gap-2">
+
                             {/* salaryByDayRequest */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                               <FormField
@@ -877,6 +834,7 @@ export const UsersForm = () => {
                                 )}
                               />
                             </div>
+                            
                           </CardContent>
                         </Card>
                       </div>

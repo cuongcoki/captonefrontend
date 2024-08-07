@@ -10,6 +10,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
@@ -41,6 +52,9 @@ export default function CountProduct({
   const [searchData, setSearchData] = useState<GetAllProductResponse | null>(
     null
   );
+  const [open, setOpen] = useState(false);
+  const [dialogClose, setDialogClose] = useState(false);
+  const [indexChoose, setIndexChoose] = useState<number>(0);
 
   useEffect(() => {
     userDataRef.current = userData;
@@ -81,24 +95,6 @@ export default function CountProduct({
       setSearchData(null); // Clear search data when input is empty
     }
   }, [searchInput]);
-
-  // GET PHASE DATA
-  // useEffect(() => {
-  //   attendanceApi
-  //     .getAllPhase()
-  //     .then(({ data }) => {
-  //       // console.log("Phase Data: ", data);
-  //       setDataPhase(
-  //         data.data.map((phase) => ({
-  //           label: phase.name,
-  //           value: phase.id,
-  //         }))
-  //       );
-  //     })
-  //     .catch((error) => {
-  //       console.log("Error getAllPhase: ", error);
-  //     });
-  // }, []);
 
   const AddNewProductForUser = async (product: Product) => {
     const getImage = async (name: string) => {
@@ -159,10 +155,10 @@ export default function CountProduct({
     setIsUpdate(true);
   };
 
-  const removeProduct = (indexP: number) => {
+  const removeProduct = () => {
     setUserData((prev) => {
       const newProducts = [...prev.products];
-      newProducts.splice(indexP, 1);
+      newProducts.splice(indexChoose, 1);
       return {
         ...prev,
         products: newProducts,
@@ -170,7 +166,13 @@ export default function CountProduct({
     });
     setIsUpdate(true);
   };
-
+  const handleDialog = (value: boolean) => {
+    if (isUpdate) {
+      setDialogClose(true);
+      return;
+    }
+    setDialogIsOpen(value);
+  };
   useEffect(() => {
     if (!dialogIsOpen && isUpdate) {
       console.log("Update Table Data");
@@ -185,12 +187,12 @@ export default function CountProduct({
   }, [dialogIsOpen, userData, index, setTableDataIndex, isUpdate]);
 
   return (
-    <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
+    <Dialog open={dialogIsOpen} onOpenChange={handleDialog}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[825px] dark:bg-[#1c1917]">
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3">
-            Cập nhật sản phẩm tạo ra
+            Cập Nhật Sản Phẩm Tạo Ra
           </DialogTitle>
           <DialogDescription className="mb-1 space-y-1">
             <div className="flex space-x-1">
@@ -234,13 +236,11 @@ export default function CountProduct({
                 {searchData.data.data.map((item, index) => (
                   <li
                     key={item.id}
-                    className={`hover:bg-gray-100 cursor-pointer dark:bg-black dark:hover:bg-[#4c4c4c] ${
-                      index === 1 ? "rounded-t-md" : ""
-                    } ${
-                      index === searchData.data.data.length - 1
+                    className={`hover:bg-gray-100 cursor-pointer dark:bg-black dark:hover:bg-[#4c4c4c] ${index === 1 ? "rounded-t-md" : ""
+                      } ${index === searchData.data.data.length - 1
                         ? "rounded-b-md"
                         : ""
-                    }`}
+                      }`}
                     onClick={async () => {
                       await AddNewProductForUser(item);
                       setSearchInput("");
@@ -254,7 +254,7 @@ export default function CountProduct({
             )}
             {searchInput !== "" && !searchData && !isSearch && (
               <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 z-1000 p-2 dark:bg-black rounded-b-md rounded-t-md">
-                No data found
+                Không có sản phẩm
               </div>
             )}
           </div>
@@ -289,7 +289,7 @@ export default function CountProduct({
                 <td className="text-center">{product.phaseName}</td>
                 <td className="text-center">{product.productName}</td>
                 {/* <td className="text-center">{product.phaseName}</td> */}
-             
+
                 <td>
                   <Input
                     type="number"
@@ -303,7 +303,8 @@ export default function CountProduct({
                   {
                     <button
                       onClick={() => {
-                        removeProduct(indexP);
+                        setIndexChoose(indexP);
+                        setOpen(true);
                       }}
                     >
                       <X />
@@ -317,6 +318,61 @@ export default function CountProduct({
         <DialogFooter>
           {/* <Button type="submit">Lưu thay đổi</Button> */}
         </DialogFooter>
+        {open && (
+          <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogTrigger asChild>
+              <div></div>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Bạn có chắc chắn muốn xóa sản phẩm này
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh
+                  viên những dữ liệu mà bạn đã nhập
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    setOpen(false);
+                    removeProduct();
+                  }}
+                >
+                  Tiếp tục
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
+        {dialogClose && dialogIsOpen && (
+          <AlertDialog open={dialogClose} onOpenChange={setDialogClose}>
+            <AlertDialogTrigger asChild>
+              <div></div>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  Bạn đã hoàn thành cập nhật sản phẩm cho nhân viên này?
+                </AlertDialogTitle>
+                <AlertDialogDescription></AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    // setDialogClose(false);
+                    setDialogIsOpen(false);
+                  }}
+                >
+                  Hoàn thành
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </DialogContent>
     </Dialog>
   );

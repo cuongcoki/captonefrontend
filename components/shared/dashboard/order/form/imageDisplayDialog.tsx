@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/carousel"
 import { Package, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
 interface Product {
     code: string;
     description: string;
@@ -48,9 +49,11 @@ const ImageDisplayDialog: React.FC<ImageDisplayProps> = ({ images, checkProduct 
                 <Image src={String(images.imageUrl === "Image_not_found" ? NoImage : images.imageUrl)} width={900} height={900} className=" w-full h-full object-cover rounded-md" alt="Ảnh mãu sản phẩm" />
             </DialogTrigger>
             <DialogContent className="md:max-w-[50%] w-full">
+                <DialogTitle className="visible hidden"></DialogTitle>
+                <DialogDescription className="visible hidden"></DialogDescription>
                 <HoverCard>
                     <HoverCardTrigger>
-                        Chi tiết
+                       <Button> Chi tiết</Button>
                     </HoverCardTrigger>
                     <HoverCardContent>
                         <div className="max-w-sm mx-auto">

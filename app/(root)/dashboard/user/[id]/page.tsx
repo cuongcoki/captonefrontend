@@ -2,6 +2,6 @@ import UserIDPage from "@/components/shared/dashboard/users/table/users/userID/u
 
 export default function Page() {
     return (
-       <UserIDPage />
+            <UserIDPage />
     );
 }

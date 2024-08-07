@@ -33,7 +33,7 @@ export function Combobox({
 }) {
   const [open, setOpen] = React.useState(false);
   const limitLength = (text: any, maxLength: any) => {
-    if (text.length > maxLength) {
+    if (text && text.length > maxLength) {
       return `${text.slice(0, maxLength)}...`;
     }
     return text;
@@ -47,7 +47,12 @@ export function Combobox({
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {limitLength(value ? data.find((option) => option.value === value)?.label : title,15)}
+          {limitLength(
+            value
+              ? data.find((option) => option.value === value)?.label
+              : title,
+            15
+          )}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

@@ -29,7 +29,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog"
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -92,7 +92,7 @@ export const ChangeStatusShipment: React.FC<ShipmentIDProps> = ({ shipmentID }) 
 
 
     const handleSubmitOrderStatus = () => {
-        if(shipmentID.status === 1){
+        if (shipmentID.status === 1) {
             return toast.error("Đơn hàng đang trong quá trình vận chuyển ,thay đổi trạng thái sẽ dẫn đến tình trạng nhầm lẫn của của nhận viên vận chuyển")
         }
 
@@ -110,7 +110,13 @@ export const ChangeStatusShipment: React.FC<ShipmentIDProps> = ({ shipmentID }) 
             })
             .catch(error => {
                 console.log("error", error)
-                toast.error(error.response.data.message)
+                if (error.response.data.error) {
+                    toast.error(error.response.data.message);
+                } else {
+                    for (const key in error.response.data.error) {
+                        toast.error(error.response.data.error[key][0]);
+                    }
+                }
             })
             .finally(() => {
                 setLoading(false)

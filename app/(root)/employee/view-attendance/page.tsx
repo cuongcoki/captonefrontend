@@ -8,28 +8,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-// const attendanceDataFake: AttendanceDateData[] = [
-//   {
-//     date: "2024-06-09",
-//     attedanceDateReport: {
-//       isPresentSlot1: false,
-//       isPresentSlot2: false,
-//       isPresentSlot3: true,
-//       isSalaryByProduct: false,
-//       isOverTime: false,
-//     },
-//   },
-//   {
-//     date: "2024-06-10",
-//     attedanceDateReport: {
-//       isPresentSlot1: true,
-//       isPresentSlot2: false,
-//       isPresentSlot3: false,
-//       isSalaryByProduct: true,
-//       isOverTime: false,
-//     },
-//   },
-// ];
 type Props = {
   searchParams: {
     year: number;

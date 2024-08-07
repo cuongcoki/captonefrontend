@@ -56,9 +56,9 @@ export const columns: ColumnDef<Employee>[] = [
     accessorKey: "id",
     header: ({ column }) => <Button variant="ghost">CMND/CCCD</Button>,
     cell: ({ row }) => (
-      <Link href={`/profile/${row.getValue("id")}`}>
+      // <Link href={`/branchadmin/user/${row.getValue("id")}`}>
         <div>{row.getValue("id")}</div>
-      </Link>
+      // </Link>
     ),
   },
 
@@ -67,24 +67,20 @@ export const columns: ColumnDef<Employee>[] = [
     header: ({ column }) => {
       return <Button variant="ghost">Tên nhân viên</Button>;
     },
-    cell: ({ row }) => (
-      <div className="">
-        {row.original.firstName}
-      </div>
-    ),
+    cell: ({ row }) => <div className="">{row.original.firstName}</div>,
   },
 
-  {
-    accessorKey: "lastName",
-    header: ({ column }) => {
-      return <Button variant="ghost">Họ nhân viên</Button>;
-    },
-    cell: ({ row }) => (
-      <div className="">
-    {row.original.lastName}
-      </div>
-    ),
-  },
+  // {
+  //   accessorKey: "lastName",
+  //   header: ({ column }) => {
+  //     return <Button variant="ghost">Họ nhân viên</Button>;
+  //   },
+  //   cell: ({ row }) => (
+  //     <div className="">
+  //   {row.original.lastName}
+  //     </div>
+  //   ),
+  // },
 
   {
     accessorKey: "gender",

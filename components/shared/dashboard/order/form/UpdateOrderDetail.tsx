@@ -3,11 +3,10 @@ import { Button } from "@/components/ui/button";
 
 // ** import ICON
 import {
+  Check,
   ChevronDown,
   Minus,
-  PackagePlus,
   PenLine,
-  Pencil,
   Plus,
   Search,
   X,
@@ -17,7 +16,6 @@ import {
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { OrderDetailRequestSchema } from "@/schema/order";
 
 import {
@@ -45,14 +43,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -64,7 +59,6 @@ import { useFormStatus } from "react-dom";
 import { productApi } from "@/apis/product.api";
 import toast from "react-hot-toast";
 import ImageDisplayDialog from "./imageDisplayDialog";
-import { Label } from "@/components/ui/label";
 import { setApi } from "@/apis/set.api";
 import { filesApi } from "@/apis/files.api";
 import { NoImage } from "@/constants/images";
@@ -72,45 +66,10 @@ import useDebounce from "./useDebounce";
 import { orderApi } from "@/apis/order.api";
 import { OrderStore } from "../order-store";
 
-type OrderDetailRequest = {
-  productIdOrSetId: string;
-  quantity: number;
-  unitPrice: number;
-  note: string;
-  isProductId: boolean;
-};
-
-type OrderRequest = {
-  orderId: string;
-  orderDetailRequests: OrderDetailRequest[];
-};
-
 interface OrderID {
   orderId?: any;
 }
 
-interface productType {
-  orderId: any;
-  productOrderResponses: productOrderResponses[];
-  setOrderResponses: setOrderResponses[];
-}
-interface productOrderResponses {
-  imageProductUrl: any;
-  productId: any;
-  productName: any;
-  quantity: any;
-  unitPrice: any;
-  note: any;
-}
-
-interface setOrderResponses {
-  imageSetUrl: any;
-  setId: any;
-  setName: any;
-  quantity: any;
-  unitPrice: any;
-  note: any;
-}
 let initialFormValuesProduct: any = null;
 export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   //state
@@ -130,7 +89,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     setOpenAlert(true);
   };
 
-  // console.log('orderIdddddd', orderId)
   const [loading, setLoading] = useState<boolean>(false);
   const [checkProducts, setCheckProducts] = useState<boolean>(false);
   const handleCheckProduct = () => {
@@ -153,11 +111,9 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  // console.log('searchResults', searchResults)
 
   const [searchTermSet, setSearchTermSet] = useState<string>("");
   const [searchResultsSet, setSearchResultsSet] = useState<any[]>([]);
-  // console.log('searchResultsSet==============', searchResultsSet)
 
   const debouncedSearchTermSet = useDebounce(searchTermSet, 500);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
@@ -174,14 +130,14 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
               .then(({ data }) => {
                 return {
                   ...image,
-                  imageUrl: data.data, // Assuming data.data is the updated image URL
+                  imageUrl: data.data,
                 };
               })
               .catch((error) => {
                 console.error("Error getting file:", error);
                 return {
                   ...image,
-                  imageUrl: "NoImage", // Example fallback if there's an error
+                  imageUrl: "NoImage",
                 };
               });
           })
@@ -192,7 +148,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       })
       .catch((error) => {
         setSearchResultsSet([])
-        // toast.error("Không tìm thấy bộ sản phẩm");
       })
       .finally(() => { });
   };
@@ -206,7 +161,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         setSearchResults(data.data);
       })
       .catch((error) => {
-        // toast.error("Không tìm thấy sản phẩm");
         setSearchResults([])
       })
       .finally(() => { });
@@ -255,7 +209,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       isProductId: false,
     }));
     const combinedRequests = [...productRequests, ...setRequests];
-    // console.log('combinedRequests', combinedRequests)
     setProductsRequest(combinedRequests);
 
     const productRequestsPro = orderId.productOrderResponses.map(
@@ -285,11 +238,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     setGetDetailsPro(combinedRequestsPro);
   }, [orderId, fetchTrigger]);
 
-  // console.log('getDetailsProgetDetailsPro=========', getDetailsPro)
   const [getDetailsProUpdate, setGetDetailsProUpdate] = useState<any[]>([]);
-
-  // console.log("productsRequest===", productsRequest);
-  // console.log("getDetailsPro===", getDetailsPro);
 
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any) => {
@@ -336,7 +285,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         {
           productIdOrSetId: product.id,
           quantity: 1,
-          unitPrice: 0,
+          unitPrice: 1,
           note: "",
           isProductId: checkProducts ? false : true,
         },
@@ -350,13 +299,11 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     );
     setGetDetailsPro(updatedDetailsPro);
 
-    // Lọc sản phẩm cần xóa khỏi productsRequest
     const updatedProductsRequest = productsRequest.filter(
       (product) => product.productIdOrSetId !== productId
     );
     setProductsRequest(updatedProductsRequest);
 
-    // toast.success("Đã xóa sản phẩm khỏi danh sách");
   };
 
   const handleChange = (productId: string, name: string, value: any) => {
@@ -380,13 +327,21 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   // ========================================================= Xử lý khi người dùng gửi form =========================================================
 
   const handleSubmit = async () => {
-    const productsRequestTrimmed = productsRequest.map((product) => ({
-      productIdOrSetId: product.productIdOrSetId,
-      quantity: product.quantity,
-      unitPrice: product.unitPrice,
-      note: product.note.trim(), // Sử dụng trim() để loại bỏ khoảng trắng ở đầu và cuối
-      isProductId: product.isProductId,
-    }));
+
+    const productsRequestTrimmed = productsRequest.map((product) => {
+      if (product.unitPrice < 0 && product.unitPrice === null) {
+        toast.error(`Đơn giá phải lớn hơn 0 cho sản phẩm`);
+        throw new Error("Đơn giá phải lớn hơn 0.");
+      }
+
+      return {
+        productIdOrSetId: product.productIdOrSetId,
+        quantity: product.quantity,
+        unitPrice: product.unitPrice,
+        note: product.note.trim(),
+        isProductId: product.isProductId,
+      };
+    });
     const requestBody = {
       orderId: orderId.orderId,
       orderDetailRequests: productsRequestTrimmed,
@@ -400,12 +355,11 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         if (data.isSuccess) {
           ForceRender()
           setOpen(false)
-          // console.log("dataaaa=======", data);
           toast.success("Cặp nhật sản phẩm thành công");
         }
       });
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch (error: any) {
+      toast.success("Cặp nhật sản phẩm không thành công");
     } finally {
       setLoading(false);
     }
@@ -415,24 +369,12 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
 
@@ -572,6 +514,14 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                           images={product}
                                           checkProduct={productCheck}
                                         />
+                                        <Check
+                                          className={`w-5 h-5 ${productsRequest.some(
+                                            (item1) => item1.productIdOrSetId === product.id
+                                          )
+                                            ? "absolute top-0 right-0 bg-primary text-white"
+                                            : "hidden"
+                                            }`}
+                                        />
                                       </div>
                                       <div>
                                         <Button
@@ -613,6 +563,14 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                         <ImageDisplayDialog
                                           images={product}
                                           checkProduct={setCheck}
+                                        />
+                                        <Check
+                                          className={`w-5 h-5 ${productsRequest.some(
+                                            (item1) => item1.productIdOrSetId === product.id
+                                          )
+                                            ? "absolute top-0 right-0 bg-primary text-white"
+                                            : "hidden"
+                                            }`}
                                         />
                                       </div>
                                       <div>

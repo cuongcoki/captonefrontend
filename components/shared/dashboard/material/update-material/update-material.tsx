@@ -1,17 +1,17 @@
 import React, { use, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import AddNewMeterialForm from "@/components/shared/dashboard/material/add-new-material/add-new-material-form";
+import { Plus, X } from "lucide-react";
 import UpdateMaterialForm from "@/components/shared/dashboard/material/update-material/update-material-form";
+
+import ConfirmAlertDialog from "@/components/shared/common/confirm-alert-dialog/confirm-alert-dialog";
+import { set } from "date-fns";
+type UpdateMaterialContextType = {
+  setIsUpdate: React.Dispatch<React.SetStateAction<boolean>>;
+};
+export const UpdateMaterialContext =
+  React.createContext<UpdateMaterialContextType>({
+    setIsUpdate: () => {},
+  });
 export default function UpdateMaterial({
   children,
   id,
@@ -19,22 +19,64 @@ export default function UpdateMaterial({
   children: any;
   id: string;
 }) {
+  // const { isOpen, setIsOpen, handleDialog } = UpdateNewMaterialStore();
+  const [open, setOpen] = React.useState(false);
+  const [isUpdate, setIsUpdate] = React.useState(false);
+  let handleAlertDialog = (value: boolean) => {
+    if (isUpdate) {
+      document.getElementById("alert-dialog-trigger")?.click();
+      setIsUpdate(false);
+      return;
+    }
+    setOpen(value);
+  };
   return (
     <>
-      <Dialog modal={true}>
-        <DialogTrigger asChild>
-          {<div className="flex justify-center">{children}</div>}
-        </DialogTrigger>
-        <DialogContent className=" max-w-[340px] md:max-w-[700px] dark:bg-[#1c1917]">
-          <DialogHeader>
-            <DialogTitle className="text-primary">
-              Cập Nhật Nguyên Vật Liệu
-            </DialogTitle>
-          </DialogHeader>
-          <DialogDescription></DialogDescription>
-          <UpdateMaterialForm id={id} />
-        </DialogContent>
-      </Dialog>
+      <div
+        className="flex justify-center"
+        onClick={() => {
+          setOpen(true);
+        }}
+      >
+        {children}
+      </div>
+
+      {open && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div
+            className="fixed inset-0 bg-[#0000002a]"
+            onClick={() => {
+              handleAlertDialog(false);
+            }}
+          ></div>
+          <div className="relative bg-white dark:bg-[#1c1917] p-4 rounded  max-w-[340px] md:max-w-[700px] mx-2 shadow-lg">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-2xl text-[#22c55e] w-full text-center mb-3">
+                Cập Nhật Nguyên Vật Liệu
+              </h2>
+              <button
+                onClick={() => {
+                  handleAlertDialog(false);
+                }}
+                className="text-black dark:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            <UpdateMaterialContext.Provider value={{ setIsUpdate }}>
+              <UpdateMaterialForm id={id} />
+            </UpdateMaterialContext.Provider>
+          </div>
+          <ConfirmAlertDialog
+            handleAccept={() => {
+              setOpen(false);
+              setIsUpdate(false);
+            }}
+          >
+            <div id="alert-dialog-trigger"></div>
+          </ConfirmAlertDialog>
+        </div>
+      )}
     </>
   );
 }

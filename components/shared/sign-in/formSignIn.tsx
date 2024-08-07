@@ -17,16 +17,18 @@ import { SignInSchema } from "@/schema";
 import { useAuth } from "@/hooks/useAuth";
 import { authApi } from "@/apis/auth.api";
 import { useRouter } from "next/navigation";
-import toast, { Toaster } from "react-hot-toast";
-import { Eye, EyeOff, Ghost } from "lucide-react";
+import toast from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 export default function FormSignIn() {
-  const auth = useAuth();
+  //state
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [passwordVisible, setPasswordVisible] = useState(false);
+
   // ** Hooks
   const router = useRouter();
+  const auth = useAuth();
 
   const handleClickRemember = () => {
     setRememberMe(!rememberMe);
@@ -54,7 +56,6 @@ export default function FormSignIn() {
           router.push(`/profile/${data.data.user.id}`);
       })
       .catch((error) => {
-        // console.log("===ror=r=r",error)
         const errors = error.response.data.message
         console.log(error.data)
         toast.error(errors)
@@ -68,7 +69,6 @@ export default function FormSignIn() {
 
   return (
     <Form {...form}>
-      {/* <Toaster /> */}
 
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -116,15 +116,7 @@ export default function FormSignIn() {
             </FormItem>
           )}
         />
-        {/* <div className="flex items-center space-x-2">
-                    <Checkbox  id="terms" checked={rememberMe} onCheckedChange={handleClickRemember}  />
-                    <label
-                        htmlFor="terms"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-white"
-                    >
-                        Nhớ tôi
-                    </label>
-                </div> */}
+   
         <FormLabel className="flex items-center text-secondary-backgroudPrimary"></FormLabel>
         <Button
           type="submit"

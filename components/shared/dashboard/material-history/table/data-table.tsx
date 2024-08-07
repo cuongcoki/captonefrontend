@@ -50,14 +50,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
+import AddNewMeterialHistoryForm from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history-form";
 type MaterialHistoryContextType = {
   ForceRender: () => void;
 };
 
 export const MaterialHistoryContext =
   React.createContext<MaterialHistoryContextType>({
-    ForceRender: () => { },
+    ForceRender: () => {},
   });
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -161,7 +162,8 @@ export function DataTableForMaterialHistory<TData, TValue>({
         setTotalPage(res.data.data.totalPages);
         setData(res.data.data.data);
         router.push(
-          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${searchParams.from || ""
+          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${
+            searchParams.from || ""
           }&to=${searchParams.to || ""}&pageIndex=${searchParams.pageIndex}`
         );
       } catch (error: any) {
@@ -256,7 +258,8 @@ export function DataTableForMaterialHistory<TData, TValue>({
           </div>
         </div>
         <MaterialHistoryContext.Provider value={{ ForceRender }}>
-          <AddNewMeterialHistory />
+          {/* <AddNewMeterialHistory /> */}
+          <AddNewMeterialHistoryForm />
         </MaterialHistoryContext.Provider>
       </div>
 
@@ -283,7 +286,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
                     <TableCell>
                       <div className="flex justify-center items-center space-x-2 max-w-[200px]">
                         <Dialog>
-                          <DialogTrigger >
+                          <DialogTrigger>
                             <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
                               <Image
                                 className="w-full h-full rounded-lg object-cover"
@@ -316,7 +319,6 @@ export function DataTableForMaterialHistory<TData, TValue>({
                             />
                           </DialogContent>
                         </Dialog>
-
                       </div>
                     </TableCell>
                     <TableCell className="text-center">
@@ -364,7 +366,8 @@ export function DataTableForMaterialHistory<TData, TValue>({
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <span>
-            Trang {data.length > 0 ? searchParams.pageIndex : 0} Của {data.length > 0 ? totalPage : 0}
+            Trang {data.length > 0 ? searchParams.pageIndex : 0} Của{" "}
+            {data.length > 0 ? totalPage : 0}
           </span>
           <Button
             variant="outline"
