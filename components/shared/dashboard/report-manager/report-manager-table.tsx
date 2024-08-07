@@ -245,9 +245,9 @@ export default function ReportManagerTable({
             <TableRow>
               <TableHead className="text-center">Ảnh đại diện</TableHead>
               <TableHead className="text-center">Nhân viên</TableHead>
-              <TableHead className="text-center">Loại Đơn</TableHead>
+              <TableHead className="text-center">Loại đơn</TableHead>
               <TableHead className="text-center">Nội dung</TableHead>
-              <TableHead className="text-center">Ngày tạo</TableHead>
+              <TableHead className="text-center">Ngày gửi</TableHead>
               <TableHead className="text-center">Phản hồi</TableHead>
               <TableHead className="text-center">Trạng thái</TableHead>
             </TableRow>

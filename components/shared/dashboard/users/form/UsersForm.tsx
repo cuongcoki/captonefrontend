@@ -405,7 +405,6 @@ export const UsersForm = () => {
                             <div className="grid grid-cols-1 gap-2">
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
                                 {/* firstName */}
-
                                 <FormField
                                   control={form.control}
                                   name="firstName"
@@ -413,7 +412,7 @@ export const UsersForm = () => {
                                     return (
                                       <FormItem>
                                         <FormLabel className="text-primary">
-                                          Tên nhân viên *
+                                          Họ nhân viên *
                                         </FormLabel>
                                         <FormControl>
                                           <Input type="text" {...field} />
@@ -424,7 +423,6 @@ export const UsersForm = () => {
                                   }}
                                 />
                                 {/* lastName */}
-
                                 <FormField
                                   control={form.control}
                                   name="lastName"
@@ -432,7 +430,7 @@ export const UsersForm = () => {
                                     return (
                                       <FormItem>
                                         <FormLabel className="text-primary">
-                                          Họ nhân viên *
+                                          Tên nhân viên *
                                         </FormLabel>
                                         <FormControl>
                                           <Input type="text" {...field} />

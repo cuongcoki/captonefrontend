@@ -80,7 +80,7 @@ export default function ReportTable({ searchParams }: ReportParams) {
             <TableRow>
               <TableHead className="text-center">Loại đơn</TableHead>
               <TableHead className="text-center">Nội dung</TableHead>
-              <TableHead className="text-center">Ngày tạo</TableHead>
+              <TableHead className="text-center">Ngày gửi</TableHead>
               <TableHead className="text-center">Phản hồi</TableHead>
               <TableHead className="text-center">Trạng thái</TableHead>
             </TableRow>
