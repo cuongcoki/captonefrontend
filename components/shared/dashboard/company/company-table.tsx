@@ -29,7 +29,7 @@ type CompanyContextType = {
   ForceRender: () => void;
 };
 export const CompanyContext = React.createContext<CompanyContextType>({
-  ForceRender: () => { },
+  ForceRender: () => {},
 });
 
 export default function CompanyTable({ searchParams }: CompanyParams) {
@@ -152,16 +152,16 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
               tableData.map((company, index) => (
                 <CompanyUpdate index={index} key={company.id}>
                   <TableRow className="hover:bg-gray-100 dark:hover:bg-[#685d55] hover:cursor-pointer">
-                    <TableCell className="px-6 py-4 text-sm font-medium text-gray-800 dark:text-white">
+                    <TableCell className="px-4 py-4 text-sm font-medium text-gray-800 dark:text-white">
                       {company.name}
                     </TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-800 dark:text-white">
+                    <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
                       {company.address}
                     </TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-800 dark:text-white">
+                    <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
                       {company.email}
                     </TableCell>
-                    <TableCell className="px-6 py-4 text-sm text-gray-800 dark:text-white">
+                    <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
                       {company.companyTypeDescription}
                     </TableCell>
                   </TableRow>
