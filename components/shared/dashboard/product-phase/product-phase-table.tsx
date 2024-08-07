@@ -74,7 +74,7 @@ export default function ProductPhaseTable({
         firtCompany = res.data.data[0];
         listData = res.data.data.map((item) => ({
           label: item.name,
-          value: item.name,
+          value: item.id,
         }));
       } catch (e) {
         console.log(e);
@@ -87,10 +87,10 @@ export default function ProductPhaseTable({
         listData = listData.concat(
           res.data.data.map((item) => ({
             label: item.name,
-            value: item.name,
+            value: item.id,
           }))
         );
-      } catch (error) { }
+      } catch (error) {}
     };
     const fetchData = async () => {
       try {
@@ -153,7 +153,7 @@ export default function ProductPhaseTable({
           }}
         />
         <div className="flex flex-col sm:flex-row items-start gap-3">
-          <div >
+          <div>
             <Combobox
               data={companyData}
               title="Vui lòng chọn công ty"
@@ -167,7 +167,7 @@ export default function ProductPhaseTable({
               }
             />
           </div>
-          <div >
+          <div>
             <Select
               value={params.SearchPhase}
               onValueChange={(value) => {
