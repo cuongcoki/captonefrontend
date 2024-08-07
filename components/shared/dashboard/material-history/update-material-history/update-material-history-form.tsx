@@ -54,10 +54,10 @@ const linkImage =
   "https://images.pexels.com/photos/986733/pexels-photo-986733.jpeg?cs=srgb&dl=pexels-nickoloui-986733.jpg&fm=jpg";
 export default function UpdateMaterialHistoryForm({
   children,
-  id,
+  idMaterialHistory,
 }: {
   children: any;
-  id: string;
+  idMaterialHistory: string;
 }) {
   const [comboboxData, setComboboxData] = useState<ComboboxDataType[]>([]);
   const { listMaterial } = useMaterialHistoryStore();
@@ -98,7 +98,7 @@ export default function UpdateMaterialHistoryForm({
   }, [listMaterial]);
 
   useEffect(() => {
-    materiaHistoryApi.getMaterialHistory(id).then((res) => {
+    materiaHistoryApi.getMaterialHistory(idMaterialHistory).then((res) => {
       // console.log("DATA FETCH FROM API:", res.data.data);
       const formData: materialHistoryFormType = {
         materialID: String(res.data.data.materialId),
@@ -110,7 +110,7 @@ export default function UpdateMaterialHistoryForm({
       setImportDate(res.data.data.importDate);
       form.reset(formData);
     });
-  }, [form, id]);
+  }, [form, idMaterialHistory]);
 
   // Convert date format from yyyy-MM-dd to dd/MM/yyyy
   function convertDateFormat(inputDate: string) {
@@ -133,7 +133,7 @@ export default function UpdateMaterialHistoryForm({
     }
     // console.log("ON SUBMIT DATA:", data);
     const requestBody = {
-      id: id,
+      id: idMaterialHistory,
       materialId: data.materialID,
       quantity: Number(data.quantity),
       price: Number(data.price.replace(/\./g, "")),
@@ -227,14 +227,14 @@ export default function UpdateMaterialHistoryForm({
       <div onClick={() => handleOnDialog()}>{children}</div>
 
       {open && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 rounded-2xl">
+        <div className="fixed inset-0 flex items-center justify-center z-50 rounded-lg">
           <div
             className="fixed inset-0 bg-black opacity-50 blur-sm backdrop:blur-sm backdrop-blur-md"
             onClick={() => handleOffDialogA()}
           ></div>
-          <div className="relative inset-0 bg-white dark:bg-[#1c1917] rounded-2xl min-w-[525px]  shadow-lg">
-            <div className="bg-slate-100  flex flex-col rounded-2xl">
-              <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
+          <div className="relative inset-0 bg-white dark:bg-[#1c1917] rounded-lg min-w-[525px]  shadow-lg">
+            <div className="bg-[#ffff]  flex flex-col rounded-2xl">
+              <div className="p-4 flex items-center justify-between bg-[#00c100]  rounded-t-md">
                 <h2 className="text-2xl text-white">
                   Nhập Nguyên Vật Liệu Mới
                 </h2>

@@ -201,8 +201,8 @@ export default function AddNewMeterialHistoryForm() {
             onClick={() => handleOffDialogA()}
           ></div>
           <div className="relative bg-white dark:bg-[#1c1917] rounded-2xl min-w-[525px] shadow-lg">
-            <div className="bg-slate-100 flex flex-col rounded-md">
-              <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
+            <div className="bg-[#ffff] flex flex-col rounded-md">
+              <div className="p-4 flex items-center justify-between bg-[#00c100] rounded-t-md">
                 <h2 className="text-2xl text-white">
                   Nhập Nguyên Vật Liệu Mới
                 </h2>
@@ -331,7 +331,7 @@ export default function AddNewMeterialHistoryForm() {
                       )}
                     />
 
-                    <Button className="mt-3 w-full" type="submit">
+                    <Button className="mt-3 w-full bg-[#00c100]" type="submit">
                       Tạo mới
                     </Button>
                   </form>
