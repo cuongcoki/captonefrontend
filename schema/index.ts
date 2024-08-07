@@ -261,7 +261,7 @@ export const ChangePasswordSchema = z
         const idPattern = /^(\d{9}|\d{12})$/; // Allow 9 or 12 digits
         return idPattern.test(id);
       },
-      { message: "Id phải đúng 9 hoặc 12 chữ số" }
+      { message: "CCCD/CMND phải đúng 9 hoặc 12 chữ số" }
     ),
     verifyCode: z.string(),
     password: z
@@ -275,9 +275,9 @@ export const ChangePasswordSchema = z
   });
 
 export const UpdateUserForm = z.object({
-  id: z.string().nonempty({ message: "ID không được để trống" }),
-  firstName: z.string().nonempty({ message: "Tên không được để trống" }),
-  lastName: z.string().nonempty({ message: "Họ không được để trống" }),
+  id: z.string().nonempty({ message: "CCCD/CMND không được để trống" }),
+  firstName: z.string().nonempty({ message: "Họ không được để trống" }),
+  lastName: z.string().nonempty({ message: "Tên không được để trống" }),
   phone: z
     .string()
     .nonempty({ message: "Số điện thoại không được để trống" })
