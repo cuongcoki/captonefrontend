@@ -375,7 +375,7 @@ export const ProductForm = () => {
               <Dialog.Title className="hidden visible"></Dialog.Title>
               <Dialog.Description className="hidden visible"></Dialog.Description>
               <div className="bg-slate-100  flex flex-col ">
-                <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
+                <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">Thêm Sản Phẩm</h2>
                   <Button variant="outline" size="icon" onClick={handleOffDialog}>
                     <X className="w-4 h-4 dark:text-white" />

@@ -98,7 +98,7 @@ export default function CompanyUpdate({
       <DialogContent className="sm:max-w-[40vw] dark:bg-[#1c1917]">
         <DialogHeader>
           <DialogTitle className="text-2xl text-[#22c55e] w-full text-center mb-3 ">
-            Thông tin công ty
+            Thông Tin Công Ty
           </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
@@ -112,8 +112,8 @@ export default function CompanyUpdate({
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-left">
-                          Tên công ty*
+                        <Label htmlFor="name" className="text-left text-primary">
+                          Tên công ty *
                         </Label>
                         <Input
                           id="name"
@@ -135,8 +135,8 @@ export default function CompanyUpdate({
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="address" className="text-left">
-                          Địa chỉ*
+                        <Label htmlFor="address" className="text-left text-primary">
+                          Địa chỉ *
                         </Label>
                         <Input
                           id="address"
@@ -158,8 +158,8 @@ export default function CompanyUpdate({
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="directorName" className="text-left">
-                          Tên giám đốc*
+                        <Label htmlFor="directorName" className="text-left text-primary">
+                          Tên giám đốc *
                         </Label>
                         <Input
                           id="directorName"
@@ -181,8 +181,8 @@ export default function CompanyUpdate({
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="directorPhone" className="text-left">
-                          Số điện thoại*
+                        <Label htmlFor="directorPhone" className="text-left text-primary">
+                          Số điện thoại *
                         </Label>
                         <Input
                           id="directorPhone"
@@ -204,7 +204,7 @@ export default function CompanyUpdate({
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="email" className="text-left">
+                        <Label htmlFor="email" className="text-left text-primary">
                           Email
                         </Label>
                         <Input
@@ -227,8 +227,8 @@ export default function CompanyUpdate({
                   render={({ field }) => (
                     <FormItem>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="companyType" className="text-left">
-                          Loại công ty*
+                        <Label htmlFor="companyType" className="text-left text-primary">
+                          Loại công ty *
                         </Label>
                         <div className="col-span-3">
                           <Select
