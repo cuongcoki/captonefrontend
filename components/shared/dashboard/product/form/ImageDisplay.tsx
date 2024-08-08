@@ -27,6 +27,12 @@ import { Switch } from "@/components/ui/switch";
 import Image from "next/image";
 import { Trash2, EllipsisVertical } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { DropdownMenuSubContent } from "@radix-ui/react-dropdown-menu";
 
 interface ImageDisplayProps {
   images: {
@@ -75,7 +81,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
                   />
                 </button>
 
-                <HoverCard>
+                {/* <HoverCard>
                   <HoverCardTrigger className="absolute left-0 top-0 ">
                     <EllipsisVertical
                       size={35}
@@ -83,6 +89,51 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
                     />
                   </HoverCardTrigger>
                   <HoverCardContent align="start" className="w-full">
+                    <div className="grid gap-4">
+                      <div className="space-y-2">
+                        <h4 className="font-medium leading-none">Loại ảnh</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
+                        </p>
+                      </div>
+                      <div className="grid gap-2">
+                        <div className="flex justify-between items-center">
+                          <Label htmlFor={`isBluePrint-${index}`}>
+                            [Ảnh] Bản thiết kế
+                          </Label>
+                          <Switch
+                            className="data-[state=checked]:bg-primary"
+                            id={`isBluePrint-${index}`}
+                            checked={image.isBluePrint}
+                            onCheckedChange={() => onToggleBlueprint(index)}
+                          />
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <Label htmlFor={`isMainImage-${index}`}>
+                            [Ảnh] Chính
+                          </Label>
+                          <Switch
+                            className="data-[state=checked]:bg-primary"
+                            id={`isMainImage-${index}`}
+                            checked={image.isMainImage}
+                            onCheckedChange={() => onToggleMainImage(index)}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard> */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="absolute left-0 top-0 ">
+                    <EllipsisVertical
+                      size={35}
+                      className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5"
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="start"
+                    className="z-50 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 w-full"
+                  >
                     <div className="grid gap-4">
                       <div className="space-y-2">
                         <h4 className="font-medium leading-none">Loại ảnh</h4>
@@ -115,8 +166,8 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
                         </div>
                       </div>
                     </div>
-                  </HoverCardContent>
-                </HoverCard>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </CardContent>
             </CarouselItem>
           ))}

@@ -258,7 +258,9 @@ export const ProductForm = () => {
           setTimeout(() => {
             setOpen(false);
             ForceRender();
-          }, 2000);
+            form.reset();
+            setImageRequests([]);
+          }, 1000);
         } else {
           toast.error(response.data.message);
         }
@@ -284,7 +286,7 @@ export const ProductForm = () => {
         if (errors["UpdateProductRequest.PriceFinished"]) {
           toast.error(errors["UpdateProductRequest.PriceFinished"]);
         }
-        console.log(error.UpdateProductRequest.PriceFinished);
+        // console.log(error.UpdateProductRequest.PriceFinished);
       } else {
         console.error("Lỗi khi gửi biểu mẫu:", error);
       }
@@ -350,6 +352,7 @@ export const ProductForm = () => {
       isSizeEmpty
     ) {
       setOpen(false);
+      form.reset();
     } else {
       setOpenAlert(true);
     }
@@ -483,7 +486,7 @@ export const ProductForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center text-primary">
-                                      Mã Sản Phẩm *
+                                      Mã sản phẩm *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -499,7 +502,7 @@ export const ProductForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center text-primary">
-                                      Tên Sản Phẩm *
+                                      Tên sản phẩm *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -515,7 +518,7 @@ export const ProductForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center text-primary">
-                                      Kích Thước *
+                                      Kích thước *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -567,10 +570,11 @@ export const ProductForm = () => {
                                           {...field}
                                           value={formatCurrency(field.value)}
                                           onChange={(e) => {
-                                            const rawValue = e.target.value.replace(
-                                              /[^\d.]/g,
-                                              ""
-                                            ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                            const rawValue =
+                                              e.target.value.replace(
+                                                /[^\d.]/g,
+                                                ""
+                                              ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
                                             field.onChange(rawValue);
                                           }}
                                         />
@@ -595,10 +599,11 @@ export const ProductForm = () => {
                                           {...field}
                                           value={formatCurrency(field.value)}
                                           onChange={(e) => {
-                                            const rawValue = e.target.value.replace(
-                                              /[^\d.]/g,
-                                              ""
-                                            ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                            const rawValue =
+                                              e.target.value.replace(
+                                                /[^\d.]/g,
+                                                ""
+                                              ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
                                             field.onChange(rawValue);
                                           }}
                                         />
@@ -615,7 +620,7 @@ export const ProductForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center text-primary">
-                                      Mô Tả
+                                      Miêu tả
                                     </FormLabel>
                                     <FormControl>
                                       <Textarea
@@ -635,7 +640,7 @@ export const ProductForm = () => {
                               className="w-full bg-primary hover:bg-primary/90"
                               disabled={pending}
                             >
-                              {loading ? "Loading..." : "GỬI"}
+                              {loading ? "Đang xử lý..." : "Thêm Sản Phẩm"}
                             </Button>
                           </div>
                         </form>

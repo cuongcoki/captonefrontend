@@ -26,7 +26,7 @@ export type Product = {
 export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "imageResponses",
-    header: ({ column }) => <Button variant="ghost">Hình Ảnh</Button>,
+    header: ({ column }) => <Button variant="ghost">Hình ảnh</Button>,
     cell: ({ row }) => {
       const firstImage = row.original.imageResponses.find(item => item.isMainImage === true) || row.original.imageResponses[0];
       return firstImage ? (
@@ -65,7 +65,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "code",
     header: ({ column }) => {
-      return <Button variant="ghost">Mã Sản Phẩm</Button>;
+      return <Button variant="ghost">Mã sản phẩm</Button>;
     },
     cell: ({ row }) => {
       const shortenedCode = row.original.code.slice(0, 10);
@@ -80,7 +80,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
-      return <Button variant="ghost" className="">Tên Sản Phẩm</Button>;
+      return <Button variant="ghost" className="">Tên sản phẩm</Button>;
     },
     cell: ({ row }) => {
       let displayText = row.original.name;
@@ -99,7 +99,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "description",
     header: ({ column }) => {
-      return <Button variant="ghost">Mô Tả</Button>;
+      return <Button variant="ghost">Miêu tả</Button>;
     },
     cell: ({ row }) => {
       const shortenedDescription = `${row.original.description.slice(
@@ -117,7 +117,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "price",
     header: ({ column }) => {
-      return <Button variant="ghost">Giá Thành</Button>;
+      return <Button variant="ghost">Giá thành</Button>;
     },
     cell: ({ row }) => {
       const formattedPrice = Number(row.original.price).toLocaleString("vi-VN");
@@ -128,32 +128,10 @@ export const columns: ColumnDef<Product>[] = [
       );
     },
   },
-
-
-
-  // {
-  // accessorKey: "size",
-  // header: ({ column }) => {
-  //   return <Button variant="ghost">Kích Thước</Button>;
-  // },
-  // cell: ({ row }) => {
-  //   let displayText = row.original.size;
-
-  //   if (displayText.length > 15) {
-  //   displayText = displayText.slice(0, 15) + "...";
-  //   }
-  //   return (
-  //   <span className="inline-block  px-3 py-1 rounded-md">
-  //   {displayText}
-  //   </span>
-  //   );
-  // },
-  // },
-
-
+  
   {
     accessorKey: "isInProcessing",
-    header: ({ column }) => <Button variant="ghost">Trạng Thái</Button>,
+    header: ({ column }) => <Button variant="ghost">Trạng thái</Button>,
     cell: ({ row }) => {
       const isInProcessing = IsInProcessing.find(
         (item) => item.value === row.getValue("isInProcessing")

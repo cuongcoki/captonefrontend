@@ -64,7 +64,7 @@ export const RoleSchema = z.object({
     message: "Hãy nhập vai trò",
   }),
   description: z.string().min(6, {
-    message: "Hãy nhập mô tả vai trò",
+    message: "Hãy nhập miêu tả vai trò",
   }),
 });
 
@@ -85,9 +85,9 @@ export const ProductSchema = z.object({
     ),
   priceFinished: z.coerce
     .string()
-    .min(1, { message: "Giá thành là bắt buộc." }),
-  pricePhase1: z.coerce.string().min(1, { message: "Giá thành là bắt buộc." }),
-  pricePhase2: z.coerce.string().min(1, { message: "Giá thành là bắt buộc." }),
+    .min(1, { message: "Giá là bắt buộc." }),
+  pricePhase1: z.coerce.string().min(1, { message: "Giá là bắt buộc." }),
+  pricePhase2: z.coerce.string().min(1, { message: "Giá là bắt buộc." }),
   size: z.string().min(1, { message: "Kích thước là bắt buộc." }),
   description: z.string(),
 });
