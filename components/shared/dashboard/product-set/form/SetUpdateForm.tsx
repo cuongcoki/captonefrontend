@@ -596,6 +596,185 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                   </Button>
                 </div>
                 <div className="grid gap-4 p-4 overflow-y-auto h-[750px] dark:bg-card">
+                  
+
+
+
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="flex flex-col gap-6"
+                    >
+                      <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+                        <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8 ">
+                          <Card>
+                            <CardHeader>
+                              <CardTitle className="text-2xl text-primary">
+                                Thông Tin
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex flex-col gap-5">
+                              <FormField
+                                control={form.control}
+                                name="code"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center ">
+                                      Mã bộ sản phẩm *
+                                    </FormLabel>
+                                    <Input type="text" {...field} />
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center">
+                                      Tên bộ sản phẩm *
+                                    </FormLabel>
+                                    <Input type="text" {...field} />
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                              <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel className="flex items-center ">
+                                      Miêu tả *
+                                    </FormLabel>
+                                    <Textarea {...field} />
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </CardContent>
+                          </Card>
+                        </div>
+
+                        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+                          <Card
+                            className="overflow-hidden"
+                            x-chunk="dashboard-07-chunk-4"
+                          >
+                            <CardHeader>
+                              <CardTitle className="text-2xl text-primary">
+                                Hình ảnh
+                              </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <div className="grid gap-2">
+                                <Image
+                                  alt="Product image"
+                                  className="aspect-square w-full rounded-md object-contain"
+                                  height={900}
+                                  src={imageRequests}
+                                  width={900}
+                                />
+                              </div>
+
+                              <div className="flex gap-4 justify-center items-center p-4">
+                                <Trash2
+                                  className="h-6 w-6 text-red-600"
+                                  onClick={handleDeleteImage}
+                                />
+                                <div style={{ width: "100%", height: "100%" }}>
+                                  <input
+                                    id="image"
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    accept="image/*"
+                                    onChange={(e) => handleUploadPhoto(e)}
+                                  />
+                                  <label htmlFor="image">
+                                    <ImageUp className="h-6 w-6" />
+                                  </label>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </div>
+                      <div className="gap-4 w-full lg:gap-8">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="text-2xl text-primary">Danh Sách Sản Phẩm</CardTitle>
+                      </CardHeader>
+                      <CardContent className="overflow-auto">
+                        {getDetailsProUpdate.map((product, index) => (
+                          <div
+                            className="flex items-start justify-between gap-2 py-4"
+                            key={product.productId}
+                          >
+                            <div className="flex items-start gap-6">
+                              {product.product.imageResponses.length > 0 && (
+                                <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
+                                  <Image
+                                    src={
+                                      product.product.imageResponses[0].imageUrl
+                                    } // Lấy ảnh đầu tiên từ mảng imageResponses
+                                    alt="Ảnh mẫu"
+                                    className="w-full h-full object-cover rounded-md"
+                                    width={900}
+                                    height={900}
+                                  />
+                                </div>
+                              )}
+                              <div className="font-medium dark:text-white">
+                                <div className="hidden sm:block">
+                                  <b>Tên Sản Phẩm: </b>
+                                  {limitLength(product?.product.name, 50)}
+                                </div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 ">
+                                  <b className="hidden sm:block">Mã: </b>
+                                  {limitLength(product?.product.code, 50)}
+                                </div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
+                                  <i>
+                                    {limitLength(
+                                      product?.product.description,
+                                      50
+                                    )}
+                                  </i>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-6">
+                              <Label htmlFor="email" className="hidden sm:block" >Số lượng</Label>
+
+                              <Input
+                                className="col-span-2 w-16 text-center outline-none"
+                                type="number"
+                                defaultValue={product.quantity || 0}
+                                onChange={(e) =>
+                                  handleChangeUpdate(
+                                    product.productId,
+                                    parseInt(e.target.value)
+                                  )
+                                }
+                              />
+
+                              <Button
+                                className="col-span-1"
+                                variant="outline"
+                                size="icon"
+                                onClick={() =>
+                                  handleDeleteProducts(product.productId)
+                                }
+                              >
+                                <Minus className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </CardContent>
+                    </Card>
+                  </div>
                   <div className="gap-4 w-full lg:gap-8">
                     <Card>
                       <CardHeader>
@@ -699,7 +878,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                       />
                                     </div>
                                     <div className="font-medium dark:text-white text-sm">
-                                      {limitLength(product.name, 15)} - {limitLength(product.code, 10)}
+                                    {limitLength(product.code, 10)} - {limitLength(product.name, 15)}
                                     </div>
                                   </div>
                                   <div className="flex items-center gap-6">
@@ -740,191 +919,13 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                       </CardContent>
                     </Card>
                   </div>
-
-                  <div className="gap-4 w-full lg:gap-8">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-2xl text-primary">Danh Sách Sản Phẩm</CardTitle>
-                      </CardHeader>
-                      <CardContent className="overflow-auto">
-                        {getDetailsProUpdate.map((product, index) => (
-                          <div
-                            className="flex items-start justify-between gap-2 py-4"
-                            key={product.productId}
-                          >
-                            <div className="flex items-start gap-6">
-                              {product.product.imageResponses.length > 0 && (
-                                <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
-                                  <Image
-                                    src={
-                                      product.product.imageResponses[0].imageUrl
-                                    } // Lấy ảnh đầu tiên từ mảng imageResponses
-                                    alt="Ảnh mẫu"
-                                    className="w-full h-full object-cover rounded-md"
-                                    width={900}
-                                    height={900}
-                                  />
-                                </div>
-                              )}
-                              <div className="font-medium dark:text-white">
-                                <div className="hidden sm:block">
-                                  <b>Tên Sản Phẩm: </b>
-                                  {limitLength(product?.product.name, 50)}
-                                </div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 ">
-                                  <b className="hidden sm:block">Mã: </b>
-                                  {limitLength(product?.product.code, 50)}
-                                </div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
-                                  <i>
-                                    {limitLength(
-                                      product?.product.description,
-                                      50
-                                    )}
-                                  </i>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-6">
-                              <Label htmlFor="email" className="hidden sm:block" >Số lượng</Label>
-
-                              <Input
-                                className="col-span-2 w-16 text-center outline-none"
-                                type="number"
-                                defaultValue={product.quantity || 0}
-                                onChange={(e) =>
-                                  handleChangeUpdate(
-                                    product.productId,
-                                    parseInt(e.target.value)
-                                  )
-                                }
-                              />
-
-                              <Button
-                                className="col-span-1"
-                                variant="outline"
-                                size="icon"
-                                onClick={() =>
-                                  handleDeleteProducts(product.productId)
-                                }
-                              >
-                                <Minus className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  <Form {...form}>
-                    <form
-                      onSubmit={form.handleSubmit(onSubmit)}
-                      className="flex flex-col gap-6"
-                    >
-                      <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-                        <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8 ">
-                          <Card>
-                            <CardHeader>
-                              <CardTitle className="text-2xl text-primary">
-                                Thông Tin
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex flex-col gap-5">
-                              <FormField
-                                control={form.control}
-                                name="code"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center ">
-                                      Mã bộ sản phẩm
-                                    </FormLabel>
-                                    <Input type="text" {...field} />
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center">
-                                      Tên bộ sản phẩm
-                                    </FormLabel>
-                                    <Input type="text" {...field} />
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center ">
-                                      Miêu tả
-                                    </FormLabel>
-                                    <Textarea {...field} />
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </CardContent>
-                          </Card>
-                        </div>
-
-                        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                          <Card
-                            className="overflow-hidden"
-                            x-chunk="dashboard-07-chunk-4"
-                          >
-                            <CardHeader>
-                              <CardTitle className="text-2xl text-primary">
-                                Hình ảnh
-                              </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                              <div className="grid gap-2">
-                                <Image
-                                  alt="Product image"
-                                  className="aspect-square w-full rounded-md object-contain"
-                                  height={900}
-                                  src={imageRequests}
-                                  width={900}
-                                />
-                              </div>
-
-                              <div className="flex gap-4 justify-center items-center p-4">
-                                <Trash2
-                                  className="h-6 w-6 text-red-600"
-                                  onClick={handleDeleteImage}
-                                />
-                                <div style={{ width: "100%", height: "100%" }}>
-                                  <input
-                                    id="image"
-                                    type="file"
-                                    style={{ display: "none" }}
-                                    accept="image/*"
-                                    onChange={(e) => handleUploadPhoto(e)}
-                                  />
-                                  <label htmlFor="image">
-                                    <ImageUp className="h-6 w-6" />
-                                  </label>
-                                </div>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </div>
-
                       <Card>
                         <Button
                           type="submit"
                           className="w-full bg-primary hover:bg-primary/90"
                           disabled={pending}
                         >
-                          {pending ? "Loading..." : "GỬI"}
+                          {pending ? "Đang xử lý..." : "Chỉnh sửa thông tin bộ"}
                         </Button>
                       </Card>
                     </form>
