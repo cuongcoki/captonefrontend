@@ -59,7 +59,7 @@ const ImageDisplayID: React.FC<ImageDisplayProps> = ({ images }) => {
   return (
     <div className="flex items-center justify-center w-full h-full">
       {updatedImages && updatedImages.length > 0 ? (
-        <Carousel className="flex flex-col w-full h-full">
+        <Carousel className="flex flex-col w-full max-w-sm h-full">
           <CarouselContent>
             {updatedImages.map((image, index) => (
               <CarouselItem

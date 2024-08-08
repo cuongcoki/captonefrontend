@@ -35,6 +35,7 @@ import ProductUpdate from "@/components/shared/dashboard/product/table/productID
 import { ProductStore } from "@/components/shared/dashboard/product/product-store";
 import HeaderComponent from "@/components/shared/common/header";
 import TitleComponent from "@/components/shared/common/Title";
+import { ProductUpdateForm } from "../../form/ProductUpdateForm";
 
 export interface ProductData {
   code: string;
@@ -119,7 +120,7 @@ export default function ProductIDPage() {
     };
 
     fetchDataProductId();
-  }, [params.id, force]);
+  }, [params.id, force, productId]);
 
   const limitLength = (text: any, maxLength: any) => {
     if (text.length > maxLength) {
@@ -152,9 +153,13 @@ export default function ProductIDPage() {
                   description="Thông tin của sản phẩm."
                 />
                 <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
-                  <ProductUpdate product={productId}>
-                    <PencilLine />
-                  </ProductUpdate>
+                  {productId && Object.keys(productId).length > 0 ? (
+                    <ProductUpdateForm productId={productId}>
+                      <PencilLine />
+                    </ProductUpdateForm>
+                  ) : (
+                    <div>ko có dữ liệu chỉnh sửa</div>
+                  )}
                 </div>
               </div>
             </CardHeader>
@@ -206,11 +211,10 @@ export default function ProductIDPage() {
                     <div className="">Trạng Thái:</div>
                     <div className="">
                       <span
-                        className={`w-[40%] px-2 py-2 rounded-full ${
-                          productId?.isInProcessing
-                            ? "bg-primary text-white"
-                            : "bg-yellow-200 text-black"
-                        }`}
+                        className={`w-[40%] px-2 py-2 rounded-full ${productId?.isInProcessing
+                          ? "bg-primary text-white"
+                          : "bg-yellow-200 text-black"
+                          }`}
                       >
                         {productId?.isInProcessing
                           ? "Đang xử lý"
@@ -232,11 +236,11 @@ export default function ProductIDPage() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="overflow-x-auto  ">
+              <CardContent >
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="sm:block hidden">Tên</TableHead>
+                      <TableHead className="hidden sm:block">Tên</TableHead>
                       <TableHead>Mô tả</TableHead>
                       <TableHead>Giá tiền</TableHead>
                     </TableRow>
@@ -248,17 +252,16 @@ export default function ProductIDPage() {
                           b.salaryPerProduct - a.salaryPerProduct
                       )
                       .map((item: any) => (
-                        <TableRow key={item.phaseId}>
-                          <TableCell className="font-semibold sm:block hidden">
-                            {item?.phaseName}
+                        <TableRow key={item.phaseId} >
+                          <TableCell className="hidden sm:block">
+                            <div className="py-2 rounded-md">
+                              {item?.phaseName}
+                            </div>
                           </TableCell>
-                          <TableCell className="w-full overflow-hidden ">
+                          <TableCell className="overflow-hidden ">
                             {item?.phaseDescription}
                           </TableCell>
                           <TableCell>
-                            <Label htmlFor="price-1" className="sr-only">
-                              Price
-                            </Label>
                             <div className="border px-3 py-2 rounded-md">
                               {formatCurrency(item?.salaryPerProduct)}
                             </div>

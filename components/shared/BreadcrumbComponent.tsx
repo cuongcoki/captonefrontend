@@ -81,6 +81,10 @@ export function BreadcrumbComponent() {
         return `Nhân viên ID: ${params.id}`;
       case `/dashboard/user/${params.id}`:
         return `Nhân viên ID: ${params.id}`;
+      case `/dashboard/salary-company`:
+        return `Chi phí gia công`;
+      case `/dashboard/salary-company/detail`:
+        return `Chi phí gia công chi tiết`;
       // nhân viên
       case "/employee":
         return "Nhân viên";

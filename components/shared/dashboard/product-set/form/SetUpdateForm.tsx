@@ -163,7 +163,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         const names = data.data;
 
         setImageRequests(names);
-        toast.success("Image uploaded successfully");
+        // toast.success("Image uploaded successfully");
       } else toast.error("No image selected");
     } catch (error) {
       console.error("Error uploading image", error);
@@ -350,7 +350,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any) => {
     console.warn("product", product.id);
-    setSearchTerm("");
 
     //kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
     const exstingDetailProUpdate = getDetailsProUpdate.some(
@@ -513,26 +512,25 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     setProductsRequest([]);
     setGetDetailsPro([]);
     setUpdateProducts([]);
-    setRemoveProductIds([])
+    setRemoveProductIds([]);
+    setFetchTrigger((prev) => prev + 1);
   }
-  const handleOffDialog = () => {
 
+  const { formState } = form;
+
+  const [checkImageChange, setCheckImageChange] = useState<any>()
+
+  useEffect(() => {
+    setCheckImageChange(imageRequests)
+  }, [])
+
+  const handleOffDialog = () => {
     //add product
     const isArrayEmptyAdd = (arr: any) => {
       return Array.isArray(arr) && arr.length === 0;
     };
 
     const isAddEmpty = isArrayEmptyAdd(productsRequest);
-
-    // form
-    const currentFormValues1 = form.getValues();
-    console.log("currentFormValues1", currentFormValues1)
-    if (initialFormValuesForm === null) {
-      initialFormValuesForm = currentFormValues1;
-    }
-    console.log("initialFormValuesForm", initialFormValuesForm)
-
-    const isFormChanged1 = JSON.stringify(initialFormValuesForm) === JSON.stringify(currentFormValues1);
 
     // update set
     const isArrayEmptyUpdate = (arr: any) => {
@@ -541,24 +539,27 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
 
     const isUpdateEmpty = isArrayEmptyUpdate(updateProducts);
 
-
     // remove set
     const isArrayEmptyRemove = (arr: any) => {
       return Array.isArray(arr) && arr.length === 0;
     };
+
+
+    const checkImage = checkImageChange === imageRequests;
 
     const isRemoveEmpty = isArrayEmptyRemove(removeProductIds);
     // console.log("isFormChanged", isAddEmpty)
     // console.log("isFormChanged1", isFormChanged1)
     // console.log("isFormChanged2", isUpdateEmpty)
     // console.log("isFormChanged3", isRemoveEmpty)
-    if (isAddEmpty && isFormChanged1 && isUpdateEmpty && isRemoveEmpty) {
+    if (isAddEmpty && !formState.isDirty && isUpdateEmpty && isRemoveEmpty && !checkImage) {
       setOpen(false);
+      setFetchTrigger((prev) => prev + 1);
     } else {
       setOpenAlert(true);
     }
   };
-  // console.log("removeProductIds", removeProductIds)
+  
   return (
     <>
       {
@@ -672,13 +673,22 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                             </CardHeader>
                             <CardContent>
                               <div className="grid gap-2">
-                                <Image
-                                  alt="Product image"
-                                  className="aspect-square w-full rounded-md object-contain"
-                                  height={900}
-                                  src={imageRequests}
-                                  width={900}
-                                />
+
+                                {
+                                  imageRequests === "" ? (
+                                    <div className="aspect-square w-full items-center justify-center flex">
+                                      Hãy thêm hình ảnh
+                                    </div>
+                                  ) : (
+                                    <Image
+                                      alt="ảnh sản phẩm"
+                                      className="aspect-square w-full rounded-md object-contain"
+                                      height={900}
+                                      src={imageRequests}
+                                      width={900}
+                                    />
+                                  )
+                                }
                               </div>
 
                               <div className="flex gap-4 justify-center items-center p-4">
@@ -704,77 +714,76 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         </div>
                       </div>
                       <div className="gap-4 w-full lg:gap-8">
-                        <Card>
-                          <CardHeader>
-                            <TitleComponent
+                            <Card>
+                              <CardHeader>
+                                <TitleComponent
                               title="Danh sách sản phẩm"
                               description="Danh sách các sản phẩm đã có trong bộ sản phẩm."
                             />
-                          </CardHeader>
-                          <CardContent className="overflow-auto">
-                            {getDetailsProUpdate.map((product, index) => (
-                              <div
-                                className="flex items-start justify-between gap-2 py-4"
-                                key={product.productId}
-                              >
-                                <div className="flex items-start gap-6">
-                                  {product.product.imageResponses.length > 0 && (
-                                    <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
-                                      <Image
-                                        src={
-                                          product.product.imageResponses[0].imageUrl
-                                        } // Lấy ảnh đầu tiên từ mảng imageResponses
-                                        alt="Ảnh mẫu"
-                                        className="w-full h-full object-cover rounded-md"
-                                        width={900}
-                                        height={900}
-                                      />
+                              </CardHeader>
+                              <CardContent className="overflow-auto">
+                                {getDetailsProUpdate.map((product, index) => (
+                                  <div
+                                    className="flex items-start justify-between gap-2 py-4"
+                                    key={product.productId}
+                                  >
+                                    <div className="flex items-start gap-6">
+                                      {product.product.imageResponses.length > 0 && (
+                                        <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
+                                          <Image
+                                            src={
+                                              product.product.imageResponses[0].imageUrl
+                                            } // Lấy ảnh đầu tiên từ mảng imageResponses
+                                            alt="Ảnh mẫu"
+                                            className="w-full h-full object-cover rounded-md"
+                                            width={900}
+                                            height={900}
+                                          />
+                                        </div>
+                                      )}
+                                      <div className="font-medium dark:text-white">
+                                        <div className="hidden sm:block">
+                                          <b>Tên Sản Phẩm: </b>
+                                          {limitLength(product?.product.name, 50)}
+                                        </div>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400 ">
+                                          <b className="hidden sm:block">Mã: </b>
+                                          {limitLength(product?.product.code, 50)}
+                                        </div>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
+                                          <i>
+                                            {limitLength(
+                                              product?.product.description,
+                                              50
+                                            )}
+                                          </i>
+                                        </div>
+                                      </div>
                                     </div>
-                                  )}
-                                  <div className="font-medium dark:text-white">
-                                    <div className="hidden sm:block">
-                                      <b>Tên Sản Phẩm: </b>
-                                      {limitLength(product?.product.name, 50)}
-                                    </div>
-                                    <div className="text-sm text-gray-500 dark:text-gray-400 ">
-                                      <b className="hidden sm:block">Mã: </b>
-                                      {limitLength(product?.product.code, 50)}
-                                    </div>
-                                    <div className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
-                                      <i>
-                                        {limitLength(
-                                          product?.product.description,
-                                          50
-                                        )}
-                                      </i>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-6">
-                                  <Label htmlFor="email" className="hidden sm:block" >Số lượng</Label>
+                                    <div className="flex items-center gap-6">
+                                      <Label htmlFor="email" className="hidden sm:block" >Số lượng</Label>
 
-                                  <Input
+                                      <Input
+                                        min={0}
                                     className="col-span-2 w-16 text-center outline-none"
-                                    type="number"
-                                    defaultValue={product.quantity || 0}
-                                    onChange={(e) =>
-                                      handleChangeUpdate(
-                                        product.productId,
-                                        parseInt(e.target.value)
-                                      )
-                                    }
-                                  />
+                                        type="number"
+                                        defaultValue={product.quantity || 0}
+                                        onChange={(e) =>
+                                          handleChangeUpdate(
+                                            product.productId,
+                                            parseInt(e.target.value)
+                                          )
+                                        }
+                                      />
 
-                                  <Button
-                                    className="col-span-1"
-                                    variant="outline"
-                                    size="icon"
+                                  <span
+                                    className="hover:bg-slate-50 cursor-pointer col-span-1 border p-3 rounded-lg"
                                     onClick={() =>
                                       handleDeleteProducts(product.productId)
                                     }
                                   >
                                     <Minus className="h-4 w-4" />
-                                  </Button>
+                                  </span>
                                 </div>
                               </div>
                             ))}
@@ -784,7 +793,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                       <div className="gap-4 w-full lg:gap-8">
                         <Card>
                           <CardHeader>
-                            <TitleComponent
+                          <TitleComponent
                               title="Thêm sản phẩm vào bộ"
                               description="Tìm kiếm - lựa chọn sản phẩm thêm vào bộ."
                             />
@@ -833,16 +842,14 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                           />
 
                                           <div>
-                                            <Button
-                                              variant={"ghost"}
-                                              size={"icon"}
-                                              className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                            <span
+                                              className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                               onClick={() =>
                                                 handleAddProducts(product)
                                               }
                                             >
                                               <Plus className="text-white " />
-                                            </Button>
+                                            </span>
                                           </div>
                                         </div>
                                       ))
@@ -891,6 +898,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                       <div className="flex items-center gap-6">
                                         <Label htmlFor="email" className="hidden sm:block">Số lượng</Label>
                                         <Input
+                                          min={0}
                                           className="w-[60px] text-center outline-none border"
                                           type="number"
                                           value={
@@ -906,16 +914,14 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                             )
                                           }
                                         />
-                                        <Button
-                                          className="col-span-1"
-                                          variant="outline"
-                                          size="icon"
+                                        <span
+                                          className="hover:bg-slate-50 cursor-pointer col-span-1 border p-3 rounded-lg"
                                           onClick={() =>
                                             handleMinusProducts(product.id)
                                           }
                                         >
                                           <Minus className="h-4 w-4" />
-                                        </Button>
+                                        </span>
                                       </div>
 
                                     </div>

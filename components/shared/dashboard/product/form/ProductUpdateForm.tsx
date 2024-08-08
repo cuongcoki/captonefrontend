@@ -47,6 +47,20 @@ import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import * as Dialog from "@radix-ui/react-dialog";
+import { PencilLine, X } from "lucide-react";
+
 interface ProductData {
   code: string;
   description: string;
@@ -74,9 +88,10 @@ interface productPhaseSalaries {
 
 interface ProductID {
   productId?: ProductData;
+  children?: any
 }
 
-export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
+export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) => {
   const [loading, setLoading] = useState(false);
   const { ForceRender } = ProductStore();
   const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(
@@ -84,7 +99,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   );
   const [imageRequests, setImageRequests] = useState<any[]>([]);
   const [imageRequestsUpdate, setImageRequestsUpdate] = useState<any[]>([]);
-
   useEffect(() => {
     const fetchUpdatedProduct = async () => {
       if (productId) {
@@ -135,17 +149,11 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       id: productId?.id || "",
       code: productId?.code || "",
       priceFinished:
-        productId?.productPhaseSalaries
-          .find((item) => item.phaseName === "PH_003")
-          ?.salaryPerProduct.toString() || "",
+        productId?.productPhaseSalaries[0].salaryPerProduct.toString() || "",
       pricePhase2:
-        productId?.productPhaseSalaries
-          .find((item) => item.phaseName === "PH_002")
-          ?.salaryPerProduct.toString() || "",
+        productId?.productPhaseSalaries[1].salaryPerProduct.toString() || "",
       pricePhase1:
-        productId?.productPhaseSalaries
-          .find((item) => item.phaseName === "PH_001")
-          ?.salaryPerProduct.toString() || "",
+        productId?.productPhaseSalaries[2].salaryPerProduct.toString() || "",
       size: productId?.size || "",
       description: productId?.description || "",
       name: productId?.name || "",
@@ -509,335 +517,403 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const parseCurrency = (value: any) => {
     return value.replace(/,/g, "");
   };
+
+
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleOffDialogA = () => {
+    setOpenAlert(false);
+  };
+  const handleOnDialogA = () => {
+    setOpenAlert(true);
+  };
+  const handleOffDialog = () => {
+    setOpenAlert(true);
+  };
+  const handleOnDialog = () => {
+    setOpen(true);
+  };
+
+  const handleClearForm = () => {
+    setOpen(false)
+    setOpenAlert(false)
+  }
   return (
-    <Form {...form}>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 rounded-xl">
-        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-          <Card className="rounded-xl">
-            <CardContent>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="w-full flex flex-col gap-4">
-                  <div className="w-full flex flex-col gap-4">
-                    {/* Code */}
-                    <FormField
-                      control={form.control}
-                      name="code"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center text-primary">
-                            Mã sản phẩm *
-                          </FormLabel>
-                          <Input type="text" {...field} />
-                          <FormMessage />
-                        </FormItem>
-                      )}
+    <>
+      {
+        openAlert && (
+          <AlertDialog open={openAlert} >
+            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
+                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )
+      }
+      <Dialog.Root open={open} onOpenChange={handleOnDialog}>
+        <Dialog.Trigger asChild>{children}</Dialog.Trigger>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
+            <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2  max-w-[900px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
+              <Dialog.Title className="hidden visible"></Dialog.Title>
+              <Dialog.Description className="hidden visible"></Dialog.Description>
+              <div className="bg-slate-100  flex flex-col ">
+                <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
+                  <h2 className="text-2xl text-white">
+                    Chỉnh Sửa Thông Tin Sản Phẩm
+                  </h2>
+                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                    <X
+                      className="w-4 h-4 dark:text-white"
                     />
-                    {/* Name */}
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center text-primary">
-                            Tên sản phẩm *
-                          </FormLabel>
-                          <Input type="text" {...field} />
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {/* Size */}
-                    <FormField
-                      control={form.control}
-                      name="size"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center text-primary">
-                            Kích thước *
-                          </FormLabel>
-                          <Input type="text" {...field} />
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <div className="md:flex flex-row gap-4">
-                      {/* Price */}
-                      <FormField
-                        control={form.control}
-                        name="pricePhase1"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center text-primary">
-                              Giá giai đoạn 1 *
-                            </FormLabel>
-                            <Input
-                              type="text"
-                              inputMode="numeric"
-                              {...field}
-                              value={formatCurrency(field.value)}
-                              onChange={(e) =>
-                                field.onChange(parseCurrency(e.target.value))
-                              }
-                            />
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Price */}
-                      <FormField
-                        control={form.control}
-                        name="pricePhase2"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center text-primary">
-                              Giá giai đoạn 2 *
-                            </FormLabel>
-                            <Input
-                              type="text"
-                              inputMode="numeric"
-                              {...field}
-                              value={formatCurrency(field.value)}
-                              onChange={(e) =>
-                                field.onChange(parseCurrency(e.target.value))
-                              }
-                            />
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      {/* Price */}
-                      <FormField
-                        control={form.control}
-                        name="priceFinished"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center text-primary">
-                              Giá hoàn thiện *
-                            </FormLabel>
-                            <Input
-                              type="text"
-                              inputMode="numeric"
-                              {...field}
-                              value={formatCurrency(field.value)}
-                              onChange={(e) =>
-                                field.onChange(parseCurrency(e.target.value))
-                              }
-                            />
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    {/* Description */}
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center text-primary">
-                            Miêu tả
-                          </FormLabel>
-                          <Textarea {...field} />
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    {/* IsProse */}
-                    <FormField
-                      control={form.control}
-                      name="isInProcessing"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-primary">
-                            Trạng Thái *
-                          </FormLabel>
-                          <Select
-                            onValueChange={(value) =>
-                              field.onChange(value === "true")
-                            }
-                            value={
-                              field.value !== undefined
-                                ? String(field.value)
-                                : undefined
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Trạng thái" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="true">Đang xử lý</SelectItem>
-                              <SelectItem value="false">Chưa xử lý</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  {/* Submit button */}
-                  <Button
-                    type="submit"
-                    className="w-full bg-primary hover:bg-primary/90"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Đang xử lý..." : "Chỉnh Sửa Thông Tin"}
                   </Button>
                 </div>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-          <Card className=" relative border-none shadow-none">
-            {/* nếu không có ảnh nào thì hiện input này */}
-            {imageRequests.length < 1 && (
-              <CardContent className="h-[60vh]">
-                <input
-                  id="image"
-                  type="file"
-                  style={{ display: "none" }}
-                  accept="image/*"
-                  onChange={(e) => handleUploadPhotos(e)}
-                  multiple
-                />
-                <label
-                  htmlFor="image"
-                  className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                >
-                  <Upload
-                    size={100}
-                    className="text-white flex items-center justify-center bg-primary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto"
-                  />
-                  <span className="text-l text-gray-500 font-medium">
-                    Hãy tải ảnh sản phẩm lên
-                  </span>
-                </label>
-              </CardContent>
-            )}
-
-            {/* nếu có trên 1 ảnh thì hiện input này */}
-            {imageRequests.length > 0 && (
-              <CardContent className="relative w-full h-full">
-                {/* phần hiển thị ảnh xem trước */}
-                <Carousel className="flex items-center justify-center w-full md:max-w-[390px] h-full">
-                  <CarouselContent>
-                    {imageRequests.map((image, index) => (
-                      <CarouselItem
-                        key={index}
-                      >
-                        <div className="p-1">
-                          <Card>
-                            <CardContent className="flex aspect-square items-center justify-center p-6 relative bg-black">
-                              <Image
-                                src={image.imageUrl}
-                                alt={`image-${index}`}
-                                width={500}
-                                height={500}
-                                className="h-full w-full object-contain bg-cover bg-center  bg-no-repeat  pointer-events-none"
-                              />
-                              <button
-                                type="button"
-                                className="absolute right-0 top-0 "
-                                onClick={() => handleDeleteImage(index, image.id)}
-                              >
-                                <Trash2
-                                  size={35}
-                                  className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
-                                />
-                              </button>
-
-                              <HoverCard>
-                                <HoverCardTrigger className="absolute left-0 top-0 ">
-                                  <EllipsisVertical
-                                    size={35}
-                                    className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5"
+                <div className="grid gap-4 p-4 overflow-y-auto h-[650px] dark:bg-card">
+                  <Form {...form}>
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-5 rounded-xl">
+                      <div className="grid md:col-span-3 auto-rows-max items-start gap-4 lg:gap-8">
+                        <Card className="rounded-xl">
+                          <CardContent>
+                            <form onSubmit={form.handleSubmit(onSubmit)}>
+                              <div className="w-full flex flex-col gap-4">
+                                <div className="w-full flex flex-col gap-4">
+                                  {/* Code */}
+                                  <FormField
+                                    control={form.control}
+                                    name="code"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel className="flex items-center text-primary">
+                                          Mã sản phẩm *
+                                        </FormLabel>
+                                        <Input type="text" {...field} />
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
                                   />
-                                </HoverCardTrigger>
-                                <HoverCardContent
-                                  align="start"
-                                  className="w-full"
-                                >
-                                  <div className="grid gap-4">
-                                    <div className="space-y-2">
-                                      <h4 className="font-medium leading-none">
-                                        Loại ảnh
-                                      </h4>
-                                      <p className="text-sm text-muted-foreground">
-                                        Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
-                                      </p>
-                                    </div>
-                                    <div className="grid gap-2">
-                                      <div className="flex justify-between items-center">
-                                        <Label htmlFor={`isBluePrint-${index}`}>
-                                          [Ảnh] Bản thiết kế
-                                        </Label>
-                                        <Switch
-                                          className="data-[state=checked]:bg-primary"
-                                          id={`isBluePrint-${index}`}
-                                          checked={image.isBluePrint}
-                                          onCheckedChange={() =>
-                                            handleToggleBluePrint(
-                                              image.imageUrl,
-                                              image?.id
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                      <div className="flex justify-between items-center">
-                                        <Label htmlFor={`isMainImage-${index}`}>
-                                          [Ảnh] Chính
-                                        </Label>
-                                        <Switch
-                                          className="data-[state=checked]:bg-primary"
-                                          id={`isMainImage-${index}`}
-                                          checked={image.isMainImage}
-                                          onCheckedChange={() =>
-                                            handleToggleMainImage(
-                                              image.imageUrl,
-                                              image?.id
-                                            )
-                                          }
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-                                </HoverCardContent>
-                              </HoverCard>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <div className="  absolute left-[50%] bottom-[6%] transform: translate-x-[50%] transform: translate-y-[50%]">
-                    <CarouselNext />
-                    <CarouselPrevious />
-                  </div>
-                </Carousel>
+                                  {/* Name */}
+                                  <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel className="flex items-center text-primary">
+                                          Tên sản phẩm *
+                                        </FormLabel>
+                                        <Input type="text" {...field} />
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  {/* Size */}
+                                  <FormField
+                                    control={form.control}
+                                    name="size"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel className="flex items-center text-primary">
+                                          Kích thước *
+                                        </FormLabel>
+                                        <Input type="text" {...field} />
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  <div className="md:flex flex-row gap-4">
+                                    {/* Price */}
+                                    <FormField
+                                      control={form.control}
+                                      name="pricePhase1"
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormLabel className="flex items-center text-primary">
+                                            Giá giai đoạn 1 *
+                                          </FormLabel>
+                                          <Input
+                                            type="text"
+                                            inputMode="numeric"
+                                            {...field}
+                                            value={formatCurrency(field.value)}
+                                            onChange={(e) =>
+                                              field.onChange(parseCurrency(e.target.value))
+                                            }
+                                          />
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
 
-                {/* Phần add thêm image */}
-                <input
-                  id="image"
-                  type="file"
-                  style={{ display: "none" }}
-                  accept="image/*"
-                  onChange={(e) => handleUploadPhotos(e)}
-                  multiple
-                />
-                <label htmlFor="image" className="absolute bottom-0">
-                  <Upload
-                    size={35}
-                    className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
-                  />
-                </label>
-              </CardContent>
-            )}
-          </Card>
-        </div>
-      </div>
-    </Form>
+                                    {/* Price */}
+                                    <FormField
+                                      control={form.control}
+                                      name="pricePhase2"
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormLabel className="flex items-center text-primary">
+                                            Giá giai đoạn 2 *
+                                          </FormLabel>
+                                          <Input
+                                            type="text"
+                                            inputMode="numeric"
+                                            {...field}
+                                            value={formatCurrency(field.value)}
+                                            onChange={(e) =>
+                                              field.onChange(parseCurrency(e.target.value))
+                                            }
+                                          />
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+
+                                    {/* Price */}
+                                    <FormField
+                                      control={form.control}
+                                      name="priceFinished"
+                                      render={({ field }) => (
+                                        <FormItem>
+                                          <FormLabel className="flex items-center text-primary">
+                                            Giá hoàn thiện *
+                                          </FormLabel>
+                                          <Input
+                                            type="text"
+                                            inputMode="numeric"
+                                            {...field}
+                                            value={formatCurrency(field.value)}
+                                            onChange={(e) =>
+                                              field.onChange(parseCurrency(e.target.value))
+                                            }
+                                          />
+                                          <FormMessage />
+                                        </FormItem>
+                                      )}
+                                    />
+                                  </div>
+                                  {/* Description */}
+                                  <FormField
+                                    control={form.control}
+                                    name="description"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel className="flex items-center text-primary">
+                                          Miêu tả
+                                        </FormLabel>
+                                        <Textarea {...field} />
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                  {/* IsProse */}
+                                  <FormField
+                                    control={form.control}
+                                    name="isInProcessing"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <FormLabel className="text-primary">
+                                          Trạng Thái *
+                                        </FormLabel>
+                                        <Select
+                                          onValueChange={(value) =>
+                                            field.onChange(value === "true")
+                                          }
+                                          value={
+                                            field.value !== undefined
+                                              ? String(field.value)
+                                              : undefined
+                                          }
+                                        >
+                                          <SelectTrigger>
+                                            <SelectValue placeholder="Trạng thái" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectItem value="true">Đang xử lý</SelectItem>
+                                            <SelectItem value="false">Chưa xử lý</SelectItem>
+                                          </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </div>
+                                {/* Submit button */}
+                                <Button
+                                  type="submit"
+                                  className="w-full bg-primary hover:bg-primary/90"
+                                  disabled={isSubmitting}
+                                >
+                                  {isSubmitting ? "Đang xử lý..." : "Chỉnh Sửa Thông Tin"}
+                                </Button>
+                              </div>
+                            </form>
+                          </CardContent>
+                        </Card>
+                      </div>
+
+                      <div className="grid md:col-span-2 auto-rows-max items-start gap-4 lg:gap-8">
+                        <Card className=" relative border-none shadow-none">
+                          {/* nếu không có ảnh nào thì hiện input này */}
+                          {imageRequests.length < 1 && (
+                            <CardContent className="h-[60vh]">
+                              <input
+                                id="image"
+                                type="file"
+                                style={{ display: "none" }}
+                                accept="image/*"
+                                onChange={(e) => handleUploadPhotos(e)}
+                                multiple
+                              />
+                              <label
+                                htmlFor="image"
+                                className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                              >
+                                <Upload
+                                  size={100}
+                                  className="text-white flex items-center justify-center bg-primary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto"
+                                />
+                                <span className="text-l text-gray-500 font-medium">
+                                  Hãy tải ảnh sản phẩm lên
+                                </span>
+                              </label>
+                            </CardContent>
+                          )}
+
+                          {/* nếu có trên 1 ảnh thì hiện input này */}
+                          {imageRequests.length > 0 && (
+                            <CardContent className="relative w-full h-full">
+                              {/* phần hiển thị ảnh xem trước */}
+                              <Carousel className="w-full max-w-xs flex justify-center pb-5">
+                                <CarouselContent>
+                                  {imageRequests.map((image, index) => (
+                                    <CarouselItem
+                                      key={index}
+                                    >
+                                      <div className="p-1">
+                                        <Card className="border-none">
+                                          <CardContent className="flex aspect-square items-center justify-center p-6 relative bg-black">
+                                            <Image
+                                              src={image.imageUrl}
+                                              alt={`image-${index}`}
+                                              width={500}
+                                              height={500}
+                                              className="h-full w-full object-contain bg-cover bg-center  bg-no-repeat  pointer-events-none"
+                                            />
+                                            <button
+                                              type="button"
+                                              className="absolute right-0 top-0 "
+                                              onClick={() => handleDeleteImage(index, image.id)}
+                                            >
+                                              <Trash2
+                                                size={35}
+                                                className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
+                                              />
+                                            </button>
+
+                                            <HoverCard>
+                                              <HoverCardTrigger className="absolute left-0 top-0 ">
+                                                <EllipsisVertical
+                                                  size={35}
+                                                  className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
+                                                />
+                                              </HoverCardTrigger>
+                                              <HoverCardContent
+                                                align="start"
+                                                className="w-full"
+                                              >
+                                                <div className="grid gap-4">
+                                                  <div className="space-y-2">
+                                                    <h4 className="font-medium leading-none">
+                                                      Loại ảnh
+                                                    </h4>
+                                                    <p className="text-sm text-muted-foreground">
+                                                      Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
+                                                    </p>
+                                                  </div>
+                                                  <div className="grid gap-2">
+                                                    <div className="flex justify-between items-center">
+                                                      <Label htmlFor={`isBluePrint-${index}`}>
+                                                        [Ảnh] Bản thiết kế
+                                                      </Label>
+                                                      <Switch
+                                                        className="data-[state=checked]:bg-primary"
+                                                        id={`isBluePrint-${index}`}
+                                                        checked={image.isBluePrint}
+                                                        onCheckedChange={() =>
+                                                          handleToggleBluePrint(
+                                                            image.imageUrl,
+                                                            image?.id
+                                                          )
+                                                        }
+                                                      />
+                                                    </div>
+                                                    <div className="flex justify-between items-center">
+                                                      <Label htmlFor={`isMainImage-${index}`}>
+                                                        [Ảnh] Chính
+                                                      </Label>
+                                                      <Switch
+                                                        className="data-[state=checked]:bg-primary"
+                                                        id={`isMainImage-${index}`}
+                                                        checked={image.isMainImage}
+                                                        onCheckedChange={() =>
+                                                          handleToggleMainImage(
+                                                            image.imageUrl,
+                                                            image?.id
+                                                          )
+                                                        }
+                                                      />
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </HoverCardContent>
+                                            </HoverCard>
+                                          </CardContent>
+                                        </Card>
+                                      </div>
+                                    </CarouselItem>
+                                  ))}
+                                </CarouselContent>
+                                <div className="  absolute left-[50%] bottom-0 transform: translate-x-[50%] transform: translate-y-[50%]">
+                                  <CarouselNext className="text-primary " />
+                                  <CarouselPrevious className="text-primary" />
+                                </div>
+                              </Carousel>
+
+                              {/* Phần add thêm image */}
+                              <input
+                                id="image"
+                                type="file"
+                                style={{ display: "none" }}
+                                accept="image/*"
+                                onChange={(e) => handleUploadPhotos(e)}
+                                multiple
+                              />
+                              <label htmlFor="image" className="absolute -bottom-4">
+                                <Upload
+                                  size={35}
+                                  className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5 border-gray-200 border"
+                                />
+                              </label>
+                            </CardContent>
+                          )}
+                        </Card>
+                      </div>
+                    </div>
+                  </Form>
+                </div>
+              </div>
+            </Dialog.Content>
+          </Dialog.Overlay>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </>
   );
 };

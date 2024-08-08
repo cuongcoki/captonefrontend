@@ -464,11 +464,11 @@ export const ProductForm = () => {
                                 />
                                 <label
                                   htmlFor="image"
-                                  className="absolute bottom-0"
+                                  className="absolute bottom-3"
                                 >
                                   <Upload
                                     size={35}
-                                    className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
+                                    className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5 border-gray-200 border"
                                   />
                                 </label>
                               </div>
