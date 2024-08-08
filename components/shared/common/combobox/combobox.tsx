@@ -75,7 +75,7 @@ export function Combobox({
               {data.map((option, index) => (
                 <CommandItem
                   key={option.value}
-                  value={option.label + "✦".repeat(index + 1)}
+                  value={option.label + " ✦".repeat(index + 1)}
                   onSelect={(currentValue: any) => {
                     setValue(option.value);
                     setOpen(false);

@@ -18,13 +18,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { DialogFooter } from "@/components/ui/dialog";
-import InputAnimation from "@/components/shared/common/input/input";
-import DragAndDropFile from "@/components/shared/common/input/drag&drop-file/drag&drop-file";
-import { number } from "zod";
 
-import * as Dialog from "@radix-ui/react-dialog";
+import InputAnimation from "@/components/shared/common/input/input";
 
 import {
   AlertDialog,
@@ -130,6 +125,7 @@ export default function AddNewMeterialHistoryForm() {
       isQuantityEmpty
     ) {
       setOpen(false);
+      form.reset();
     } else {
       setOpenAlert(true);
     }
@@ -198,9 +194,9 @@ export default function AddNewMeterialHistoryForm() {
         <div className="fixed inset-0 flex items-center justify-center z-50 rounded-2xl">
           <div
             className="fixed inset-0 bg-black opacity-50 blur-sm backdrop:blur-sm backdrop-blur-md"
-            onClick={() => handleOffDialogA()}
+            onClick={() => handleOffDialog()}
           ></div>
-          <div className="relative bg-white dark:bg-[#1c1917] rounded-2xl min-w-[525px] shadow-lg">
+          <div className="relative bg-white dark:bg-[#1c1917] rounded-2xl max-w-[80vw] w-[525px] max-h-[80vh] h-max shadow-lg">
             <div className="bg-[#ffff] flex flex-col rounded-md">
               <div className="p-4 flex items-center justify-between bg-[#00c100] rounded-t-md">
                 <h2 className="text-2xl text-white">
