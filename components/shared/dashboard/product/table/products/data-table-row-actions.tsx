@@ -15,6 +15,7 @@ import ProductUpdate from "@/components/shared/dashboard/product/table/productID
 import { ProductData } from "@/components/shared/dashboard/product/table/productID/ProductID";
 import { useEffect, useState } from "react";
 import { productApi } from "@/apis/product.api";
+import { ProductUpdateForm } from "../../form/ProductUpdateForm";
 
 interface DataTableRowActionsProps<TData extends { id: string }> {
   row: Row<TData>;
@@ -53,11 +54,11 @@ export function DataTableRowActions<TData extends { id: string }>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <ProductUpdate product={productId}>
+        <ProductUpdateForm productId={productId}>
           <div className="w-full hover:bg-gray-200 dark:hover:bg-black/90 relative flex cursor-default select-none justify-center items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
             Chỉnh sửa
           </div>
-        </ProductUpdate>
+        </ProductUpdateForm>
         <Link
           className="w-full hover:bg-gray-200 dark:hover:bg-black/90 relative flex cursor-default select-none items-center justify-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
           href={`/dashboard/products/product/${row.original.id}`}

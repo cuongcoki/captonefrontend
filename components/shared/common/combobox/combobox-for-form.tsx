@@ -70,13 +70,14 @@ export function ComboboxForForm({
           <CommandList>
             <CommandEmpty>No component found.</CommandEmpty>
             <CommandGroup>
-              {data.map((component) => (
+              {data.map((component, index) => (
                 <CommandItem
                   key={component.value}
-                  value={component.label}
+                  value={component.label + " ✦".repeat(index + 1)}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    setValue(component.value);
                     form.setValue(name, String(component.value));
+                    form.trigger(name);
                     setOpen(false);
                   }}
                 >

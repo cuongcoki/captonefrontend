@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 
 // ** import UI
 import { Label } from "@/components/ui/label";
@@ -35,6 +35,7 @@ import ProductUpdate from "@/components/shared/dashboard/product/table/productID
 import { ProductStore } from "@/components/shared/dashboard/product/product-store";
 import HeaderComponent from "@/components/shared/common/header";
 import TitleComponent from "@/components/shared/common/Title";
+import { ProductUpdateForm } from "../../form/ProductUpdateForm";
 
 export interface ProductData {
   code: string;
@@ -119,7 +120,7 @@ export default function ProductIDPage() {
     };
 
     fetchDataProductId();
-  }, [params.id, force]);
+  }, [params.id, force, productId]);
 
   const limitLength = (text: any, maxLength: any) => {
     if (text.length > maxLength) {
@@ -140,39 +141,46 @@ export default function ProductIDPage() {
         description="Thông tin chi tiết của sản phẩm."
       />
       <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
-        <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
-          <Card className="shadow-sm">
-            <CardHeader>
+        <div
+          id="A"
+          className="grid md:grid-cols-2 grid-col-1 items-start gap-4 md:gap-8 lg:col-span-2"
+        >
+          <Card className="shadow-sm h-full grid ">
+            <CardHeader className="row-span-2">
               <div className="flex justify-between items-start text-primary">
                 <TitleComponent
                   title="Thông Tin"
                   description="Thông tin của sản phẩm."
                 />
                 <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
-                  <ProductUpdate product={productId}>
-                    <PencilLine />
-                  </ProductUpdate>
+                  {productId && Object.keys(productId).length > 0 ? (
+                    <ProductUpdateForm productId={productId}>
+                      <PencilLine />
+                    </ProductUpdateForm>
+                  ) : (
+                    <div>ko có dữ liệu chỉnh sửa</div>
+                  )}
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="grid gap-3">
-                <Label className="" htmlFor="name">
-                  <div>Mã Sản Phẩm</div>
-                </Label>
-                <div className="grid grid-cols-2 ">
+            <CardContent className="grid grid-rows-10 row-span-10">
+              <div className=" gap-3 space-y-5 row-span-7">
+                <div className=" gap-3  ">
+                  <Label className="" htmlFor="name">
+                    <div>Mã Sản Phẩm</div>
+                  </Label>
                   <div className="col-span-6 border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden truncate">
                     {productId?.code}
                   </div>
                 </div>
 
-                <div className="grid gap-3">
+                <div className=" gap-3">
                   <Label htmlFor="name">Tên Sản Phẩm</Label>
                   <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden truncate">
                     {productId?.name}
                   </div>
                 </div>
-                <div className="grid gap-3">
+                <div className=" gap-3">
                   <Label className="" htmlFor="name">
                     Kích Thước
                   </Label>
@@ -180,93 +188,94 @@ export default function ProductIDPage() {
                     {productId?.size}
                   </div>
                 </div>
-                <div className="grid gap-3">
+                <div className=" gap-3">
                   <Label htmlFor="description">Mô Tả</Label>
-                  <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                    {productId?.description}
-                  </div>
                 </div>
+              </div>
+              <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden row-span-3">
+                {productId?.description}
               </div>
             </CardContent>
           </Card>
-          <Card className="shadow-sm gd-1 ">
-            <CardHeader className="text-primary">
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle>Giai Đoạn</CardTitle>
-                  <span className="text-xs font-normal leading-snug text-muted-foreground">
-                    Thông tin các giai đoạn của sản phẩm.
-                  </span>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="overflow-x-auto  ">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="sm:block hidden">Tên</TableHead>
-                    <TableHead>Mô tả</TableHead>
-                    <TableHead>Giá tiền</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {productId?.productPhaseSalaries
-                    ?.sort(
-                      (a: any, b: any) =>
-                        b.salaryPerProduct - a.salaryPerProduct
-                    )
-                    .map((item: any) => (
-                      <TableRow key={item.phaseId}>
-                        <TableCell className="font-semibold sm:block hidden">
-                          {item?.phaseName}
-                        </TableCell>
-                        <TableCell className="w-full overflow-hidden ">
-                          {item?.phaseDescription}
-                        </TableCell>
-                        <TableCell>
-                          <Label htmlFor="price-1" className="sr-only">
-                            Price
-                          </Label>
-                          <div className="border px-3 py-2 rounded-md">
-                            {formatCurrency(item?.salaryPerProduct)}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="grid gap-8 ">
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-primary">Trạng Thái</CardTitle>
-              <span className="text-xs font-normal leading-snug text-muted-foreground">
-                Trạng thái hiện tại của sản phẩm.
-              </span>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-3 col-span-4 mx-auto">
-                <Label className="flex gap-x-3 items-center" htmlFor="status">
-                  <div className="">Trạng Thái:</div>
-                  <div className="">
-                    <span
-                      className={`w-[40%] px-2 py-2 rounded-full ${
-                        productId?.isInProcessing
+          <div className="flex flex-col justify-center space-y-5">
+            <Card className="shadow-sm">
+              <CardHeader>
+                <CardTitle className="text-primary">Trạng Thái</CardTitle>
+                <span className="text-xs font-normal leading-snug text-muted-foreground">
+                  Trạng thái hiện tại của sản phẩm.
+                </span>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-3 col-span-4 mx-auto">
+                  <Label className="flex gap-x-3 items-center" htmlFor="status">
+                    <div className="">Trạng Thái:</div>
+                    <div className="">
+                      <span
+                        className={`w-[40%] px-2 py-2 rounded-full ${productId?.isInProcessing
                           ? "bg-primary text-white"
                           : "bg-yellow-200 text-black"
-                      }`}
-                    >
-                      {productId?.isInProcessing ? "Đang xử lý" : "Chưa xử lý"}
+                          }`}
+                      >
+                        {productId?.isInProcessing
+                          ? "Đang xử lý"
+                          : "Chưa xử lý"}
+                      </span>
+                    </div>
+                  </Label>
+                </div>
+              </CardContent>
+            </Card>
+            <Card className="shadow-sm gd-1 ">
+              <CardHeader className="text-primary">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle>Giai Đoạn</CardTitle>
+                    <span className="text-xs font-normal leading-snug text-muted-foreground">
+                      Thông tin các giai đoạn của sản phẩm.
                     </span>
                   </div>
-                </Label>
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+              </CardHeader>
+              <CardContent >
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="hidden sm:block">Tên</TableHead>
+                      <TableHead>Mô tả</TableHead>
+                      <TableHead>Giá tiền</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {productId?.productPhaseSalaries
+                      ?.sort(
+                        (a: any, b: any) =>
+                          b.salaryPerProduct - a.salaryPerProduct
+                      )
+                      .map((item: any) => (
+                        <TableRow key={item.phaseId} >
+                          <TableCell className="hidden sm:block">
+                            <div className="py-2 rounded-md">
+                              {item?.phaseName}
+                            </div>
+                          </TableCell>
+                          <TableCell className="overflow-hidden ">
+                            {item?.phaseDescription}
+                          </TableCell>
+                          <TableCell>
+                            <div className="border px-3 py-2 rounded-md">
+                              {formatCurrency(item?.salaryPerProduct)}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
+        <div id="B" className="grid gap-8 h-full">
           <Card className="shadow-sm">
             <CardHeader>
               <CardTitle className="text-primary">Hình Ảnh</CardTitle>

@@ -232,12 +232,10 @@ export default function UpdateMaterialHistoryForm({
             className="fixed inset-0 bg-black opacity-50 blur-sm backdrop:blur-sm backdrop-blur-md"
             onClick={() => handleOffDialogA()}
           ></div>
-          <div className="relative inset-0 bg-white dark:bg-[#1c1917] rounded-lg min-w-[525px]  shadow-lg">
+          <div className="relative inset-0 bg-white dark:bg-[#1c1917] rounded-lg max-w-[80vw] w-[525px]  shadow-lg">
             <div className="bg-[#ffff]  flex flex-col rounded-2xl">
               <div className="p-4 flex items-center justify-between bg-[#00c100]  rounded-t-md">
-                <h2 className="text-2xl text-white">
-                  Chỉnh Sửa Lịch Sử Nhập
-                </h2>
+                <h2 className="text-2xl text-white">Cập nhập lịch sử nhập</h2>
                 <Button variant="outline" size="icon" onClick={handleOffDialog}>
                   <X className="w-4 h-4 dark:text-white" />
                 </Button>
@@ -370,7 +368,10 @@ export default function UpdateMaterialHistoryForm({
                     />
 
                     <DialogFooter>
-                      <Button className="mt-3" type="submit">
+                      <Button
+                        className="mt-3 w-full bg-[#00c100]"
+                        type="submit"
+                      >
                         Lưu thay đổi
                       </Button>
                     </DialogFooter>
