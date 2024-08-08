@@ -228,7 +228,6 @@ export const SetForm = () => {
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any) => {
     console.warn("product", product.id);
-    setSearchTerm("");
 
     //kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
     const exstingDetailProUpdate = getDetailsProUpdate.some(
@@ -603,16 +602,14 @@ export const SetForm = () => {
                                               }`}
                                           />
                                           <div>
-                                            <Button
-                                              variant={"ghost"}
-                                              size={"icon"}
+                                            <span
                                               className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                               onClick={() =>
                                                 handleAddProducts(product)
                                               }
                                             >
                                               <Plus className="text-white " />
-                                            </Button>
+                                            </span>
                                           </div>
                                         </div>
                                       ))
@@ -661,6 +658,7 @@ export const SetForm = () => {
                                       <div className="flex items-center gap-6">
                                         <Label htmlFor="email" className="hidden sm:block">Số lượng</Label>
                                         <Input
+                                          min={0}
                                           className="w-[60px] text-center outline-none border"
                                           type="number"
                                           value={

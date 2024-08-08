@@ -70,39 +70,7 @@ export default function SetProduct({ setProduct }: SetProductProps) {
   );
 
   const handleOpenDialog = async (pro: SetProduct) => {
-    try {
-      const updatedImages = await Promise.all(
-        pro.product.imageResponses.map(async (image: ImageResponse) => {
-          try {
-            const { data } = await filesApi.getFile(image.imageUrl);
-            return {
-              ...image,
-              imageUrl: data.data, // Assuming data.data is the updated image URL
-            };
-          } catch (error) {
-            console.error("Error getting file:", error);
-            return {
-              ...image,
-              imageUrl: "", // Handle error case if needed
-            };
-          }
-        })
-      );
-
-      const updatedProduct: SetProduct = {
-        ...pro,
-        product: {
-          ...pro.product,
-          imageResponses: updatedImages,
-        },
-      };
-
-      setSelectedProduct(updatedProduct);
-      setOpen(true);
-    } catch (error) {
-      console.error("Error updating images:", error);
-      // Handle error state if necessary
-    }
+    window.location.href = `/dashboard/products/product/${pro.productId}`;
   };
   const limitLength = (text: any, maxLength: any) => {
     if (text.length > maxLength) {
@@ -148,97 +116,6 @@ export default function SetProduct({ setProduct }: SetProductProps) {
           </TableBody>
         </Table>
       </CardContent>
-      <div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogContent className="max-w-[1100px]  ">
-            <DialogTitle className="visible">
-              {/* Thông tin bộ sản phẩm */}
-            </DialogTitle>
-
-            <div className=" w-full min-w-[90%] md:min-w-[70%] bg-white p-2 rounded-lg dark:bg-card">
-              <Card className="p-4 flex flex-col justify-between gap-4  w-full">
-                <CardHeader className="font-semibold text-xl ">
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl text-primary">
-                      Thông Tin Sản Phẩm
-                    </span>{" "}
-                    <span>Số Lượng : {selectedProduct?.quantity}</span>
-                  </div>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-6 md:flex-row">
-                  <Card className=" w-full md:w-1/2">
-                    {selectedProduct && (
-                      <ImageDisplay
-                        images={selectedProduct.product.imageResponses}
-                      />
-                    )}
-                  </Card>
-                  <div className="w-full md:w-1/2">
-                    <Card>
-                      <CardContent className="overflow-auto py-2">
-                        <div className="w-[100px]">
-                          <span className="text-xl font-medium"></span>
-                        </div>
-                        <div className="space-y-1">
-                          <Label className="text-primary" htmlFor="username">
-                            Mã Sản Phẩm
-                          </Label>
-                          <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                            {selectedProduct?.product.code}
-                          </div>
-                        </div>
-                        <div className="space-y-1">
-                          <Label htmlFor="username" className="text-primary">
-                            Tên Sản Phẩm
-                          </Label>
-                          <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                            {selectedProduct?.product.name}
-                          </div>
-                        </div>
-
-                        <div className="space-y-1">
-                          <Label className="text-primary" htmlFor="username">
-                            Giá Thành
-                          </Label>
-                          <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                            {selectedProduct?.product.price}
-                          </div>
-                        </div>
-                        <div className="space-y-1">
-                          <Label className="text-primary" htmlFor="username">
-                            Kích Thước
-                          </Label>
-                          <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                            {selectedProduct?.product.size}
-                          </div>
-                        </div>
-                        <div className="space-y-1">
-                          <Label className="text-primary" htmlFor="description">
-                            Mô Tả
-                          </Label>
-                          <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                            {selectedProduct?.product.description}
-                          </div>
-                        </div>
-                        <div className="space-y-1">
-                          <Label className="text-primary" htmlFor="description">
-                            Trạng Thái
-                          </Label>
-                          <div className="border p-2 rounded-md border-gray-100 whitespace-pre-wrap break-words w-full overflow-hidden">
-                            {selectedProduct?.product.isInProcessing
-                              ? "Đang xử lý"
-                              : "Chưa xử lý"}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
     </Card>
   );
 }
