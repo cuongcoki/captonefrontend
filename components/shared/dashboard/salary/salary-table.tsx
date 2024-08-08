@@ -178,7 +178,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Ảnh</TableHead>
+              <TableHead>Ảnh đại diện</TableHead>
               <TableHead>Tên nhân viên</TableHead>
               <TableHead>Lương tháng</TableHead>
               <TableHead>Lương khả dụng</TableHead>

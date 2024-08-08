@@ -209,7 +209,7 @@ export default function UpdateMaterialHistoryForm({
               </AlertDialogTitle>
               <AlertDialogDescription>
                 Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
-                những dữ liệu mà bạn đã nhập
+                những dữ liệu mà bạn đã chỉnh sửa
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -253,7 +253,7 @@ export default function UpdateMaterialHistoryForm({
                         <FormItem>
                           <FormControl>
                             <ComboboxForForm
-                              title="Vui lòng chọn nguyên liệu"
+                              title="Vui lòng chọn nguyên vật liệu"
                               data={comboboxData}
                               name="materialID"
                               form={form}
@@ -312,7 +312,7 @@ export default function UpdateMaterialHistoryForm({
                           <FormControl>
                             <InputAnimation
                               type="text"
-                              nameFor="Giá nhập"
+                              nameFor="Giá nhập / Đơn vị"
                               {...field}
                               inputMode="numeric"
                               value={formatCurrency(field.value)}

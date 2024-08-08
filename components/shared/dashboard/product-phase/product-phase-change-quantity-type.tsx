@@ -22,6 +22,7 @@ import { productPhaseStore } from "@/components/shared/dashboard/product-phase/p
 import { productPhaseApi } from "@/apis/product-phase.api";
 import { ProductPhaseQuantityType } from "@/types/product-phase.type";
 import { Separator } from "@/components/ui/separator";
+import TitleComponent from "../../common/Title";
 
 export default function ProductPhaseChangeQuantityType({
   index,
@@ -93,9 +94,10 @@ export default function ProductPhaseChangeQuantityType({
         </DialogTrigger>
         <DialogContent className="max-w-[80vw] md:max-w-[750px] rounded-lg">
           <DialogHeader>
-            <DialogTitle className="text-primary">
-              Cập nhật sản phẩm
-            </DialogTitle>
+            <TitleComponent
+            title="Chuyển Đổi Sản phẩm"
+            description="Chuyển đổi số lượng của giai đoạn - chất lượng sản phẩm."
+            />
             <DialogDescription></DialogDescription>
           </DialogHeader>
           <Separator />

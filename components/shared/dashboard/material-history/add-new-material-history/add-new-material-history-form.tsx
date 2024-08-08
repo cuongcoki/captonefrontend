@@ -219,7 +219,7 @@ export default function AddNewMeterialHistoryForm() {
                         <FormItem>
                           <FormControl>
                             <ComboboxForForm
-                              title="Vui lòng chọn nguyên liệu"
+                              title="Vui lòng chọn nguyên vật liệu"
                               data={comboboxData}
                               name="materialID"
                               form={form}
@@ -278,7 +278,7 @@ export default function AddNewMeterialHistoryForm() {
                           <FormControl>
                             <InputAnimation
                               type="text"
-                              nameFor="Giá nhập"
+                              nameFor="Giá nhập / Đơn vị"
                               {...field}
                               inputMode="numeric"
                               value={formatCurrency(field.value)}

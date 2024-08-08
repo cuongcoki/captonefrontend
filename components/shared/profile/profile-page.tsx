@@ -76,6 +76,7 @@ import { authApi } from "@/apis/auth.api";
 import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdateForm";
 import Custom404 from "@/app/not-found";
 import { NoImage } from "@/constants/images";
+import TitleComponent from "../common/Title";
 
 const invoices = [
   {
@@ -250,9 +251,9 @@ export default function ProfilePage() {
     <>
       {user?.user?.id === userId?.id && (
         <div className="flex flex-col gap-6 justify-center">
-          <header className=" flex justify-center bg-primary p-2">
+          <header className=" flex justify-center p-2">
             {/* Card User  */}
-            <div className="text-white relative w-full max-w-3xl flex flex-col items-start space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6 px-4 py-8 border-2 border-dashed border-primary-backgroudPrimary dark:border-gray-400 shadow-lg rounded-lg">
+            <div className="text-white relative w-full max-w-3xl flex flex-col items-start space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6 px-4 py-8 border-2 border-dashed border-primary-backgroudPrimary dark:border-gray-400 shadow-lg bg-primary rounded-lg">
               <span className="absolute text-xs font-medium top-0 left-0 rounded-br-lg rounded-tl-lg px-2 py-1 bg-primary-100 dark:bg-gray-900 dark:text-gray-300 border-primary-backgroudPrimary dark:border-gray-400 border-b-2 border-r-2 border-dashed ">
                 {Role.find((role) => role.value === userId.roleId)?.label}
               </span>
@@ -268,12 +269,12 @@ export default function ProfilePage() {
               </div>
 
               <div className="w-full sm:w-auto flex flex-col items-center sm:items-start">
-                <p className="font-display mb-2 text-xl dark:text-primary  font-semibold">
+                <p className="font-display mb-2 text-xl font-semibold">
                   {userId?.firstName} {userId?.lastName}
                 </p>
 
                 <div className="mb-4 text-sm sm:text-md md:text-lg text-center sm:text-start">
-                  <p className="font-display mb-2 text-lg sm:text-xl dark:text-primary font-semibold">
+                  <p className="font-display mb-2 text-lg sm:text-xl font-semibold">
                     {userId?.address}
                   </p>
                 </div>
@@ -305,112 +306,118 @@ export default function ProfilePage() {
               <div className="flex flex-col md:flex-row items-start justify-between w-full gap-6">
                 <div className="md:w-[40%] w-full">
                   <Card className="p-2">
-                    <h2 className="text-lg font-semibold mb-2 text-primary">
-                      Thông tin cá nhân
-                    </h2>
-                    <div className="flex flex-col gap-2">
-                      <div className="flex gap-3 items-center">
-                        <ContactRound className="w-6 h-6 flex-shrink-0 text-gray-500" />
-                        <div>
-                          {userId?.firstName} {userId?.lastName}
+                    <CardHeader>
+                      <TitleComponent
+                        title="Thông tin cá nhân"
+                        description="Thông tin cá nhân của nhân viên."
+                      />
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-3 items-center">
+                          <ContactRound className="w-6 h-6 flex-shrink-0 text-gray-500" />
+                          <div>
+                            {userId?.firstName} {userId?.lastName}
+                          </div>
+                        </div>
+
+                        <div className="flex gap-3 items-center">
+                          <Laugh className="w-6 h-6 flex-shrink-0 text-gray-500" />
+                          <div>{userId?.gender === "Male" ? "Nam" : "Nữ"}</div>
+                        </div>
+
+                        <div className="flex gap-3 items-center">
+                          <Cake className="w-6 h-6 flex-shrink-0 text-gray-500" />
+                          <div>{formatDate(userId?.dob)}</div>
+                        </div>
+
+                        <div className="flex gap-3 items-start">
+                          <MapPinIcon className="w-6 h-6 flex-shrink-0 text-gray-500" />
+                          <div>{userId?.address}</div>
                         </div>
                       </div>
-
-                      <div className="flex gap-3 items-center">
-                        <Laugh className="w-6 h-6 flex-shrink-0 text-gray-500" />
-                        <div>{userId?.gender === "Male" ? "Nam" : "Nữ"}</div>
-                      </div>
-
-                      <div className="flex gap-3 items-center">
-                        <Cake className="w-6 h-6 flex-shrink-0 text-gray-500" />
-                        <div>{formatDate(userId?.dob)}</div>
-                      </div>
-
-                      <div className="flex gap-3 items-start">
-                        <MapPinIcon className="w-6 h-6 flex-shrink-0 text-gray-500" />
-                        <div>{userId?.address}</div>
-                      </div>
-                    </div>
+                    </CardContent>
                   </Card>
                 </div>
+
                 <div className="md:w-[60%] w-full flex flex-col gap-6">
-                  <Card className="p-2">
-                    <h2 className="text-lg font-semibold mb-2 text-primary">
-                      Thông tin lương
-                    </h2>
-                    <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
-                      <div>
-                        <div className="font-extralight text-[0.8rem]">
-                          Lương công nhật
-                        </div>
+                  <Card>
+                    <CardHeader>
+                      <TitleComponent
+                        title="Thông tin lương"
+                        description="Thông tin lương của nhân viên."
+                      />
+                    </CardHeader>
+                    <CardContent className="">
+                      <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
                         <div>
-                          {formatCurrency(
-                            userId?.salaryHistoryResponse?.salaryByDayResponses
-                              .salary
-                          )}{" "}
-                          <span className="text-gray-400">VND/Ngày</span>
+                          <div className="font-extralight text-[0.8rem]">
+                            Lương công nhật
+                          </div>
+                          <div>
+                            {formatCurrency(
+                              userId?.salaryHistoryResponse?.salaryByDayResponses.salary
+                            )}{" "}
+                            <span className="text-gray-400">VND/Ngày</span>
+                          </div>
                         </div>
-                      </div>
 
-                      <div>
-                        <div className="font-extralight text-[0.8rem]">
-                          Lương tăng ca
-                        </div>
                         <div>
-                          {formatCurrency(
-                            userId?.salaryHistoryResponse
-                              ?.salaryByOverTimeResponses.salary
-                          )}{" "}
-                          <span className="text-gray-400">VND/giờ</span>
+                          <div className="font-extralight text-[0.8rem]">
+                            Lương tăng ca
+                          </div>
+                          <div>
+                            {formatCurrency(
+                              userId?.salaryHistoryResponse?.salaryByOverTimeResponses
+                                .salary
+                            )}{" "}
+                            <span className="text-gray-400">VND/giờ</span>
+                          </div>
                         </div>
-                      </div>
 
-                      <div>
-                        <div className="font-extralight text-[0.8rem]">
-                          Lương khả dụng
-                        </div>
-                        {/* accountBalance */}
                         <div>
-                          {userId?.accountBalance === 0
-                            ? 0
-                            : formatCurrency(userId?.accountBalance)}{" "}
-                          <span className="text-gray-400">VND</span>
+                          <div className="font-extralight text-[0.8rem]">
+                            Lương khả dụng
+                          </div>
+                          {/* accountBalance */}
+                          <div>
+                            {userId?.accountBalance === 0
+                              ? 0
+                              : formatCurrency(userId?.accountBalance)}{" "}
+                            <span className="text-gray-400">VND</span>
+                          </div>
                         </div>
-                      </div>
 
-                      <div>
-                        <div className="font-extralight text-[0.8rem]">
-                          Ngày nhận lương gần nhất
+                        <div>
+                          <div className="font-extralight text-[0.8rem]">
+                            Ngày nhận lương gần nhất
+                          </div>
+                          <div>{lastDay ? formatDate(lastDay) : "Không có"}</div>
                         </div>
-                        <div>{lastDay ? formatDate(lastDay) : "Không có"}</div>
                       </div>
-                    </div>
+                    </CardContent>
                   </Card>
 
-                  <Card className="p-2">
-                    <h2 className="text-lg font-semibold mb-2 text-primary">
-                      Cơ sở làm việc
-                    </h2>
-                    <div className="grid grid-cols-2 grid-rows-2 gap-y-8">
+                  <Card>
+                    <CardHeader>
+                      <TitleComponent
+                        title="Cơ sở làm việc"
+                        description="Thông tin công ty của nhân viên."
+                      />
+                    </CardHeader>
+                    <CardContent className="grid grid-cols-2 gap-y-8">
                       <div>
-                        <div className="font-extralight text-[0.8rem]">
-                          Cơ sở
-                        </div>
+                        <div className="font-extralight text-[0.8rem]">Cơ sở</div>
                         <div>{userId.companyName}</div>
                       </div>
 
                       <div>
-                        <div className="font-extralight text-[0.8rem]">
-                          Vai trò
-                        </div>
+                        <div className="font-extralight text-[0.8rem]">Vai trò</div>
                         <div>
-                          {
-                            Role.find((role) => role.value === userId.roleId)
-                              ?.label
-                          }
+                          {Role.find((role) => role.value === userId.roleId)?.label}
                         </div>
                       </div>
-                    </div>
+                    </CardContent>
                   </Card>
                 </div>
               </div>
@@ -421,10 +428,13 @@ export default function ProfilePage() {
           <div className=" flex justify-center">
             <div className="w-full max-w-3xl flex flex-col items-start space-y-4 sm:flex-row sm:space-y-0 sm:space-x-6  rounded-lg">
               <Card className="p-2 w-full">
-                <h2 className="text-lg font-semibold mb-2 text-primary">
-                  Thay đổi mật khẩu
-                </h2>
-                <div>
+                <CardHeader>
+                  <TitleComponent
+                    title="Mật Khẩu"
+                    description="Thay đổi mật khẩu của bạn ở đây. Sau khi lưu, bạn sẽ đăng xuất."
+                  />
+                </CardHeader>
+                <CardContent className="space-y-2">
                   <div className="space-y-1">
                     <Label htmlFor="current">Mật khẩu hiện tại</Label>
                     <Input
@@ -460,15 +470,15 @@ export default function ProfilePage() {
                     />
                     <div id="errorConfirm" className="text-destructive"></div>
                   </div>
-                </div>
-                <div className="flex items-end justify-end mb-2">
+                </CardContent>
+                <CardFooter>
                   <Button
-                    className="bg-primary hover:bg-primary/90 mt-2 "
+                    className="bg-primary hover:bg-primary/90"
                     onClick={handleChangePassword}
                   >
                     Xác nhận thay đổi
                   </Button>
-                </div>
+                </CardFooter>
               </Card>
             </div>
           </div>
