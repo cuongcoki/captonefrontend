@@ -268,12 +268,12 @@ export function DataTableForMaterialHistory<TData, TValue>({
             <TableHeader>
               <TableRow>
                 <TableHead className="text-center">Ảnh minh họa</TableHead>
-                <TableHead className="text-center">Tên nguyên liệu</TableHead>
+                <TableHead className="text-center">Tên nguyên vật liệu</TableHead>
                 <TableHead className="text-center">Số lượng</TableHead>
                 <TableHead className="text-center">
-                  Giá mua 1 nguyên liệu
+                  Giá / Đơn vị
                 </TableHead>
-                <TableHead className="text-center">Ngày mua</TableHead>
+                <TableHead className="text-center">Ngày nhập</TableHead>
                 <TableHead className="text-center">Ghi chú</TableHead>
                 <TableHead className="text-center">Hành Động</TableHead>
               </TableRow>
