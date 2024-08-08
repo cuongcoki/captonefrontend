@@ -93,7 +93,7 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
                       <div className="grid gap-2">
                         <div className="flex justify-between items-center">
                           <Label htmlFor={`isBluePrint-${index}`}>
-                            [Ảnh] bản thiết kế
+                            [Ảnh] Bản thiết kế
                           </Label>
                           <Switch
                             className="data-[state=checked]:bg-primary"

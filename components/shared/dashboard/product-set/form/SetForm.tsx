@@ -57,6 +57,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { NoImage } from "@/constants/images";
 import { MyContext } from "../table/sets/RenderTable";
 import { Label } from "@/components/ui/label";
+import TitleComponent from "@/components/shared/common/Title";
 let initialFormValuesSetProduct: any = null;
 export const SetForm = () => {
   // state
@@ -138,7 +139,7 @@ export const SetForm = () => {
 
     setLoading(true);
     const formData = new FormData();
-    formData.append("receivedFiles", imageUrls); 
+    formData.append("receivedFiles", imageUrls);
 
     try {
       const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
@@ -413,7 +414,7 @@ export const SetForm = () => {
   };
 
   const { pending } = useFormStatus();
-  
+
   return (
     <>
       {
@@ -453,256 +454,257 @@ export const SetForm = () => {
                 </div>
                 <div className="grid gap-4 p-4 overflow-y-auto h-[700px]">
                   <div className="gap-4 w-full lg:gap-8">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="font-semibold tracking-tight text-2xl text-primary">
-                          Thêm Sản Phẩm Vào Bộ
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="md:flex w-full gap-6 justify-between items-start">
-                        <div className="md:w-[50%] w-full">
-                          <div className="flex items-center my-4">
-                            <Input
-                              placeholder="Tìm kiếm mã - tên sản phẩm ..."
-                              value={searchTerm}
-                              onChange={(e) => {
-                                setSearchTerm(e.target.value);
-                              }}
-                              className=""
-                            />
-                          </div>
-                          {searchResults !== null ? (
-                            <Card className="my-4">
-                              <CardHeader className="font-semibold text-xl">
-                                <span>Thông tin sản phẩm</span>
-                              </CardHeader>
-                              <CardContent className="w-full grid grid-cols-3 md:grid-cols-5  gap-4 min-h-[100px]  overflow-y-auto ">
-                                {searchResults !== null ? (
-                                  searchResults.map((product) => (
-                                    <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
-                                      <div className="font-medium flex flex-col rounded-md">
-                                        <ImageDisplayDialog
-                                          images={product}
-                                        />
-                                      </div>
-                                      <Check
-                                        className={`w-5 h-5 ${productsRequest.some(
-                                          (item1) => item1.productId === product.id
-                                        )
-                                          ? "absolute top-0 right-0 bg-primary text-white"
-                                          : "hidden"
-                                          }`}
-                                      />
-                                      <div>
-                                        <Button
-                                          variant={"ghost"}
-                                          size={"icon"}
-                                          className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                          onClick={() =>
-                                            handleAddProducts(product)
-                                          }
-                                        >
-                                          <Plus className="text-white " />
-                                        </Button>
-                                      </div>
-                                    </div>
-                                  ))
-                                ) : (
-                                  <div className="text-center flex justify-center items-center w-full">
-                                    không thấy sản phẩm nào
-                                  </div>
-                                )}
-                              </CardContent>
-                            </Card>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="md:w-[50%] w-full">
-                          <Card className="mt-4">
-                            <CardHeader className="font-semibold text-xl">
-                              <span>Thông tin sản phẩm đã thêm</span>
+                    <Form {...form}>
+                      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+                        <div className="flex flex-wrap gap-2 lg:gap-5">
+                          <Card className="flex-1 items-start gap-4 lg:gap-8">
+                            <CardHeader>
+                              <TitleComponent
+                                title="Thông tin bộ sản phẩm"
+                                description="Thông tin chung của bộ sản phẩm."
+                              />
                             </CardHeader>
-                            <CardContent className="overflow-auto">
-                              {getDetailsPro.map((product, index) => (
-                                <div
-                                  className="flex items-start justify-between gap-2 py-4"
-                                  key={product.id}
-                                >
-                                  <div className="flex flex-col gap-2">
-                                    <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
-                                      <Image
-                                        alt="ảnh mẫu"
-                                        className="w-full h-full object-cover rounded-md"
-                                        width={900}
-                                        height={900}
-                                        src={
-                                          product?.imageUrl ===
-                                            "Image_not_found"
-                                            ? NoImage
-                                            : product?.imageUrl
-                                        }
-                                      />
-                                    </div>
-                                    <div className="font-medium dark:text-white text-sm">
-                                      {limitLength(product.name, 15)} - {limitLength(product.code, 10)}
-                                    </div>
-                                  </div>
-                                  <div className="flex items-center gap-6">
-                                    <Label htmlFor="email" className="hidden sm:block">Số lượng</Label>
-                                    <Input
-                                      className="w-[60px] text-center outline-none border"
-                                      type="number"
-                                      value={
-                                        productsRequest.find(
-                                          (item) =>
-                                            item.productId === product.id
-                                        )?.quantity || 0
-                                      }
-                                      onChange={(e) =>
-                                        handleChange(
-                                          product.id,
-                                          parseInt(e.target.value)
-                                        )
-                                      }
-                                    />
-                                    <Button
-                                      className="col-span-1"
-                                      variant="outline"
-                                      size="icon"
-                                      onClick={() =>
-                                        handleMinusProducts(product.id)
-                                      }
-                                    >
-                                      <Minus className="h-4 w-4" />
-                                    </Button>
-                                  </div>
+                            <CardContent>
+                              {/* Phần nhập dữ liệu thông tin */}
+                              <div className="w-full flex flex-col gap-4 ">
+                                {/* code */}
+                                <FormField
+                                  control={form.control}
+                                  name="code"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center">
+                                        Mã bộ sản phẩm *
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input type="text" {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
 
-                                </div>
-                              ))}
+                                {/* name */}
+                                <FormField
+                                  control={form.control}
+                                  name="name"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center">
+                                        Tên bộ sản phẩm *
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input type="text" {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                {/* description */}
+                                <FormField
+                                  control={form.control}
+                                  name="description"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center">
+                                        Miêu tả *
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Textarea {...field} />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
                             </CardContent>
                           </Card>
+
+                          <Card className="w-full h-[350px] lg:w-2/5">
+                            <CardContent className=" w-full h-full relative pt-6">
+                              {/* nếu không có ảnh nào thì hiện input này */}
+                              {imageRequests === null && (
+                                <div style={{ width: "100%", height: "100%" }}>
+                                  <input
+                                    id="image"
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    accept="image/*"
+                                    onChange={(e) => handleUploadPhoto(e)}
+                                  />
+                                  <label
+                                    htmlFor="image"
+                                    className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                                  >
+                                    <Upload
+                                      size={70}
+                                      className="text-white flex items-center justify-center bg-primary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto"
+                                    />
+                                    <span className="text-l text-gray-500 font-medium">
+                                      Hãy tải ảnh lên
+                                    </span>
+                                  </label>
+                                </div>
+                              )}
+
+                              {/* nếu có trên 1 ảnh thì hiện input này */}
+                              {imageRequests !== null && (
+                                <div className="relative w-full h-full">
+                                  {/* phần hiển thị ảnh xem trước */}
+                                  <ImageDisplay
+                                    images={imageRequests}
+                                    onDelete={handleDeleteImage}
+                                  />
+                                </div>
+                              )}
+                            </CardContent>
+                          </Card>
+
                         </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)}>
-                      <div className="flex flex-wrap gap-2 lg:gap-5">
-                        <Card className="flex-1 items-start gap-4 lg:gap-8">
+                        <Card>
                           <CardHeader>
-                            <CardTitle className="font-semibold tracking-tight text-2xl text-primary">
-                              Thông Tin
-                            </CardTitle>
+                            <TitleComponent
+                              title="Thêm sản phẩm vào bộ"
+                              description="Lựa chọn các sản phẩm để tạo thảnh một bộ."
+                            />
                           </CardHeader>
-                          <CardContent>
-                            {/* Phần nhập dữ liệu thông tin */}
-                            <div className="w-full flex flex-col gap-4 ">
-                              {/* code */}
-                              <FormField
-                                control={form.control}
-                                name="code"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center text-primary">
-                                      Mã Bộ Sản Phẩm
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input type="text" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
+                          <CardContent className="md:flex w-full gap-6 justify-between items-start">
+                            <div className="md:w-[50%] w-full">
+                              <div className="flex items-center my-4">
+                                <Input
+                                  placeholder="Tìm kiếm mã - tên sản phẩm ..."
+                                  value={searchTerm}
+                                  onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                  }}
+                                  className=""
+                                />
+                              </div>
+                              {searchResults !== null ? (
+                                <Card className="my-4">
+                                  <CardHeader className="font-semibold text-xl">
+                                    <span>Thông tin sản phẩm</span>
+                                  </CardHeader>
+                                  <CardContent className="w-full grid grid-cols-3 md:grid-cols-5  gap-4 min-h-[100px]  overflow-y-auto ">
+                                    {searchResults !== null ? (
+                                      searchResults.map((product) => (
+                                        <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
+                                          <div className="font-medium flex flex-col rounded-md">
+                                            <ImageDisplayDialog
+                                              images={product}
+                                            />
+                                          </div>
+                                          <Check
+                                            className={`w-5 h-5 ${productsRequest.some(
+                                              (item1) => item1.productId === product.id
+                                            )
+                                              ? "absolute top-0 right-0 bg-primary text-white"
+                                              : "hidden"
+                                              }`}
+                                          />
+                                          <div>
+                                            <Button
+                                              variant={"ghost"}
+                                              size={"icon"}
+                                              className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                              onClick={() =>
+                                                handleAddProducts(product)
+                                              }
+                                            >
+                                              <Plus className="text-white " />
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <div className="text-center flex justify-center items-center w-full">
+                                        không thấy sản phẩm nào
+                                      </div>
+                                    )}
+                                  </CardContent>
+                                </Card>
+                              ) : (
+                                ""
+                              )}
+                            </div>
 
-                              {/* name */}
-                              <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center text-primary">
-                                      Tên Bộ Sản Phẩm
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input type="text" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              {/* description */}
-                              <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center text-primary">
-                                      Mô Tả
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Textarea {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
+                            <div className="md:w-[50%] w-full">
+                              <Card className="mt-4">
+                                <CardHeader className="font-semibold text-xl">
+                                  <span>Thông tin sản phẩm đã thêm</span>
+                                </CardHeader>
+                                <CardContent className="overflow-auto">
+                                  {getDetailsPro.map((product, index) => (
+                                    <div
+                                      className="flex items-start justify-between gap-2 py-4"
+                                      key={product.id}
+                                    >
+                                      <div className="flex flex-col gap-2">
+                                        <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
+                                          <Image
+                                            alt="ảnh mẫu"
+                                            className="w-full h-full object-cover rounded-md"
+                                            width={900}
+                                            height={900}
+                                            src={
+                                              product?.imageUrl ===
+                                                "Image_not_found"
+                                                ? NoImage
+                                                : product?.imageUrl
+                                            }
+                                          />
+                                        </div>
+                                        <div className="font-medium dark:text-white text-sm">
+                                          {limitLength(product.name, 15)} - {limitLength(product.code, 10)}
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center gap-6">
+                                        <Label htmlFor="email" className="hidden sm:block">Số lượng</Label>
+                                        <Input
+                                          className="w-[60px] text-center outline-none border"
+                                          type="number"
+                                          value={
+                                            productsRequest.find(
+                                              (item) =>
+                                                item.productId === product.id
+                                            )?.quantity || 0
+                                          }
+                                          onChange={(e) =>
+                                            handleChange(
+                                              product.id,
+                                              parseInt(e.target.value)
+                                            )
+                                          }
+                                        />
+                                        <Button
+                                          className="col-span-1"
+                                          variant="outline"
+                                          size="icon"
+                                          onClick={() =>
+                                            handleMinusProducts(product.id)
+                                          }
+                                        >
+                                          <Minus className="h-4 w-4" />
+                                        </Button>
+                                      </div>
+
+                                    </div>
+                                  ))}
+                                </CardContent>
+                              </Card>
                             </div>
                           </CardContent>
                         </Card>
-
-                        <Card className="w-full h-[350px] lg:w-2/5">
-                          <CardContent className=" w-full h-full relative pt-6">
-                            {/* nếu không có ảnh nào thì hiện input này */}
-                            {imageRequests === null && (
-                              <div style={{ width: "100%", height: "100%" }}>
-                                <input
-                                  id="image"
-                                  type="file"
-                                  style={{ display: "none" }}
-                                  accept="image/*"
-                                  onChange={(e) => handleUploadPhoto(e)}
-                                />
-                                <label
-                                  htmlFor="image"
-                                  className="max-w-full max-h-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                                >
-                                  <Upload
-                                    size={70}
-                                    className="text-white flex items-center justify-center bg-primary rounded-md p-5 max-w-[100%] max-h-[100%] cursor-pointer my-0 mx-auto"
-                                  />
-                                  <span className="text-l text-gray-500 font-medium">
-                                    Hãy tải ảnh lên
-                                  </span>
-                                </label>
-                              </div>
-                            )}
-
-                            {/* nếu có trên 1 ảnh thì hiện input này */}
-                            {imageRequests !== null && (
-                              <div className="relative w-full h-full">
-                                {/* phần hiển thị ảnh xem trước */}
-                                <ImageDisplay
-                                  images={imageRequests}
-                                  onDelete={handleDeleteImage}
-                                />
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
-
-                      </div>
-                      <Button
-                        type="submit"
-                        className="w-full bg-primary hover:bg-primary/90 my-3"
-                        disabled={pending}
-                      >
-                        {loading ? "Loading..." : "GỬI"}
-                      </Button>
-                    </form>
-                  </Form>
+                        <Button
+                          type="submit"
+                          className="w-full bg-primary hover:bg-primary/90 my-3"
+                          disabled={pending}
+                        >
+                          {loading ? "Đang xử lý..." : "GỬI"}
+                        </Button>
+                      </form>
+                    </Form>
+                  </div>
                 </div>
               </div>
             </Dialog.Content>

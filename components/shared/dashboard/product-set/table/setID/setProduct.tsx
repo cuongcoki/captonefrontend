@@ -122,7 +122,7 @@ export default function SetProduct({ setProduct }: SetProductProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Hình Ảnh</TableHead>
+              <TableHead>Hình ảnh</TableHead>
               <TableHead>Mã Sản Phẩm</TableHead>
               <TableHead>Tên Sản Phẩm</TableHead>
               <TableHead>Số lượng</TableHead>

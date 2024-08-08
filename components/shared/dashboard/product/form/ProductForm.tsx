@@ -483,7 +483,7 @@ export const ProductForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center text-primary">
-                                      Mã Sản Phẩm *
+                                      Mã sản phẩm *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -499,7 +499,7 @@ export const ProductForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center text-primary">
-                                      Tên Sản Phẩm *
+                                      Tên sản phẩm *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -515,7 +515,7 @@ export const ProductForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center text-primary">
-                                      Kích Thước *
+                                      Kích thước *
                                     </FormLabel>
                                     <FormControl>
                                       <Input type="text" {...field} />
@@ -615,7 +615,7 @@ export const ProductForm = () => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center text-primary">
-                                      Mô Tả
+                                      Miêu tả
                                     </FormLabel>
                                     <FormControl>
                                       <Textarea
@@ -635,7 +635,7 @@ export const ProductForm = () => {
                               className="w-full bg-primary hover:bg-primary/90"
                               disabled={pending}
                             >
-                              {loading ? "Loading..." : "GỬI"}
+                              {loading ? "Đang xử lý..." : "Thêm Sản Phẩm"}
                             </Button>
                           </div>
                         </form>
