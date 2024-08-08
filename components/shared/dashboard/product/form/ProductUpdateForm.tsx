@@ -511,8 +511,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   };
   return (
     <Form {...form}>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 rounded-xl">
-        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-5 rounded-xl">
+        <div className="grid md:col-span-3 auto-rows-max items-start gap-4 lg:gap-8">
           <Card className="rounded-xl">
             <CardContent>
               <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -690,7 +690,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
           </Card>
         </div>
 
-        <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+        <div className="grid md:col-span-2 auto-rows-max items-start gap-4 lg:gap-8">
           <Card className=" relative border-none shadow-none">
             {/* nếu không có ảnh nào thì hiện input này */}
             {imageRequests.length < 1 && (
@@ -722,14 +722,14 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
             {imageRequests.length > 0 && (
               <CardContent className="relative w-full h-full">
                 {/* phần hiển thị ảnh xem trước */}
-                <Carousel className="flex items-center justify-center w-full md:max-w-[390px] h-full">
+                <Carousel className="w-full max-w-xs flex justify-center pb-5">
                   <CarouselContent>
                     {imageRequests.map((image, index) => (
                       <CarouselItem
                         key={index}
                       >
                         <div className="p-1">
-                          <Card>
+                          <Card className="border-none">
                             <CardContent className="flex aspect-square items-center justify-center p-6 relative bg-black">
                               <Image
                                 src={image.imageUrl}
@@ -753,7 +753,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                                 <HoverCardTrigger className="absolute left-0 top-0 ">
                                   <EllipsisVertical
                                     size={35}
-                                    className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5"
+                                    className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
                                   />
                                 </HoverCardTrigger>
                                 <HoverCardContent
@@ -812,9 +812,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <div className="  absolute left-[50%] bottom-[6%] transform: translate-x-[50%] transform: translate-y-[50%]">
-                    <CarouselNext />
-                    <CarouselPrevious />
+                  <div className="  absolute left-[50%] bottom-0 transform: translate-x-[50%] transform: translate-y-[50%]">
+                    <CarouselNext className="text-primary "/>
+                    <CarouselPrevious className="text-primary"/>
                   </div>
                 </Carousel>
 
@@ -827,10 +827,10 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                   onChange={(e) => handleUploadPhotos(e)}
                   multiple
                 />
-                <label htmlFor="image" className="absolute bottom-0">
+                <label htmlFor="image" className="absolute -bottom-4">
                   <Upload
                     size={35}
-                    className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5"
+                    className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5 border-gray-200 border"
                   />
                 </label>
               </CardContent>

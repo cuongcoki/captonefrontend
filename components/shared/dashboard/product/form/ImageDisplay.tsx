@@ -48,9 +48,9 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
 }) => {
   // console.log('images', images)
   return (
-    <div className="flex items-center justify-center w-full h-full ">
-      <Carousel className="w-full h-full flex flex-col">
-        <CarouselContent className="w-full h-full">
+    <div className="flex items-center justify-center w-full h-full pb-5">
+      <Carousel className="w-full h-full flex flex-col ">
+        <CarouselContent className="w-full h-full ">
           {images.map((image, index) => (
             <CarouselItem
               className="w-full h-full flex items-center justify-center"
