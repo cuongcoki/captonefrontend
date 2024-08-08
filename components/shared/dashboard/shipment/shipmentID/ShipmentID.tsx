@@ -227,24 +227,18 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-            <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-            <Dialog.Title></Dialog.Title>
-            <Dialog.Description></Dialog.Description>
-              <div className="bg-slate-100 flex flex-col  space-y-1 rounded-md">
-                <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
-                  <h2 className="text-2xl text-white">
-                    Thông tin đơn vận chuyển
-                  </h2>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={handleOffDialog}
-                  >
+            <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[600px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+              <Dialog.Title></Dialog.Title>
+              <Dialog.Description></Dialog.Description>
+              <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
+                <div className="p-4 flex items-center justify-between bg-primary rounded-t-md ">
+                  <h2 className="text-2xl text-white">Thông tin đơn vận chuyển</h2>
+                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
 
-                <div className="grid p-4 gap-4">
+                <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4">
                   <Card
                     className="overflow-hidden"
                     x-chunk="dashboard-05-chunk-4"

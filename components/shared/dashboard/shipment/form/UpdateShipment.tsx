@@ -101,6 +101,7 @@ import { productApi } from "@/apis/product.api"
 import { userApi } from "@/apis/user.api"
 import { shipmentApi } from "@/apis/shipment.api"
 import TitleComponent from "@/components/shared/common/Title"
+import { useFormStatus } from "react-dom"
 
 const enumCompany = [
     {
@@ -786,6 +787,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
             setOpenAlert(true);
         }
     };
+
+  const { pending } = useFormStatus();
+
     return (
         <>
             {
@@ -952,14 +956,14 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                     </div>
                                                 </CardContent>
                                             </Card>
-                                            <Card className="flex">
+                                            <Card className="flex flex-col md:flex-row">
                                                 <CardHeader>
                                                     <TitleComponent
                                                         title="Thông tin"
                                                         description="Thông tin nhân viên - thời gian vận chuyển đơn hàng."
                                                     />
                                                 </CardHeader>
-                                                <CardContent className="grid grid-cols-2 justify-around items-center space-x-16 p-4 w-full">
+                                                <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2 justify-around items-center space-x-0 md:space-x-16 p-4 w-full">
                                                     <FormField
                                                         control={form.control}
                                                         name="shipperId"
@@ -1045,8 +1049,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                     />
                                                 </CardContent>
                                             </Card>
+
                                             <div className="w-full">
-                                                <Tabs defaultValue="account" >
+                                                <Tabs defaultValue="account">
                                                     <TabsList className="grid w-[200px] grid-cols-2">
                                                         <TabsTrigger value="account" className="data-[state=active]:shadow-lg">Sản phẩm</TabsTrigger>
                                                         <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
@@ -1060,23 +1065,51 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                 />
                                                             </CardHeader>
                                                             <CardContent className="space-y-2">
+                                                                <Input
+                                                                    placeholder="Tìm kiếm sản phẩm..."
+                                                                    value={searchTerm}
+                                                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                                                    className="md:w-[300px] w-full mb-3"
+                                                                />
                                                                 <div className=" w-full grid grid-cols-3 md:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
-                                                                    {
-                                                                        dataP.map(item => (
-                                                                            <div className="group relative w-[80px] h-[80px] shadow-md rounded-md" key={item.id} >
-                                                                                <ImageIconShipmentForm dataImage={item} />
-                                                                                <Check className={`${shipmentDetailRequests.some(item1 => item1.itemId === item.id) ? "absolute top-0 right-0 bg-primary text-white" : "hidden"}`} />
-                                                                                <Button variant={"ghost"} size={"icon"} className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary " onClick={() => {
-                                                                                    const mainImage = item?.imageResponses.find(image => image.isMainImage);
-                                                                                    handleAddProducts(mainImage ? mainImage.imageUrl : '', item?.id, productType);
-                                                                                }}><Plus className="text-white " /></Button>
-                                                                            </div>
-                                                                        ))
-                                                                    }
+                                                                    {dataP.map((item) => (
+                                                                        <div
+                                                                            className="group relative w-[80px] h-[80px] shadow-md rounded-md"
+                                                                            key={item.id}
+                                                                        >
+                                                                            <ImageIconShipmentForm dataImage={item} />
+                                                                            <Check
+                                                                                className={`${shipmentDetailRequests.some(
+                                                                                    (item1) => item1.itemId === item.id
+                                                                                )
+                                                                                    ? "absolute top-0 right-0 bg-primary text-white"
+                                                                                    : "hidden"
+                                                                                    }`}
+                                                                            />
+                                                                            <span
+                                                                                className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                                                onClick={() => {
+                                                                                    const mainImage =
+                                                                                        item?.imageResponses.find(
+                                                                                            (image) => image.isMainImage
+                                                                                        );
+                                                                                    handleAddProducts(
+                                                                                        mainImage ? mainImage.imageUrl : "",
+                                                                                        item?.id,
+                                                                                        productType
+                                                                                    );
+                                                                                }}
+                                                                            >
+                                                                                <Plus className="text-white" />
+                                                                            </span>
+                                                                        </div>
+                                                                    ))}
                                                                 </div>
                                                             </CardContent>
                                                             <CardFooter className="flex justify-end">
-                                                                <Button onClick={handleClear}>Bỏ chọn tất cả</Button>
+                                                                <span onClick={handleClear} className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5">
+                                                                    Bỏ chọn tất cả
+                                                                </span>
                                                             </CardFooter>
                                                         </Card>
                                                     </TabsContent>
@@ -1089,20 +1122,47 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                 />
                                                             </CardHeader>
                                                             <CardContent className="space-y-2">
-                                                                <div className=" w-full grid grid-cols-3 md:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
-                                                                    {
-                                                                        dataM.map(item => (
-                                                                            <div className="group relative w-[60px] h-[60px] shadow-md rounded-md" key={item.id} >
-                                                                                <ImageIconMaterial dataImage={item} />
-                                                                                <Check className={`${shipmentDetailRequests.some(item1 => item1.itemId === item.id) ? "absolute top-0 right-0 bg-primary text-white" : "hidden"}`} />
-                                                                                <Button variant={"ghost"} size={"icon"} className="absolute bottom-0 left-0 w-full opacity-0 group-hover:opacity-100 hover:bg-primary" onClick={() => handleAddProducts(item?.image, item?.id, materialType)}><CirclePlus className="text-white" /></Button>
-                                                                            </div>
-                                                                        ))
-                                                                    }
+                                                                <Input
+                                                                    placeholder="Tìm kiếm nguyên vật liệu..."
+                                                                    value={searchTermM}
+                                                                    onChange={(e) => setSearchTermM(e.target.value)}
+                                                                    className="md:w-[300px] w-full mb-3"
+                                                                />
+                                                                <div className=" w-full grid grid-cols-3 sm:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
+                                                                    {dataM.map((item) => (
+                                                                        <div
+                                                                            className="group relative w-[80px] h-[80px] shadow-md rounded-md"
+                                                                            key={item.id}
+                                                                        >
+                                                                            <ImageIconMaterial dataImage={item} />
+                                                                            <Check
+                                                                                className={`${shipmentDetailRequests.some(
+                                                                                    (item1) => item1.itemId === item.id
+                                                                                )
+                                                                                    ? "absolute top-0 right-0 bg-primary text-white"
+                                                                                    : "hidden"
+                                                                                    }`}
+                                                                            />
+                                                                            <span
+                                                                                className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                                                onClick={() =>
+                                                                                    handleAddProducts(
+                                                                                        item?.image,
+                                                                                        item?.id,
+                                                                                        materialType
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                <Plus className="text-white" />
+                                                                            </span>
+                                                                        </div>
+                                                                    ))}
                                                                 </div>
                                                             </CardContent>
                                                             <CardFooter className="flex justify-end">
-                                                                <Button onClick={handleClear}>Bỏ chọn tất cả</Button>
+                                                                <span onClick={handleClear} className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5">
+                                                                    Bỏ chọn tất cả
+                                                                </span>
                                                             </CardFooter>
                                                         </Card>
                                                     </TabsContent>
@@ -1271,9 +1331,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                 )}
                                                                             </TableCell>
                                                                             <TableCell>
-                                                                                <Button
-                                                                                    variant={"ghost"}
-                                                                                    size={"icon"}
+                                                                                <span
+                                                                                    className="cursor-pointer"
                                                                                     onClick={() =>
                                                                                         handleDeleteProducts(
                                                                                             proDetail.itemId,
@@ -1282,7 +1341,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                     }
                                                                                 >
                                                                                     <CircleX />
-                                                                                </Button>
+                                                                                </span>
                                                                             </TableCell>
                                                                         </TableRow>
                                                                     ))
@@ -1293,13 +1352,14 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                     </Card>
                                                 )}
                                             </div>
+
                                             <Separator className="h-1 my-1" />
                                             <Button
                                                 type="submit"
                                                 className="w-full bg-primary hover:bg-primary/90"
-                                                disabled={loading}
+                                                disabled={pending}
                                             >
-                                                {loading ? "Đang xử lý..." : "Chỉnh sửa đơn vận chuyển"}
+                                                {pending ? "Đang xử lý..." : "Chỉnh sửa đơn vận chuyển"}
                                             </Button>
                                         </form>
                                     </Form>
