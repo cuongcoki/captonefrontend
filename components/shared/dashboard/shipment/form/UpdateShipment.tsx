@@ -1121,7 +1121,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                         <Table>
                                                             <TableHeader>
                                                                 <TableRow>
-                                                                    <TableHead className="w-[100px]">Ảnh</TableHead>
+                                                                    <TableHead className="w-[100px]">Hình ảnh</TableHead>
                                                                     <TableHead>Giai đoạn</TableHead>
                                                                     <TableHead>Số lượng</TableHead>
                                                                     <TableHead>Loại hàng</TableHead>

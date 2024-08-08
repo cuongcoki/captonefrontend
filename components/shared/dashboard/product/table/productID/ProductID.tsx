@@ -158,7 +158,7 @@ export default function ProductIDPage() {
                       <PencilLine />
                     </ProductUpdateForm>
                   ) : (
-                    <div>ko có dữ liệu chỉnh sửa</div>
+                    <div>Không có dữ liệu chỉnh sửa</div>
                   )}
                 </div>
               </div>
