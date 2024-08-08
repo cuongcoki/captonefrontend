@@ -88,7 +88,7 @@ export default function SetIDPage() {
                 <div className="flex justify-between items-start">
                   <div>
                     <CardTitle className="text-primary">
-                      Thông Tin
+                      Thông tin
                     </CardTitle>
                     <span className="text-xs font-normal leading-snug text-muted-foreground">Thông tin cơ bản của bộ sản phẩm.</span>
                   </div>
