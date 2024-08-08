@@ -5,6 +5,7 @@ import UpdateMaterialForm from "@/components/shared/dashboard/material/update-ma
 
 import ConfirmAlertDialog from "@/components/shared/common/confirm-alert-dialog/confirm-alert-dialog";
 import { set } from "date-fns";
+import { CardHeader, CardTitle } from "@/components/ui/card";
 type UpdateMaterialContextType = {
   setIsUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -51,17 +52,19 @@ export default function UpdateMaterial({
           ></div>
           <div className="relative bg-white dark:bg-[#1c1917] p-4 rounded  max-w-[340px] md:max-w-[700px] mx-2 shadow-lg">
             <div className="flex justify-between items-center mb-3">
-              <h2 className="text-2xl text-[#22c55e] w-full text-center mb-3">
-                Cập Nhật Nguyên Vật Liệu
-              </h2>
-              <button
+            <CardHeader className="w-full">
+                <CardTitle className="text-primary w-full text-center">
+                  Cập Nhật Nguyên Vật Liệu
+                </CardTitle>
+              </CardHeader>
+              <Button
                 onClick={() => {
                   handleAlertDialog(false);
                 }}
                 className="text-black dark:text-white"
               >
-                <X className="h-4 w-4" />
-              </button>
+                <X className="w-4 h-4 dark:text-white" />
+              </Button>
             </div>
             <UpdateMaterialContext.Provider value={{ setIsUpdate }}>
               <UpdateMaterialForm id={id} />

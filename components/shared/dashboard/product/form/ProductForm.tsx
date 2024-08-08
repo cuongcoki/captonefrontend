@@ -26,7 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Upload, X } from "lucide-react";
@@ -91,7 +91,6 @@ export const ProductForm = () => {
     }[]
   >([]);
 
-
   const generateRandomString = (length: number = 5) => {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -123,18 +122,23 @@ export const ProductForm = () => {
     const newImageRequests = files
       .filter((file) => {
         if (!validImageTypes.includes(file.type)) {
-          toast.error(`File ${limitLength(file.name, 15)} không đúng kiểu: .png, .jpg, .jpeg.`);
+          toast.error(
+            `File ${limitLength(
+              file.name,
+              15
+            )} không đúng kiểu: .png, .jpg, .jpeg.`
+          );
           return false;
         }
         if (file.size > 1000000) {
           // 1000 KB
-          toast.error(`File ${limitLength(file.name, 15)} Dung lượng không được quá 1M.`);
+          toast.error(
+            `File ${limitLength(file.name, 15)} Dung lượng không được quá 1M.`
+          );
           return false;
         }
         if (currentTotalSize + file.size > maxTotalSize) {
-          toast.error(
-            `Vượt quá tổng kích thước giới hạn là 1200 KB.`
-          );
+          toast.error(`Vượt quá tổng kích thước giới hạn là 1200 KB.`);
           return false;
         }
         currentTotalSize += file.size;
@@ -213,20 +217,17 @@ export const ProductForm = () => {
     setLoading(true);
     const formData = new FormData();
     imageUrls.forEach((imageUrl: any) => {
-      formData.append("receivedFiles", imageUrl); 
+      formData.append("receivedFiles", imageUrl);
     });
     try {
-      const response = await filesApi.postFiles(formData); 
+      const response = await filesApi.postFiles(formData);
       console.log("Upload successful:", response.data);
-   
     } catch (error) {
       console.error("Error uploading files:", error);
-     
     } finally {
       setLoading(false);
     }
   };
-
 
   const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
     setLoading(true);
@@ -280,10 +281,10 @@ export const ProductForm = () => {
           toast.error(errors.Code);
         }
 
-        if (errors['UpdateProductRequest.PriceFinished']) {
-          toast.error(errors['UpdateProductRequest.PriceFinished']);
+        if (errors["UpdateProductRequest.PriceFinished"]) {
+          toast.error(errors["UpdateProductRequest.PriceFinished"]);
         }
-        console.log(error.UpdateProductRequest.PriceFinished)
+        console.log(error.UpdateProductRequest.PriceFinished);
       } else {
         console.error("Lỗi khi gửi biểu mẫu:", error);
       }
@@ -311,23 +312,23 @@ export const ProductForm = () => {
   const { pending } = useFormStatus();
 
   const handleClearForm = () => {
-    setOpen(false)
-    setOpenAlert(false)
+    setOpen(false);
+    setOpenAlert(false);
     form.reset();
-    setImageRequests([])
-  }
+    setImageRequests([]);
+  };
   const handleOffDialog = () => {
     // Kiểm tra xem mảng có rỗng hay không
-    const isArrayEmpty = (arr:any) => {
+    const isArrayEmpty = (arr: any) => {
       return Array.isArray(arr) && arr.length === 0;
     };
-    
+
     // Sử dụng hàm này để kiểm tra mảng imageRequests
     const isDetailsProEmpty = isArrayEmpty(imageRequests);
-    
+
     console.log(isDetailsProEmpty);
-    console.log("form", form.getValues())
-    console.log("imageRequests",imageRequests)
+    console.log("form", form.getValues());
+    console.log("imageRequests", imageRequests);
     // Kiểm tra giá trị cụ thể của form
     const isCodeIdEmpty = form.getValues().code === "";
     const isDescriptionEmpty = form.getValues().description === "";
@@ -337,8 +338,17 @@ export const ProductForm = () => {
     const isPricePhase2Empty = form.getValues().pricePhase2 === "";
     const isSizeEmpty = form.getValues().size === "";
 
-     // Nếu tất cả các trường trong form đều trống hoặc không có giá trị và các mảng rỗng
-     if (isDetailsProEmpty && isCodeIdEmpty && isDescriptionEmpty && isNameEmpty && isPriceFinishedEmpty&& isPricePhase1Empty && isPricePhase2Empty && isSizeEmpty) {
+    // Nếu tất cả các trường trong form đều trống hoặc không có giá trị và các mảng rỗng
+    if (
+      isDetailsProEmpty &&
+      isCodeIdEmpty &&
+      isDescriptionEmpty &&
+      isNameEmpty &&
+      isPriceFinishedEmpty &&
+      isPricePhase1Empty &&
+      isPricePhase2Empty &&
+      isSizeEmpty
+    ) {
       setOpen(false);
     } else {
       setOpenAlert(true);
@@ -346,38 +356,47 @@ export const ProductForm = () => {
   };
   return (
     <>
-      {
-        openAlert && (
-          <AlertDialog open={openAlert} >
-            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-      }
+      {openAlert && (
+        <AlertDialog open={openAlert}>
+          <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Bạn có chắc chắn muốn tắt biểu mẫu này không ??
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
+                những dữ liệu mà bạn đã nhập
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleOffDialogA}>
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearForm}>
+                Tiếp tục
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
-        <Dialog.Trigger className="rounded p-2 hover:bg-primary/90 bg-primary">
-          <Plus onClick={handleOnDialog} />
+        <Dialog.Trigger className="rounded p-2 bg-[#00c100] hover:bg-[#00c100]/90">
+          <Plus className="" onClick={handleOnDialog} />
         </Dialog.Trigger>
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
             <Dialog.Content className="overflow-auto w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
               <Dialog.Title className="hidden visible"></Dialog.Title>
               <Dialog.Description className="hidden visible"></Dialog.Description>
-              <div className="bg-slate-100  flex flex-col ">
+              <div className="bg-[#ffff]  flex flex-col ">
                 <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
                   <h2 className="text-2xl text-white">Thêm Sản Phẩm</h2>
-                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleOffDialog}
+                  >
                     <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
@@ -505,6 +524,90 @@ export const ProductForm = () => {
                                   </FormItem>
                                 )}
                               />
+                              <div className="md:flex flex-row gap-4">
+                                {/* price */}
+                                <FormField
+                                  control={form.control}
+                                  name="pricePhase1"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center text-primary">
+                                        Giá giai đoạn 1 *
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="text"
+                                          inputMode="numeric"
+                                          {...field}
+                                          value={formatCurrency(field.value)}
+                                          onChange={(e) =>
+                                            field.onChange(
+                                              parseCurrency(e.target.value)
+                                            )
+                                          }
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                {/* price */}
+                                <FormField
+                                  control={form.control}
+                                  name="pricePhase2"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center text-primary">
+                                        Giá giai đoạn 2 *
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="text"
+                                          inputMode="numeric"
+                                          {...field}
+                                          value={formatCurrency(field.value)}
+                                          onChange={(e) => {
+                                            const rawValue = e.target.value.replace(
+                                              /[^\d.]/g,
+                                              ""
+                                            ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                            field.onChange(rawValue);
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                                {/* priceFinished */}
+                                <FormField
+                                  control={form.control}
+                                  name="priceFinished"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex items-center text-primary">
+                                        Giá hoàn thiện *
+                                      </FormLabel>
+                                      <FormControl>
+                                        <Input
+                                          type="text"
+                                          inputMode="numeric"
+                                          {...field}
+                                          value={formatCurrency(field.value)}
+                                          onChange={(e) => {
+                                            const rawValue = e.target.value.replace(
+                                              /[^\d.]/g,
+                                              ""
+                                            ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
+                                            field.onChange(rawValue);
+                                          }}
+                                        />
+                                      </FormControl>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
                               {/* description */}
                               <FormField
                                 control={form.control}
@@ -525,90 +628,7 @@ export const ProductForm = () => {
                                 )}
                               />
                             </div>
-                            <div className="md:flex flex-row gap-4">
-                              {/* price */}
-                              <FormField
-                                control={form.control}
-                                name="pricePhase1"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center text-primary">
-                                      Giá giai đoạn 1 *
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        type="text"
-                                        inputMode="numeric"
-                                        {...field}
-                                        value={formatCurrency(field.value)}
-                                        onChange={(e) =>
-                                          field.onChange(
-                                            parseCurrency(e.target.value)
-                                          )
-                                        }
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              {/* price */}
-                              <FormField
-                                control={form.control}
-                                name="pricePhase2"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center text-primary">
-                                      Giá giai đoạn 2 *
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        type="text"
-                                        inputMode="numeric"
-                                        {...field}
-                                        value={formatCurrency(field.value)}
-                                        onChange={(e) => {
-                                          const rawValue = e.target.value.replace(
-                                            /[^\d.]/g,
-                                            ""
-                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                                          field.onChange(rawValue);
-                                        }}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              {/* priceFinished */}
-                              <FormField
-                                control={form.control}
-                                name="priceFinished"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex items-center text-primary">
-                                      Giá hoàn thiện *
-                                    </FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        type="text"
-                                        inputMode="numeric"
-                                        {...field}
-                                        value={formatCurrency(field.value)}
-                                        onChange={(e) => {
-                                          const rawValue = e.target.value.replace(
-                                            /[^\d.]/g,
-                                            ""
-                                          ); // Loại bỏ các ký tự không phải số hoặc dấu chấm
-                                          field.onChange(rawValue);
-                                        }}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
+
                             {/* <Separator className="h-1" /> */}
                             <Button
                               type="submit"

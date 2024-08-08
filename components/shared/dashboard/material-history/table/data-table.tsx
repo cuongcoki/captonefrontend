@@ -52,6 +52,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import AddNewMeterialHistoryForm from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history-form";
+import UpdateMaterialHistoryForm from "@/components/shared/dashboard/material-history/update-material-history/update-material-history-form";
 type MaterialHistoryContextType = {
   ForceRender: () => void;
 };
@@ -61,12 +62,10 @@ export const MaterialHistoryContext =
     ForceRender: () => {},
   });
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
   searchParamsProp: materialHistoryProp;
 }
 
 export function DataTableForMaterialHistory<TData, TValue>({
-  columns,
   searchParamsProp,
 }: DataTableProps<TData, TValue>) {
   const [data, setData] = React.useState<materialHistoryType[]>([]);
@@ -269,12 +268,12 @@ export function DataTableForMaterialHistory<TData, TValue>({
             <TableHeader>
               <TableRow>
                 <TableHead className="text-center">Ảnh minh họa</TableHead>
-                <TableHead className="text-center">Tên nguyên liệu</TableHead>
+                <TableHead className="text-center">Tên nguyên vật liệu</TableHead>
                 <TableHead className="text-center">Số lượng</TableHead>
                 <TableHead className="text-center">
-                  Giá mua 1 nguyên liệu
+                  Giá / Đơn vị
                 </TableHead>
-                <TableHead className="text-center">Ngày mua</TableHead>
+                <TableHead className="text-center">Ngày nhập</TableHead>
                 <TableHead className="text-center">Ghi chú</TableHead>
                 <TableHead className="text-center">Hành Động</TableHead>
               </TableRow>
@@ -282,12 +281,31 @@ export function DataTableForMaterialHistory<TData, TValue>({
             <TableBody>
               {data.length && !isloading ? (
                 data.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell>
-                      <div className="flex justify-center items-center space-x-2 max-w-[200px]">
-                        <Dialog>
-                          <DialogTrigger>
-                            <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
+                  <>
+                    <TableRow key={row.id}>
+                      <TableCell>
+                        <div className="flex justify-center items-center space-x-2 max-w-[200px]">
+                          <Dialog>
+                            <DialogTrigger>
+                              <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
+                                <Image
+                                  className="w-full h-full rounded-lg object-cover"
+                                  width={900}
+                                  height={900}
+                                  src={
+                                    (images.has(row.image as string)
+                                      ? images.get(row.image as string)
+                                      : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
+                                  }
+                                  alt={row.materialName}
+                                />
+                              </div>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle></DialogTitle>
+                                <DialogDescription></DialogDescription>
+                              </DialogHeader>
                               <Image
                                 className="w-full h-full rounded-lg object-cover"
                                 width={900}
@@ -299,52 +317,35 @@ export function DataTableForMaterialHistory<TData, TValue>({
                                 }
                                 alt={row.materialName}
                               />
-                            </div>
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle></DialogTitle>
-                              <DialogDescription></DialogDescription>
-                            </DialogHeader>
-                            <Image
-                              className="w-full h-full rounded-lg object-cover"
-                              width={900}
-                              height={900}
-                              src={
-                                (images.has(row.image as string)
-                                  ? images.get(row.image as string)
-                                  : "https://toplist.vn/images/800px/lang-nghe-may-tre-dan-phu-vinh-281399.jpg") as string
-                              }
-                              alt={row.materialName}
-                            />
-                          </DialogContent>
-                        </Dialog>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {row.materialName}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {row.quantity}
-                    </TableCell>
-                    <TableCell className="text-center">{row.price}</TableCell>
-                    <TableCell className="text-center">
-                      {convertDateFormatToDMY(row.importDate)}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {row.description}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <MaterialHistoryAction id={row.id} />
-                    </TableCell>
-                  </TableRow>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {row.materialName}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {row.quantity}
+                      </TableCell>
+                      <TableCell className="text-center">{row.price}</TableCell>
+                      <TableCell className="text-center">
+                        {convertDateFormatToDMY(row.importDate)}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {row.description}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <MaterialHistoryAction idMaterialHistory={row.id} />
+                      </TableCell>
+                    </TableRow>
+                    <UpdateMaterialHistoryForm idMaterialHistory={row.id}>
+                      <div id={row.id}></div>
+                    </UpdateMaterialHistoryForm>
+                  </>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={columns.length}
-                    className="h-24 text-center"
-                  >
+                  <TableCell colSpan={7} className="h-24 text-center">
                     {isloading ? "Đang tải dữ liệu..." : "Không có dữ liệu"}
                   </TableCell>
                 </TableRow>

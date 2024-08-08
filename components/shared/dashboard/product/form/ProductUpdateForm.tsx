@@ -102,7 +102,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                 console.error("Error getting file:", error);
                 return {
                   ...image,
-                  imageUrl: "", 
+                  imageUrl: "",
                 };
               }
             })
@@ -282,9 +282,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
       });
     }
   };
- 
+
   const [saveUpdateImage, setSaveUpdateImage] = useState<any[]>([]);
- 
+
   // Handle toggling blue image flag for an image
   const handleToggleBluePrint = (imageUrl: string, id: string) => {
     console.log("id", id);
@@ -394,10 +394,10 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
     setLoading(true);
     const formData = new FormData();
     imageUrls.forEach((imageUrl: any) => {
-      formData.append("receivedFiles", imageUrl); 
+      formData.append("receivedFiles", imageUrl);
     });
     try {
-      const response = await filesApi.postFiles(formData); 
+      const response = await filesApi.postFiles(formData);
       console.log("Upload successful:", response.data);
     } catch (error) {
       console.error("Error uploading files:", error);
@@ -409,7 +409,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Handle form submission
   const onSubmit = async (formData: z.infer<typeof ProductUpdateSchema>) => {
-    if (isSubmitting) return; 
+    if (isSubmitting) return;
     var ImaNull = null;
     setLoading(true);
     setIsSubmitting(true);
@@ -444,7 +444,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
           formData.id
         );
         ForceRender();
-        toast.success(response.data.message); 
+        toast.success(response.data.message);
         console.log("Update Successful:", response);
       } catch (error: any) {
         if (
@@ -560,7 +560,90 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                         </FormItem>
                       )}
                     />
+                    <div className="md:flex flex-row gap-4">
+                      {/* Price */}
+                      <FormField
+                        control={form.control}
+                        name="pricePhase1"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center text-primary">
+                              Giá giai đoạn 1 *
+                            </FormLabel>
+                            <Input
+                              type="text"
+                              inputMode="numeric"
+                              {...field}
+                              value={formatCurrency(field.value)}
+                              onChange={(e) =>
+                                field.onChange(parseCurrency(e.target.value))
+                              }
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
+                      {/* Price */}
+                      <FormField
+                        control={form.control}
+                        name="pricePhase2"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center text-primary">
+                              Giá giai đoạn 2 *
+                            </FormLabel>
+                            <Input
+                              type="text"
+                              inputMode="numeric"
+                              {...field}
+                              value={formatCurrency(field.value)}
+                              onChange={(e) =>
+                                field.onChange(parseCurrency(e.target.value))
+                              }
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      {/* Price */}
+                      <FormField
+                        control={form.control}
+                        name="priceFinished"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center text-primary">
+                              Giá hoàn thiện *
+                            </FormLabel>
+                            <Input
+                              type="text"
+                              inputMode="numeric"
+                              {...field}
+                              value={formatCurrency(field.value)}
+                              onChange={(e) =>
+                                field.onChange(parseCurrency(e.target.value))
+                              }
+                            />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    {/* Description */}
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center text-primary">
+                            Mô Tả
+                          </FormLabel>
+                          <Textarea {...field} />
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     {/* IsProse */}
                     <FormField
                       control={form.control}
@@ -592,93 +675,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                         </FormItem>
                       )}
                     />
-                    {/* Description */}
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center text-primary">
-                            Mô Tả
-                          </FormLabel>
-                          <Textarea {...field} />
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
-
-                  <div className="md:flex flex-row gap-4">
-                    {/* Price */}
-                    <FormField
-                      control={form.control}
-                      name="pricePhase1"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center text-primary">
-                            Giá giai đoạn 1 *
-                          </FormLabel>
-                          <Input
-                            type="text"
-                            inputMode="numeric"
-                            {...field}
-                            value={formatCurrency(field.value)}
-                            onChange={(e) =>
-                              field.onChange(parseCurrency(e.target.value))
-                            }
-                          />
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Price */}
-                    <FormField
-                      control={form.control}
-                      name="pricePhase2"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center text-primary">
-                            Giá giai đoạn 2 *
-                          </FormLabel>
-                          <Input
-                            type="text"
-                            inputMode="numeric"
-                            {...field}
-                            value={formatCurrency(field.value)}
-                            onChange={(e) =>
-                              field.onChange(parseCurrency(e.target.value))
-                            }
-                          />
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {/* Price */}
-                    <FormField
-                      control={form.control}
-                      name="priceFinished"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center text-primary">
-                            Giá hoàn thiện *
-                          </FormLabel>
-                          <Input
-                            type="text"
-                            inputMode="numeric"
-                            {...field}
-                            value={formatCurrency(field.value)}
-                            onChange={(e) =>
-                              field.onChange(parseCurrency(e.target.value))
-                            }
-                          />
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
                   {/* Submit button */}
                   <Button
                     type="submit"
