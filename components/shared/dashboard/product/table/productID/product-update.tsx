@@ -77,10 +77,9 @@ export default function ProductUpdate({
                   <h2 className="text-2xl text-white">
                     Chỉnh Sửa Thông Tin Sản Phẩm
                   </h2>
-                  <Button variant="outline" size="icon">
+                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
                     <X
                       className="w-4 h-4 dark:text-white"
-                      onClick={handleOffDialog}
                     />
                   </Button>
                 </div>
