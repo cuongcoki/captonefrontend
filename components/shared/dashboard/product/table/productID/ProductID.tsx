@@ -132,24 +132,6 @@ export default function ProductIDPage() {
     if (!value) return "";
     return limitLength(value, maxLength);
   };
-  useEffect(() => {
-    const setEqualHeight = () => {
-      const divA = document.getElementById("A");
-      const divB = document.getElementById("B");
-
-      if (divA && divB) {
-        const heightA = divA.offsetHeight;
-        divB.style.height = `${heightA}px`;
-      }
-    };
-
-    setEqualHeight();
-    window.addEventListener("resize", setEqualHeight);
-
-    return () => {
-      window.removeEventListener("resize", setEqualHeight);
-    };
-  });
 
   return (
     <>
@@ -160,7 +142,7 @@ export default function ProductIDPage() {
       <div className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
         <div
           id="A"
-          className="grid grid-cols-2 items-start gap-4 md:gap-8 lg:col-span-2"
+          className="grid md:grid-cols-2 grid-col-1 items-start gap-4 md:gap-8 lg:col-span-2"
         >
           <Card className="shadow-sm h-full grid ">
             <CardHeader className="row-span-2">
