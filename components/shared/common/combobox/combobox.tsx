@@ -38,6 +38,11 @@ export function Combobox({
     }
     return text;
   };
+  const [searchValue, setSearchValue] = React.useState("");
+
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
+  };
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -58,14 +63,19 @@ export function Combobox({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search option..." className="h-9" />
+          <CommandInput
+            value={searchValue}
+            onValueChange={handleSearch}
+            placeholder="Search option..."
+            className="h-9"
+          />
           <CommandList>
             <CommandEmpty>No option found.</CommandEmpty>
             <CommandGroup>
-              {data.map((option) => (
+              {data.map((option, index) => (
                 <CommandItem
                   key={option.value}
-                  value={option.label}
+                  value={option.label + "✦".repeat(index + 1)}
                   onSelect={(currentValue: any) => {
                     setValue(option.value);
                     setOpen(false);
