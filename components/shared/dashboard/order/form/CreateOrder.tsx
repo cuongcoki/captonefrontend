@@ -89,6 +89,7 @@ import ImageDisplayDialog from "./imageDisplayDialog";
 import Image from "next/image";
 import { NoImage } from "@/constants/images";
 import { OrderStore } from "../order-store";
+import TitleComponent from "@/components/shared/common/Title";
 
 // Define Company Type
 type Company = {
@@ -235,7 +236,12 @@ export default function CreateOrder() {
   }, [debouncedSearchTerm, searchTerm]);
 
   // ========================================================= các hàm để thêm sản phẩm và số lượng vào bộ sản phẩm =========================================================
-
+  const limitLength = (text: any, maxLength: any) => {
+    if (text.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`;
+    }
+    return text;
+  };
   const [getDetailsPro, setGetDetailsPro] = useState<any[]>([]);
   const [productsRequest, setProductsRequest] = useState<
     {
@@ -463,7 +469,7 @@ export default function CreateOrder() {
               <Dialog.Description className="hidden visible"></Dialog.Description>
               <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
-                  <h2 className="text-2xl text-white">Tạo Đơn Hàng</h2>
+                  <h2 className="text-2xl text-white">Tạo Đơn Đặt Hàng</h2>
                   <Button
                     variant="outline"
                     size="icon"
@@ -473,519 +479,513 @@ export default function CreateOrder() {
                   </Button>
                 </div>
                 <div className="grid p-4 overflow-y-auto h-[650px] gap-4">
-                  <div className="grid gap-4 lg:grid-cols-5 lg:gap-8">
-                    <div className="grid auto-rows-max items-start gap-4 lg:col-span-5 lg:gap-8">
-                      <Card>
-                        <CardHeader>
-                          <CardTitle className="text-lg text-primary">
-                            Thêm sản phẩm cho đơn hàng
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="flex items-center my-4">
-                            <div className="flex items-center border w-full rounded-lg px-2 ">
-                              <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <ChevronDown className="mr-2 h-4 w-4 text-primary-backgroudPrimary" />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="start">
-                                  <DropdownMenuItem
-                                    onClick={handleCheckProduct}
-                                  >
-                                    Sản phẩm
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={handleCheckOrder}>
-                                    Bộ sản phẩm
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-
-                              {!checkProducts ? (
-                                <Input
-                                  placeholder="tìm kiếm tên sản phẩm ..."
-                                  value={searchTerm}
-                                  onChange={(e) =>
-                                    setSearchTerm(e.target.value)
-                                  }
-                                  className="border-none w-full"
-                                />
-                              ) : (
-                                <Input
-                                  placeholder="tìm kiếm bộ sản phẩm ..."
-                                  value={searchTermSet}
-                                  onChange={(e) =>
-                                    setSearchTermSet(e.target.value)
-                                  }
-                                  className="border-none w-full"
-                                />
-                              )}
-                            </div>
-                          </div>
-                          {!checkProducts ? (
-                            <>
-                              {searchResults !== null ? (
-                                <Card className="my-4">
-                                  <CardHeader className="font-semibold text-xl">
-                                    <span>Thông tin sản phẩm</span>
-                                  </CardHeader>
-                                  <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
-                                    {searchResults !== null ? (
-                                      searchResults.map((product) => (
-                                        <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
-                                          <div className="font-medium flex flex-col rounded-md">
-                                            <ImageDisplayDialog
-                                              images={product}
-                                              checkProduct={productCheck}
-                                            />
-                                            <Check
-                                              className={`w-5 h-5 ${productsRequest.some(
-                                                (item1) => item1.productIdOrSetId === product.id
-                                              )
-                                                ? "absolute top-0 right-0 bg-primary text-white"
-                                                : "hidden"
-                                                }`}
-                                            />
-                                          </div>
-                                          <div>
-                                            <Button
-                                              variant={"ghost"}
-                                              size={"icon"}
-                                              className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                              onClick={() =>
-                                                handleAddProducts(product, productType)
-                                              }
-                                            >
-                                              <Plus className="text-white" />
-                                            </Button>
-                                          </div>
-                                        </div>
-                                      ))
-                                    ) : (
-                                      <div className="text-center flex justify-center items-center w-full">
-                                        không thấy sản phẩm nào
-                                      </div>
-                                    )}
-                                  </CardContent>
-                                </Card>
-                              ) : (
-                                ""
-                              )}
-                            </>
-                          ) : (
-                            <>
-                              {searchResultsSet !== null ? (
-                                <Card className="my-4">
-                                  <CardHeader className="font-semibold text-xl">
-                                    <span>Thông tin Bộ sản phẩm</span>
-                                  </CardHeader>
-                                  <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
-                                    {searchResultsSet !== null ? (
-                                      searchResultsSet.map((product) => (
-                                        <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
-                                          <div className="font-medium flex flex-col rounded-md">
-                                            <ImageDisplayDialog
-                                              images={product}
-                                              checkProduct={setCheck}
-                                            />
-                                            <Check
-                                              className={`w-5 h-5 ${productsRequest.some(
-                                                (item1) => item1.productIdOrSetId === product.id
-                                              )
-                                                ? "absolute top-0 right-0 bg-primary text-white"
-                                                : "hidden"
-                                                }`}
-                                            />
-                                          </div>
-                                          <div>
-                                            <Button
-                                              variant={"ghost"}
-                                              size={"icon"}
-                                              className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                              onClick={() =>
-                                                handleAddProducts(product, setType)
-                                              }
-                                            >
-                                              <Plus className="text-white" />
-                                            </Button>
-                                          </div>
-                                        </div>
-                                      ))
-                                    ) : (
-                                      <div className="text-center flex justify-center items-center w-full">
-                                        không thấy sản phẩm nào
-                                      </div>
-                                    )}
-                                  </CardContent>
-                                </Card>
-                              ) : (
-                                ""
-                              )}
-                            </>
-                          )}
-
-
-                          <div className="md:col-span-1 md:mt-0 md:w-full w-[1000px]">
-                            <Card className="mt-4">
-                              <CardHeader className="font-semibold text-xl">
-                                <span>Thông tin sản phẩm đã thêm</span>
-                              </CardHeader>
-                              <CardContent >
-                                <Table >
-                                  <TableHeader>
-                                    <TableRow>
-                                      <TableHead className="w-[100px]">
-                                        Sản phẩm
-                                      </TableHead>
-                                      <TableHead>Loại Sản phẩm</TableHead>
-                                      <TableHead>Số lượng</TableHead>
-                                      <TableHead>Đơn vị giá</TableHead>
-                                      <TableHead>Ghi chú</TableHead>
-
-                                      <TableHead></TableHead>
-                                    </TableRow>
-                                  </TableHeader>
-
-                                  <TableBody >
-                                    {getDetailsPro.map((product, index) => (
-                                      <TableRow key={index} >
-                                        <TableCell className="font-medium w-[20%]">
-                                          <div className="flex flex-col gap-2">
-                                            <div className="flex items-center gap-1">
-                                              <Image
-                                                alt="ảnh mẫu"
-                                                className="w-[50px] h-[50px] rounded-lg object-cover"
-                                                width={900}
-                                                height={900}
-                                                src={
-                                                  product?.imageUrl ===
-                                                    "Image_not_found"
-                                                    ? NoImage
-                                                    : product?.imageUrl
-                                                }
-                                              />
-                                            </div>
-
-                                            <div className="font-medium dark:text-white">
-                                              <div className="text-sm text-gray-500 dark:text-gray-400">
-                                                {product.code}-{product.name}
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </TableCell>
-                                        <TableCell>{product.productType === 0 ? "Sản phẩm" : "Bộ sản phẩm"}</TableCell>
-                                        <TableCell className="font-medium">
-                                          <Input
-                                            name="quantity"
-                                            value={formatCurrency(
-                                              productsRequest.find(
-                                                (item) =>
-                                                  item.productIdOrSetId ===
-                                                  product.id
-                                              )?.quantity
-                                            )}
-                                            onChange={(e) =>
-                                              handleChange(
-                                                product.id,
-                                                "quantity",
-                                                parseInt(
-                                                  e.target.value.replace(
-                                                    /\./g,
-                                                    ""
-                                                  )
-                                                )
-                                              )
-                                            }
-                                            className="w-16 text-left outline-none"
-                                          />
-                                        </TableCell>
-
-                                        <TableCell className="font-medium">
-                                          <Input
-                                            name="unitPrice"
-                                            step={1}
-                                            value={formatCurrency(
-                                              productsRequest.find(
-                                                (item) =>
-                                                  item.productIdOrSetId ===
-                                                  product.id
-                                              )?.unitPrice || 0
-                                            )}
-                                            onChange={(e) =>
-                                              handleChange(
-                                                product.id,
-                                                "unitPrice",
-                                                parseInt(
-                                                  e.target.value.replace(
-                                                    /\./g,
-                                                    ""
-                                                  )
-                                                )
-                                              )
-                                            }
-                                            className="w-32 text-left outline-none"
-                                          />
-                                        </TableCell>
-
-                                        <TableCell className="relative">
-                                          {/* <div className="overflow-auto bg-green-200 p-4 w-[200px] h-24 text-justify break-words whitespace-pre-wrap"> */}
-                                          <Textarea
-                                            id="note"
-                                            name="note"
-                                            value={
-                                              productsRequest.find(
-                                                (item) =>
-                                                  item.productIdOrSetId ===
-                                                  product.id
-                                              )?.note || ""
-                                            }
-                                            onChange={(e) =>
-                                              handleChange(
-                                                product.id,
-                                                "note",
-                                                e.target.value
-                                              )
-                                            }
-                                            className="col-span-3 "
-                                          />
-                                          {/* </div> */}
-                                        </TableCell>
-
-                                        <TableCell className="font-medium">
-                                          <Button
-                                            variant="outline"
-                                            size="icon"
-                                            onClick={() =>
-                                              handleMinusProducts(product.id)
-                                            }
-                                          >
-                                            <Minus className="h-4 w-4" />
-                                          </Button>
-                                        </TableCell>
-                                      </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </CardContent>
-                            </Card>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-
                   <Form {...form}>
                     <form
                       onSubmit={form.handleSubmit(onSubmit)}
                       className="flex flex-col gap-6"
                     >
-                      <div className="">
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="text-lg text-primary">
-                              Chi tiết đơn hàng
-                            </CardTitle>
-                          </CardHeader>
-
-                          <CardContent className="flex gap-6">
-                            <div className="flex flex-col gap-6 w-full">
+                      <Card>
+                        <CardHeader>
+                          <TitleComponent
+                          title="Thông tin đơn hàng"
+                          description="Thông tin công ty - thuế - thời gian đặt hàng của đơn đặt hàng."
+                          />
+                        </CardHeader>
+                        <CardContent className="flex gap-4">
+                          <div className="flex flex-col gap-4 w-full">
+                            <FormField
+                              control={form.control}
+                              name="companyId"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel className="text-primary-backgroudPrimary">
+                                    Công ty *
+                                  </FormLabel>
+                                  <Select
+                                    onValueChange={field.onChange}
+                                    defaultValue={field.value}
+                                  >
+                                    <FormControl>
+                                      <SelectTrigger>
+                                        <SelectValue
+                                          placeholder="Hãy chọn công ty"
+                                          defaultValue={field.value}
+                                        />
+                                      </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                      {company.map((item) => (
+                                        <SelectItem
+                                          key={item.id}
+                                          value={item.id}
+                                        >
+                                          {item.name}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                            <div className="flex gap-6 items-start ">
                               <FormField
                                 control={form.control}
-                                name="companyId"
+                                name="vat"
                                 render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="text-primary-backgroudPrimary">
-                                      Công ty *
+                                  <FormItem >
+                                    <FormLabel className="">
+                                      <div className="mb-2 text-primary">
+                                        %Thuế
+                                      </div>
                                     </FormLabel>
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      defaultValue={field.value}
-                                    >
-                                      <FormControl>
+                                    <FormControl className="mt-2">
+                                      <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={field.value.toString()}
+                                      >
                                         <SelectTrigger>
-                                          <SelectValue
-                                            placeholder="Hãy chọn công ty"
-                                            defaultValue={field.value}
-                                          />
+                                          <SelectValue placeholder="Chọn % thuế" />
                                         </SelectTrigger>
-                                      </FormControl>
-                                      <SelectContent>
-                                        {company.map((item) => (
-                                          <SelectItem
-                                            key={item.id}
-                                            value={item.id}
-                                          >
-                                            {item.name}
+                                        <SelectContent>
+                                          <SelectItem value="0">
+                                            0%
                                           </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
+                                          <SelectItem value="5">
+                                            5%
+                                          </SelectItem>
+                                          <SelectItem value="8">
+                                            8%
+                                          </SelectItem>
+                                          <SelectItem value="20">
+                                            10%
+                                          </SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </FormControl>
                                     <FormMessage />
                                   </FormItem>
                                 )}
                               />
-                              <div className="flex gap-6 items-start ">
-                                <FormField
-                                  control={form.control}
-                                  name="vat"
-                                  render={({ field }) => (
-                                    <FormItem >
-                                      <FormLabel className="">
-                                        <div className="mb-2 text-primary">
-                                          %Thuế
-                                        </div>
-                                      </FormLabel>
-                                      <FormControl className="mt-2">
-                                        <Select
-                                          onValueChange={field.onChange}
-                                          defaultValue={field.value.toString()}
-                                        >
-                                          <SelectTrigger>
-                                            <SelectValue placeholder="Chọn % thuế" />
-                                          </SelectTrigger>
-                                          <SelectContent>
-                                            <SelectItem value="0">
-                                              0%
-                                            </SelectItem>
-                                            <SelectItem value="5">
-                                              5%
-                                            </SelectItem>
-                                            <SelectItem value="8">
-                                              8%
-                                            </SelectItem>
-                                            <SelectItem value="20">
-                                              10%
-                                            </SelectItem>
-                                          </SelectContent>
-                                        </Select>
-                                      </FormControl>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                                <FormField
-                                  control={form.control}
-                                  name="startOrder"
-                                  render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                      <FormLabel className="flex items-center text-primary">
-                                        Ngày bắt đầu *
-                                      </FormLabel>
-                                      <Popover modal={true}>
-                                        <PopoverTrigger asChild>
-                                          <FormControl>
-                                            <Button
-                                              variant={"outline"}
-                                              className={cn(
-                                                "w-[240px] pl-3 text-left font-normal",
-                                                !field.value &&
-                                                "text-muted-foreground"
-                                              )}
-                                            >
-                                              {field.value ? (
-                                                field.value
-                                              ) : (
-                                                <span>Chọn ngày</span>
-                                              )}
-                                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                          </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent
-                                          className="w-auto p-0"
-                                          align="start"
-                                        >
-                                          <Calendar
-                                            mode="single"
-                                            selected={
+                              <FormField
+                                control={form.control}
+                                name="startOrder"
+                                render={({ field }) => (
+                                  <FormItem className="flex flex-col">
+                                    <FormLabel className="flex items-center text-primary">
+                                      Ngày bắt đầu *
+                                    </FormLabel>
+                                    <Popover modal={true}>
+                                      <PopoverTrigger asChild>
+                                        <FormControl>
+                                          <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                              "w-[240px] pl-3 text-left font-normal",
+                                              !field.value &&
+                                              "text-muted-foreground"
+                                            )}
+                                          >
+                                            {field.value ? (
                                               field.value
-                                                ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
-                                                : undefined
-                                            }
-                                            onSelect={(date: any) =>
-                                              field.onChange(
-                                                format(date, "dd/MM/yyyy")
+                                            ) : (
+                                              <span>Chọn ngày</span>
+                                            )}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                          </Button>
+                                        </FormControl>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                      >
+                                        <Calendar
+                                          mode="single"
+                                          selected={
+                                            field.value
+                                              ? parse(
+                                                field.value,
+                                                "dd/MM/yyyy",
+                                                new Date()
                                               )
-                                            }
-                                            // disabled={(date) =>
-                                            //   date > new Date() || date < new Date("1900-01-01")
-                                            // }
-                                            initialFocus
-                                          />
-                                        </PopoverContent>
-                                      </Popover>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
+                                              : undefined
+                                          }
+                                          onSelect={(date: any) =>
+                                            field.onChange(
+                                              format(date, "dd/MM/yyyy")
+                                            )
+                                          }
+                                          // disabled={(date) =>
+                                          //   date > new Date() || date < new Date("1900-01-01")
+                                          // }
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
 
-                                <FormField
-                                  control={form.control}
-                                  name="endOrder"
-                                  render={({ field }) => (
-                                    <FormItem className="flex flex-col">
-                                      <FormLabel className="flex items-center text-primary">
-                                        Ngày kết thúc *
-                                      </FormLabel>
-                                      <Popover modal={true}>
-                                        <PopoverTrigger asChild>
-                                          <FormControl>
-                                            <Button
-                                              variant={"outline"}
-                                              className={cn(
-                                                "w-[240px] pl-3 text-left font-normal",
-                                                !field.value &&
-                                                "text-muted-foreground"
-                                              )}
-                                            >
-                                              {field.value ? (
-                                                field.value
-                                              ) : (
-                                                <span>Chọn ngày</span>
-                                              )}
-                                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                          </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent
-                                          className="w-auto p-0"
-                                          align="start"
-                                        >
-                                          <Calendar
-                                            mode="single"
-                                            selected={
+                              <FormField
+                                control={form.control}
+                                name="endOrder"
+                                render={({ field }) => (
+                                  <FormItem className="flex flex-col">
+                                    <FormLabel className="flex items-center text-primary">
+                                      Ngày kết thúc *
+                                    </FormLabel>
+                                    <Popover modal={true}>
+                                      <PopoverTrigger asChild>
+                                        <FormControl>
+                                          <Button
+                                            variant={"outline"}
+                                            className={cn(
+                                              "w-[240px] pl-3 text-left font-normal",
+                                              !field.value &&
+                                              "text-muted-foreground"
+                                            )}
+                                          >
+                                            {field.value ? (
                                               field.value
-                                                ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
-                                                : undefined
-                                            }
-                                            onDayClick={(date: any) =>
-                                              field.onChange(
-                                                format(date, "dd/MM/yyyy")
+                                            ) : (
+                                              <span>Chọn ngày</span>
+                                            )}
+                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                          </Button>
+                                        </FormControl>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                      >
+                                        <Calendar
+                                          mode="single"
+                                          selected={
+                                            field.value
+                                              ? parse(
+                                                field.value,
+                                                "dd/MM/yyyy",
+                                                new Date()
                                               )
-                                            }
-                                            disabled={(date) =>
-                                              date < new Date("2024-01-01")
-                                            }
-                                            initialFocus
-                                          />
-                                        </PopoverContent>
-                                      </Popover>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
+                                              : undefined
+                                          }
+                                          onDayClick={(date: any) =>
+                                            field.onChange(
+                                              format(date, "dd/MM/yyyy")
+                                            )
+                                          }
+                                          disabled={(date) =>
+                                            date < new Date("2024-01-01")
+                                          }
+                                          initialFocus
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
                             </div>
-                          </CardContent>
-                        </Card>
+                          </div>
+                        </CardContent>
+                      </Card>
+                      <div className="grid gap-4 lg:grid-cols-5 lg:gap-8">
+                        <div className="grid auto-rows-max items-start gap-4 lg:col-span-5 lg:gap-8">
+                          <Card>
+                            <CardHeader>
+                              <TitleComponent
+                                title="Danh sách mặt hàng"
+                                description="Tìm kiếm - thêm mặt hàng vào đơn đặt hàng."
+                              />
+                            </CardHeader>
+                            <CardContent>
+                              <div className="flex items-center my-4">
+                                <div className="flex items-center border w-full rounded-lg px-2 ">
+                                  <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <ChevronDown className="mr-2 h-4 w-4 text-primary-backgroudPrimary" />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="start">
+                                      <DropdownMenuItem
+                                        onClick={handleCheckProduct}
+                                      >
+                                        Sản phẩm
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem onClick={handleCheckOrder}>
+                                        Bộ sản phẩm
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+
+                                  {!checkProducts ? (
+                                    <Input
+                                      placeholder="Tìm kiếm sản phẩm..."
+                                      value={searchTerm}
+                                      onChange={(e) =>
+                                        setSearchTerm(e.target.value)
+                                      }
+                                      className="border-none w-full"
+                                    />
+                                  ) : (
+                                    <Input
+                                      placeholder="Tìm kiếm bộ sản phẩm..."
+                                      value={searchTermSet}
+                                      onChange={(e) =>
+                                        setSearchTermSet(e.target.value)
+                                      }
+                                      className="border-none w-full"
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                              {!checkProducts ? (
+                                <>
+                                  {searchResults !== null ? (
+                                    <Card className="my-4">
+                                      <CardHeader className="font-semibold text-xl">
+                                        <span>Thông tin sản phẩm</span>
+                                      </CardHeader>
+                                      <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
+                                        {searchResults !== null ? (
+                                          searchResults.map((product) => (
+                                            <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
+                                              <div className="font-medium flex flex-col rounded-md">
+                                                <ImageDisplayDialog
+                                                  images={product}
+                                                  checkProduct={productCheck}
+                                                />
+                                                <Check
+                                                  className={`w-5 h-5 ${productsRequest.some(
+                                                    (item1) => item1.productIdOrSetId === product.id
+                                                  )
+                                                    ? "absolute top-0 right-0 bg-primary text-white"
+                                                    : "hidden"
+                                                    }`}
+                                                />
+                                              </div>
+                                              <div>
+                                                <Button
+                                                  variant={"ghost"}
+                                                  size={"icon"}
+                                                  className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                  onClick={() =>
+                                                    handleAddProducts(product, productType)
+                                                  }
+                                                >
+                                                  <Plus className="text-white" />
+                                                </Button>
+                                              </div>
+                                            </div>
+                                          ))
+                                        ) : (
+                                          <div className="text-center flex justify-center items-center w-full">
+                                            Không tìm thấy sản phẩm nào.
+                                          </div>
+                                        )}
+                                      </CardContent>
+                                    </Card>
+                                  ) : (
+                                    ""
+                                  )}
+                                </>
+                              ) : (
+                                <>
+                                  {searchResultsSet !== null ? (
+                                    <Card className="my-4">
+                                      <CardHeader className="font-semibold text-xl">
+                                        <span>Thông tin bộ sản phẩm</span>
+                                      </CardHeader>
+                                      <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
+                                        {searchResultsSet !== null ? (
+                                          searchResultsSet.map((product) => (
+                                            <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
+                                              <div className="font-medium flex flex-col rounded-md">
+                                                <ImageDisplayDialog
+                                                  images={product}
+                                                  checkProduct={setCheck}
+                                                />
+                                                <Check
+                                                  className={`w-5 h-5 ${productsRequest.some(
+                                                    (item1) => item1.productIdOrSetId === product.id
+                                                  )
+                                                    ? "absolute top-0 right-0 bg-primary text-white"
+                                                    : "hidden"
+                                                    }`}
+                                                />
+                                              </div>
+                                              <div>
+                                                <Button
+                                                  variant={"ghost"}
+                                                  size={"icon"}
+                                                  className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                  onClick={() =>
+                                                    handleAddProducts(product, setType)
+                                                  }
+                                                >
+                                                  <Plus className="text-white" />
+                                                </Button>
+                                              </div>
+                                            </div>
+                                          ))
+                                        ) : (
+                                          <div className="text-center flex justify-center items-center w-full">
+                                            Không tìm thấy bộ sản phẩm nào.
+                                          </div>
+                                        )}
+                                      </CardContent>
+                                    </Card>
+                                  ) : (
+                                    ""
+                                  )}
+                                </>
+                              )}
+                              <div className="md:col-span-1 md:mt-0 md:w-full w-[1000px]">
+                                <Card className="mt-4">
+                                  <CardHeader className="font-semibold text-xl">
+                                    <span>Thông tin mặt hàng thêm vào đơn đặt hàng</span>
+                                  </CardHeader>
+                                  <CardContent >
+                                    <Table >
+                                      <TableHeader>
+                                        <TableRow>
+                                          <TableHead className="w-[100px]">Mặt hàng
+                                          </TableHead>
+                                          <TableHead>Loại hàng</TableHead>
+                                          <TableHead>Số lượng</TableHead>
+                                          <TableHead>Đơn giá</TableHead>
+                                          <TableHead>Ghi chú</TableHead>
+                                          <TableHead></TableHead>
+                                        </TableRow>
+                                      </TableHeader>
+
+                                      <TableBody >
+                                        {getDetailsPro.map((product, index) => (
+                                          <TableRow key={index} >
+                                            <TableCell className="font-medium w-[20%]">
+                                              <div className="flex flex-col gap-2">
+                                                <div className="flex items-center gap-1">
+                                                  <Image
+                                                    alt="ảnh mẫu"
+                                                    className="w-[50px] h-[50px] rounded-lg object-cover"
+                                                    width={900}
+                                                    height={900}
+                                                    src={
+                                                      product?.imageUrl ===
+                                                        "Image_not_found"
+                                                        ? NoImage
+                                                        : product?.imageUrl
+                                                    }
+                                                  />
+                                                </div>
+
+                                                <div className="font-medium dark:text-white">
+                                                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                                                    {limitLength(product.code, 10)} - {limitLength(product.name, 15)}
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </TableCell>
+                                            <TableCell>{product.productType === 0 ? "Sản phẩm" : "Bộ sản phẩm"}</TableCell>
+                                            <TableCell className="font-medium">
+                                              <Input
+                                                name="quantity"
+                                                value={formatCurrency(
+                                                  productsRequest.find(
+                                                    (item) =>
+                                                      item.productIdOrSetId ===
+                                                      product.id
+                                                  )?.quantity
+                                                )}
+                                                onChange={(e) =>
+                                                  handleChange(
+                                                    product.id,
+                                                    "quantity",
+                                                    parseInt(
+                                                      e.target.value.replace(
+                                                        /\./g,
+                                                        ""
+                                                      )
+                                                    )
+                                                  )
+                                                }
+                                                className="w-16 text-left outline-none"
+                                              />
+                                            </TableCell>
+
+                                            <TableCell className="font-medium">
+                                              <Input
+                                                name="unitPrice"
+                                                step={1}
+                                                value={formatCurrency(
+                                                  productsRequest.find(
+                                                    (item) =>
+                                                      item.productIdOrSetId ===
+                                                      product.id
+                                                  )?.unitPrice || 0
+                                                )}
+                                                onChange={(e) =>
+                                                  handleChange(
+                                                    product.id,
+                                                    "unitPrice",
+                                                    parseInt(
+                                                      e.target.value.replace(
+                                                        /\./g,
+                                                        ""
+                                                      )
+                                                    )
+                                                  )
+                                                }
+                                                className="w-32 text-left outline-none"
+                                              />
+                                            </TableCell>
+
+                                            <TableCell className="relative">
+                                              {/* <div className="overflow-auto bg-green-200 p-4 w-[200px] h-24 text-justify break-words whitespace-pre-wrap"> */}
+                                              <Textarea
+                                                id="note"
+                                                name="note"
+                                                value={
+                                                  productsRequest.find(
+                                                    (item) =>
+                                                      item.productIdOrSetId ===
+                                                      product.id
+                                                  )?.note || ""
+                                                }
+                                                onChange={(e) =>
+                                                  handleChange(
+                                                    product.id,
+                                                    "note",
+                                                    e.target.value
+                                                  )
+                                                }
+                                                className="col-span-3 "
+                                              />
+                                              {/* </div> */}
+                                            </TableCell>
+
+                                            <TableCell className="font-medium">
+                                              <Button
+                                                variant="outline"
+                                                size="icon"
+                                                onClick={() =>
+                                                  handleMinusProducts(product.id)
+                                                }
+                                              >
+                                                <Minus className="h-4 w-4" />
+                                              </Button>
+                                            </TableCell>
+                                          </TableRow>
+                                        ))}
+                                      </TableBody>
+                                    </Table>
+                                  </CardContent>
+                                </Card>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
                       </div>
                       <Card>
                         <Button
@@ -993,7 +993,7 @@ export default function CreateOrder() {
                           className="w-full bg-primary hover:bg-primary/90"
                           disabled={loading}
                         >
-                          {loading ? "Loading..." : "GỬI"}
+                          {loading ? "Đang xử lý..." : "Tạo đơn đặt hàng"}
                         </Button>
                       </Card>
                     </form>

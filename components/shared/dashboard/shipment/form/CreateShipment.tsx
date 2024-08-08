@@ -102,6 +102,7 @@ import { companyApi } from "@/apis/company.api";
 import { shipmentApi } from "@/apis/shipment.api";
 import { userApi } from "@/apis/user.api";
 import TitleComponent from "@/components/shared/common/Title";
+import { useFormStatus } from "react-dom";
 
 const enumCompany = [
   {
@@ -812,6 +813,8 @@ export default function CreateShipment() {
       setOpenAlert(true);
     }
   };
+
+  const { pending } = useFormStatus();
   return (
     <>
       {
@@ -1028,14 +1031,14 @@ export default function CreateShipment() {
                         </CardContent>
                       </Card>
 
-                      <Card className="flex">
+                      <Card className="flex flex-col md:flex-row">
                         <CardHeader>
                           <TitleComponent
                             title="Thông tin"
                             description="Thông tin nhân viên - thời gian vận chuyển đơn hàng."
                           />
                         </CardHeader>
-                        <CardContent className="grid grid-cols-2 justify-around items-center space-x-16 p-4 w-full">
+                        <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2 justify-around items-center space-x-0 md:space-x-16 p-4 w-full">
                           <FormField
                             control={form.control}
                             name="shipperId"
@@ -1102,7 +1105,7 @@ export default function CreateShipment() {
                                       <Button
                                         variant={"outline"}
                                         className={cn(
-                                          "w-[240px] pl-3 text-left font-normal row-span-4",
+                                          "w-full md:w-[240px] pl-3 text-left font-normal row-span-4",
                                           !field.value && "text-muted-foreground"
                                         )}
                                       >
@@ -1147,6 +1150,7 @@ export default function CreateShipment() {
                           />
                         </CardContent>
                       </Card>
+                      
                       <div className="w-full">
                         <Tabs defaultValue="account">
                           <TabsList className="grid w-[200px] grid-cols-2">
@@ -1162,6 +1166,12 @@ export default function CreateShipment() {
                                 />
                               </CardHeader>
                               <CardContent className="space-y-2">
+                                <Input
+                                  placeholder="Tìm kiếm sản phẩm..."
+                                  value={searchTerm}
+                                  onChange={(e) => setSearchTerm(e.target.value)}
+                                  className="md:w-[300px] w-full mb-3"
+                                />
                                 <div className=" w-full grid grid-cols-3 md:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
                                   {dataP.map((item) => (
                                     <div
@@ -1177,10 +1187,8 @@ export default function CreateShipment() {
                                           : "hidden"
                                           }`}
                                       />
-                                      <Button
-                                        variant={"ghost"}
-                                        size={"icon"}
-                                        className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary "
+                                      <span
+                                        className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                         onClick={() => {
                                           const mainImage =
                                             item?.imageResponses.find(
@@ -1194,15 +1202,15 @@ export default function CreateShipment() {
                                         }}
                                       >
                                         <Plus className="text-white" />
-                                      </Button>
+                                      </span>
                                     </div>
                                   ))}
                                 </div>
                               </CardContent>
                               <CardFooter className="flex justify-end">
-                                <Button onClick={handleClear}>
+                                <span onClick={handleClear} className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5">
                                   Bỏ chọn tất cả
-                                </Button>
+                                </span>
                               </CardFooter>
                             </Card>
                           </TabsContent>
@@ -1215,6 +1223,12 @@ export default function CreateShipment() {
                                 />
                               </CardHeader>
                               <CardContent className="space-y-2">
+                              <Input
+                                  placeholder="Tìm kiếm nguyên vật liệu..."
+                                  value={searchTermM}
+                                  onChange={(e) => setSearchTermM(e.target.value)}
+                                  className="md:w-[300px] w-full mb-3"
+                                />
                                 <div className=" w-full grid grid-cols-3 sm:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
                                   {dataM.map((item) => (
                                     <div
@@ -1230,10 +1244,8 @@ export default function CreateShipment() {
                                           : "hidden"
                                           }`}
                                       />
-                                      <Button
-                                        variant={"ghost"}
-                                        size={"icon"}
-                                        className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary "
+                                      <span
+                                        className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                         onClick={() =>
                                           handleAddProducts(
                                             item?.image,
@@ -1243,34 +1255,34 @@ export default function CreateShipment() {
                                         }
                                       >
                                         <Plus className="text-white" />
-                                      </Button>
+                                      </span>
                                     </div>
                                   ))}
                                 </div>
                               </CardContent>
                               <CardFooter className="flex justify-end">
-                                <Button onClick={handleClear}>
+                                <span onClick={handleClear} className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5">
                                   Bỏ chọn tất cả
-                                </Button>
+                                </span>
                               </CardFooter>
                             </Card>
                           </TabsContent>
                         </Tabs>
                       </div>
 
-                      <div className="w-full overflow-auto">
+                      <div className="w-full overflow-auto ">
                         {productDetail.length > 0 && (
-                          <Card className="w-[1000px] sm:w-full overflow-auto">
+                          <Card className=" w-[1000px] sm:w-full overflow-auto">
                             <CardHeader>
                               <TitleComponent
                                 title="Danh sách mặt hàng"
                                 description="Danh sách sản phẩm - nguyên vật liệu trong vận chuyển."
                               />
                             </CardHeader>
-                            <Table>
+                            <Table >
                               <TableHeader>
                                 <TableRow>
-                                  <TableHead className="w-[100px]">Ảnh</TableHead>
+                                  <TableHead className="w-[100px]">Hình ảnh</TableHead>
                                   <TableHead>Giai đoạn</TableHead>
                                   <TableHead>Số lượng</TableHead>
                                   <TableHead>Loại hàng</TableHead>
@@ -1279,7 +1291,7 @@ export default function CreateShipment() {
                                   <TableHead></TableHead>
                                 </TableRow>
                               </TableHeader>
-                              <TableBody className="min-h-[200px] overflow-y-auto">
+                              <TableBody >
                                 {productDetail.map((proDetail, index) => (
                                   <TableRow key={proDetail.itemId}>
                                     <TableCell className="font-medium">
@@ -1419,9 +1431,8 @@ export default function CreateShipment() {
                                       )}
                                     </TableCell>
                                     <TableCell>
-                                      <Button
-                                        variant={"ghost"}
-                                        size={"icon"}
+                                      <span
+                                      className="cursor-pointer"
                                         onClick={() =>
                                           handleDeleteProducts(
                                             proDetail.itemId,
@@ -1430,7 +1441,7 @@ export default function CreateShipment() {
                                         }
                                       >
                                         <CircleX />
-                                      </Button>
+                                      </span>
                                     </TableCell>
                                   </TableRow>
                                 ))}
@@ -1439,13 +1450,14 @@ export default function CreateShipment() {
                           </Card>
                         )}
                       </div>
+
                       <Separator className="h-1 my-1" />
                       <Button
                         type="submit"
                         className="w-full bg-primary hover:bg-primary/90"
-                        disabled={loading}
+                        disabled={pending}
                       >
-                        {loading ? "Loading..." : "Tạo đơn"}
+                        {pending ? "Loading..." : "Tạo đơn"}
                       </Button>
                     </form>
                   </Form>
