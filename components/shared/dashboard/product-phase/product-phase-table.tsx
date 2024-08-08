@@ -200,15 +200,14 @@ export default function ProductPhaseTable({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Ảnh</TableHead>
-                <TableHead>Tên</TableHead>
-                <TableHead>Mã</TableHead>
+                <TableHead>Ảnh minh họa</TableHead>
+                <TableHead>Tên sản phẩm</TableHead>
+                <TableHead>Mã sản phẩm</TableHead>
                 <TableHead>Giai đoạn</TableHead>
                 <TableHead>Bình thường</TableHead>
                 <TableHead>Lỗi bên mình</TableHead>
                 <TableHead>Lỗi bên hợp tác</TableHead>
                 <TableHead>Hàng hỏng</TableHead>
-                {/* <TableHead className="text-center">Hành động</TableHead> */}
               </TableRow>
             </TableHeader>
 
