@@ -837,7 +837,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center ">
-                                      Mã Bộ Sản Phẩm
+                                      Mã bộ sản phẩm
                                     </FormLabel>
                                     <Input type="text" {...field} />
                                     <FormMessage />
@@ -850,7 +850,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center">
-                                      Tên Bộ Sản Phẩm
+                                      Tên bộ sản phẩm
                                     </FormLabel>
                                     <Input type="text" {...field} />
                                     <FormMessage />
@@ -863,7 +863,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center ">
-                                      Mô Tả
+                                      Miêu tả
                                     </FormLabel>
                                     <Textarea {...field} />
                                     <FormMessage />
@@ -881,7 +881,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                           >
                             <CardHeader>
                               <CardTitle className="text-2xl text-primary">
-                                Hình Ảnh
+                                Hình ảnh
                               </CardTitle>
                             </CardHeader>
                             <CardContent>

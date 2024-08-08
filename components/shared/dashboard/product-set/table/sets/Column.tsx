@@ -23,7 +23,7 @@ const limitLength = (text: any, maxLength: any) => {
 export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "imageResponses",
-    header: ({ column }) => <Button variant="ghost">Hình Ảnh</Button>,
+    header: ({ column }) => <Button variant="ghost">Hình ảnh</Button>,
     cell: ({ row }) => {
       const firstImage = row.original.imageUrl;
       return firstImage ? (
@@ -52,17 +52,17 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "code",
     header: ({ column }) => {
-      return <Button variant="ghost">Mã Bộ Sản Phẩm</Button>;
+      return <Button variant="ghost">Mã bộ sản phẩm</Button>;
     },
     cell: ({ row }) => {
       return <div className="w-full">{limitLength(row.original.code, 20)}</div>;
     },
   },
-  
+
   {
     accessorKey: "name",
     header: ({ column }) => {
-      return <Button variant="ghost">Tên Bộ Sản Phẩm</Button>;
+      return <Button variant="ghost">Tên bộ sản phẩm</Button>;
     },
     cell: ({ row }) => {
       return <div className=" w-full">{limitLength(row.original.name, 50)}</div>;
@@ -72,7 +72,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "description",
     header: ({ column }) => {
-      return <Button variant="ghost">Mô Tả</Button>;
+      return <Button variant="ghost">Miêu tả</Button>;
     },
     cell: ({ row }) => {
       return <div className="w-full">{limitLength(row.original.description, 45)}</div>;

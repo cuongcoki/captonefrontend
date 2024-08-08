@@ -525,7 +525,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex items-center text-primary">
-                            Mã Sản Phẩm *
+                            Mã sản phẩm *
                           </FormLabel>
                           <Input type="text" {...field} />
                           <FormMessage />
@@ -539,7 +539,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex items-center text-primary">
-                            Tên Sản Phẩm *
+                            Tên sản phẩm *
                           </FormLabel>
                           <Input type="text" {...field} />
                           <FormMessage />
@@ -553,7 +553,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex items-center text-primary">
-                            Kích Thước *
+                            Kích thước *
                           </FormLabel>
                           <Input type="text" {...field} />
                           <FormMessage />
@@ -637,7 +637,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex items-center text-primary">
-                            Mô Tả
+                            Miêu tả
                           </FormLabel>
                           <Textarea {...field} />
                           <FormMessage />
@@ -682,7 +682,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                     className="w-full bg-primary hover:bg-primary/90"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Loading..." : "GỬI"}
+                    {isSubmitting ? "Đang xử lý..." : "Chỉnh Sửa Thông Tin"}
                   </Button>
                 </div>
               </form>
@@ -772,7 +772,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId }) => {
                                     <div className="grid gap-2">
                                       <div className="flex justify-between items-center">
                                         <Label htmlFor={`isBluePrint-${index}`}>
-                                          [Ảnh] bản thiết kế
+                                          [Ảnh] Bản thiết kế
                                         </Label>
                                         <Switch
                                           className="data-[state=checked]:bg-primary"
