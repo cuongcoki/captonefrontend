@@ -36,6 +36,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     React.useEffect(() => {
       if (form !== undefined && name && date)
         form.setValue(name, format(date, "dd/MM/yyyy"));
+      form?.trigger(name);
     }, [date, name, form]);
 
     return (
