@@ -56,6 +56,7 @@ import ImageDisplayDialog from "./imageDisplayDialog";
 import { NoImage } from "@/constants/images";
 import { ProductSetStore } from "@/components/shared/dashboard/product-set/product-set-store";
 import { Label } from "@/components/ui/label";
+import TitleComponent from "@/components/shared/common/Title";
 
 interface ImageResponse {
   id: string;
@@ -596,7 +597,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                   </Button>
                 </div>
                 <div className="grid gap-4 p-4 overflow-y-auto h-[750px] dark:bg-card">
-                  
+
 
 
 
@@ -609,9 +610,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8 ">
                           <Card>
                             <CardHeader>
-                              <CardTitle className="text-2xl text-primary">
-                                Thông Tin
-                              </CardTitle>
+                              <TitleComponent
+                                title="Thông tin"
+                                description="Thông tin chung của bộ sản phẩm."
+                              />
                             </CardHeader>
                             <CardContent className="flex flex-col gap-5">
                               <FormField
@@ -646,7 +648,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center ">
-                                      Miêu tả *
+                                      Mô tả *
                                     </FormLabel>
                                     <Textarea {...field} />
                                     <FormMessage />
@@ -663,9 +665,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                             x-chunk="dashboard-07-chunk-4"
                           >
                             <CardHeader>
-                              <CardTitle className="text-2xl text-primary">
-                                Hình ảnh
-                              </CardTitle>
+                              <TitleComponent
+                                title="Hình ảnh"
+                                description="Hình ảnh minh họa của bộ sản phẩm."
+                              />
                             </CardHeader>
                             <CardContent>
                               <div className="grid gap-2">
@@ -701,224 +704,228 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         </div>
                       </div>
                       <div className="gap-4 w-full lg:gap-8">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="text-2xl text-primary">Danh Sách Sản Phẩm</CardTitle>
-                      </CardHeader>
-                      <CardContent className="overflow-auto">
-                        {getDetailsProUpdate.map((product, index) => (
-                          <div
-                            className="flex items-start justify-between gap-2 py-4"
-                            key={product.productId}
-                          >
-                            <div className="flex items-start gap-6">
-                              {product.product.imageResponses.length > 0 && (
-                                <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
-                                  <Image
-                                    src={
-                                      product.product.imageResponses[0].imageUrl
-                                    } // Lấy ảnh đầu tiên từ mảng imageResponses
-                                    alt="Ảnh mẫu"
-                                    className="w-full h-full object-cover rounded-md"
-                                    width={900}
-                                    height={900}
-                                  />
-                                </div>
-                              )}
-                              <div className="font-medium dark:text-white">
-                                <div className="hidden sm:block">
-                                  <b>Tên Sản Phẩm: </b>
-                                  {limitLength(product?.product.name, 50)}
-                                </div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 ">
-                                  <b className="hidden sm:block">Mã: </b>
-                                  {limitLength(product?.product.code, 50)}
-                                </div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
-                                  <i>
-                                    {limitLength(
-                                      product?.product.description,
-                                      50
-                                    )}
-                                  </i>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-6">
-                              <Label htmlFor="email" className="hidden sm:block" >Số lượng</Label>
-
-                              <Input
-                                className="col-span-2 w-16 text-center outline-none"
-                                type="number"
-                                defaultValue={product.quantity || 0}
-                                onChange={(e) =>
-                                  handleChangeUpdate(
-                                    product.productId,
-                                    parseInt(e.target.value)
-                                  )
-                                }
-                              />
-
-                              <Button
-                                className="col-span-1"
-                                variant="outline"
-                                size="icon"
-                                onClick={() =>
-                                  handleDeleteProducts(product.productId)
-                                }
-                              >
-                                <Minus className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </CardContent>
-                    </Card>
-                  </div>
-                  <div className="gap-4 w-full lg:gap-8">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="font-semibold tracking-tight text-2xl text-primary">
-                          Thêm Sản Phẩm Vào Bộ
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="md:flex w-full gap-6 justify-between items-start">
-                        <div className="md:w-[50%] w-full">
-                          <div className="flex items-center my-4">
-                            <Input
-                              placeholder="Tìm kiếm mã - tên sản phẩm ..."
-                              value={searchTerm}
-                              onChange={(e) => {
-                                setSearchTerm(e.target.value);
-                              }}
-                              className=""
+                        <Card>
+                          <CardHeader>
+                            <TitleComponent
+                              title="Danh sách sản phẩm"
+                              description="Danh sách các sản phẩm đã có trong bộ sản phẩm."
                             />
-                          </div>
-                          {searchResults !== null ? (
-                            <Card className="my-4">
-                              <CardHeader className="font-semibold text-xl">
-                                <span>Thông tin sản phẩm</span>
-                              </CardHeader>
-                              <CardContent className="w-full grid grid-cols-3 md:grid-cols-5 gap-4 min-h-[100px]  overflow-y-auto ">
-                                {searchResults !== null ? (
-                                  searchResults.map((product) => (
-                                    <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
-                                      <div className="font-medium flex flex-col rounded-md">
-                                        <ImageDisplayDialog
-                                          images={product}
-                                        />
-                                      </div>
-                                      <Check
-                                        className={`w-5 h-5 ${productsRequest.some(
-                                          (item1) => item1.productId === product.id
-                                        )
-                                          ? "absolute top-0 right-0 bg-primary text-white"
-                                          : "hidden"
-                                          }`}
-                                      />
-                                      <Check
-                                        className={`w-5 h-5 ${getDetailsProUpdate.some(
-                                          (item1) => item1.productId === product.id
-                                        )
-                                          ? "absolute top-0 right-0 bg-primary text-white"
-                                          : "hidden"
-                                          }`}
-                                      />
-
-                                      <div>
-                                        <Button
-                                          variant={"ghost"}
-                                          size={"icon"}
-                                          className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                          onClick={() =>
-                                            handleAddProducts(product)
-                                          }
-                                        >
-                                          <Plus className="text-white " />
-                                        </Button>
-                                      </div>
-                                    </div>
-                                  ))
-                                ) : (
-                                  <div className="text-center flex justify-center items-center w-full">
-                                    không thấy sản phẩm nào
-                                  </div>
-                                )}
-                              </CardContent>
-                            </Card>
-                          ) : (
-                            ""
-                          )}
-                        </div>
-
-                        <div className="md:w-[50%] w-full">
-                          <Card className="mt-4">
-                            <CardHeader className="font-semibold text-xl">
-                              <span>Thông tin sản phẩm đã thêm</span>
-                            </CardHeader>
-                            <CardContent className="overflow-auto">
-                              {getDetailsPro.map((product, index) => (
-                                <div
-                                  className="flex items-start justify-between gap-2 py-4"
-                                  key={product.id}
-                                >
-                                  <div className="flex flex-col gap-2">
+                          </CardHeader>
+                          <CardContent className="overflow-auto">
+                            {getDetailsProUpdate.map((product, index) => (
+                              <div
+                                className="flex items-start justify-between gap-2 py-4"
+                                key={product.productId}
+                              >
+                                <div className="flex items-start gap-6">
+                                  {product.product.imageResponses.length > 0 && (
                                     <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
                                       <Image
-                                        alt="ảnh mẫu"
+                                        src={
+                                          product.product.imageResponses[0].imageUrl
+                                        } // Lấy ảnh đầu tiên từ mảng imageResponses
+                                        alt="Ảnh mẫu"
                                         className="w-full h-full object-cover rounded-md"
                                         width={900}
                                         height={900}
-                                        src={
-                                          product?.imageUrl ===
-                                            "Image_not_found"
-                                            ? NoImage
-                                            : product?.imageUrl
-                                        }
                                       />
                                     </div>
-                                    <div className="font-medium dark:text-white text-sm">
-                                    {limitLength(product.code, 10)} - {limitLength(product.name, 15)}
+                                  )}
+                                  <div className="font-medium dark:text-white">
+                                    <div className="hidden sm:block">
+                                      <b>Tên Sản Phẩm: </b>
+                                      {limitLength(product?.product.name, 50)}
+                                    </div>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400 ">
+                                      <b className="hidden sm:block">Mã: </b>
+                                      {limitLength(product?.product.code, 50)}
+                                    </div>
+                                    <div className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
+                                      <i>
+                                        {limitLength(
+                                          product?.product.description,
+                                          50
+                                        )}
+                                      </i>
                                     </div>
                                   </div>
-                                  <div className="flex items-center gap-6">
-                                    <Label htmlFor="email" className="hidden sm:block">Số lượng</Label>
-                                    <Input
-                                      className="w-[60px] text-center outline-none border"
-                                      type="number"
-                                      value={
-                                        productsRequest.find(
-                                          (item) =>
-                                            item.productId === product.id
-                                        )?.quantity || 0
-                                      }
-                                      onChange={(e) =>
-                                        handleChange(
-                                          product.id,
-                                          parseInt(e.target.value)
-                                        )
-                                      }
-                                    />
-                                    <Button
-                                      className="col-span-1"
-                                      variant="outline"
-                                      size="icon"
-                                      onClick={() =>
-                                        handleMinusProducts(product.id)
-                                      }
-                                    >
-                                      <Minus className="h-4 w-4" />
-                                    </Button>
-                                  </div>
-
                                 </div>
-                              ))}
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                                <div className="flex items-center gap-6">
+                                  <Label htmlFor="email" className="hidden sm:block" >Số lượng</Label>
+
+                                  <Input
+                                    className="col-span-2 w-16 text-center outline-none"
+                                    type="number"
+                                    defaultValue={product.quantity || 0}
+                                    onChange={(e) =>
+                                      handleChangeUpdate(
+                                        product.productId,
+                                        parseInt(e.target.value)
+                                      )
+                                    }
+                                  />
+
+                                  <Button
+                                    className="col-span-1"
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() =>
+                                      handleDeleteProducts(product.productId)
+                                    }
+                                  >
+                                    <Minus className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </CardContent>
+                        </Card>
+                      </div>
+                      <div className="gap-4 w-full lg:gap-8">
+                        <Card>
+                          <CardHeader>
+                            <TitleComponent
+                              title="Thêm sản phẩm vào bộ"
+                              description="Tìm kiếm - lựa chọn sản phẩm thêm vào bộ."
+                            />
+                          </CardHeader>
+                          <CardContent className="md:flex w-full gap-6 justify-between items-start">
+                            <div className="md:w-[50%] w-full">
+                              <div className="flex items-center my-4">
+                                <Input
+                                  placeholder="Tìm kiếm mã - tên sản phẩm ..."
+                                  value={searchTerm}
+                                  onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                  }}
+                                  className=""
+                                />
+                              </div>
+                              {searchResults !== null ? (
+                                <Card className="my-4">
+                                  <CardHeader className="font-semibold text-xl">
+                                    <span>Thông tin sản phẩm</span>
+                                  </CardHeader>
+                                  <CardContent className="w-full grid grid-cols-3 md:grid-cols-5 gap-4 min-h-[100px]  overflow-y-auto ">
+                                    {searchResults !== null ? (
+                                      searchResults.map((product) => (
+                                        <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
+                                          <div className="font-medium flex flex-col rounded-md">
+                                            <ImageDisplayDialog
+                                              images={product}
+                                            />
+                                          </div>
+                                          <Check
+                                            className={`w-5 h-5 ${productsRequest.some(
+                                              (item1) => item1.productId === product.id
+                                            )
+                                              ? "absolute top-0 right-0 bg-primary text-white"
+                                              : "hidden"
+                                              }`}
+                                          />
+                                          <Check
+                                            className={`w-5 h-5 ${getDetailsProUpdate.some(
+                                              (item1) => item1.productId === product.id
+                                            )
+                                              ? "absolute top-0 right-0 bg-primary text-white"
+                                              : "hidden"
+                                              }`}
+                                          />
+
+                                          <div>
+                                            <Button
+                                              variant={"ghost"}
+                                              size={"icon"}
+                                              className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                              onClick={() =>
+                                                handleAddProducts(product)
+                                              }
+                                            >
+                                              <Plus className="text-white " />
+                                            </Button>
+                                          </div>
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <div className="text-center flex justify-center items-center w-full">
+                                        không thấy sản phẩm nào
+                                      </div>
+                                    )}
+                                  </CardContent>
+                                </Card>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+
+                            <div className="md:w-[50%] w-full">
+                              <Card className="mt-4">
+                                <CardHeader className="font-semibold text-xl">
+                                  <span>Danh sách sản phẩm lựa chọn</span>
+                                </CardHeader>
+                                <CardContent className="overflow-auto">
+                                  {getDetailsPro.map((product, index) => (
+                                    <div
+                                      className="flex items-start justify-between gap-2 py-4"
+                                      key={product.id}
+                                    >
+                                      <div className="flex flex-col gap-2">
+                                        <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
+                                          <Image
+                                            alt="ảnh mẫu"
+                                            className="w-full h-full object-cover rounded-md"
+                                            width={900}
+                                            height={900}
+                                            src={
+                                              product?.imageUrl ===
+                                                "Image_not_found"
+                                                ? NoImage
+                                                : product?.imageUrl
+                                            }
+                                          />
+                                        </div>
+                                        <div className="font-medium dark:text-white text-sm">
+                                          {limitLength(product.code, 10)} - {limitLength(product.name, 15)}
+                                        </div>
+                                      </div>
+                                      <div className="flex items-center gap-6">
+                                        <Label htmlFor="email" className="hidden sm:block">Số lượng</Label>
+                                        <Input
+                                          className="w-[60px] text-center outline-none border"
+                                          type="number"
+                                          value={
+                                            productsRequest.find(
+                                              (item) =>
+                                                item.productId === product.id
+                                            )?.quantity || 0
+                                          }
+                                          onChange={(e) =>
+                                            handleChange(
+                                              product.id,
+                                              parseInt(e.target.value)
+                                            )
+                                          }
+                                        />
+                                        <Button
+                                          className="col-span-1"
+                                          variant="outline"
+                                          size="icon"
+                                          onClick={() =>
+                                            handleMinusProducts(product.id)
+                                          }
+                                        >
+                                          <Minus className="h-4 w-4" />
+                                        </Button>
+                                      </div>
+
+                                    </div>
+                                  ))}
+                                </CardContent>
+                              </Card>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
                       <Card>
                         <Button
                           type="submit"

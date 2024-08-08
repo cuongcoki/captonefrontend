@@ -507,7 +507,7 @@ export const SetForm = () => {
                                   render={({ field }) => (
                                     <FormItem>
                                       <FormLabel className="flex items-center">
-                                        Miêu tả *
+                                        Mô tả *
                                       </FormLabel>
                                       <FormControl>
                                         <Textarea {...field} />
@@ -565,7 +565,7 @@ export const SetForm = () => {
                           <CardHeader>
                             <TitleComponent
                               title="Thêm sản phẩm vào bộ"
-                              description="Lựa chọn các sản phẩm để tạo thảnh một bộ."
+                              description="Tìm kiếm - lựa chọn sản phẩm thêm vào bộ."
                             />
                           </CardHeader>
                           <CardContent className="md:flex w-full gap-6 justify-between items-start">
@@ -631,7 +631,7 @@ export const SetForm = () => {
                             <div className="md:w-[50%] w-full">
                               <Card className="mt-4">
                                 <CardHeader className="font-semibold text-xl">
-                                  <span>Thông tin sản phẩm đã thêm</span>
+                                  <span>Danh sách sản phẩm lựa chọn</span>
                                 </CardHeader>
                                 <CardContent className="overflow-auto">
                                   {getDetailsPro.map((product, index) => (
@@ -655,7 +655,7 @@ export const SetForm = () => {
                                           />
                                         </div>
                                         <div className="font-medium dark:text-white text-sm">
-                                          {limitLength(product.name, 15)} - {limitLength(product.code, 10)}
+                                          {limitLength(product.code, 10)} - {limitLength(product.name, 15)}
                                         </div>
                                       </div>
                                       <div className="flex items-center gap-6">
@@ -700,7 +700,7 @@ export const SetForm = () => {
                           className="w-full bg-primary hover:bg-primary/90 my-3"
                           disabled={pending}
                         >
-                          {loading ? "Đang xử lý..." : "GỬI"}
+                          {loading ? "Đang xử lý..." : "Thêm bộ sản phẩm"}
                         </Button>
                       </form>
                     </Form>
