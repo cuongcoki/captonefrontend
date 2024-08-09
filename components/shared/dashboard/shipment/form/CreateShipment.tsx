@@ -250,7 +250,7 @@ export default function CreateShipment() {
   const [currentPageP, setCurrentPageP] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [totalPagesP, setTotalPagesP] = useState<number>(1);
-  const [pageSizeP, setPageSizeP] = useState<number>(20);
+  const [pageSizeP, setPageSizeP] = useState<number>(40);
   const [isInProcessing, setIsInProcessing] = useState<boolean>(true);
   const [dataP, setDataP] = useState<Product[]>([]);
 
@@ -258,7 +258,7 @@ export default function CreateShipment() {
   const [currentPageM, setCurrentPageM] = useState<number>(1);
   const [searchTermM, setSearchTermM] = useState<string>("");
   const [totalPagesM, setTotalPagesM] = useState<number>(1);
-  const [pageSizeM, setPageSizeM] = useState<number>(20);
+  const [pageSizeM, setPageSizeM] = useState<number>(40);
   const [isInProcessingM, setIsInProcessingM] = useState<boolean>(true);
   const [dataM, setDataM] = useState<Material[]>([]);
   // ** state Shipment
