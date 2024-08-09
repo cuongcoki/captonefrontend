@@ -30,7 +30,6 @@ export default function AddNewMeterialForm() {
   const ChangeImage = (file: any) => {
     setMaterialImage(file);
   };
-  const [isChange, setIsChange] = useState(false);
   const firstValue = useRef<Omit<AddMaterialType, "id">>({
     name: "",
     unit: "",
@@ -53,21 +52,16 @@ export default function AddNewMeterialForm() {
   });
 
   const handlePostImage = async (file: File) => {
-    console.log("handlePostImage");
     if (!file) {
-      console.error("No image selected");
       return;
     }
-
     // setLoading(true);
     const formData = new FormData();
-    formData.append("receivedFiles", file); // Đảm bảo rằng tên trường tương ứng với server và chỉ đăng một ảnh
-
+    formData.append("receivedFiles", file); 
     try {
-      const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
+      const response = await filesApi.postFiles(formData); 
     } catch (error) {
       console.error("Error uploading files:", error);
-      // Xử lý lỗi khi tải lên không thành công
     } finally {
       // setLoading(false);
     }
@@ -107,12 +101,9 @@ export default function AddNewMeterialForm() {
     setLoading(true);
     const file = (await handleUploadPhoto(materialImage)) as File;
     data.image = file?.name || " ";
-    // console.log("Material Image", materialImage);
-    console.log("Submit DATA", data);
     try {
       await handlePostImage(file);
     } catch (error) {
-      console.log("Error in Up Image", error);
     }
     materialApi
       .addMaterial(data)
@@ -127,14 +118,12 @@ export default function AddNewMeterialForm() {
       })
       .catch((err) => {
         toast.error("Thêm vật liệu thất bại");
-        console.log("Error in Add Material: ", err);
       })
       .finally(() => {
         setLoading(false);
       });
   };
   useEffect(() => {
-    console.log("Use Effect");
     setHandleDialog(() => {
       if (
         isOpen &&
@@ -191,19 +180,13 @@ export default function AddNewMeterialForm() {
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
                         const inputValue = event.target.value;
-                        // Remove any characters that are not digits or a decimal point
                         let filteredInput = inputValue.replace(/[^\d.]/g, "");
-
-                        // Split by decimal point and ensure only one decimal point is present
                         const parts = filteredInput.split(".");
                         if (parts.length > 2) {
-                          // More than one decimal point
-                          // Join the first part with the rest of the string, excluding additional decimal points
                           filteredInput = `${parts[0]}.${parts
                             .slice(1)
                             .join("")}`;
                         }
-
                         field.onChange(filteredInput);
                       }}
                     />
@@ -239,14 +222,9 @@ export default function AddNewMeterialForm() {
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
                         const inputValue = event.target.value;
-                        // Remove any characters that are not digits or a decimal point
                         let filteredInput = inputValue.replace(/[^\d.]/g, "");
-
-                        // Split by decimal point and ensure only one decimal point is present
                         const parts = filteredInput.split(".");
                         if (parts.length > 2) {
-                          // More than one decimal point
-                          // Join the first part with the rest of the string, excluding additional decimal points
                           filteredInput = `${parts[0]}.${parts
                             .slice(1)
                             .join("")}`;

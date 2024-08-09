@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Nav } from "./nav";
 import {
   ShoppingCart,
-  LayoutDashboard,
   UserRound,
   Settings,
   ChevronRight,
@@ -11,7 +10,6 @@ import {
   PackageSearch,
   InspectionPanel,
   CalendarSearch,
-  PackagePlus,
   Building,
   MessageSquareWarning,
   MessageSquareMore,
@@ -27,7 +25,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Command } from "@/components/ui/command";
@@ -38,10 +35,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { authApi } from "@/apis/auth.api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import Image from "next/image";
 import { CardContent } from "../home/DashbroadComponents/Cards/Card";
 import Link from "next/link";
-import CommandDemo from "../Command";
 
 type Props = {};
 export default function SideNavbar({}: Props) {
@@ -69,7 +64,6 @@ export default function SideNavbar({}: Props) {
     authApi
       .logout(id)
       .then(({ data }) => {
-        console.log("dataLogout", data);
         user.logout();
         router.push("/sign-in");
         toast.success(data.message);
@@ -98,12 +92,6 @@ export default function SideNavbar({}: Props) {
           <Nav
             isCollapsed={mobileWidth ? true : isCollapsed}
             links={[
-              // {
-              //   title: "Thống kê",
-              //   href: "/dashboard/home",
-              //   icon: LayoutDashboard,
-              //   variant: "colorCompany",
-              // },
               {
                 title: "Nhân Viên",
                 href: "/dashboard/user",

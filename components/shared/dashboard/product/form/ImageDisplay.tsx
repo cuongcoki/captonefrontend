@@ -1,7 +1,6 @@
 import * as React from "react";
-import { LogoSignIn } from "@/constants/images/index.js";
 
-import { Card, CardContent } from "@/components/ui/card";
+import {  CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -9,18 +8,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 
 import { Switch } from "@/components/ui/switch";
 
@@ -32,7 +19,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DropdownMenuSubContent } from "@radix-ui/react-dropdown-menu";
 
 interface ImageDisplayProps {
   images: {
@@ -52,7 +38,6 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
   onToggleBlueprint,
   onToggleMainImage,
 }) => {
-  // console.log('images', images)
   return (
     <div className="flex items-center justify-center w-full h-full pb-5">
       <Carousel className="w-full h-full flex flex-col ">
@@ -81,48 +66,6 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
                   />
                 </button>
 
-                {/* <HoverCard>
-                  <HoverCardTrigger className="absolute left-0 top-0 ">
-                    <EllipsisVertical
-                      size={35}
-                      className="flex items-center justify-center text-primary-backgroudPrimary bg-white rounded-md p-2 m-5"
-                    />
-                  </HoverCardTrigger>
-                  <HoverCardContent align="start" className="w-full">
-                    <div className="grid gap-4">
-                      <div className="space-y-2">
-                        <h4 className="font-medium leading-none">Loại ảnh</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
-                        </p>
-                      </div>
-                      <div className="grid gap-2">
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor={`isBluePrint-${index}`}>
-                            [Ảnh] Bản thiết kế
-                          </Label>
-                          <Switch
-                            className="data-[state=checked]:bg-primary"
-                            id={`isBluePrint-${index}`}
-                            checked={image.isBluePrint}
-                            onCheckedChange={() => onToggleBlueprint(index)}
-                          />
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <Label htmlFor={`isMainImage-${index}`}>
-                            [Ảnh] Chính
-                          </Label>
-                          <Switch
-                            className="data-[state=checked]:bg-primary"
-                            id={`isMainImage-${index}`}
-                            checked={image.isMainImage}
-                            onCheckedChange={() => onToggleMainImage(index)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard> */}
                 <DropdownMenu>
                   <DropdownMenuTrigger className="absolute left-0 top-0 ">
                     <EllipsisVertical

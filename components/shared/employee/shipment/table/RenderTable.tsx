@@ -103,7 +103,7 @@ export default function RenderTableShipment() {
   };
 
   return (
-    <div className="px-3 mt-3">
+    <div className="mt-3">
       <div className="flex flex-col md:flex-row justify-between mb-4">
         <div className="w-full md:w-auto mb-4 md:mb-0">
           <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">

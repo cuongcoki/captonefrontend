@@ -5,50 +5,16 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardTitle,
-  CardDescription,
   CardFooter,
 } from "@/components/ui/card";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import LoadingPage from "../loading/loading-page";
 
 // ** import icon
 import {
-  ListCollapse,
   Phone,
-  Globe,
-  KeyRound,
   Contact,
   PencilLine,
   Laugh,
@@ -58,13 +24,11 @@ import {
 } from "lucide-react";
 
 // ** import react
-import { redirect, useParams, useRouter } from "next/navigation";
+import {  useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { userApi } from "@/apis/user.api";
-import Link from "next/link";
 
-import toast, { Toaster } from "react-hot-toast";
-import { Pencil } from "lucide-react";
+import toast from "react-hot-toast";
 
 // ** import hooks
 import { useAuth } from "@/hooks/useAuth";
@@ -74,18 +38,9 @@ import { filesApi } from "@/apis/files.api";
 import { salaryApi } from "@/apis/salary.api";
 import { authApi } from "@/apis/auth.api";
 import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdateForm";
-import Custom404 from "@/app/not-found";
 import { NoImage } from "@/constants/images";
 import TitleComponent from "../common/Title";
 
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-];
 
 export default function ProfilePage() {
   // ** state
@@ -98,10 +53,6 @@ export default function ProfilePage() {
   const [avatar, setAvatar] = useState<string>("");
   const [lastDay, setLastDay] = useState<string>("");
   const router = useRouter();
-  const [isAlertChangeStatus, setIsAlertChangeStatus] =
-    useState<boolean>(false);
-  const [isAlertChnageRole, setIsAlertChangeRole] = useState<boolean>(false);
-  const [roleChosed, setRoleChosed] = useState<string>("");
 
   // ** hooks
   const user = useAuth();
@@ -127,13 +78,10 @@ export default function ProfilePage() {
           const userData = res.data.data;
           filesApi.getFile(userData.avatar).then((res) => {
             setAvatar(res.data.data);
-            // console.log("avatar", res.data.data);
           });
-          // console.log("userData", userData);
           setUserId(userData);
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
         })
         .finally(() => {
           setLoading(false);
@@ -142,7 +90,6 @@ export default function ProfilePage() {
     fetchDataGetMe();
   }, [params, userId?.id]);
 
-  // console.log("====datauserId====", getMeApi);
 
   function validatePassword(password: string) {
     // Kiểm tra độ dài tối thiểu
@@ -172,10 +119,8 @@ export default function ProfilePage() {
     authApi
       .logout(id)
       .then(({ data }) => {
-        console.log("dataLogout", data);
         user.logout();
         router.push("/sign-in");
-        // toast.success(data.message);
       })
       .catch((error) => {
         toast.error(error.message);
@@ -226,24 +171,12 @@ export default function ProfilePage() {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
-    const reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
-    const formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
-    const formatted = formattedReversed.split("").reverse().join("");
-
+    let reversed = valueString.split("").reverse().join("");
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+    let formatted = formattedReversed.split("").reverse().join("");
     return formatted;
   };
 

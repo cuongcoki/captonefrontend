@@ -3,10 +3,8 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 
 import {
@@ -75,7 +73,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ShipmentSchema } from "@/schema/shipment";
 
 // ** import Components
-import { NoImage } from "@/constants/images";
 import {
   CalendarIcon,
   Check,
@@ -259,7 +256,6 @@ export default function CreateShipment() {
   const [searchTermM, setSearchTermM] = useState<string>("");
   const [totalPagesM, setTotalPagesM] = useState<number>(1);
   const [pageSizeM, setPageSizeM] = useState<number>(40);
-  const [isInProcessingM, setIsInProcessingM] = useState<boolean>(true);
   const [dataM, setDataM] = useState<Material[]>([]);
   // ** state Shipment
   const [shipmentDetailRequests, setShipmentDetailRequests] = useState<
@@ -364,7 +360,6 @@ export default function CreateShipment() {
         );
         const newData = response.data.data.data;
 
-        // Update imageUrl with links fetched from filesApi
         const updatedData = await Promise.all(
           newData.map(async (item: any) => {
             if (item.image) {
@@ -375,10 +370,9 @@ export default function CreateShipment() {
                   image: data.data,
                 };
               } catch (error) {
-                console.error("Error getting file:", error);
                 return {
                   ...item,
-                  image: "", // Xử lý trường hợp lỗi nếu cần thiết
+                  image: "",
                 };
               }
             }
@@ -390,7 +384,6 @@ export default function CreateShipment() {
         setCurrentPageM(response.data.data.currentPage);
         setTotalPagesM(response.data.data.totalPages);
       } catch (error) {
-        console.error("Error fetching product data:", error);
         setDataM([]);
       } finally {
         setLoading(false);
@@ -441,9 +434,7 @@ export default function CreateShipment() {
         setDataEm(res.data.data.data);
         setCurrentPage(res.data.data.currentPage);
         setTotalPages(res.data.data.totalPages);
-        console.log("Response:", res);
       } catch (error: any) {
-        console.error("Error fetching user data:");
         if (error?.response.data.status === 400) {
           setDataEm([]);
         }
@@ -468,7 +459,6 @@ export default function CreateShipment() {
         );
         const newData = response.data.data.data;
 
-        // Update imageUrl with links fetched from filesApi
         const updatedData = await Promise.all(
           newData.map(async (item: any) => {
             const updatedImageResponses = await Promise.all(
@@ -480,10 +470,9 @@ export default function CreateShipment() {
                     imageUrl: data.data,
                   };
                 } catch (error) {
-                  console.error("Error getting file:", error);
                   return {
                     ...image,
-                    imageUrl: "", // Handle error case if needed
+                    imageUrl: "",
                   };
                 }
               })
@@ -499,7 +488,6 @@ export default function CreateShipment() {
         setCurrentPageP(response.data.data.currentPage);
         setTotalPagesP(response.data.data.totalPages);
       } catch (error) {
-        console.error("Error fetching product data:", error);
         setDataP([]);
       } finally {
         setLoading(false);
@@ -520,7 +508,6 @@ export default function CreateShipment() {
   });
   // call gủi form
   const onSubmit = (data: z.infer<typeof ShipmentSchema>) => {
-    console.log("data", data);
     if (data.fromId === data.toId) {
       return toast.error("2 Công ty không được trùng nhau");
     }
@@ -534,10 +521,6 @@ export default function CreateShipment() {
 
     shipmentDetailRequests.forEach((request, index) => {
       if (!request.itemId) {
-        console.error(
-          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
-          request
-        );
         toast.custom((t) => (
           <div
             className={`${t.visible ? "animate-enter" : "animate-leave"
@@ -563,10 +546,6 @@ export default function CreateShipment() {
         ));
         hasError = true;
       } else if (!request.phaseId && request.kindOfShip === 0) {
-        console.error(
-          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
-          request
-        );
         toast.custom((t) => (
           <div
             className={`${t.visible ? "animate-enter" : "animate-leave"
@@ -596,10 +575,6 @@ export default function CreateShipment() {
         ));
         hasError = true;
       } else if (request.quantity <= 0) {
-        console.error(
-          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
-          request
-        );
         toast.custom((t) => (
           <div
             className={`${t.visible ? "animate-enter" : "animate-leave"
@@ -633,10 +608,6 @@ export default function CreateShipment() {
         request.kindOfShip === 0
       ) {
         // Sửa điều kiện ở đây
-        console.error(
-          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
-          request
-        );
         toast.custom((t) => (
           <div
             className={`${t.visible ? "animate-enter" : "animate-leave"
@@ -666,10 +637,6 @@ export default function CreateShipment() {
         ));
         hasError = true;
       } else if (request.materialPrice <= 0 && request.kindOfShip === 1) {
-        console.error(
-          `Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`,
-          request
-        );
         toast.custom((t) => (
           <div
             className={`${t.visible ? "animate-enter" : "animate-leave"
@@ -718,7 +685,6 @@ export default function CreateShipment() {
       shipmentDetailRequests: shipmentDetailRequests,
     };
 
-    console.log("requestBodyCreateShipment=====", requestBody);
     setLoading(true);
     shipmentApi
       .createShipment(requestBody)
@@ -760,21 +726,11 @@ export default function CreateShipment() {
   const formatCurrency = (value: any): string => {
     if (!value) return "0";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters except dots
     valueString = valueString.replace(/[^0-9]/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Convert to number to format with toLocaleString
-    const numberValue = parseInt(valueString, 10);
-
-    // Format number with commas as thousands separators
-    const formatted = numberValue.toLocaleString("vi-VN");
-
+    let numberValue = parseInt(valueString, 10);
+    let formatted = numberValue.toLocaleString("vi-VN");
     return formatted;
   };
 

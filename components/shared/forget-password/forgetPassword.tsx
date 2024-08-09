@@ -5,7 +5,6 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 
 import { ImageBackGround, LogoSignIn } from "@/constants/images/index.js";
@@ -21,7 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { authApi } from "@/apis/auth.api";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { useState } from "react";
 
 export default function ForgetPassword() {
@@ -40,14 +39,14 @@ export default function ForgetPassword() {
     authApi
       .forgetPassword(data)
       .then((response) => {
-        console.log(">>> forget pass", response.data.message);
+        // console.log(">>> forget pass", response.data.message);
         toast.success(response.data.message);
         setTimeout(() => {
           router.push(`/change-password/${data.id}`);
         }, 2000);
       })
       .catch((error) => {
-        console.log(">>> forget pass error", error);
+        // console.log(">>> forget pass error", error);
         const errors = error.response.data.error
         if (errors.Password) {
           toast.error(errors.Password)

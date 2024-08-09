@@ -1,12 +1,11 @@
 "use client";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, {  useEffect, useRef, useState } from "react";
 import {
   AttendanceDetailProductType,
   AttendanceDetailType,
 } from "@/schema/attendance";
 import Image from "next/image";
 import "./style-update-attendance.css";
-import { Card } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
@@ -15,7 +14,6 @@ import { attendanceApi } from "@/apis/attendance.api";
 import {
   AttendanceForUpdate,
   CreateAttendanceBody,
-  GetUsersResponse,
   ProductEmployee,
   UpdateAttendanceBody,
   UpdateEmployeeProductBody,
@@ -23,14 +21,12 @@ import {
 } from "@/types/attendance.type";
 import toast from "react-hot-toast";
 import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
-import DatePicker from "@/components/shared/common/datapicker/date-picker";
-import { format, set } from "date-fns";
+import { format} from "date-fns";
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import { Combobox } from "@/components/shared/common/combobox/combobox";
 import { usePathname, useRouter } from "next/navigation";
 import CountProduct from "@/components/shared/dashboard/attendance/update-attendance/count-product";
 import { filesApi } from "@/apis/files.api";
-import { companyApi } from "@/apis/company.api";
 import HeaderComponent from "@/components/shared/common/header";
 import { useAuth } from "@/hooks/useAuth";
 import DatePickerLimit from "@/components/shared/common/datapicker/date-picker-limit";
@@ -76,12 +72,9 @@ export default function UpdateAttendanceEm({
     handleAttendanceChange,
     updateOverTime,
     updateSalaryByProduct,
-    checkAllAttendance,
-    checkAllSalaryByProduct,
     user,
     setUser,
   } = useUpdateAttendanceStore();
-  const { setListProduct, setListPhase } = useAttendanceStore();
   const [force, setForce] = useState(0);
   const ForceRender = () => {
     setForce(force + 1);
@@ -103,7 +96,6 @@ export default function UpdateAttendanceEm({
     new Map<string, string>()
   );
 
-  console.log("CheckUser", CheckUser.user);
   const [isChangeCompany, setIsChangeCompany] = useState(false);
 
   const wareHouseRef = useRef(warehouse);
@@ -135,33 +127,15 @@ export default function UpdateAttendanceEm({
   useEffect(() => {
     const localWareHouse = wareHouseRef.current || "";
     let userD: User[] = [];
-    // GET WAREHOUSE DATA
-    // if (selectWareHouseDataRef.current.length === 0) {
-    //   companyApi.getCompanyByType(0).then(({ data }) => {
-    //     console.log("Company Data: ", data);
-    //     setSelectWareHouseData(
-    //       data.data.map((item) => ({ label: item.name, value: item.id }))
-    //     );
-    //     if (wareHouseRef.current === "") {
-    //       localWareHouse = data.data[0].id;
-    //       setWarehouse(data.data[0].id);
-    //     }
-    //   });
-    // }
-    // GET USERS DATA
+   
     const FetchGetUser = async () => {
-      // if (userD.length > 0 && !isChangeCompany) return;
       try {
         const response = await attendanceApi.getUserByCompanyId({
           CompanyId: localWareHouse,
         });
         const data = response.data.data;
-        console.log("GetUSERS:", data);
-        // setUsers(data);
-        // setUser(data);
         userD = data;
       } catch (error) {
-        console.log("Error getUserByCompanyId: ", error);
       }
     };
     // GET IMAGE OF USER
@@ -172,13 +146,10 @@ export default function UpdateAttendanceEm({
       for (let i = 0; i < userD.length; i++) {
         try {
           const response = await filesApi.getFile(userD[i].avatar);
-          // userD[i].avatar = response.data.data;
           iamges.set(userD[i].id, response.data.data);
         } catch (error) {
-          console.log("Error get image: ", error);
         }
       }
-      console.log("iamges of user", iamges.size);
       setImageOfUser(iamges);
       setUsers(userD);
       setUser(userD);
@@ -187,10 +158,8 @@ export default function UpdateAttendanceEm({
     const getImage = async (name: string) => {
       try {
         const res = await filesApi.getFile(name);
-        console.log("Get Image", res.data.data);
         return res.data.data;
       } catch (error: any) {
-        console.log("Error get image: ", error.response.data);
       }
     };
     const setOfUser = new Set<string>();
@@ -206,7 +175,6 @@ export default function UpdateAttendanceEm({
           CompanyId: warehouse,
         })
         .then(async ({ data }) => {
-          // console.log("data", data.data.data);
           setIsCreated(true);
           const attendanceData = await Promise.all(
             data.data.data.map(async (item): Promise<AttendanceDetailType> => {
@@ -237,12 +205,10 @@ export default function UpdateAttendanceEm({
               };
             })
           );
-          console.log("attendanceData", attendanceData);
 
           setTableData(attendanceData);
         })
         .catch((error) => {
-          console.log("Error getAttendance: ", error.response.data.status);
           if (404 === error.response.data.status) {
             const attendanceData = userD?.map((item): AttendanceDetailType => {
               return {
@@ -276,7 +242,6 @@ export default function UpdateAttendanceEm({
     };
     FetchData();
 
-    console.log("RERENDER DATA ATTENDANCE");
   }, [
     setUser,
     pathname,
@@ -307,7 +272,6 @@ export default function UpdateAttendanceEm({
       companyId: warehouse,
       createQuantityProducts: employeeProductData,
     };
-    console.log("updateEmployeeProductData", updateEmployeeProductData);
     attendanceApi
       .updateEmployeeProduct(updateEmployeeProductData)
       .then(({ data }) => {
@@ -353,7 +317,6 @@ export default function UpdateAttendanceEm({
       };
     }
 
-    console.log("updateData", DataBody);
 
     if (isCreate) {
       attendanceApi
@@ -374,7 +337,6 @@ export default function UpdateAttendanceEm({
           }
         })
         .finally(() => {
-          // ForceRender();
         });
     } else {
       attendanceApi
@@ -382,8 +344,6 @@ export default function UpdateAttendanceEm({
         .then(({ data }) => {
           console.log(data);
           updateEmployeeProduct();
-
-          // toast.success(data.message);
         })
         .catch((error) => {
           if (error.response.data.error) {
@@ -395,18 +355,15 @@ export default function UpdateAttendanceEm({
           }
         })
         .finally(() => {
-          // ForceRender();
         });
     }
   };
-  // Convert date format from dd/MM/yyyy to yyyy-MM-dd
   function convertDateFormat(inputDate: string) {
     const parts = inputDate.split("/");
     const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
     return formattedDate;
   }
   useEffect(() => {
-    console.log("tableData", tableData);
   }, [tableData]);
 
   return (

@@ -35,9 +35,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -51,7 +49,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
@@ -86,9 +84,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
-  };
+ 
 
   const [loading, setLoading] = useState<boolean>(false);
   const [checkProducts, setCheckProducts] = useState<boolean>(false);
@@ -135,7 +131,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                 };
               })
               .catch((error) => {
-                console.error("Error getting file:", error);
                 return {
                   ...image,
                   imageUrl: "NoImage",
@@ -157,7 +152,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     productApi
       .searchProduct(searchTerm)
       .then(({ data }) => {
-        console.log("data searchhhkkkkh", data);
 
         setSearchResults(data.data);
       })
@@ -248,7 +242,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
 
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any) => {
-    console.warn("product", product.id);
 
     // Kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
     const existingDetailProUpdate = getDetailsProUpdate.some(
@@ -352,8 +345,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       orderDetailRequests: productsRequestTrimmed,
     };
 
-    console.log("requestBody", requestBody);
-
     try {
       setLoading(true);
       orderApi.createOrderId(requestBody).then(({ data }) => {
@@ -364,7 +355,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         }
       });
     } catch (error: any) {
-      // toast.error("Cặp nhật sản phẩm không thành công");
       if (error.response.data.error) {
         for (const key in error.response.data.error) {
           toast.error(error.response.data.error[key][0]);
@@ -412,13 +402,10 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
 
   const handleOffDialog = () => {
     const currentFormValues = productsRequest;
-    // console.log("currentFormValues", initialFormValuesProduct)
-    // console.log("setProductsRequest", productsRequest)
     if (initialFormValuesProduct === null) {
       initialFormValuesProduct = currentFormValues;
     }
     const isFormChanged = JSON.stringify(initialFormValuesProduct) === JSON.stringify(productsRequest);
-    // console.log("isFormChanged", isFormChanged)
     if (isFormChanged) {
       setOpen(false);
     } else if (initialFormValuesProduct === null) {

@@ -11,10 +11,9 @@ import {
 } from "@/components/ui/alert-dialog"
 import React, { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-import { PencilLine, X } from "lucide-react";
+import {  X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductUpdateForm } from "@/components/shared/dashboard/product/form/ProductUpdateForm";
-import { Label } from "recharts";
 import { ProductData } from "@/components/shared/dashboard/product/table/productID/ProductID";
 
 export default function ProductUpdate({
@@ -30,9 +29,7 @@ export default function ProductUpdate({
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
-  };
+ 
   const handleOffDialog = () => {
     setOpenAlert(true);
   };

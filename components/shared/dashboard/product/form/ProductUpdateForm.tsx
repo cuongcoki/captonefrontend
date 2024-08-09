@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -12,11 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { EllipsisVertical, Trash2, Upload } from "lucide-react";
-import ImageDisplay from "./ImageDisplay";
 import { ProductUpdateSchema } from "@/schema/product";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { productApi } from "@/apis/product.api";
-import { string, z } from "zod";
+import {  z } from "zod";
 
 import {
   Select,
@@ -59,7 +58,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import * as Dialog from "@radix-ui/react-dialog";
-import { PencilLine, X } from "lucide-react";
+import {  X } from "lucide-react";
 
 interface ProductData {
   code: string;
@@ -114,7 +113,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                   imageUrl: data.data,
                 };
               } catch (error) {
-                console.error("Error getting file:", error);
                 return {
                   ...image,
                   imageUrl: "",
@@ -125,7 +123,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
           setUpdatedProduct({ ...productId, imageResponses: updatedData });
           setImageRequests(updatedData);
         } catch (error) {
-          console.error("Error fetching updated product data:", error);
         } finally {
           setLoading(false);
         }
@@ -292,12 +289,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     }
   };
 
-  const [saveUpdateImage, setSaveUpdateImage] = useState<any[]>([]);
 
   // Handle toggling blue image flag for an image
   const handleToggleBluePrint = (imageUrl: string, id: string, index: any) => {
-    console.log("id", id);
-    console.log("image=====", imageRequestsUpdate);
     setImageRequests((prevImageRequests) =>
       prevImageRequests.map((req) =>
         req.imageUrl === imageUrl
@@ -350,7 +344,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
 
   // Handle toggling main image flag for an image
   const handleToggleMainImage = (imageUrl: string, id: string, index: any) => {
-    console.log("imageUrl=", imageUrl);
     setImageRequests((prevImageRequests) =>
       prevImageRequests.map((req) =>
         req.imageUrl === imageUrl
@@ -449,7 +442,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
         })),
         removeImageIds: removeImageIds ? removeImageIds : ImaNull,
       };
-      console.log("============requestBody", requestBody);
 
       try {
         const response = await productApi.updateProduct(
@@ -459,7 +451,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
         ForceRender();
         setOpen(false)
         toast.success(response.data.message);
-        console.log("Update Successful:", response);
       } catch (error: any) {
         if (
           error.response &&
@@ -486,10 +477,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
         throw error; // Re-throw the error to stop further execution
       }
     } catch (error: any) {
-      console.error("Error updating product:", error);
     } finally {
       setLoading(false);
-      setIsSubmitting(false); // Reset trạng thái submit
+      setIsSubmitting(false); 
     }
   };
 
@@ -517,9 +507,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
 
   const handleOffDialogA = () => {
     setOpenAlert(false);
-  };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
   };
 
   const handleOnDialog = () => {

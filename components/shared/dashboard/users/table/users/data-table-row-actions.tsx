@@ -7,16 +7,10 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { userskSchema } from "./data/schema";
 import UserBanButton from "@/components/shared/dashboard/users/table/users/user-ban-button";
 import { Employee } from "@/components/shared/dashboard/users/table/users/Column";
-import UserEditButton from "@/components/shared/dashboard/users/table/users/edit-button";
 import { UpdateUser } from "../../form/UsersUpdateForm";
 import { useState } from "react";
 
@@ -32,9 +26,7 @@ export function DataTableRowActions<TData>({
     setIsOpen(!isOpen);
   };
 
-  const closeDropdown = () => {
-    setIsOpen(false);
-  };
+
   return (
     <DropdownMenu modal={false} onOpenChange={toggleDropdown} open={isOpen}>
       <DropdownMenuTrigger asChild>

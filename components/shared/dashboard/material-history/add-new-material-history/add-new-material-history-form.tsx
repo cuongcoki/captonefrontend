@@ -1,9 +1,7 @@
 import {
   materialHistoryFormSchema,
   materialHistoryFormType,
-  materialHistoryType,
-  materialSchema,
-  materialType,
+
 } from "@/schema/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
@@ -15,7 +13,6 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
@@ -33,7 +30,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-import { get } from "http";
 import DatePicker from "@/components/shared/common/datapicker/date-picker";
 import {
   ComboboxDataType,
@@ -43,7 +39,6 @@ import { useMaterialHistoryStore } from "@/components/shared/dashboard/material-
 import { materiaHistoryApi } from "@/apis/material-history.api";
 import { MaterialHistoryContext } from "@/components/shared/dashboard/material-history/table/data-table";
 import toast from "react-hot-toast";
-import { ComboboxDemo } from "@/components/shared/common/combobox/combobox_demo";
 import { parse } from "date-fns";
 import { Plus, X } from "lucide-react";
 
@@ -54,10 +49,7 @@ export default function AddNewMeterialHistoryForm() {
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
-  };
-
+ 
   const handleOnDialog = () => {
     setOpen(true);
   };
@@ -84,7 +76,6 @@ export default function AddNewMeterialHistoryForm() {
   });
 
   const onSubmit = (data: materialHistoryFormType) => {
-    // console.log("SUBMIT DATA", data);
     if (parse(data.importAt, "dd/MM/yyyy", new Date()) > new Date()) {
       toast.error("Ngày nhập không được vượt quá ngày hiện tại ");
       return;
@@ -96,7 +87,6 @@ export default function AddNewMeterialHistoryForm() {
       importDate: data.importAt,
       description: data.description,
     };
-    // console.log("requestBodyrequestBodyrequestBody",requestBody)
     materiaHistoryApi.addMaterialHistory(requestBody).then(() => {
       toast.success("Thêm mới lịch sử nhập hàng thành công");
       form.reset();
@@ -133,24 +123,12 @@ export default function AddNewMeterialHistoryForm() {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
-    const reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
-    const formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
-    const formatted = formattedReversed.split("").reverse().join("");
-
+    let reversed = valueString.split("").reverse().join("");
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+    let formatted = formattedReversed.split("").reverse().join("");
     return formatted;
   };
   const parseCurrency = (value: any) => {
@@ -235,9 +213,7 @@ export default function AddNewMeterialHistoryForm() {
                       name="quantity"
                       render={({ field }) => (
                         <FormItem>
-                          {/* <FormLabel>Đơn vị</FormLabel> */}
                           <FormControl>
-                            {/* <Input placeholder="Nhập đơn vị ở đây" {...field} /> */}
                             <InputAnimation
                               nameFor="Số lượng"
                               {...field}
@@ -245,22 +221,16 @@ export default function AddNewMeterialHistoryForm() {
                                 event: React.ChangeEvent<HTMLInputElement>
                               ) => {
                                 const inputValue = event.target.value;
-                                // Remove any characters that are not digits or a decimal point
                                 let filteredInput = inputValue.replace(
                                   /[^\d.]/g,
                                   ""
                                 );
-
-                                // Split by decimal point and ensure only one decimal point is present
                                 const parts = filteredInput.split(".");
                                 if (parts.length > 2) {
-                                  // More than one decimal point
-                                  // Join the first part with the rest of the string, excluding additional decimal points
                                   filteredInput = `${parts[0]}.${parts
                                     .slice(1)
                                     .join("")}`;
                                 }
-
                                 field.onChange(filteredInput);
                               }}
                             />

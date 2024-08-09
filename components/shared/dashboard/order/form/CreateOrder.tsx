@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -76,7 +75,7 @@ import { CalendarIcon, Check, Plus, X } from "lucide-react";
 import { ChevronDown, Minus, Search } from "lucide-react";
 
 // ** import TYPE & SCHEMA
-import { OrderSchema, CompanyRequestSchema } from "@/schema/order";
+import { OrderSchema} from "@/schema/order";
 import { cn } from "@/lib/utils";
 import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
@@ -101,7 +100,7 @@ type Company = {
   email: string | null;
   companyType: number;
   companyTypeDescription: string;
-  companyEnum: string; // Nếu có nhiều loại công ty khác nhau, bạn có thể thêm vào đây
+  companyEnum: string; 
 };
 
 
@@ -114,15 +113,10 @@ export default function CreateOrder() {
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
-  };
 
   const handleOnDialog = () => {
     setOpen(true);
   };
-
-
 
   // useForm hook for managing form state and validation
   const form = useForm({
@@ -189,7 +183,6 @@ export default function CreateOrder() {
                 };
               })
               .catch((error) => {
-                console.error("Error getting file:", error);
                 return {
                   ...image,
                   imageUrl: "NoImage",
@@ -211,12 +204,10 @@ export default function CreateOrder() {
     productApi
       .searchProduct(searchTerm)
       .then(({ data }) => {
-        console.log("data searchhhkkkkh", data);
 
         setSearchResults(data.data);
       })
       .catch((error) => {
-        toast.error("Không tìm thấy sản phẩm");
         setSearchResults([]);
       })
       .finally(() => { });
@@ -254,11 +245,8 @@ export default function CreateOrder() {
   >([]);
   const [getDetailsProUpdate, setGetDetailsProUpdate] = useState<any[]>([]);
 
-  console.log("productsRequest", productsRequest);
-
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any, productType: any) => {
-    console.warn("product", product.id);
     // Kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
     const existingDetailProUpdate = getDetailsProUpdate.some(
       (item) => item.productId === product.id
@@ -361,12 +349,10 @@ export default function CreateOrder() {
       vat: formData.vat,
       orderDetailRequests: productsRequestTrimmed,
     };
-    console.log("requestBody00000000", requestBody);
     setLoading(true);
     try {
       const response = await orderApi.createOrder(requestBody);
       setIdOrder(response.data.data);
-      console.log("response", response);
       toast.success("Tạo đơn hàng thành công");
       if (response.data.isSuccess) {
         ForceRender();

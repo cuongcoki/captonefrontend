@@ -160,9 +160,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
-  };
+
   //state
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -188,7 +186,6 @@ console.log("orderId",orderId)
       const formattedMonth = month.padStart(2, "0");
       return `${formattedDay}/${formattedMonth}/${year}`;
     } catch (error) {
-      console.error("Error formatting date:", error);
       return dateString;
     }
   };
@@ -209,7 +206,6 @@ console.log("orderId",orderId)
       });
     }
   }, [orderId, currentPage, pageSize, searchTermAll, form, fetchTrigger, company]);
-console.log("company",company)
   const [dataShipOrder, setDataShipOrder] = useState<ShipOrder[]>([]);
   useEffect(() => {
     setLoading(true);
@@ -220,7 +216,7 @@ console.log("company",company)
           setDataShipOrder(data.data);
         })
         .catch((error) => {
-          console.error("Error fetching ship order data:", error);
+          setDataShipOrder([])
         })
         .finally(() => {
           setLoading(false);
@@ -229,13 +225,11 @@ console.log("company",company)
   }, [orderId]);
 
   const onSubmit = async (formData: z.infer<typeof UpdateOrderSchema>) => {
-    console.log("formData", formData);
   
     const requestBody = {
       ...formData,
       orderId: orderId?.id,
     };
-    console.log("requestBodyrequestBody",requestBody)
     setLoading(true);
     orderApi
       .updateOrder(requestBody)
@@ -243,7 +237,6 @@ console.log("company",company)
         if (data.isSuccess) {
           ForceRender();
           setOpen(false)
-          console.log("dâtupdatessss", data);
           toast.success("Cặp nhật đơn hàng thành công");
         }
       })
@@ -266,7 +259,6 @@ console.log("company",company)
             toast.error(JSON.stringify(companyIdError));
           }
         }
-        console.log("errordddddddddd", error);
       })
       .finally(()=>(
         setLoading(false)

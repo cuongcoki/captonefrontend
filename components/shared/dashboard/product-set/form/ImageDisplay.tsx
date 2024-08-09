@@ -1,12 +1,10 @@
 import * as React from "react"
 
-import { Card, CardContent } from "@/components/ui/card"
+import {  CardContent } from "@/components/ui/card"
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
 } from "@/components/ui/carousel"
 
 
@@ -24,7 +22,6 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({
     images,
     onDelete,
 }) => {
-    console.log('images', images)
     return (
         <div className="flex items-center justify-center w-full h-full ">
             <Carousel className="w-full h-full flex flex-col">

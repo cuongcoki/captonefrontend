@@ -5,14 +5,9 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import ProductUpdate from "@/components/shared/dashboard/product/table/productID/product-update";
-import { ProductData } from "@/components/shared/dashboard/product/table/productID/ProductID";
 import { useEffect, useState } from "react";
 import { productApi } from "@/apis/product.api";
 import { ProductUpdateForm } from "../../form/ProductUpdateForm";
@@ -32,10 +27,8 @@ export function DataTableRowActions<TData extends { id: string }>({
         .then((res) => {
           const userData = res.data.data;
           setProductId(userData);
-          // setUserId(res.data.data);
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
         })
         .finally(() => {});
     };

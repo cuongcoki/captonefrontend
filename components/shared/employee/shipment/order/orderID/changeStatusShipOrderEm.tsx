@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -54,11 +53,9 @@ export default function ChangeStatusShipOrderEm({ status }: PropStatus) {
     const [valueStatus, setValueStatus] = useState<any>(0);
 
     const handleSelectChange = (value: any, id: string) => {
-        console.log("value", value);
         setValueStatus(value);
     };
     const handleSubmitOrderStatus = (id: string) => {
-        console.log("value", valueStatus);
         console.log("id", id);
         const formattedData = {
             shipOrderId: id,
@@ -67,7 +64,6 @@ export default function ChangeStatusShipOrderEm({ status }: PropStatus) {
         console.log("formattedData", formattedData);
         shipOrderApi.updateStatus(formattedData, id).then(({ data }) => {
             forceUpdate();
-            console.log("data", data);
             toast.success(data.message);
         });
     };

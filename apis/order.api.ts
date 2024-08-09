@@ -59,6 +59,7 @@ const createCacheId = (base: string, params: Record<string, any>): string => {
 const orderCacheIds: Set<string> = new Set();
 const ordersCacheIds: Map<string, string> = new Map();
 
+const orderDetailsCacheIds:  Set<string> = new Set();
 
 export const orderApi = {
   searchOrder: (
@@ -80,6 +81,7 @@ export const orderApi = {
     if (CompanyName) url += `&CompanyName=${CompanyName}`;
     return axiosClient.get(url, { id: cacheId });
   },
+
   getOrderId: (id:any) => {
     const cacheId = `get-order-${id}`;
     ordersCacheIds.set(id, cacheId);
@@ -114,8 +116,8 @@ export const orderApi = {
     createOrderId: (data:updateOrderDetails) => axiosClient.post(`${endPointConstant.BASE_URL}/orderDetails`, data, {
       cache: {
         update: () => {
-          orderCacheIds.forEach((id) => axiosClient.storage.remove(id));
-          orderCacheIds.clear();
+          orderDetailsCacheIds.forEach((id) => axiosClient.storage.remove(id));
+          orderDetailsCacheIds.clear();
         },
       },
     }),
@@ -130,7 +132,7 @@ export const orderApi = {
 
   getOrderDetailsId: (orderId:any) => {
     const cacheId = `get-order-details-${orderId}`;
-    ordersCacheIds.set(orderId, cacheId);
+    orderDetailsCacheIds.add(cacheId);
     return axiosClient.get(`${endPointConstant.BASE_URL}/orderDetails/order/${orderId}`, { id: cacheId });
   },
 

@@ -16,7 +16,6 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -50,7 +49,6 @@ export function CompanyAdd() {
     },
   });
   const onSubmit = (data: CompanyAddSchemaType) => {
-    console.log("Submit Company Data", data);
     companyApi
       .createCompany({
         companyRequest: {

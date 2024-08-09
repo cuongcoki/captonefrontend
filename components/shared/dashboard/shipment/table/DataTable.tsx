@@ -7,7 +7,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import Link from "next/link";
 import { useRouter } from 'next/navigation';
 
 interface DataTableProps<TData, TValue> {
@@ -62,9 +61,7 @@ export function DataTable<TData, TValue>({
 
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className="py-3 text-center cursor-pointer" >
-                    {/* <Link href={`/dashboard/order/${row.original.id}`} > */}
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    {/* </Link> */}
                   </TableCell>
                 ))}
 

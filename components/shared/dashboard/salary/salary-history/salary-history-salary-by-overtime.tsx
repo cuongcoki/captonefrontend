@@ -15,10 +15,8 @@ import {
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -33,24 +31,12 @@ export default function SalaryHistorySalaryByOverTime({ id }: { id: string }) {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
-    const reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
-    const formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
-    const formatted = formattedReversed.split("").reverse().join("");
-
+    let reversed = valueString.split("").reverse().join("");
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+    let formatted = formattedReversed.split("").reverse().join("");
     return formatted;
   };
   useEffect(() => {

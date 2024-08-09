@@ -8,7 +8,6 @@ import {
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -17,7 +16,6 @@ interface DataTableProps<TData, TValue> {
 interface OrderData {
   id: string;
   status: string;
-  // Các thuộc tính khác của dữ liệu nếu có
 }
 
 export function DataTable<TData extends OrderData, TValue>({
@@ -32,11 +30,6 @@ export function DataTable<TData extends OrderData, TValue>({
     state: { sorting },
     onSortingChange: setSorting,
   });
-  const router = useRouter();
-  const handleGotoDetail = (id: string) => {
-    router.push(`/dashboard/order/${id}`);
-    console.log('id', id)
-  }
 
   return (
     <div className="rounded-md border">

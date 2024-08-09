@@ -90,11 +90,11 @@ export default function SalaryDetail({
       .then((res) => {
         setData(res.data.data);
         setSalaryAvailiable(res.data.data.accountBalance);
-        console.log("SALARY DETAIL API RESPONSE", res.data);
+        // console.log("SALARY DETAIL API RESPONSE", res.data);
         router.push(`${pathname}?year=${params.year}&month=${params.month}`);
       })
       .catch((e) => {
-        console.log("SALARY DETAIL API ERROR", e);
+        // console.log("SALARY DETAIL API ERROR", e);
         setData({
           accountBalance: 0,
           month: 1,
@@ -114,24 +114,12 @@ export default function SalaryDetail({
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
-    const reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
-    const formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
-    const formatted = formattedReversed.split("").reverse().join("");
-
+    let reversed = valueString.split("").reverse().join("");
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+    let formatted = formattedReversed.split("").reverse().join("");
     return formatted;
   };
   return (

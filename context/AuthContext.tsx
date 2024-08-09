@@ -50,12 +50,12 @@ const AuthProvider = ({ children }: Props) => {
 
       const decodedToken: any = jwtDecode(storedToken)
       const currentTime = Date.now() / 1000
-      console.log('decodedToken', decodedToken)
+      // console.log('decodedToken', decodedToken)
       if (decodedToken.exp < currentTime) {
         try {
           const response = await authService.refreshToken()
           const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data.data
-          console.log("Authssseiver ========== ",response.data.data)
+          // console.log("Authssseiver ========== ",response.data.data)
           authService.setLocalStorageWhenLogin({
             user: JSON.parse(window.localStorage.getItem(authConfig.userData) || '{}'),
             accessToken: newAccessToken,
@@ -63,7 +63,7 @@ const AuthProvider = ({ children }: Props) => {
           })
           setUser(JSON.parse(window.localStorage.getItem(authConfig.userData) || '{}'))
         } catch (error) {
-          console.error('Failed to refresh token', error)
+          // console.error('Failed to refresh token', error)
           handleLogout()
         }
       } else {
@@ -92,7 +92,7 @@ const AuthProvider = ({ children }: Props) => {
             })
             setUser(JSON.parse(window.localStorage.getItem(authConfig.userData) || '{}'))
           }).catch(error => {
-            console.error('Failed to refresh token', error)
+            // console.error('Failed to refresh token', error)
             handleLogout()
           })
         }

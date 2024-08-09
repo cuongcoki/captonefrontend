@@ -7,7 +7,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 
@@ -28,12 +28,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 // ** import ICON
 import {
   Check,
-  Eye,
   ImageUp,
   Minus,
-  PackageMinus,
-  PackagePlus,
-  PencilLine,
   Plus,
   Trash2,
 } from "lucide-react";
@@ -43,7 +39,7 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { string, z } from "zod";
+import {  z } from "zod";
 import { useFormStatus } from "react-dom";
 
 import { SetUpdateSchema } from "@/schema/set";
@@ -87,11 +83,8 @@ interface SetProduct {
   quantity: number;
   product: Product;
 }
-const initialFormValuesSet: any = null;
-const initialFormValuesSetUpdate: any = null;
-const initialFormValuesForm: any = null;
+
 export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
-  // console.log('setId',setId)
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
 
   const [openAlert, setOpenAlert] = useState<boolean>(false);
@@ -99,9 +92,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
 
   const handleOffDialogA = () => {
     setOpenAlert(false);
-  };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
   };
 
   const handleOnDialog = () => {
@@ -114,9 +104,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   const [nameImage, setNameImage] = useState<any>("");
   const [imageRequests, setImageRequests] = useState<string>("");
   const [imageUrls, setImageUrls] = useState<File | null>(null);
-  const [linkImg, setLinkImg] = useState<string>("");
   const { ForceRender } = ProductSetStore();
-  console.log("nameImage", nameImage);
   // ** các hàm để sử lý đăng ảnh
 
   const generateRandomString = (length: number = 5) => {
@@ -150,7 +138,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         const newFile = new File([file], changedFileName, { type: file.type });
         setNameImage(changedFileName);
         if (!newFile) {
-          toast.error("No image selected");
           return;
         }
         const formData = new FormData();
@@ -163,18 +150,14 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         const names = data.data;
 
         setImageRequests(names);
-        // toast.success("Image uploaded successfully");
-      } else toast.error("No image selected");
+      } else toast.error("Không có hình ảnh nào được chọn");
     } catch (error) {
-      console.error("Error uploading image", error);
-      toast.error("Error uploading image");
+      toast.error("Lỗi khi tải hình ảnh lên");
     } finally {
       setLoading(false);
     }
   };
 
-  // console.log('imageUrls', imageUrls)
-  // console.log('imageRequests', imageRequests)
 
   // ** Xử lý khi người dùng xóa một hình ảnh đã có
   const handleDeleteImage = () => {
@@ -189,7 +172,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         const res = await setApi.getSetId(setId);
         const userData = res.data.data;
         const productData = userData.setProducts;
-        console.log("productData", productData);
 
         // Fetch image responses for each product in setProducts
         const updatedSetProducts: SetProduct[] = await Promise.all(
@@ -221,9 +203,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                 product: updatedProduct,
               };
             } catch (error) {
-              console.error("Error getting file:", error);
 
-              // Handle error case if needed, return original setProduct
               return setProduct;
             }
           })
@@ -236,10 +216,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         const fileResponse = await filesApi.getFile(userData.imageUrl);
         const imageData = fileResponse.data.data;
 
-        // Process imageData as needed, e.g., set state with image data
         setImageRequests(imageData);
       } catch (error) {
-        console.error("Error fetching user data:", error);
       } finally {
         setLoading(false);
       }
@@ -247,7 +225,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
 
     fetchDataProductId();
   }, [setId, fetchTrigger]);
-  // console.log('setProductId', setProductId)
 
   // useForm hook for managing form state and validation
   const form = useForm({
@@ -271,13 +248,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     }
   }, [setProductId, form]);
 
-  // console.log('nameImage', nameImage)
 
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  // console.log('searchTerm', searchTerm)
-  // console.log('searchResults', searchResults)
 
   const handleSearch = () => {
     setLoading(true);
@@ -310,9 +284,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   >([]);
 
   const [getDetailsProUpdate, setGetDetailsProUpdate] = useState<any[]>([]);
-  const [addProducts, setAddProducts] = useState<
-    { productId: string; quantity: number }[]
-  >([]);
+ 
   const [updateProducts, setUpdateProducts] = useState<
     {
       productId: string;
@@ -349,7 +321,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
 
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any) => {
-    console.warn("product", product.id);
 
     //kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
     const exstingDetailProUpdate = getDetailsProUpdate.some(
@@ -458,9 +429,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     setProductsRequest(updatedProductsRequest);
   };
 
-  // console.log("productsRequest", productsRequest);
-  // console.log("removeProductIds", removeProductIds);
-  // console.log("updateProducts", updateProducts);
 
   const onSubmit = async (data: z.infer<typeof SetUpdateSchema>) => {
     // Ensure `nameImage` has been updated
@@ -475,11 +443,9 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       removeProductIds: removeProductIds,
     };
 
-    console.log("requestBodyrequestBodyrequestBody", requestBody)
     setApi
       .updateSet(requestBody, setProductId.id)
       .then((res) => {
-        console.log("Update Successful:", res);
         toast.success(res.data.message);
         form.reset();
         setGetDetailsPro([]);
@@ -491,7 +457,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         setOpen(false);
       })
       .catch((e) => {
-        console.log(e)
         toast.error("Cập nhật thất bại", e);
       });
   };
@@ -502,7 +467,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     }
     return text;
   };
-  // console.log("getDetailsProUpdate", getDetailsProUpdate);
   const { pending } = useFormStatus();
 
   const handleClearForm = () => {
@@ -548,10 +512,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     const checkImage = checkImageChange === imageRequests;
 
     const isRemoveEmpty = isArrayEmptyRemove(removeProductIds);
-    // console.log("isFormChanged", isAddEmpty)
-    // console.log("isFormChanged1", isFormChanged1)
-    // console.log("isFormChanged2", isUpdateEmpty)
-    // console.log("isFormChanged3", isRemoveEmpty)
+   
     if (isAddEmpty && !formState.isDirty && isUpdateEmpty && isRemoveEmpty && !checkImage) {
       setOpen(false);
       setFetchTrigger((prev) => prev + 1);

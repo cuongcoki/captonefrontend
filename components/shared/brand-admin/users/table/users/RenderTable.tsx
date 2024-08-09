@@ -3,12 +3,8 @@
 import { userApi } from "@/apis/user.api";
 import { Employee, columns } from "./Column";
 import { DataTable } from "./DataTable";
-import { DataTablePagination } from "./data-table-pagination";
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState } from "react";
 
-import { UserSearchParams } from "@/types/userTypes";
-import TableUserFeature from "@/components/shared/dashboard/users/table/users/user-table-feature";
-import toast from "react-hot-toast";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function RenderTableUsers() {

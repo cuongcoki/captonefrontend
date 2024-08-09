@@ -1,5 +1,4 @@
 "use client";
-import { CardTitle, Card } from "@/components/ui/card";
 import RenderTableSet from "./table/sets/RenderTable";
 import HeaderComponent from "@/components/shared/common/header";
 

@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+
 
 import {
   Table,
@@ -23,7 +13,6 @@ import {
 import { Button } from "@/components/ui/button";
 import React, { useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import AddNewMeterialHistory from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history";
 import { usePathname, useRouter } from "next/navigation";
 import {
   materialHistoryProp,
@@ -40,13 +29,11 @@ import toast from "react-hot-toast";
 import Image from "next/image";
 import MaterialHistoryAction from "@/components/shared/dashboard/material-history/table/material-history-action";
 import { filesApi } from "@/apis/files.api";
-import { se } from "date-fns/locale";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -115,7 +102,6 @@ export function DataTableForMaterialHistory<TData, TValue>({
         setListMaterial(listMaterial);
       })
       .catch((err) => {
-        console.log("ERROR", err);
       });
     setListMaterial;
   }, [setListMaterial]);
@@ -135,7 +121,6 @@ export function DataTableForMaterialHistory<TData, TValue>({
                 });
               })
               .catch((error) => {
-                console.log("error in get image", error);
               });
           }
         });
@@ -156,7 +141,6 @@ export function DataTableForMaterialHistory<TData, TValue>({
           StartDateImport: searchParams.from || "",
           EndDateImport: searchParams.to || "",
         });
-        console.log("MATERIAL_HISTORY_DATA", res.data);
         await getImages(res.data.data.data);
         setTotalPage(res.data.data.totalPages);
         setData(res.data.data.data);
@@ -166,7 +150,6 @@ export function DataTableForMaterialHistory<TData, TValue>({
           }&to=${searchParams.to || ""}&pageIndex=${searchParams.pageIndex}`
         );
       } catch (error: any) {
-        console.log("Error in search material history", error);
         if (error.response?.status === 400) {
           setData([]);
         }
