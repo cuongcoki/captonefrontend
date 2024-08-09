@@ -5,6 +5,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import {
   Card,
   CardContent,
+  CardHeader,
 } from "@/components/ui/card";
 
 import { Calendar } from "@/components/ui/calendar";
@@ -69,6 +70,7 @@ import toast from "react-hot-toast";
 import { companyApi } from "@/apis/company.api";
 import { OrderStore } from "../order-store";
 import { shipOrderApi } from "@/apis/shipOrder.api";
+import TitleComponent from "@/components/shared/common/Title";
 
 interface OrderId {
   orderId?: orderIds;
@@ -167,7 +169,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
   const [searchTermAll, setSearchTermAll] = useState<string>("");
   const [pageSize, setPageSize] = useState<number>(10);
   const [company, setCompany] = useState<Company[]>([]);
-
+console.log("orderId",orderId)
   const form = useForm({
     resolver: zodResolver(UpdateOrderSchema),
     defaultValues: {
@@ -187,7 +189,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
       return `${formattedDay}/${formattedMonth}/${year}`;
     } catch (error) {
       console.error("Error formatting date:", error);
-      return dateString; 
+      return dateString;
     }
   };
 
@@ -199,15 +201,15 @@ export default function UpdateOrder({ orderId }: OrderId) {
     fetchDataCompany();
     if (orderId) {
       form.reset({
-        companyId: orderId.companyId,
-        status: orderId.status,
-        startOrder: formatDate(orderId.startOrder),
-        endOrder: formatDate(orderId.endOrder),
-        vat: orderId.vat,
+        companyId: orderId?.company.id,
+        status: orderId?.status,
+        startOrder: formatDate(orderId?.startOrder),
+        endOrder: formatDate(orderId?.endOrder),
+        vat: orderId?.vat,
       });
     }
-  }, [orderId, currentPage, pageSize, searchTermAll, form, fetchTrigger]);
-
+  }, [orderId, currentPage, pageSize, searchTermAll, form, fetchTrigger, company]);
+console.log("company",company)
   const [dataShipOrder, setDataShipOrder] = useState<ShipOrder[]>([]);
   useEffect(() => {
     setLoading(true);
@@ -224,15 +226,17 @@ export default function UpdateOrder({ orderId }: OrderId) {
           setLoading(false);
         });
     }
-  }, [orderId,]);
+  }, [orderId]);
 
   const onSubmit = async (formData: z.infer<typeof UpdateOrderSchema>) => {
     console.log("formData", formData);
-    setLoading(true);
+  
     const requestBody = {
       ...formData,
       orderId: orderId?.id,
     };
+    console.log("requestBodyrequestBody",requestBody)
+    setLoading(true);
     orderApi
       .updateOrder(requestBody)
       .then(({ data }) => {
@@ -248,13 +252,25 @@ export default function UpdateOrder({ orderId }: OrderId) {
         if (errors && !errors.Status) {
           toast.error(errors);
         }
-        if(errors.Status){
+        if (errors.Status) {
           errors.Status.forEach((error: any) => {
             toast.error(error);
           });
+        
+        }
+        if (errors.CompanyId) {
+          const companyIdError = errors.CompanyId;
+          if (typeof companyIdError === 'string') {
+            toast.error(companyIdError);
+          } else {
+            toast.error(JSON.stringify(companyIdError));
+          }
         }
         console.log("errordddddddddd", error);
-      });
+      })
+      .finally(()=>(
+        setLoading(false)
+      ))
   };
 
   const { pending } = useFormStatus();
@@ -316,7 +332,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
               <div className="flex flex-col space-y-4 rounded-md bg-white">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">
-                    Chỉnh sửa sản phẩm đơn hàng
+                    Chỉnh Sửa Thông Tin Đơn Hàng
                   </h2>
                   <Button variant="outline" size="icon" onClick={handleOffDialog}>
                     <X className="w-4 h-4" />
@@ -326,7 +342,13 @@ export default function UpdateOrder({ orderId }: OrderId) {
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                       <Card>
-                        <CardContent className="flex gap-6 mt-6">
+                        <CardHeader>
+                          <TitleComponent
+                            title="Thông tin đơn hàng"
+                            description="Thông tin công ty - thuế - thời gian đặt hàng của đơn đặt hàng."
+                          />
+                        </CardHeader>
+                        <CardContent className="flex gap-6">
                           <div className="flex flex-col gap-6 w-full">
                             <FormField
                               control={form.control}
@@ -558,7 +580,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                 className="w-full bg-primary hover:bg-primary/90"
                                 disabled={pending}
                               >
-                                {pending ? "Loading..." : "GỬI"}
+                                {pending ? "Đang xử lý..." : "Cập nhật thông tin"}
                               </Button>
                             </Card>
                           </div>

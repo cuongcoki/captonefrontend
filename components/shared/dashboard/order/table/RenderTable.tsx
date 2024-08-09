@@ -108,8 +108,6 @@ export default function RenderTableOrder() {
         setTotalPages(response.data.data.totalPages);
       } catch (error: any) {
         setData([])
-        toast.error(error.response.data.message)
-        console.error("Error fetching order data:", error);
       } finally {
         setLoading(false);
       }

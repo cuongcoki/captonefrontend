@@ -411,17 +411,13 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                 }
             })
             .catch(error => {
-                console.log("error", error)
-                const errorResponse = error.response?.data?.error;
-                if (errorResponse?.ShipDate) {
-                    toast.error(errorResponse.ShipDate[0]);
-                }
-                if (errorResponse?.Id) {
-                    toast.error(errorResponse.Id[0]);
-                }
-                if (!errorResponse?.ShipDate && !errorResponse?.Id) {
-                    toast.error(error.response?.data?.message);
-                }
+                if (error.response.data.error) {
+                    for (const key in error.response.data.error) {
+                      toast.error(error.response.data.error[key][0]);
+                    }
+                  } else {
+                    toast.error(error.response.data.message);
+                  }
             })
             .finally(() => {
                 setLoading(false)

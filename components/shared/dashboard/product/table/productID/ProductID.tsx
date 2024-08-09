@@ -158,7 +158,7 @@ export default function ProductIDPage() {
                       <PencilLine />
                     </ProductUpdateForm>
                   ) : (
-                    <div>ko có dữ liệu chỉnh sửa</div>
+                    <div>Không có dữ liệu chỉnh sửa</div>
                   )}
                 </div>
               </div>
@@ -231,7 +231,7 @@ export default function ProductIDPage() {
                   <div>
                     <CardTitle>Giai Đoạn</CardTitle>
                     <span className="text-xs font-normal leading-snug text-muted-foreground">
-                      Thông tin các giai đoạn của sản phẩm.
+                      Thông tin giá thành các giai đoạn của sản phẩm.
                     </span>
                   </div>
                 </div>

@@ -101,6 +101,8 @@ import { filesApi } from "@/apis/files.api";
 import { companyApi } from "@/apis/company.api";
 import { shipmentApi } from "@/apis/shipment.api";
 import { userApi } from "@/apis/user.api";
+import TitleComponent from "@/components/shared/common/Title";
+import { useFormStatus } from "react-dom";
 
 const enumCompany = [
   {
@@ -700,13 +702,13 @@ export default function CreateShipment() {
     if (hasError) {
       return;
     }
-    
+
     // check time UTC
     const originalDate = data.shipDate;
     const date = new Date(originalDate);
     date.setUTCHours(23, 59, 59, 0);
     const formattedShipDate = date.toISOString().replace('.000', '');
- 
+
     // Gọi hàm kiểm tra
     const requestBody = {
       fromId: data.fromId,
@@ -732,17 +734,12 @@ export default function CreateShipment() {
       })
       .catch((error) => {
         const errorResponse = error.response?.data?.error;
-        if (errorResponse?.ShipmentDetailRequests) {
-          toast.error(errorResponse.ShipmentDetailRequests);
-        }
-        if (errorResponse?.ToId) {
-          toast.error(errorResponse.ToId);
-        }
-        if (
-          !errorResponse?.ToId &&
-          !errorResponse?.ShipmentDetailRequests &&
-          error.response?.data
-        ) {
+
+        if (errorResponse) {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
+        } else {
           toast.error(error.response?.data.message);
         }
       })
@@ -811,6 +808,8 @@ export default function CreateShipment() {
       setOpenAlert(true);
     }
   };
+
+  const { pending } = useFormStatus();
   return (
     <>
       {
@@ -843,7 +842,7 @@ export default function CreateShipment() {
               <Dialog.Description className="visible hidden"></Dialog.Description>
               <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
-                  <h2 className="text-2xl text-white">Tạo đơn vận chuyển</h2>
+                  <h2 className="text-2xl text-white">Tạo Đơn Vận Chuyển</h2>
                   <Button
                     variant="outline"
                     size="icon"
@@ -853,571 +852,607 @@ export default function CreateShipment() {
                   </Button>
                 </div>
                 <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4">
-                  <div className="w-full">
-                    <Tabs defaultValue="account">
-                      <TabsList className="grid w-[200px] grid-cols-2">
-                        <TabsTrigger value="account">Sản phẩm</TabsTrigger>
-                        <TabsTrigger value="password">Vật liệu</TabsTrigger>
-                      </TabsList>
-                      <TabsContent value="account">
-                        <Card>
-                          <CardHeader>
-                            <CardTitle>Sản phẩm</CardTitle>
-                            <CardDescription>
-                              {/* <Input type="number"  onChange={(e) => setPageSizeP(Number(e.target.value))} /> */}
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent className="space-y-2">
-                            <div className=" w-full grid grid-cols-3 md:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
-                              {dataP.map((item) => (
-                                <div
-                                  className="group relative w-[80px] h-[80px] shadow-md rounded-md"
-                                  key={item.id}
-                                >
-                                  <ImageIconShipmentForm dataImage={item} />
-                                  <Check
-                                    className={`${shipmentDetailRequests.some(
-                                      (item1) => item1.itemId === item.id
-                                    )
-                                      ? "absolute top-0 right-0 bg-primary text-white"
-                                      : "hidden"
-                                      }`}
-                                  />
-                                  <Button
-                                    variant={"ghost"}
-                                    size={"icon"}
-                                    className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary "
-                                    onClick={() => {
-                                      const mainImage =
-                                        item?.imageResponses.find(
-                                          (image) => image.isMainImage
-                                        );
-                                      handleAddProducts(
-                                        mainImage ? mainImage.imageUrl : "",
-                                        item?.id,
-                                        productType
-                                      );
-                                    }}
-                                  >
-                                    <Plus className="text-white" />
-                                  </Button>
-                                </div>
-                              ))}
-                            </div>
-                          </CardContent>
-                          <CardFooter className="flex justify-end">
-                            <Button onClick={handleClear}>
-                              Bỏ chọn tất cả
-                            </Button>
-                          </CardFooter>
-                        </Card>
-                      </TabsContent>
-                      <TabsContent value="password">
-                        <Card>
-                          <CardHeader>
-                            <CardTitle>Vật liệu</CardTitle>
-                            <CardDescription></CardDescription>
-                          </CardHeader>
-                          <CardContent className="space-y-2">
-                            <div className=" w-full grid grid-cols-3 sm:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
-                              {dataM.map((item) => (
-                                <div
-                                  className="group relative w-[80px] h-[80px] shadow-md rounded-md"
-                                  key={item.id}
-                                >
-                                  <ImageIconMaterial dataImage={item} />
-                                  <Check
-                                    className={`${shipmentDetailRequests.some(
-                                      (item1) => item1.itemId === item.id
-                                    )
-                                      ? "absolute top-0 right-0 bg-primary text-white"
-                                      : "hidden"
-                                      }`}
-                                  />
-                                  <Button
-                                    variant={"ghost"}
-                                    size={"icon"}
-                                    className="w-[30px] h-[30px] absolute bottom-0 left-0  opacity-0 group-hover:opacity-100 hover:bg-primary "
-                                    onClick={() =>
-                                      handleAddProducts(
-                                        item?.image,
-                                        item?.id,
-                                        materialType
-                                      )
-                                    }
-                                  >
-                                    <Plus className="text-white" />
-                                  </Button>
-                                </div>
-                              ))}
-                            </div>
-                          </CardContent>
-                          <CardFooter className="flex justify-end">
-                            <Button onClick={handleClear}>
-                              Bỏ chọn tất cả
-                            </Button>
-                          </CardFooter>
-                        </Card>
-                      </TabsContent>
-                    </Tabs>
-                  </div>
-
-                  <div className="w-full overflow-auto">
-                    {productDetail.length > 0 && (
-                      <Card className="w-[1000px] sm:w-full overflow-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead className="w-[100px]">Ảnh</TableHead>
-                              <TableHead>Giai đoạn</TableHead>
-                              <TableHead>Số lượng</TableHead>
-                              <TableHead>Loại hàng</TableHead>
-                              <TableHead>Chất lượng</TableHead>
-                              <TableHead>Giá Tiền</TableHead>
-                              <TableHead></TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody className="min-h-[200px] overflow-y-auto">
-                            {productDetail.map((proDetail, index) => (
-                              <TableRow key={proDetail.itemId}>
-                                <TableCell className="font-medium">
-                                  <div className="w-[50px] h-[50px] rounded-md shadow-md">
-                                    <Image
-                                      src={proDetail.imgProducts}
-                                      width={900}
-                                      height={900}
-                                      alt="ảnh sản phẩm"
-                                      className="w-full h-full object-cover rounded-md"
-                                    />
-                                  </div>
-                                </TableCell>
-                                <TableCell>
-                                  {proDetail.kindOfShip === 0 ? (
-                                    <Select
-                                      defaultValue={String(proDetail.phaseId)}
-                                      onValueChange={(value) =>
-                                        handleChange(
-                                          proDetail.itemId,
-                                          "phaseId",
-                                          value,
-                                          index
-                                        )
-                                      }
-                                    >
-                                      <SelectTrigger className="w-[100px]">
-                                        <SelectValue placeholder="Giai đoạn sản phẩm" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectGroup>
-                                          {dataPh.map((item) => (
-                                            <SelectItem
-                                              key={item.id}
-                                              value={item.id}
-                                            >
-                                              {item.name}
-                                            </SelectItem>
-                                          ))}
-                                        </SelectGroup>
-                                      </SelectContent>
-                                    </Select>
-                                  ) : (
-                                    <>Không có</>
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  <Input
-                                    min={0}
-                                    type="number"
-                                    name="quantity"
-                                    value={
-                                      shipmentDetailRequests.find(
-                                        (item, i) =>
-                                          item.itemId === proDetail.itemId &&
-                                          i === index
-                                      )?.quantity || 0
-                                    }
-                                    onChange={(e) =>
-                                      handleChange(
-                                        proDetail.itemId,
-                                        "quantity",
-                                        parseInt(e.target.value),
-                                        index
-                                      )
-                                    }
-                                    className="w-16 text-center outline-none"
-                                  />
-                                </TableCell>
-                                <TableCell>
-                                  {proDetail.kindOfShip === 0
-                                    ? "Sản phẩm"
-                                    : "Vật liệu"}
-                                </TableCell>
-                                <TableCell>
-                                  {proDetail.kindOfShip === 0 ? (
-                                    <Select
-                                      defaultValue={String(
-                                        proDetail.productPhaseType
-                                      )}
-                                      onValueChange={(value) =>
-                                        handleChange(
-                                          proDetail.itemId,
-                                          "productPhaseType",
-                                          parseInt(value),
-                                          index
-                                        )
-                                      }
-                                    >
-                                      <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder="Loại chất lượng sản phẩm" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectGroup>
-                                          {ProductPhaseType.map((item) => (
-                                            <SelectItem
-                                              key={item.id}
-                                              value={String(item.id)}
-                                            >
-                                              {item.des}
-                                            </SelectItem>
-                                          ))}
-                                        </SelectGroup>
-                                      </SelectContent>
-                                    </Select>
-                                  ) : (
-                                    <div>Không có</div>
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  {proDetail.kindOfShip === 1 ? (
-                                    <Input
-                                      min={0}
-                                      max={20000000000}
-                                      type="text"
-                                      name="materialPrice"
-                                      value={formatCurrency(
-                                        shipmentDetailRequests.find(
-                                          (item, i) =>
-                                            item.itemId === proDetail.itemId &&
-                                            i === index
-                                        )?.materialPrice || 0
-                                      )}
-                                      inputMode="numeric"
-                                      onChange={(e) =>
-                                        handleChange(
-                                          proDetail.itemId,
-                                          "materialPrice",
-                                          parseCurrency(e.target.value),
-                                          index
-                                        )
-                                      }
-                                      className="w-[150px] text-center outline-none"
-                                    />
-                                  ) : (
-                                    <>Không có</>
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  <Button
-                                    variant={"ghost"}
-                                    size={"icon"}
-                                    onClick={() =>
-                                      handleDeleteProducts(
-                                        proDetail.itemId,
-                                        index
-                                      )
-                                    }
-                                  >
-                                    <CircleX />
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </Card>
-                    )}
-                  </div>
-
                   <Form {...form}>
                     <form
                       onSubmit={form.handleSubmit(onSubmit)}
                       className="w-full flex flex-col gap-4"
                     >
-                      <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                        <div className="w-full">
-                          <FormLabel className="text-primary-backgroudPrimary ">
-                            Công ty gửi *
-                          </FormLabel>
-                          <Card className="w-full mt-2">
-                            <CardContent className="mt-5">
-                              <Select
-                                onValueChange={(value) =>
-                                  handleStatusChange(parseInt(value))
-                                }
-                              >
-                                <SelectTrigger className="mb-2">
-                                  {" "}
-                                  <SelectValue placeholder="Chọn kiểu công ty" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {enumCompany.map((item) => (
-                                    <SelectItem
-                                      value={item.value}
-                                      key={item.id}
-                                    >
-                                      {item.description}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormField
-                                control={form.control}
-                                name="fromId"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      defaultValue={field.value}
-                                    >
-                                      <FormControl>
-                                        <SelectTrigger className="h-32">
-                                          <SelectValue
-                                            placeholder="Hãy chọn công ty"
-                                            defaultValue={field.value}
-                                          />
-                                        </SelectTrigger>
-                                      </FormControl>
-                                      <SelectContent>
-                                        {company.map((item) => (
-                                          <SelectItem
-                                            key={item.id}
-                                            value={item.id}
-                                            className="hover:bg-slate-100 shadow-md mb-1"
-                                          >
-                                            <div className="flex flex-col items-start  ">
-                                              <span>
-                                                {`${limitLength(item.name, 30)} - ${limitLength(item.address, 30)}`}
-                                              </span>
-                                              <span className="text-sm text-gray-500">
-                                                <div className="flex flex-col items-start">
+                      <Card>
+                        <CardHeader>
+                          <TitleComponent
+                            title="Thông tin công ty"
+                            description="Thông tin công ty gửi - nhận đơn hàng."
+                          />
+                        </CardHeader>
+                        <CardContent>
+                          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div className="w-full">
+                              <FormLabel className="text-primary-backgroudPrimary ">
+                                Công ty gửi *
+                              </FormLabel>
+                              <Card className="w-full mt-2 shadow-lg">
+                                <CardContent className="mt-5">
+                                  <Select
+                                    onValueChange={(value) =>
+                                      handleStatusChange(parseInt(value))
+                                    }
+                                  >
+                                    <SelectTrigger className="mb-2">
+                                      {" "}
+                                      <SelectValue placeholder="Chọn kiểu công ty" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {enumCompany.map((item) => (
+                                        <SelectItem
+                                          value={item.value}
+                                          key={item.id}
+                                        >
+                                          {item.description}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormField
+                                    control={form.control}
+                                    name="fromId"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <Select
+                                          onValueChange={field.onChange}
+                                          defaultValue={field.value}
+                                        >
+                                          <FormControl>
+                                            <SelectTrigger className="h-32">
+                                              <SelectValue
+                                                placeholder="Hãy chọn công ty"
+                                                defaultValue={field.value}
+                                              />
+                                            </SelectTrigger>
+                                          </FormControl>
+                                          <SelectContent>
+                                            {company.map((item) => (
+                                              <SelectItem
+                                                key={item.id}
+                                                value={item.id}
+                                                className="hover:bg-slate-100 shadow-md mb-1"
+                                              >
+                                                <div className="flex flex-col items-start  ">
                                                   <span>
-                                                    {item.directorName}
+                                                    {`${limitLength(item.name, 30)} - ${limitLength(item.address, 30)}`}
                                                   </span>
                                                   <span className="text-sm text-gray-500">
-                                                    {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
+                                                    <div className="flex flex-col items-start">
+                                                      <span>
+                                                        {item.directorName}
+                                                      </span>
+                                                      <span className="text-sm text-gray-500">
+                                                        {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
+                                                      </span>
+                                                    </div>
                                                   </span>
                                                 </div>
-                                              </span>
-                                            </div>
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </CardContent>
-                          </Card>
-                        </div>
-                        <Card className="hidden md:block">
-                          <Truck className="w-10 h-10 p-1" />
-                        </Card>
-                        <div className="w-full">
-                          <FormLabel className="text-primary-backgroudPrimary ">
-                            Công ty nhận *
-                          </FormLabel>
-                          <Card className="w-full mt-2">
-                            <CardContent className="mt-5">
-                              <Select
-                                onValueChange={(value) =>
-                                  handleStatusChange1(parseInt(value))
-                                }
-                              >
-                                <SelectTrigger className="mb-2">
-                                  {" "}
-                                  <SelectValue placeholder="Chọn kiểu công ty" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {enumCompany.map((item) => (
-                                    <SelectItem
-                                      value={item.value}
-                                      key={item.id}
-                                    >
-                                      {item.description}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormField
-                                control={form.control}
-                                name="toId"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      defaultValue={field.value}
-                                    >
-                                      <FormControl>
-                                        <SelectTrigger className="h-32">
-                                          <SelectValue
-                                            placeholder="Hãy chọn công ty"
-                                            defaultValue={field.value}
-                                          />
-                                        </SelectTrigger>
-                                      </FormControl>
-                                      <SelectContent>
-                                        {company1.map((item) => (
-                                          <SelectItem
-                                            key={item.id}
-                                            value={item.id}
-                                            className="hover:bg-slate-100 shadow-md mb-1"
-                                          >
-                                            <div className="flex flex-col items-start  ">
-                                              <span>
-                                                {`${limitLength(item.name, 30)} - ${limitLength(item.address, 30)}`}
-                                              </span>
-                                              <span className="text-sm text-gray-500">
-                                                <div className="flex flex-col items-start">
+                                              </SelectItem>
+                                            ))}
+                                          </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </CardContent>
+                              </Card>
+                            </div>
+                            <Card className="hidden md:block shadow-lg">
+                              <Truck className="w-10 h-10 p-1" />
+                            </Card>
+                            <div className="w-full">
+                              <FormLabel className="text-primary-backgroudPrimary ">
+                                Công ty nhận *
+                              </FormLabel>
+                              <Card className="w-full mt-2 shadow-lg">
+                                <CardContent className="mt-5">
+                                  <Select
+                                    onValueChange={(value) =>
+                                      handleStatusChange1(parseInt(value))
+                                    }
+                                  >
+                                    <SelectTrigger className="mb-2">
+                                      {" "}
+                                      <SelectValue placeholder="Chọn kiểu công ty" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {enumCompany.map((item) => (
+                                        <SelectItem
+                                          value={item.value}
+                                          key={item.id}
+                                        >
+                                          {item.description}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <FormField
+                                    control={form.control}
+                                    name="toId"
+                                    render={({ field }) => (
+                                      <FormItem>
+                                        <Select
+                                          onValueChange={field.onChange}
+                                          defaultValue={field.value}
+                                        >
+                                          <FormControl>
+                                            <SelectTrigger className="h-32">
+                                              <SelectValue
+                                                placeholder="Hãy chọn công ty"
+                                                defaultValue={field.value}
+                                              />
+                                            </SelectTrigger>
+                                          </FormControl>
+                                          <SelectContent>
+                                            {company1.map((item) => (
+                                              <SelectItem
+                                                key={item.id}
+                                                value={item.id}
+                                                className="hover:bg-slate-100 shadow-md mb-1"
+                                              >
+                                                <div className="flex flex-col items-start  ">
                                                   <span>
-                                                    {item.directorName}
+                                                    {`${limitLength(item.name, 30)} - ${limitLength(item.address, 30)}`}
                                                   </span>
                                                   <span className="text-sm text-gray-500">
-                                                    {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
+                                                    <div className="flex flex-col items-start">
+                                                      <span>
+                                                        {item.directorName}
+                                                      </span>
+                                                      <span className="text-sm text-gray-500">
+                                                        {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
+                                                      </span>
+                                                    </div>
                                                   </span>
                                                 </div>
-                                              </span>
+                                              </SelectItem>
+                                            ))}
+                                          </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                      </FormItem>
+                                    )}
+                                  />
+                                </CardContent>
+                              </Card>
+                            </div>
+                          </div>
+
+                        </CardContent>
+                      </Card>
+
+                      <Card className="flex flex-col md:flex-row">
+                        <CardHeader>
+                          <TitleComponent
+                            title="Thông tin"
+                            description="Thông tin nhân viên - thời gian vận chuyển đơn hàng."
+                          />
+                        </CardHeader>
+                        <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2 justify-around items-center space-x-0 md:space-x-16 p-4 w-full">
+                          <FormField
+                            control={form.control}
+                            name="shipperId"
+                            render={({ field }) => (
+                              <FormItem className="grid grid-rows-5 h-full">
+                                <FormLabel className="flex items-end text-primary-backgroudPrimary">
+                                  Nhân viên *
+                                </FormLabel>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={field.value}
+                                >
+                                  <FormControl>
+                                    <SelectTrigger className="h-16 row-span-4">
+                                      <SelectValue
+                                        placeholder="Hãy chọn nhân viên"
+                                        defaultValue={field.value}
+                                      />
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {dataEm.map((item) => (
+                                      <SelectItem key={item.id} value={item.id}>
+                                        <div className="flex items-center gap-4">
+                                          <Image
+                                            className="w-12 h-12 rounded-full shadow-md"
+                                            src={item.avatar}
+                                            width={900}
+                                            height={900}
+                                            alt="ảnh nhân viên"
+                                          />
+                                          <div className="font-medium dark:text-white">
+                                            <div>
+                                              {item.firstName} {item.lastName}
                                             </div>
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </CardContent>
-                          </Card>
-                        </div>
+                                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                                              {item.id}
+                                            </div>
+                                            <div className="text-sm text-gray-500 dark:text-gray-400">
+                                              {item.companyName}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name="shipDate"
+                            render={({ field }) => (
+                              <FormItem className="grid grid-rows-5 h-full">
+                                <FormLabel className="flex items-end text-primary-backgroudPrimary">
+                                  Ngày vận đơn *
+                                </FormLabel>
+                                <Popover modal={true}>
+                                  <PopoverTrigger asChild>
+                                    <FormControl>
+                                      <Button
+                                        variant={"outline"}
+                                        className={cn(
+                                          "w-full md:w-[240px] pl-3 text-left font-normal row-span-4",
+                                          !field.value && "text-muted-foreground"
+                                        )}
+                                      >
+                                        {field.value ? (
+                                          format(
+                                            parseISO(field.value),
+                                            "dd/MM/yyyy"
+                                          )
+                                        ) : (
+                                          <span>Chọn ngày</span>
+                                        )}
+                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                      </Button>
+                                    </FormControl>
+                                  </PopoverTrigger>
+                                  <PopoverContent
+                                    className="w-auto p-0"
+                                    align="start"
+                                  >
+                                    <Calendar
+                                      mode="single"
+                                      selected={
+                                        field.value
+                                          ? parseISO(field.value)
+                                          : undefined
+                                      }
+                                      onSelect={(date: any) => {
+                                        if (date) {
+                                          const formattedDate = new Date(
+                                            Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                                          ).toISOString();
+                                          field.onChange(formattedDate);
+                                        }
+                                      }}
+                                      initialFocus
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </CardContent>
+                      </Card>
+
+                      <div className="w-full">
+                        <Tabs defaultValue="account">
+                          <TabsList className="grid w-[200px] grid-cols-2">
+                            <TabsTrigger value="account" className="data-[state=active]:shadow-lg">Sản phẩm</TabsTrigger>
+                            <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
+                          </TabsList>
+                          <TabsContent value="account">
+                            <Card>
+                              <CardHeader>
+                                <TitleComponent
+                                  title="Sản phẩm"
+                                  description="Danh sách sản phẩm của công ty."
+                                />
+                              </CardHeader>
+                              <CardContent className="space-y-2">
+                                <Input
+                                  placeholder="Tìm kiếm sản phẩm..."
+                                  value={searchTerm}
+                                  onChange={(e) => setSearchTerm(e.target.value)}
+                                  className="md:w-[300px] w-full mb-3"
+                                />
+                                <div className=" w-full grid grid-cols-3 md:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
+                                  {dataP.map((item) => (
+                                    <div
+                                      className="group relative w-[80px] h-[80px] shadow-md rounded-md"
+                                      key={item.id}
+                                    >
+                                      <ImageIconShipmentForm dataImage={item} />
+                                      <Check
+                                        className={`${shipmentDetailRequests.some(
+                                          (item1) => item1.itemId === item.id
+                                        )
+                                          ? "absolute top-0 right-0 bg-primary text-white"
+                                          : "hidden"
+                                          }`}
+                                      />
+                                      <span
+                                        className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                        onClick={() => {
+                                          const mainImage =
+                                            item?.imageResponses.find(
+                                              (image) => image.isMainImage
+                                            );
+                                          handleAddProducts(
+                                            mainImage ? mainImage.imageUrl : "",
+                                            item?.id,
+                                            productType
+                                          );
+                                        }}
+                                      >
+                                        <Plus className="text-white" />
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </CardContent>
+                              <CardFooter className="flex justify-end">
+                                <span onClick={handleClear} className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5">
+                                  Bỏ chọn tất cả
+                                </span>
+                              </CardFooter>
+                            </Card>
+                          </TabsContent>
+                          <TabsContent value="password">
+                            <Card>
+                              <CardHeader>
+                                <TitleComponent
+                                  title="Vật liệu"
+                                  description="Danh sách nguyên vật liệu đã nhập."
+                                />
+                              </CardHeader>
+                              <CardContent className="space-y-2">
+                                <Input
+                                  placeholder="Tìm kiếm nguyên vật liệu..."
+                                  value={searchTermM}
+                                  onChange={(e) => setSearchTermM(e.target.value)}
+                                  className="md:w-[300px] w-full mb-3"
+                                />
+                                <div className=" w-full grid grid-cols-3 sm:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
+                                  {dataM.map((item) => (
+                                    <div
+                                      className="group relative w-[80px] h-[80px] shadow-md rounded-md"
+                                      key={item.id}
+                                    >
+                                      <ImageIconMaterial dataImage={item} />
+                                      <Check
+                                        className={`${shipmentDetailRequests.some(
+                                          (item1) => item1.itemId === item.id
+                                        )
+                                          ? "absolute top-0 right-0 bg-primary text-white"
+                                          : "hidden"
+                                          }`}
+                                      />
+                                      <span
+                                        className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                        onClick={() =>
+                                          handleAddProducts(
+                                            item?.image,
+                                            item?.id,
+                                            materialType
+                                          )
+                                        }
+                                      >
+                                        <Plus className="text-white" />
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </CardContent>
+                              <CardFooter className="flex justify-end">
+                                <span onClick={handleClear} className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5">
+                                  Bỏ chọn tất cả
+                                </span>
+                              </CardFooter>
+                            </Card>
+                          </TabsContent>
+                        </Tabs>
                       </div>
 
-                      <FormField
-                        control={form.control}
-                        name="shipperId"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-primary-backgroudPrimary">
-                              Nhân viên vận chuyển *
-                            </FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="h-16">
-                                  <SelectValue
-                                    placeholder="Hãy chọn nhân viên"
-                                    defaultValue={field.value}
-                                  />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {dataEm.map((item) => (
-                                  <SelectItem key={item.id} value={item.id}>
-                                    <div className="flex items-center gap-4">
-                                      <Image
-                                        className="w-12 h-12 rounded-full shadow-md"
-                                        src={item.avatar}
-                                        width={900}
-                                        height={900}
-                                        alt="ảnh nhân viên"
-                                      />
-                                      <div className="font-medium dark:text-white">
-                                        <div>
-                                          {item.firstName} {item.lastName}
-                                        </div>
-                                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                                          {item.id}
-                                        </div>
-                                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                                          {item.companyName}
-                                        </div>
+                      <div className="w-full overflow-auto ">
+                        {productDetail.length > 0 && (
+                          <Card className=" w-[1000px] sm:w-full overflow-auto">
+                            <CardHeader>
+                              <TitleComponent
+                                title="Danh sách mặt hàng"
+                                description="Danh sách sản phẩm - nguyên vật liệu trong vận chuyển."
+                              />
+                            </CardHeader>
+                            <Table >
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead className="w-[100px]">Hình ảnh</TableHead>
+                                  <TableHead>Giai đoạn</TableHead>
+                                  <TableHead>Số lượng</TableHead>
+                                  <TableHead>Loại hàng</TableHead>
+                                  <TableHead>Chất lượng</TableHead>
+                                  <TableHead>Giá Tiền</TableHead>
+                                  <TableHead></TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody >
+                                {productDetail.map((proDetail, index) => (
+                                  <TableRow key={proDetail.itemId}>
+                                    <TableCell className="font-medium">
+                                      <div className="w-[50px] h-[50px] rounded-md shadow-md">
+                                        <Image
+                                          src={proDetail.imgProducts}
+                                          width={900}
+                                          height={900}
+                                          alt="ảnh sản phẩm"
+                                          className="w-full h-full object-cover rounded-md"
+                                        />
                                       </div>
-                                    </div>
-                                  </SelectItem>
+                                    </TableCell>
+                                    <TableCell>
+                                      {proDetail.kindOfShip === 0 ? (
+                                        <Select
+                                          defaultValue={String(proDetail.phaseId)}
+                                          onValueChange={(value) =>
+                                            handleChange(
+                                              proDetail.itemId,
+                                              "phaseId",
+                                              value,
+                                              index
+                                            )
+                                          }
+                                        >
+                                          <SelectTrigger className="w-[100px]">
+                                            <SelectValue placeholder="Giai đoạn sản phẩm" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectGroup>
+                                              {dataPh.map((item) => (
+                                                <SelectItem
+                                                  key={item.id}
+                                                  value={item.id}
+                                                >
+                                                  {item.name}
+                                                </SelectItem>
+                                              ))}
+                                            </SelectGroup>
+                                          </SelectContent>
+                                        </Select>
+                                      ) : (
+                                        <>Không có</>
+                                      )}
+                                    </TableCell>
+                                    <TableCell>
+                                      <Input
+                                        min={0}
+                                        type="number"
+                                        name="quantity"
+                                        value={
+                                          shipmentDetailRequests.find(
+                                            (item, i) =>
+                                              item.itemId === proDetail.itemId &&
+                                              i === index
+                                          )?.quantity || 0
+                                        }
+                                        onChange={(e) =>
+                                          handleChange(
+                                            proDetail.itemId,
+                                            "quantity",
+                                            parseInt(e.target.value),
+                                            index
+                                          )
+                                        }
+                                        className="w-16 text-center outline-none"
+                                      />
+                                    </TableCell>
+                                    <TableCell>
+                                      {proDetail.kindOfShip === 0
+                                        ? "Sản phẩm"
+                                        : "Vật liệu"}
+                                    </TableCell>
+                                    <TableCell>
+                                      {proDetail.kindOfShip === 0 ? (
+                                        <Select
+                                          defaultValue={String(
+                                            proDetail.productPhaseType
+                                          )}
+                                          onValueChange={(value) =>
+                                            handleChange(
+                                              proDetail.itemId,
+                                              "productPhaseType",
+                                              parseInt(value),
+                                              index
+                                            )
+                                          }
+                                        >
+                                          <SelectTrigger className="w-[180px]">
+                                            <SelectValue placeholder="Loại chất lượng sản phẩm" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectGroup>
+                                              {ProductPhaseType.map((item) => (
+                                                <SelectItem
+                                                  key={item.id}
+                                                  value={String(item.id)}
+                                                >
+                                                  {item.des}
+                                                </SelectItem>
+                                              ))}
+                                            </SelectGroup>
+                                          </SelectContent>
+                                        </Select>
+                                      ) : (
+                                        <div>Không có</div>
+                                      )}
+                                    </TableCell>
+                                    <TableCell>
+                                      {proDetail.kindOfShip === 1 ? (
+                                        <Input
+                                          min={0}
+                                          max={20000000000}
+                                          type="text"
+                                          name="materialPrice"
+                                          value={formatCurrency(
+                                            shipmentDetailRequests.find(
+                                              (item, i) =>
+                                                item.itemId === proDetail.itemId &&
+                                                i === index
+                                            )?.materialPrice || 0
+                                          )}
+                                          inputMode="numeric"
+                                          onChange={(e) =>
+                                            handleChange(
+                                              proDetail.itemId,
+                                              "materialPrice",
+                                              parseCurrency(e.target.value),
+                                              index
+                                            )
+                                          }
+                                          className="w-[150px] text-left outline-none"
+                                        />
+                                      ) : (
+                                        <>Không có</>
+                                      )}
+                                    </TableCell>
+                                    <TableCell>
+                                      <span
+                                        className="cursor-pointer"
+                                        onClick={() =>
+                                          handleDeleteProducts(
+                                            proDetail.itemId,
+                                            index
+                                          )
+                                        }
+                                      >
+                                        <CircleX />
+                                      </span>
+                                    </TableCell>
+                                  </TableRow>
                                 ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
+                              </TableBody>
+                            </Table>
+                          </Card>
                         )}
-                      />
-
-                      <FormField
-                        control={form.control}
-                        name="shipDate"
-                        render={({ field }) => (
-                          <FormItem className="flex flex-col">
-                            <FormLabel className="flex items-center text-primary-backgroudPrimary">
-                              Ngày vận chuyển *
-                            </FormLabel>
-                            <Popover modal={true}>
-                              <PopoverTrigger asChild>
-                                <FormControl>
-                                  <Button
-                                    variant={"outline"}
-                                    className={cn(
-                                      "w-[240px] pl-3 text-left font-normal",
-                                      !field.value && "text-muted-foreground"
-                                    )}
-                                  >
-                                    {field.value ? (
-                                      format(
-                                        parseISO(field.value),
-                                        "dd/MM/yyyy"
-                                      )
-                                    ) : (
-                                      <span>Chọn ngày</span>
-                                    )}
-                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent
-                                className="w-auto p-0"
-                                align="start"
-                              >
-                                <Calendar
-                                   mode="single"
-                                   selected={
-                                     field.value
-                                       ? parseISO(field.value)
-                                       : undefined
-                                   }
-                                   onSelect={(date: any) => {
-                                     if (date) {
-                                       const formattedDate = new Date(
-                                         Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-                                       ).toISOString();
-                                       field.onChange(formattedDate);
-                                     }
-                                   }}
-                                   initialFocus
-                                />
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      </div>
 
                       <Separator className="h-1 my-1" />
                       <Button
                         type="submit"
                         className="w-full bg-primary hover:bg-primary/90"
-                        disabled={loading}
+                        disabled={pending}
                       >
-                        {loading ? "Loading..." : "Tạo đơn"}
+                        {pending ? "Loading..." : "Tạo đơn"}
                       </Button>
                     </form>
                   </Form>

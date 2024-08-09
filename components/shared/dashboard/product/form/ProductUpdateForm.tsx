@@ -97,6 +97,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(
     undefined
   );
+  const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const [imageRequests, setImageRequests] = useState<any[]>([]);
   const [imageRequestsUpdate, setImageRequestsUpdate] = useState<any[]>([]);
   useEffect(() => {
@@ -132,7 +133,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     };
 
     fetchUpdatedProduct();
-  }, [productId]);
+  }, [productId, fetchTrigger]);
 
   const initialImageRequests =
     updatedProduct?.imageResponses.map((image) => ({
@@ -294,7 +295,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   const [saveUpdateImage, setSaveUpdateImage] = useState<any[]>([]);
 
   // Handle toggling blue image flag for an image
-  const handleToggleBluePrint = (imageUrl: string, id: string) => {
+  const handleToggleBluePrint = (imageUrl: string, id: string, index: any) => {
     console.log("id", id);
     console.log("image=====", imageRequestsUpdate);
     setImageRequests((prevImageRequests) =>
@@ -348,16 +349,20 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   };
 
   // Handle toggling main image flag for an image
-  const handleToggleMainImage = (imageUrl: string, id: string) => {
+  const handleToggleMainImage = (imageUrl: string, id: string, index: any) => {
     console.log("imageUrl=", imageUrl);
     setImageRequests((prevImageRequests) =>
       prevImageRequests.map((req) =>
-        req.imageUrl ? { ...req, isMainImage: !req.isMainImage } : req
+        req.imageUrl === imageUrl
+          ? { ...req, isMainImage: !req.isMainImage }
+          : req
       )
     );
     setImageAddRequests((prevImageRequests) =>
       prevImageRequests.map((req) =>
-        req.imageUrl ? { ...req, isMainImage: !req.isMainImage } : req
+        req.imageUrl === imageUrl
+          ? { ...req, isMainImage: !req.isMainImage }
+          : req
       )
     );
 
@@ -370,7 +375,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     const updatedImage = imageRequestsUpdate.find((item) => item.id === id);
     if (updatedImage) {
       handleDeleteImageUpdate(id);
-      setSaveUpdateImage((prevSaveUpdateImage) => {
+      setImageAddRequests((prevSaveUpdateImage) => {
         const existingIndex = prevSaveUpdateImage.findIndex(
           (item) => item.id === id
         );
@@ -452,6 +457,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
           formData.id
         );
         ForceRender();
+        setOpen(false)
         toast.success(response.data.message);
         console.log("Update Successful:", response);
       } catch (error: any) {
@@ -461,26 +467,13 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
           error.response.data.message
         ) {
           // Xử lý lỗi từ server
-          const errors = error.response.data.error;
-          if (errors === null) {
+          if (error.response.data.error) {
+            for (const key in error.response.data.error) {
+              toast.error(error.response.data.error[key][0]);
+            }
+          } else {
             toast.error(error.response.data.message);
           }
-          if (errors.ImageRequests) {
-            toast.error(errors.ImageRequests);
-          }
-
-          if (errors.PriceFinished) {
-            toast.error(errors.PriceFinished);
-          }
-
-          if (errors.Code) {
-            toast.error(errors.Code);
-          }
-          // Sử dụng dấu ngoặc vuông để truy cập thuộc tính có dấu chấm trong tên
-          if (errors['UpdateProductRequest.PriceFinished']) {
-            toast.error(errors['UpdateProductRequest.PriceFinished']);
-          }
-          console.log(error.UpdateProductRequest.PriceFinished)
         } else if (error.response.data.message) {
           // Xử lý lỗi khi không có phản hồi từ server
           toast.error(
@@ -528,9 +521,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   const handleOnDialogA = () => {
     setOpenAlert(true);
   };
-  const handleOffDialog = () => {
-    setOpenAlert(true);
-  };
+
   const handleOnDialog = () => {
     setOpen(true);
   };
@@ -538,7 +529,20 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   const handleClearForm = () => {
     setOpen(false)
     setOpenAlert(false)
+    setFetchTrigger((prev) => prev + 1);
   }
+
+  const { formState } = form;
+  const handleOffDialog = () => {
+
+
+    if (!formState.isDirty) {
+      setOpen(false);
+      setFetchTrigger((prev) => prev + 1);
+    } else {
+      setOpenAlert(true);
+    }
+  };
   return (
     <>
       {
@@ -850,7 +854,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                                         onCheckedChange={() =>
                                                           handleToggleBluePrint(
                                                             image.imageUrl,
-                                                            image?.id
+                                                            image?.id,
+                                                            index
                                                           )
                                                         }
                                                       />
@@ -866,7 +871,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                                         onCheckedChange={() =>
                                                           handleToggleMainImage(
                                                             image.imageUrl,
-                                                            image?.id
+                                                            image?.id,
+                                                            index
                                                           )
                                                         }
                                                       />

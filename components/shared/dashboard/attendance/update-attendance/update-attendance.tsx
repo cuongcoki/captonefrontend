@@ -253,8 +253,7 @@ export default function UpdateAttendance({
         })
         .finally(() => {
           router.push(
-            `${pathname}?${
-              userData.roleId == "2" ? "" : `warehouse=${warehouse}&`
+            `${pathname}?${userData.roleId == "2" ? "" : `warehouse=${warehouse}&`
             }date=${date}&slot=${slot}`
           );
         });
@@ -307,7 +306,7 @@ export default function UpdateAttendance({
         // ForceRender();
         // toast.success(data.message);
       })
-      .catch((error) => {});
+      .catch((error) => { });
   };
 
   const handleSubmit = (isCreate: boolean) => {
@@ -357,12 +356,12 @@ export default function UpdateAttendance({
           setIsCreated(true);
         })
         .catch((error) => {
-          if (!error.response.data.error) {
-            toast.error(error.response.data.message);
-          } else {
+          if (error.response.data.error) {
             for (const key in error.response.data.error) {
               toast.error(error.response.data.error[key][0]);
             }
+          } else {
+            toast.error(error.response.data.message);
           }
         })
         .finally(() => {
@@ -379,11 +378,11 @@ export default function UpdateAttendance({
         })
         .catch((error) => {
           if (error.response.data.error) {
-            toast.error(error.response.data.message);
-          } else {
             for (const key in error.response.data.error) {
               toast.error(error.response.data.error[key][0]);
             }
+          } else {
+            toast.error(error.response.data.message);
           }
         })
         .finally(() => {
@@ -404,9 +403,8 @@ export default function UpdateAttendance({
     <div>
       <HeaderComponent
         title="Điểm danh nhân viên"
-        description={`Điểm danh nhân viên ngày ${dateProp} - ${
-          comboboxData.find((item) => item.value === slotProp)?.label
-        }.`}
+        description={`Điểm danh nhân viên ngày ${dateProp} - ${comboboxData.find((item) => item.value === slotProp)?.label
+          }.`}
       />
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 mb-5 flex-wrap ">
         {userData.roleId != "2" && (
@@ -681,11 +679,10 @@ export default function UpdateAttendance({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${
-                            item.isSalaryByProduct === true
-                              ? "dark:bg-[#1c1917] "
-                              : "bg-white dark:bg-card "
-                          }`}
+                          className={`${item.isSalaryByProduct === true
+                            ? "dark:bg-[#1c1917] "
+                            : "bg-white dark:bg-card "
+                            }`}
                         >
                           Nhấn vào
                         </td>
@@ -695,11 +692,10 @@ export default function UpdateAttendance({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${
-                            item.isSalaryByProduct === true
-                              ? "dark:bg-[#1c1917] "
-                              : "bg-white dark:bg-card"
-                          }`}
+                          className={`${item.isSalaryByProduct === true
+                            ? "dark:bg-[#1c1917] "
+                            : "bg-white dark:bg-card"
+                            }`}
                         >
                           Để tạo
                         </td>
@@ -709,11 +705,10 @@ export default function UpdateAttendance({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${
-                            item.isSalaryByProduct === true
-                              ? "dark:bg-[#1c1917] "
-                              : "bg-white dark:bg-card"
-                          }`}
+                          className={`${item.isSalaryByProduct === true
+                            ? "dark:bg-[#1c1917] "
+                            : "bg-white dark:bg-card"
+                            }`}
                         >
                           Sản phẩm
                         </td>

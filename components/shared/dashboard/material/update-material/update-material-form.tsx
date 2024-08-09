@@ -181,18 +181,13 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
         }
       })
       .catch((error) => {
-        console.log("ERROR IN UPDATE MATERIAL", error);
-        const errors = error.response.data.error;
-        if (errors.Name) {
-          toast.error(errors.Name[0]);
+        if (error.response.data.error) {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
+        } else {
+          toast.error(error.response.data.message);
         }
-        if (errors.Unit) {
-          toast.error(errors.Unit[0]);
-        }
-        if (errors.QuantityPerUnit) {
-          toast.error(errors.QuantityPerUnit[0]);
-        }
-        toast.error(error.response.data.message);
       })
       .finally(() => {
         setLoading(false);

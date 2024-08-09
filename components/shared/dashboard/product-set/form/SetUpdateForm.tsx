@@ -56,6 +56,7 @@ import ImageDisplayDialog from "./imageDisplayDialog";
 import { NoImage } from "@/constants/images";
 import { ProductSetStore } from "@/components/shared/dashboard/product-set/product-set-store";
 import { Label } from "@/components/ui/label";
+import TitleComponent from "@/components/shared/common/Title";
 
 interface ImageResponse {
   id: string;
@@ -610,9 +611,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8 ">
                           <Card>
                             <CardHeader>
-                              <CardTitle className="text-2xl text-primary">
-                                Thông Tin
-                              </CardTitle>
+                              <TitleComponent
+                                title="Thông tin"
+                                description="Thông tin chung của bộ sản phẩm."
+                              />
                             </CardHeader>
                             <CardContent className="flex flex-col gap-5">
                               <FormField
@@ -647,7 +649,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                 render={({ field }) => (
                                   <FormItem>
                                     <FormLabel className="flex items-center ">
-                                      Miêu tả *
+                                      Mô tả *
                                     </FormLabel>
                                     <Textarea {...field} />
                                     <FormMessage />
@@ -664,9 +666,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                             x-chunk="dashboard-07-chunk-4"
                           >
                             <CardHeader>
-                              <CardTitle className="text-2xl text-primary">
-                                Hình ảnh
-                              </CardTitle>
+                              <TitleComponent
+                                title="Hình ảnh"
+                                description="Hình ảnh minh họa của bộ sản phẩm."
+                              />
                             </CardHeader>
                             <CardContent>
                               <div className="grid gap-2">
@@ -711,64 +714,67 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         </div>
                       </div>
                       <div className="gap-4 w-full lg:gap-8">
-                        <Card>
-                          <CardHeader>
-                            <CardTitle className="text-2xl text-primary">Danh Sách Sản Phẩm</CardTitle>
-                          </CardHeader>
-                          <CardContent className="overflow-auto">
-                            {getDetailsProUpdate.map((product, index) => (
-                              <div
-                                className="flex items-start justify-between gap-2 py-4"
-                                key={product.productId}
-                              >
-                                <div className="flex items-start gap-6">
-                                  {product.product.imageResponses.length > 0 && (
-                                    <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
-                                      <Image
-                                        src={
-                                          product.product.imageResponses[0].imageUrl
-                                        } // Lấy ảnh đầu tiên từ mảng imageResponses
-                                        alt="Ảnh mẫu"
-                                        className="w-full h-full object-cover rounded-md"
-                                        width={900}
-                                        height={900}
-                                      />
+                            <Card>
+                              <CardHeader>
+                                <TitleComponent
+                              title="Danh sách sản phẩm"
+                              description="Danh sách các sản phẩm đã có trong bộ sản phẩm."
+                            />
+                              </CardHeader>
+                              <CardContent className="overflow-auto">
+                                {getDetailsProUpdate.map((product, index) => (
+                                  <div
+                                    className="flex items-start justify-between gap-2 py-4"
+                                    key={product.productId}
+                                  >
+                                    <div className="flex items-start gap-6">
+                                      {product.product.imageResponses.length > 0 && (
+                                        <div className="w-[60px] h-[60px] bg-primary-backgroudPrimary rounded-md shadow-md">
+                                          <Image
+                                            src={
+                                              product.product.imageResponses[0].imageUrl
+                                            } // Lấy ảnh đầu tiên từ mảng imageResponses
+                                            alt="Ảnh mẫu"
+                                            className="w-full h-full object-cover rounded-md"
+                                            width={900}
+                                            height={900}
+                                          />
+                                        </div>
+                                      )}
+                                      <div className="font-medium dark:text-white">
+                                        <div className="hidden sm:block">
+                                          <b>Tên Sản Phẩm: </b>
+                                          {limitLength(product?.product.name, 50)}
+                                        </div>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400 ">
+                                          <b className="hidden sm:block">Mã: </b>
+                                          {limitLength(product?.product.code, 50)}
+                                        </div>
+                                        <div className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
+                                          <i>
+                                            {limitLength(
+                                              product?.product.description,
+                                              50
+                                            )}
+                                          </i>
+                                        </div>
+                                      </div>
                                     </div>
-                                  )}
-                                  <div className="font-medium dark:text-white">
-                                    <div className="hidden sm:block">
-                                      <b>Tên Sản Phẩm: </b>
-                                      {limitLength(product?.product.name, 50)}
-                                    </div>
-                                    <div className="text-sm text-gray-500 dark:text-gray-400 ">
-                                      <b className="hidden sm:block">Mã: </b>
-                                      {limitLength(product?.product.code, 50)}
-                                    </div>
-                                    <div className="text-sm text-gray-500 dark:text-gray-400 hidden sm:block">
-                                      <i>
-                                        {limitLength(
-                                          product?.product.description,
-                                          50
-                                        )}
-                                      </i>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-6">
-                                  <Label htmlFor="email" className="hidden sm:block" >Số lượng</Label>
+                                    <div className="flex items-center gap-6">
+                                      <Label htmlFor="email" className="hidden sm:block" >Số lượng</Label>
 
-                                  <Input
-                                    min={0}
+                                      <Input
+                                        min={0}
                                     className="col-span-2 w-16 text-center outline-none"
-                                    type="number"
-                                    defaultValue={product.quantity || 0}
-                                    onChange={(e) =>
-                                      handleChangeUpdate(
-                                        product.productId,
-                                        parseInt(e.target.value)
-                                      )
-                                    }
-                                  />
+                                        type="number"
+                                        defaultValue={product.quantity || 0}
+                                        onChange={(e) =>
+                                          handleChangeUpdate(
+                                            product.productId,
+                                            parseInt(e.target.value)
+                                          )
+                                        }
+                                      />
 
                                   <span
                                     className="hover:bg-slate-50 cursor-pointer col-span-1 border p-3 rounded-lg"
@@ -787,9 +793,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                       <div className="gap-4 w-full lg:gap-8">
                         <Card>
                           <CardHeader>
-                            <CardTitle className="font-semibold tracking-tight text-2xl text-primary">
-                              Thêm Sản Phẩm Vào Bộ
-                            </CardTitle>
+                          <TitleComponent
+                              title="Thêm sản phẩm vào bộ"
+                              description="Tìm kiếm - lựa chọn sản phẩm thêm vào bộ."
+                            />
                           </CardHeader>
                           <CardContent className="md:flex w-full gap-6 justify-between items-start">
                             <div className="md:w-[50%] w-full">
@@ -861,7 +868,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                             <div className="md:w-[50%] w-full">
                               <Card className="mt-4">
                                 <CardHeader className="font-semibold text-xl">
-                                  <span>Thông tin sản phẩm đã thêm</span>
+                                  <span>Danh sách sản phẩm lựa chọn</span>
                                 </CardHeader>
                                 <CardContent className="overflow-auto">
                                   {getDetailsPro.map((product, index) => (

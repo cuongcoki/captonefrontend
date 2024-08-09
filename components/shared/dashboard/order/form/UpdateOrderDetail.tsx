@@ -65,6 +65,7 @@ import { NoImage } from "@/constants/images";
 import useDebounce from "./useDebounce";
 import { orderApi } from "@/apis/order.api";
 import { OrderStore } from "../order-store";
+import TitleComponent from "@/components/shared/common/Title";
 
 interface OrderID {
   orderId?: any;
@@ -179,7 +180,12 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   }, [debouncedSearchTerm, searchTerm]);
 
   //  ========================================================= các hàm để thêm sản phẩm  và số lượng vào bộ sản phẩm  =========================================================
-
+  const limitLength = (text: any, maxLength: any) => {
+    if (text.length > maxLength) {
+      return `${text.slice(0, maxLength)}...`;
+    }
+    return text;
+  };
   const [getDetailsPro, setGetDetailsPro] = useState<any[]>([]);
   const [productsRequest, setProductsRequest] = useState<
     {
@@ -353,13 +359,20 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       setLoading(true);
       orderApi.createOrderId(requestBody).then(({ data }) => {
         if (data.isSuccess) {
-          ForceRender()
-          setOpen(false)
+          ForceRender();
+          setOpen(false);
           toast.success("Cặp nhật sản phẩm thành công");
         }
       });
     } catch (error: any) {
-      toast.success("Cặp nhật sản phẩm không thành công");
+      // toast.error("Cặp nhật sản phẩm không thành công");
+      if (error.response.data.error) {
+        for (const key in error.response.data.error) {
+          toast.error(error.response.data.error[key][0]);
+        }
+      } else {
+        toast.error(error.response.data.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -450,7 +463,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
               <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">
-                    Chỉnh sửa sản phẩm đơn hàng
+                    Chỉnh Sửa Mặt Hàng Của Đơn Hàng
                   </h2>
                   <Button variant="outline" size="icon" onClick={handleOffDialog}>
                     <X className="w-4 h-4" />
@@ -459,9 +472,10 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                 <div className="p-4  h-[800px] overflow-auto">
                   <Card >
                     <CardHeader>
-                      <CardTitle className="text-lg">
-                        Thêm sản phẩm cho đơn hàng
-                      </CardTitle>
+                      <TitleComponent
+                        title="Danh sách mặt hàng"
+                        description="Tìm kiếm - thêm mặt hàng vào đơn đặt hàng."
+                      />
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center my-4">
@@ -483,14 +497,14 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
 
                           {!checkProducts ? (
                             <Input
-                              placeholder="tìm kiếm tên sản phẩm ..."
+                              placeholder="Tìm kiếm sản phẩm..."
                               value={searchTerm}
                               onChange={(e) => setSearchTerm(e.target.value)}
                               className="border-none w-full"
                             />
                           ) : (
                             <Input
-                              placeholder="tìm kiếm bộ sản phẩm ..."
+                              placeholder="Tìm kiếm bộ sản phẩm..."
                               value={searchTermSet}
                               onChange={(e) => setSearchTermSet(e.target.value)}
                               className="border-none w-full"
@@ -539,7 +553,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                   ))
                                 ) : (
                                   <TableRow className="text-center flex justify-center items-center w-full">
-                                    không thấy sản phẩm nào
+                                    Không tìm thấy sản phẩm nào.
                                   </TableRow>
                                 )}
                               </CardContent>
@@ -553,7 +567,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                           {searchResultsSet !== null ? (
                             <Card className="my-4">
                               <CardHeader className="font-semibold text-xl">
-                                <span>Thông tin Bộ sản phẩm</span>
+                                <span>Thông tin bộ sản phẩm</span>
                               </CardHeader>
                               <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
                                 {searchResultsSet !== null ? (
@@ -589,7 +603,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                   ))
                                 ) : (
                                   <div className="text-center flex justify-center items-center w-full">
-                                    không thấy sản phẩm nào
+                                    Không tìm thấy bộ sản phẩm nào.
                                   </div>
                                 )}
                               </CardContent>
@@ -609,16 +623,13 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                             <Table className="overflow-x-auto md:w-full w-[800px]">
                               <TableHeader>
                                 <TableRow>
-                                  <TableHead className="w-[100px]">
-                                    Sản phẩm
+                                  <TableHead className="w-[100px]">Mặt hàng
                                   </TableHead>
-                                  <TableHead>Loại sản phẩm</TableHead>
+                                  <TableHead>Loại hàng</TableHead>
                                   <TableHead>Số lượng</TableHead>
-                                  <TableHead>Đơn vị giá</TableHead>
+                                  <TableHead>Đơn giá</TableHead>
                                   <TableHead>Ghi chú</TableHead>
-                                  <TableHead className="text-right">
-                                    Xóa
-                                  </TableHead>
+                                  <TableHead></TableHead>
                                 </TableRow>
                               </TableHeader>
 
@@ -642,7 +653,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
 
                                         <div className="font-medium dark:text-white">
                                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            {product.code}-{product.name}
+                                            {limitLength(product.code, 10)} - {limitLength(product.name, 15)}
                                           </div>
                                         </div>
                                       </div>
@@ -743,7 +754,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                           className="w-full bg-primary hover:bg-primary/90"
                           disabled={pending}
                         >
-                          {pending ? "Loading..." : "GỬI"}
+                          {pending ? "Đang xử lý..." : "Chỉnh sửa đơn hàng"}
                         </Button>
                       </Card>
                     </CardContent>
