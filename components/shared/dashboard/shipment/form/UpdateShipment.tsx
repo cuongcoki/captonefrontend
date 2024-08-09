@@ -708,13 +708,11 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
             })
             .catch(error => {
                 const errorResponse = error.response?.data?.error;
-                if (errorResponse?.ShipmentDetailRequests) {
-                    toast.error(errorResponse.ShipmentDetailRequests);
-                }
-                if (errorResponse?.ToId) {
-                    toast.error(errorResponse.ToId);
-                }
-                if (!errorResponse?.ToId && !errorResponse?.ShipmentDetailRequests && error.response?.data) {
+                if (errorResponse) {
+                    for (const key in error.response.data.error) {
+                        toast.error(error.response.data.error[key][0]);
+                    }
+                } else {
                     toast.error(error.response?.data.message);
                 }
             })
@@ -788,7 +786,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         }
     };
 
-  const { pending } = useFormStatus();
+    const { pending } = useFormStatus();
 
     return (
         <>
@@ -969,7 +967,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                         name="shipperId"
                                                         render={({ field }) => (
                                                             <FormItem className="grid grid-rows-5 h-full">
-                                                                <FormLabel className="text-primary-backgroudPrimary">Nhân viên vận chuyển *</FormLabel>
+                                                                <FormLabel className="text-primary-backgroudPrimary">Nhân viên *</FormLabel>
                                                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                                     <FormControl>
                                                                         <SelectTrigger className="h-16 row-span-4">

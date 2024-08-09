@@ -109,13 +109,12 @@ export const ChangeStatusShipment: React.FC<ShipmentIDProps> = ({ shipmentID }) 
                 toast.success(data.message)
             })
             .catch(error => {
-                console.log("error", error)
                 if (error.response.data.error) {
-                    toast.error(error.response.data.message);
-                } else {
                     for (const key in error.response.data.error) {
                         toast.error(error.response.data.error[key][0]);
                     }
+                } else {
+                    toast.error(error.response.data.message);
                 }
             })
             .finally(() => {

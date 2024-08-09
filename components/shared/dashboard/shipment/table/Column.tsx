@@ -282,12 +282,12 @@ export const columns: ColumnDef<Shipment>[] = [
       );
     },
     cell: ({ row }) => {
-      function formatDate(isoString:string) {
+      function formatDate(isoString: string) {
         const date = new Date(isoString);
         const day = String(date.getUTCDate()).padStart(2, '0');
         const month = String(date.getUTCMonth() + 1).padStart(2, '0');
         const year = date.getUTCFullYear();
-      
+
         return `${day}/${month}/${year}`;
       }
       return (
@@ -344,11 +344,11 @@ export const columns: ColumnDef<Shipment>[] = [
           .catch((error) => {
             // console.log(error)
             if (error.response.data.error) {
-              toast.error(error.response.data.message);
-            } else {
               for (const key in error.response.data.error) {
                 toast.error(error.response.data.error[key][0]);
               }
+            } else {
+              toast.error(error.response.data.message);
             }
           });
       };

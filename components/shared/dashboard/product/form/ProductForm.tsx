@@ -268,27 +268,12 @@ export const ProductForm = () => {
         toast.error("imageUrl (nameImage) không hợp lệ");
       }
     } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.error) {
-        const errors = error.response.data.error;
-
-        if (errors.ImageRequests) {
-          toast.error(errors.ImageRequests);
+      if (error.response.data.error) {
+        for (const key in error.response.data.error) {
+          toast.error(error.response.data.error[key][0]);
         }
-
-        if (errors.PriceFinished) {
-          toast.error(errors.PriceFinished);
-        }
-
-        if (errors.Code) {
-          toast.error(errors.Code);
-        }
-
-        if (errors["UpdateProductRequest.PriceFinished"]) {
-          toast.error(errors["UpdateProductRequest.PriceFinished"]);
-        }
-        // console.log(error.UpdateProductRequest.PriceFinished);
       } else {
-        console.error("Lỗi khi gửi biểu mẫu:", error);
+        toast.error(error.response.data.message);
       }
     } finally {
       setLoading(false);
