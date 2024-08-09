@@ -734,17 +734,12 @@ export default function CreateShipment() {
       })
       .catch((error) => {
         const errorResponse = error.response?.data?.error;
-        if (errorResponse?.ShipmentDetailRequests) {
-          toast.error(errorResponse.ShipmentDetailRequests);
-        }
-        if (errorResponse?.ToId) {
-          toast.error(errorResponse.ToId);
-        }
-        if (
-          !errorResponse?.ToId &&
-          !errorResponse?.ShipmentDetailRequests &&
-          error.response?.data
-        ) {
+
+        if (errorResponse) {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
+        } else {
           toast.error(error.response?.data.message);
         }
       })
@@ -1150,7 +1145,7 @@ export default function CreateShipment() {
                           />
                         </CardContent>
                       </Card>
-                      
+
                       <div className="w-full">
                         <Tabs defaultValue="account">
                           <TabsList className="grid w-[200px] grid-cols-2">
@@ -1223,7 +1218,7 @@ export default function CreateShipment() {
                                 />
                               </CardHeader>
                               <CardContent className="space-y-2">
-                              <Input
+                                <Input
                                   placeholder="Tìm kiếm nguyên vật liệu..."
                                   value={searchTermM}
                                   onChange={(e) => setSearchTermM(e.target.value)}
@@ -1432,7 +1427,7 @@ export default function CreateShipment() {
                                     </TableCell>
                                     <TableCell>
                                       <span
-                                      className="cursor-pointer"
+                                        className="cursor-pointer"
                                         onClick={() =>
                                           handleDeleteProducts(
                                             proDetail.itemId,

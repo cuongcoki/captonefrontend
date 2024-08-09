@@ -365,7 +365,14 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         }
       });
     } catch (error: any) {
-      toast.success("Cặp nhật sản phẩm không thành công");
+      // toast.error("Cặp nhật sản phẩm không thành công");
+      if (error.response.data.error) {
+        for (const key in error.response.data.error) {
+          toast.error(error.response.data.error[key][0]);
+        }
+      } else {
+        toast.error(error.response.data.message);
+      }
     } finally {
       setLoading(false);
     }

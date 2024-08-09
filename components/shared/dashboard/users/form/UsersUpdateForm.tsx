@@ -327,7 +327,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   const onSubmit = async (data: z.infer<typeof UpdateUserForm>) => {
     try {
       setLoading(true);
-  
+
       // Format startDate của salaryByDayRequest
       const formattedSalaryByDayRequest = {
         salary: Number(
@@ -340,7 +340,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           data.salaryHistoryResponse.salaryByDayResponses.startDate
         ),
       };
-  
+
       // Format startDate của salaryOverTimeRequest
       const formattedSalaryOverTimeRequest = {
         salary: Number(
@@ -353,7 +353,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           data.salaryHistoryResponse.salaryByOverTimeResponses.startDate
         ),
       };
-  
+
       // Tạo đối tượng dữ liệu đã format
       const formattedData = {
         id: data.id,
@@ -369,63 +369,36 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
         companyId: data.companyId,
         roleId: data.roleId,
       };
-  
+
       console.log("========= =========> UpdateUser", formattedData);
-  
+
       // Đợi cho ảnh được tải lên trước
       await handlePostImage();
-  
+
       // Sau khi ảnh đã được tải lên, gửi yêu cầu cập nhật người dùng
       const response = await userApi.userUpdate(formattedData);
-        if(response.data.isSuccess){
-          forceUpdate();
-          setOpen(false);
-          toast.success(response.data.message);
-        }
+      if (response.data.isSuccess) {
+        forceUpdate();
+        setOpen(false);
+        toast.success(response.data.message);
+      }
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.error) {
-        const errors = error.response.data.error;
-  
-        // Xử lý lỗi chi tiết
-        if (errors.Id) {
-          toast.error(errors.Id);
+        if (error.response.data.error) {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
+        } else {
+          toast.error(error.response.data.message);
         }
-  
-        if (errors.Phone) {
-          toast.error(errors.Phone);
-        }
-  
-        if (errors.FirstName) {
-          toast.error(errors.FirstName);
-        }
-  
-        if (errors.LastName) {
-          toast.error(errors.LastName);
-        }
-  
-        if (errors.DOB && Array.isArray(errors.DOB)) {
-          errors.DOB.forEach((error: any) => {
-            toast.error(error);
-          });
-        }
-  
-        if (errors['SalaryByDayRequest.Salary']) {
-          toast.error(errors['SalaryByDayRequest.Salary'][0]);
-        }
-  
-        if (errors['SalaryOverTimeRequest.Salary']) {
-          toast.error(errors['SalaryOverTimeRequest.Salary'][0]);
-        }
-  
       } else {
         toast.error("Có lỗi xảy ra khi cập nhật.");
       }
-  
     } finally {
       setLoading(false);
     }
   };
-  
+
 
   return (
     <Dialog.Root open={open} onOpenChange={handleOnDialog}>
