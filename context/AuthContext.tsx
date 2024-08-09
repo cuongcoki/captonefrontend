@@ -97,7 +97,7 @@ const AuthProvider = ({ children }: Props) => {
           })
         }
       }
-    }, 50 * 60 * 1000) // Check every 5 minutes
+    }, 2 * 60 * 1000) // Check every 5 minutes
 
     return () => clearInterval(interval)
   }, [])
