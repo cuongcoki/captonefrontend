@@ -249,8 +249,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any) => {
     console.warn("product", product.id);
-    setSearchTerm("");
-    setSearchTermSet("");
+
     // Kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
     const existingDetailProUpdate = getDetailsProUpdate.some(
       (item) => item.productId === product.id
