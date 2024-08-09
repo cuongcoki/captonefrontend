@@ -2,23 +2,19 @@
 
 import { filesApi } from "@/apis/files.api";
 import UpdateMaterial from "@/components/shared/dashboard/material/update-material/update-material";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { materialType } from "@/schema/material";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Edit, MoreHorizontal, PenLine } from "lucide-react";
+import { PenLine } from "lucide-react";
 import Image from "next/image";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 const limitLength = (text: any, maxLength: any) => {
   if (text.length > maxLength) {
     return `${text.slice(0, maxLength)}...`;
@@ -26,10 +22,7 @@ const limitLength = (text: any, maxLength: any) => {
   return text;
 };
 export const columnsForMaterial: ColumnDef<materialType>[] = [
-  // {
-  //   accessorKey: "id",
-  //   header: "ID",
-  // },
+
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -43,7 +36,6 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
         );
         href = res?.data.data;
       } catch (error) {
-        console.log("error in get image", error);
       }
       return (
         <Dialog>

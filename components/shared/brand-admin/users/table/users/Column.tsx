@@ -1,13 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 
 import { Gender, Role, isActive } from "./data/data";
-import { DataTableRowActions } from "./data-table-row-actions";
-import Link from "next/link";
-import { ArrowUpDown } from "lucide-react";
 
 export type Roles = {
   id: string;
@@ -30,35 +26,12 @@ export type Employee = {
 };
 
 export const columns: ColumnDef<Employee>[] = [
-  // {
-  //   id: "select",
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={
-  //         table.getIsAllPageRowsSelected() ||
-  //         (table.getIsSomePageRowsSelected() && "indeterminate")
-  //       }
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
+
   {
     accessorKey: "id",
     header: ({ column }) => <Button variant="ghost">CMND/CCCD</Button>,
     cell: ({ row }) => (
-      // <Link href={`/branchadmin/user/${row.getValue("id")}`}>
         <div>{row.getValue("id")}</div>
-      // </Link>
     ),
   },
 
@@ -69,18 +42,6 @@ export const columns: ColumnDef<Employee>[] = [
     },
     cell: ({ row }) => <div className="">{row.original.firstName}</div>,
   },
-
-  // {
-  //   accessorKey: "lastName",
-  //   header: ({ column }) => {
-  //     return <Button variant="ghost">Họ nhân viên</Button>;
-  //   },
-  //   cell: ({ row }) => (
-  //     <div className="">
-  //   {row.original.lastName}
-  //     </div>
-  //   ),
-  // },
 
   {
     accessorKey: "gender",

@@ -129,7 +129,6 @@ export default function UpdateAttendance({
     // GET WAREHOUSE DATA
     if (selectWareHouseDataRef.current.length === 0) {
       companyApi.getCompanyByType(0).then(({ data }) => {
-        console.log("Company Data: ", data);
         setSelectWareHouseData(
           data.data.map((item) => ({ label: item.name, value: item.id }))
         );
@@ -147,12 +146,10 @@ export default function UpdateAttendance({
           CompanyId: localWareHouse,
         });
         const data = response.data.data;
-        console.log("GetUSERS:", data);
         // setUsers(data);
         // setUser(data);
         userD = data;
       } catch (error) {
-        console.log("Error getUserByCompanyId: ", error);
       }
     };
     // GET IMAGE OF USER
@@ -166,10 +163,8 @@ export default function UpdateAttendance({
           // userD[i].avatar = response.data.data;
           iamges.set(userD[i].id, response.data.data);
         } catch (error) {
-          console.log("Error get image: ", error);
         }
       }
-      console.log("iamges of user", iamges.size);
       setImageOfUser(iamges);
       setUsers(userD);
       setUser(userD);
@@ -178,10 +173,8 @@ export default function UpdateAttendance({
     const getImage = async (name: string) => {
       try {
         const res = await filesApi.getFile(name);
-        console.log("Get Image", res.data.data);
         return res.data.data;
       } catch (error: any) {
-        console.log("Error get image: ", error.response.data);
       }
     };
     const setOfUser = new Set<string>();
@@ -228,12 +221,10 @@ export default function UpdateAttendance({
               };
             })
           );
-          console.log("attendanceData", attendanceData);
 
           setTableData(attendanceData);
         })
         .catch((error) => {
-          console.log("Error getAttendance: ", error.response.data.status);
           if (404 === error.response.data.status) {
             const attendanceData = userD?.map((item): AttendanceDetailType => {
               return {
@@ -267,7 +258,6 @@ export default function UpdateAttendance({
     };
     FetchData();
 
-    console.log("RERENDER DATA ATTENDANCE");
   }, [
     setUser,
     pathname,
@@ -298,11 +288,9 @@ export default function UpdateAttendance({
       companyId: warehouse,
       createQuantityProducts: employeeProductData,
     };
-    console.log("updateEmployeeProductData", updateEmployeeProductData);
     attendanceApi
       .updateEmployeeProduct(updateEmployeeProductData)
       .then(({ data }) => {
-        console.log(data);
         // ForceRender();
         // toast.success(data.message);
       })
@@ -345,7 +333,6 @@ export default function UpdateAttendance({
       };
     }
 
-    console.log("updateData", DataBody);
     if (isCreate) {
       attendanceApi
         .createAttendance(DataBody as CreateAttendanceBody)
@@ -397,7 +384,6 @@ export default function UpdateAttendance({
     return formattedDate;
   }
   useEffect(() => {
-    console.log("tableData", tableData);
   }, [tableData]);
   return (
     <div>

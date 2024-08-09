@@ -3,17 +3,10 @@
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -22,7 +15,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -32,16 +24,12 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { orderApi } from "@/apis/order.api";
-import toast from "react-hot-toast";
 import { useParams } from "next/navigation";
 
 // ** import Components
 import { NoImage } from "@/constants/images";
 import UpdateOrder from "../form/UpdateOrder";
 import { UpdateOrderDetails } from "../form/UpdateOrderDetail";
-import { Badge } from "@/components/ui/badge";
-import { Building2, Copy, CreditCard, MoreVertical, Truck } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import { ShipOrder } from "./shipOrder/ShipOrder";
 import TitleComponent from "@/components/shared/common/Title";
 import HeaderComponent from "@/components/shared/common/header";
@@ -130,9 +118,6 @@ export default function OrderIdPage({ orderId }: OrderId) {
   });
   const { force } = OrderStore();
 
-  console.log("data=====", data);
-  console.log("data=====", dataId);
-  // console.log('ssssssssssssssssssssssssssssssss', params.id)
   useEffect(() => {
     const fetchDataOrderId = () => {
       setLoading(true);
@@ -143,7 +128,6 @@ export default function OrderIdPage({ orderId }: OrderId) {
           setData(orderData);
         })
         .catch((error) => {
-          // toast.error("ko thấy ");
         })
         .finally(() => {
           setLoading(false);
@@ -158,7 +142,6 @@ export default function OrderIdPage({ orderId }: OrderId) {
           setDataId(orderData);
         })
         .catch((error) => {
-          // toast.error("ko thấy ");
         })
         .finally(() => {
           setLoading(false);
@@ -176,24 +159,12 @@ export default function OrderIdPage({ orderId }: OrderId) {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
 
@@ -248,7 +219,6 @@ export default function OrderIdPage({ orderId }: OrderId) {
           <Card className="sm:col-span-1 md:col-span-9 lg:col-span-3 shadow-sm">
             <CardHeader>
               <div className="flex justify-between items-center ">
-                {/* <CardTitle className="text-primary">Đơn hàng chi tiết</CardTitle> */}
                 <TitleComponent
                   title="Thông tin chủ tịch"
                   description={`Thông tin chủ tịch công ty - ${data?.company.name}`}
@@ -282,7 +252,6 @@ export default function OrderIdPage({ orderId }: OrderId) {
           <Card className="sm:col-span-1 md:col-span-9 lg:col-span-3 shadow-sm">
             <CardHeader>
               <div className="flex justify-between items-center ">
-                {/* <CardTitle className="text-primary">Đơn hàng chi tiết</CardTitle> */}
                 <TitleComponent
                   title="Thông tin đơn hàng"
                   description="Thông tin trạng thái - thuế - thời gian đặt hàng."

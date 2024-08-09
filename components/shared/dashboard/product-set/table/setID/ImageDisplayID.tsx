@@ -1,5 +1,4 @@
 import * as React from "react"
-import { LogoSignIn } from '@/constants/images/index.js'
 
 import { CardContent } from "@/components/ui/card"
 import {
@@ -12,7 +11,6 @@ import {
 
 
 import Image from "next/image"
-import { Trash2 } from "lucide-react"
 
 interface ImageDisplayProps {
     images: { imageUrl: string; isBluePrint: boolean; isMainImage: boolean }[];
@@ -22,7 +20,6 @@ interface ImageDisplayProps {
 const ImageDisplayID: React.FC<ImageDisplayProps> = ({
     images,
 }) => {
-    // console.log('images', images)
     return (
         <div className="flex items-center justify-center w-full h-full">
             {images && images.length > 0 ? (

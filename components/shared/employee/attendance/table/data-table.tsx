@@ -27,7 +27,6 @@ import { attendanceApi } from "@/apis/attendance.api";
 import { AttendanceOverallProps } from "@/types/attendance.type";
 import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
 import { usePathname, useRouter } from "next/navigation";
-import { set } from "date-fns";
 
 type ContextType = {
   ForceRender: () => void;

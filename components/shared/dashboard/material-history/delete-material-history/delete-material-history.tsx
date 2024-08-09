@@ -11,8 +11,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 
@@ -27,7 +26,6 @@ export function DeleteMaterialHistory({ id }: { id: string }) {
       toast.success("Xóa lịch sử vật liệu thành công");
     } catch (error) {
       toast.error("Xóa lịch sử vật liệu thất bại");
-      console.log("error in delete material history", error);
     }
   };
   return (

@@ -1,23 +1,6 @@
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import Image from "next/image";
 import React from "react";
 import { NoImage } from "@/constants/images"
-import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { Card, CardContent } from "@/components/ui/card"
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel"
-import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-
-
 
 import {
     Popover,
@@ -28,10 +11,8 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
-import { Package, Trash2, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Package} from "lucide-react";
 
 interface Product {
     code: string;
@@ -63,14 +44,12 @@ interface ImageDisplayProps {
 }
 
 const ImageDisplayDialog: React.FC<ImageDisplayProps> = ({ images, checkProduct }) => {
-    console.log("imagesdi", images);
     const handleGotoPID = () => {
         if (checkProduct === 0) {
             window.location.href = `/dashboard/products/product/${images.id}`;
         } else {
             window.location.href = `/dashboard/products/set/${images.id}`;
         }
-
     }
     return (
         <Popover modal={true} >
@@ -113,11 +92,9 @@ const ImageDisplayDialog: React.FC<ImageDisplayProps> = ({ images, checkProduct 
                             />
                         </div>
                         <div className="flex items-end justify-end">
-                            {/* <Link href={`/dashboard/products/product/${dataImage.id}`}> */}
                             <span className="cursor-pointer flex items-center px-2 py-1 rounded-md text-white hover:bg-primary/90 bg-primary" onClick={handleGotoPID}>
                                 <Package className=" mr-1" /><span className="text-[15px]">Chi tiết</span>
                             </span>
-                            {/* </Link> */}
                         </div>
                     </div>
                 </div>

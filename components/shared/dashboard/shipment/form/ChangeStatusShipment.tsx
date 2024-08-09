@@ -5,37 +5,21 @@ import { Button } from "@/components/ui/button"
 import {
     Card,
     CardContent,
-    CardDescription,
     CardFooter,
-    CardHeader,
-    CardTitle,
 } from "@/components/ui/card"
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 
 import * as Dialog from "@radix-ui/react-dialog";
 
 // ** import REACT
-import Image from "next/image"
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import toast from "react-hot-toast"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
 
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+
 import { X } from "lucide-react";
 import { shipmentApi } from "@/apis/shipment.api";
-import { error } from "console";
 import { ShipmentStore } from "../shipment-store";
 interface shipmentIDType {
     id: string;
@@ -70,7 +54,6 @@ const OrderStatus = [
     },
 ];
 export const ChangeStatusShipment: React.FC<ShipmentIDProps> = ({ shipmentID }) => {
-    // console.log("shipmentIDshipmentIDshipmentID", shipmentID)
     //state 
     const [loading, setLoading] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
@@ -86,10 +69,8 @@ export const ChangeStatusShipment: React.FC<ShipmentIDProps> = ({ shipmentID }) 
     const [valueStatus, setValueStatus] = useState<any>(0);
 
     const handleSelectChange = (value: any, id: string) => {
-        console.log('value', value)
         setValueStatus(value)
     };
-
 
     const handleSubmitOrderStatus = () => {
         if (shipmentID.status === 1) {

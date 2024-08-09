@@ -116,9 +116,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
-  };
 
   const { forceUpdate } = useContext(MyContext);
   const [loading, setLoading] = useState<boolean>(false);
@@ -178,7 +175,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       const newFile = new File([file], changedFileName, { type: file.type });
       setImageUrls(newFile);
       setNameImage(changedFileName);
-      // console.log("imageUrls", imageUrls);
     }
   };
 
@@ -191,27 +187,19 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   // ** Xử lý khi đăng ảnh
   const handlePostImage = async () => {
     if (!imageUrls) {
-      // console.error("No image selected");
       return;
     }
 
     setLoading(true);
     const formData = new FormData();
-    formData.append("receivedFiles", imageUrls); // Đảm bảo rằng tên trường tương ứng với server và chỉ đăng một ảnh
+    formData.append("receivedFiles", imageUrls); 
 
     try {
-      const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
-      // console.log('Upload successful:', response.data);
-      // Xử lý các hành động sau khi tải lên thành công
-      const fileName = imageUrls.name; // Lấy tên tệp của ảnh đầu tiên
+      const response = await filesApi.postFiles(formData); 
+      const fileName = imageUrls.name; 
       const { data } = await filesApi.getFile(fileName);
-      console.log("data dang anh", data.data);
-      // Assuming data.data contains the image name
-      // const names = data.data;
-      // setNameImage(fileName);
+
     } catch (error) {
-      console.error("Error uploading files:", error);
-      // Xử lý lỗi khi tải lên không thành công
     } finally {
       setLoading(false);
     }
@@ -270,10 +258,8 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
             setImageRequests(data.data);
           });
           form.reset(formattedUserData);
-          // setFormattedValue(formatCurrency(userData.salaryByDay.toString()));
         })
         .catch((error) => {
-          // console.error("Error fetching user data:", error);
         })
         .finally(() => {
           setLoading(false);
@@ -385,8 +371,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
         companyId: data.companyId,
         roleId: data.roleId,
       };
-
-      console.log("========= =========> UpdateUser", formattedData);
 
       // Đợi cho ảnh được tải lên trước
       await handlePostImage();

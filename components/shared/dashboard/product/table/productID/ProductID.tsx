@@ -1,16 +1,13 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { createContext, useEffect, useRef, useState } from "react";
+import {  useEffect,  useState } from "react";
 
 // ** import UI
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -31,7 +28,6 @@ import { productApi } from "@/apis/product.api";
 import { PencilLine } from "lucide-react";
 // ** component
 import ImageDisplayID from "./ImageDisplayID";
-import ProductUpdate from "@/components/shared/dashboard/product/table/productID/product-update";
 import { ProductStore } from "@/components/shared/dashboard/product/product-store";
 import HeaderComponent from "@/components/shared/common/header";
 import TitleComponent from "@/components/shared/common/Title";
@@ -64,44 +60,26 @@ interface productPhaseSalaries {
 
 export default function ProductIDPage() {
   const [open, setOpen] = useState<boolean>(false);
-  const handleOffDialog = () => {
-    setOpen(false);
-  };
-  const handleOnDialog = () => {
-    setOpen(true);
-  };
+  
   //state
   const [loading, setLoading] = useState<boolean>(false);
   const params = useParams<{ id: string }>();
   const [productId, setProductId] = useState<any>([]);
-  const [open1, setOpen1] = useState<boolean>(false);
   const { force } = ProductStore();
-  console.log("====productId", productId);
+
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
+
   useEffect(() => {
-    console.log("PRODUCT ID RENDER ");
     const fetchDataProductId = () => {
       setLoading(true);
       productApi
@@ -109,10 +87,8 @@ export default function ProductIDPage() {
         .then((res) => {
           const userData = res.data.data;
           setProductId(userData);
-          // setUserId(res.data.data);
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
         })
         .finally(() => {
           setLoading(false);
@@ -122,17 +98,17 @@ export default function ProductIDPage() {
     fetchDataProductId();
   }, [params.id, force, productId]);
 
-  const limitLength = (text: any, maxLength: any) => {
-    if (text.length > maxLength) {
-      return `${text.slice(0, maxLength)}...`;
-    }
-    return text;
-  };
+  // const limitLength = (text: any, maxLength: any) => {
+  //   if (text.length > maxLength) {
+  //     return `${text.slice(0, maxLength)}...`;
+  //   }
+  //   return text;
+  // };
 
-  const formatValue = (value: any, maxLength: any) => {
-    if (!value) return "";
-    return limitLength(value, maxLength);
-  };
+  // const formatValue = (value: any, maxLength: any) => {
+  //   if (!value) return "";
+  //   return limitLength(value, maxLength);
+  // };
 
   return (
     <>

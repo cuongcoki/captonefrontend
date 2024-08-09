@@ -48,13 +48,10 @@ export default function ReportTable({ searchParams }: ReportParams) {
       .then((res) => {
         setTableData(res.data.data.data);
         setTotalPage(res.data.data.totalPages);
-        console.log("REPORTS", res.data.data.data);
       })
       .catch((e) => {
-        console.log("ERROR IN GET REPORTS", e);
       })
       .finally(() => {
-        console.log("FINALLY");
         router.push(`${pathName}?PageIndex=${params.PageIndex}`);
       });
   }, [params, force, setTableData, router, pathName]);

@@ -5,7 +5,6 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useParams, useRouter } from "next/navigation";
 
 import { ImageBackGround, LogoSignIn } from "@/constants/images/index.js";
@@ -51,7 +50,7 @@ export default function ChangePasswod() {
     authApi
       .confirmChangePassword(body)
       .then((response) => {
-        console.log(">>> change password", response.data.message);
+        // console.log(">>> change password", response.data.message);
         toast.success(response.data.message);
         setTimeout(() => {
           router.push("/sign-in");

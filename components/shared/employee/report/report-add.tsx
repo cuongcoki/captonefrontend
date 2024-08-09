@@ -1,4 +1,3 @@
-import { companyApi } from "@/apis/company.api";
 import { reportApi } from "@/apis/report.api";
 import { ReportStore } from "@/components/shared/employee/report/report-store";
 import { Button } from "@/components/ui/button";
@@ -20,8 +19,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -30,7 +27,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { CompanyAddSchemaType } from "@/schema/company";
 import { reportAddSchema, ReportAddSchemaType } from "@/schema/report";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -49,7 +45,6 @@ export function ReportAdd() {
     },
   });
   const onSubmit = (data: ReportAddSchemaType) => {
-    console.log("Submit Company Data", data);
     reportApi
       .createReport({
         description: data.description,
@@ -63,7 +58,6 @@ export function ReportAdd() {
       })
       .catch((error) => {
         toast.error("Tạo đơn thất bại");
-        console.log("Error", error);
       });
   };
 

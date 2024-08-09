@@ -217,11 +217,6 @@ export default function BottomNavbar({ }: Props) {
           />
         </div>
       ) : null}
-      {/* <div className="absolute bottom-0 w-full">
-        <div className="m-1 mb-3">
-          <ModeToggle />
-        </div>
-      </div> */}
     </div>
   );
 }

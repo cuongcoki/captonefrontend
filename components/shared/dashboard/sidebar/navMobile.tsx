@@ -51,7 +51,6 @@ export function NavMobile({ links, isCollapsed }: NavProps) {
         },
     ];
     const toggleDropdown = (nameLink: string, hrefCon: any, event: any) => {
-        console.log("nameLink", nameLink);
         setCheckLink(nameLink);
         setGetNameLink(hrefCon);
         event.preventDefault();

@@ -74,7 +74,6 @@ export default function RenderTableOrderShipment() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [data, setData] = useState<ShipOrderShipper[]>([]);
-  console.log("data", data);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [status, setStatus] = useState<string | null>("0");
@@ -104,7 +103,6 @@ export default function RenderTableOrderShipment() {
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
-        console.error("Error fetching shipOrder data:", error);
       } finally {
         setLoading(false);
       }
@@ -140,8 +138,6 @@ export default function RenderTableOrderShipment() {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-  // console.log("startOrder", formatDate(startOrder)),
-  //   console.log("endOrder", formatDate(endOrder));
 
   return (
     <div className=" mt-3">

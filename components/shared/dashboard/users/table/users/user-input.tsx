@@ -60,11 +60,7 @@ function UserInput({
       </RadioGroup>
     );
   } 
-  // else if (name === "salaryByDay") {
-  //   return <Input type="number" {...field} value={field.value as number} />;
-  // } else {
-  //   return <Input type="text" {...field} value={field.value} />;
-  // }
+
 }
 
 export default function AppUserInput({ formControl, name, label }: Props) {

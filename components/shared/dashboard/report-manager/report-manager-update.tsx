@@ -58,10 +58,8 @@ export function ReportManagerUpdate({
     },
   });
   useEffect(() => {
-    console.log("RENDER UPDATE REPORT");
   }, []);
   const onSubmit = (data: ReportUpdateSchemaType) => {
-    console.log("Submit Company Data", data);
     reportApi
       .updateReport({
         id: tableData[index].id,
@@ -76,7 +74,6 @@ export function ReportManagerUpdate({
       })
       .catch((error) => {
         toast.error("Cập nhật đơn thất bại");
-        console.log("Error", error);
       });
   };
 

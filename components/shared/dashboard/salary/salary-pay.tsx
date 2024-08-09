@@ -14,16 +14,12 @@ import { salaryApi } from "@/apis/salary.api";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import toast from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { salaryStore } from "@/components/shared/dashboard/salary/salary-store";
-import { set } from "date-fns";
 import TitleComponent from "../../common/Title";
 export default function SalaryPay({ id }: { id: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +29,6 @@ export default function SalaryPay({ id }: { id: string }) {
   const { forceRender, salaryAvailiable, setSalaryAvailiable } = salaryStore();
 
   useEffect(() => {
-    console.log("SalaryPay", salary);
   }, [salary]);
 
   const handlePay = async () => {
@@ -62,16 +57,11 @@ export default function SalaryPay({ id }: { id: string }) {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
     if (valueString === "") return "0";
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
     return formatted;
   };
@@ -79,32 +69,16 @@ export default function SalaryPay({ id }: { id: string }) {
   const formatCurrencyWithNegative = (value: any): string => {
     if (value === null || value === undefined) return "";
     let valueString = value.toString();
-
-    // Check if the value is negative
     const isNegative = valueString[0] === "-";
-
-    // Remove all non-numeric characters, except the minus sign if it is the first character
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
-    // Add the negative sign back if it was originally negative
     if (isNegative) {
       formatted = "-" + formatted;
     }
-
     return formatted;
   };
 
@@ -175,10 +149,6 @@ export default function SalaryPay({ id }: { id: string }) {
                       </AlertDialogTitle>
                     )}
 
-                    {/* <AlertDialogDescription>
-                      Hành động này không thể hoàn tác. Dữ liệu này sẽ không
-                      thay đổi được
-                    </AlertDialogDescription> */}
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Hủy</AlertDialogCancel>

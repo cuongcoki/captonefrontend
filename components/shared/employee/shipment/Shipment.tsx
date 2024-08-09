@@ -2,17 +2,6 @@
 
 import RenderTableShipment from "./table/RenderTable";
 import HeaderComponent from "../../common/header";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RenderTableOrderShipment from "./order/table/RenderTable";
 export default function ShipmentByShipper() {

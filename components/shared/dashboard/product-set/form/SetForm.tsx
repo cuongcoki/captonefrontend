@@ -13,8 +13,6 @@ import {
 
 import {
   CardHeader,
-  CardTitle,
-  CardFooter,
   Card,
   CardContent,
 } from "@/components/ui/card";
@@ -72,9 +70,6 @@ export const SetForm = () => {
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
-  };
 
   const handleOnDialog = () => {
     setOpen(true);
@@ -121,7 +116,6 @@ export const SetForm = () => {
       const newFile = new File([file], changedFileName, { type: file.type });
       setImageUrls(newFile);
       setNameImage(changedFileName);
-      // console.log("imageUrls", imageUrls);
     }
   };
 
@@ -133,27 +127,17 @@ export const SetForm = () => {
   // ** Xử lý khi đăng ảnh
   const handlePostImage = async () => {
     if (!imageUrls) {
-      console.error("No image selected");
       return;
     }
 
     setLoading(true);
     const formData = new FormData();
     formData.append("receivedFiles", imageUrls);
-
     try {
-      const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
-      // console.log('Upload successful:', response.data);
-      // Xử lý các hành động sau khi tải lên thành công
-      const fileName = imageUrls.name; // Lấy tên tệp của ảnh đầu tiên
+      const response = await filesApi.postFiles(formData); 
+      const fileName = imageUrls.name; 
       const { data } = await filesApi.getFile(fileName);
-
-      // Assuming data.data contains the image name
-      // const names = data.data;
-      // setNameImage(fileName);
     } catch (error) {
-      console.error("Error uploading files:", error);
-      // Xử lý lỗi khi tải lên không thành công
     } finally {
       setLoading(false);
     }
@@ -165,18 +149,13 @@ export const SetForm = () => {
       console.error("No image selected");
       return;
     }
-
     setLoading(true);
     try {
-      const fileName = imageUrls.name; // Lấy tên tệp của ảnh đầu tiên
+      const fileName = imageUrls.name; 
       const { data } = await filesApi.getFile(fileName);
-
-      // Assuming data.data contains the image name
       const names = data.data;
       setNameImage(names);
-      console.log("Processed image names:", names);
     } catch (error) {
-      console.error("Error getting image names:", error);
     } finally {
       setLoading(false);
     }
@@ -227,7 +206,6 @@ export const SetForm = () => {
 
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any) => {
-    console.warn("product", product.id);
 
     //kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
     const exstingDetailProUpdate = getDetailsProUpdate.some(

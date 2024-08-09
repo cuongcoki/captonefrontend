@@ -1,19 +1,10 @@
 import { Product, columns } from "./Column";
 import { DataTable } from "./DataTable";
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState } from "react";
 import { DataTablePagination } from "./data-table-pagination";
 import { productApi } from "@/apis/product.api";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { EllipsisVertical, Plus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 import {
   Select,
@@ -34,7 +25,6 @@ export default function RenderTableProduct() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
-  const [open, setOpen] = useState<boolean>(false);
   const [isInProcessing, setIsInProcessing] = useState<boolean>(true);
   const [data, setData] = useState<Product[]>([]);
   const { force } = ProductStore();
@@ -43,10 +33,7 @@ export default function RenderTableProduct() {
   const [isInProcessingString, setIsInProcessingString] = useState<string>(
     isInProcessing.toString()
   );
-  type Props = {
-    searchParams: ProductSearchParams;
-  };
-  console.log("data", data);
+
   useEffect(() => {
     const fetchDataProduct = async () => {
       setLoading(true);
@@ -59,7 +46,6 @@ export default function RenderTableProduct() {
         );
         const newData = response.data.data.data;
 
-        // Update imageUrl with links fetched from filesApi
         const updatedData = await Promise.all(
           newData.map(async (item: any) => {
             const updatedImageResponses = await Promise.all(
@@ -74,7 +60,7 @@ export default function RenderTableProduct() {
                   console.error("Error getting file:", error);
                   return {
                     ...image,
-                    imageUrl: "", // Handle error case if needed
+                    imageUrl: "", 
                   };
                 }
               })
@@ -90,7 +76,6 @@ export default function RenderTableProduct() {
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
-        console.error("Error fetching product data:", error);
         setData([]);
       } finally {
         setLoading(false);
@@ -103,12 +88,12 @@ export default function RenderTableProduct() {
   const handleIsInProcessingChange = (value: string) => {
     setIsInProcessingString(value);
     setIsInProcessing(value === "true");
-    updatePathname(); // Cập nhật đường dẫn khi thay đổi trạng thái
+    updatePathname(); 
   };
 
   const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    updatePathname(); // Cập nhật đường dẫn khi thay đổi search term
+    updatePathname(); 
   };
 
   const updatePathname = () => {

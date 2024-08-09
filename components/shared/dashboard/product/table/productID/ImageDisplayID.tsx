@@ -1,5 +1,4 @@
 import * as React from "react";
-import { LogoSignIn } from "@/constants/images/index.js";
 
 import { CardContent } from "@/components/ui/card";
 import {
@@ -11,7 +10,6 @@ import {
 } from "@/components/ui/carousel";
 
 import Image from "next/image";
-import { Trash2 } from "lucide-react";
 import { filesApi } from "@/apis/files.api";
 
 interface ImageDisplayProps {
@@ -32,10 +30,9 @@ const ImageDisplayID: React.FC<ImageDisplayProps> = ({ images }) => {
               imageUrl: data.data,
             };
           } catch (error) {
-            console.error("Error getting file:", error);
             return {
               ...image,
-              imageUrl: "", // Handle error case if needed
+              imageUrl: "", 
             };
           }
         })
@@ -47,15 +44,13 @@ const ImageDisplayID: React.FC<ImageDisplayProps> = ({ images }) => {
         const newImages = await updateImageUrls(images);
         setUpdatedImages(newImages);
       } catch (error) {
-        console.error("Error fetching images:", error);
       } finally {
-        setLoading(false); // Once images are fetched (or error occurs), set loading to false
+        setLoading(false); 
       }
     };
 
     fetchUpdatedImages();
   }, [images]);
-  // console.log('images', updatedImages)
   return (
     <div className="flex items-center justify-center w-full h-full">
       {updatedImages && updatedImages.length > 0 ? (

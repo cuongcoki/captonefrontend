@@ -15,7 +15,7 @@ type ReportStoreType = {
 export const ReportManagerStore = create<ReportStoreType>((set) => ({
   tableData: [],
   setTableData: (data: ReportType[]) => {
-    console.log("Set Table Data", data);
+    // console.log("Set Table Data", data);
     set({ tableData: data });
   },
   force: 1,

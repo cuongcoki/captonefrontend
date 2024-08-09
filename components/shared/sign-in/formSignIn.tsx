@@ -48,7 +48,6 @@ export default function FormSignIn() {
     authApi
       .login({ id, password })
       .then(({ data }) => {
-        console.log("DATA", data);
           const { user, accessToken, refreshToken } = data.data;
           auth.login(user, rememberMe, accessToken, refreshToken);
           console.log(data);

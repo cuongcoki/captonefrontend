@@ -13,11 +13,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { DialogFooter } from "@/components/ui/dialog";
 import InputAnimation from "@/components/shared/common/input/input";
 import DragAndDropFile from "@/components/shared/common/input/drag&drop-file/drag&drop-file";
-import { number } from "zod";
 import { materialApi } from "@/apis/material.api";
 import { MyContext } from "@/components/shared/dashboard/material/table/data-table";
 import toast from "react-hot-toast";
@@ -31,7 +29,6 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
   let { setIsUpdate } = useContext(UpdateMaterialContext);
   const [materialImage, setMaterialImage] = useState<any>("");
   const { forceUpdate } = useContext(MyContext);
-  const [imageLink, setImageLink] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [firstValue, setFirstValue] = useState<materialType>({
     id: "",
@@ -51,7 +48,6 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       iamgeLabel.innerHTML += imgTag;
       iamgeLabel.hidden = false;
       dropArea.classList.add("active");
-      // iamgeLabel.classList.add("");
     }
   };
 
@@ -72,23 +68,17 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
     },
   });
   const handlePostImage = async (file: File) => {
-    console.log("handlePostImage");
     if (!file) {
-      console.error("No image selected");
       return;
     }
 
     // setLoading(true);
     const formData = new FormData();
-    formData.append("receivedFiles", file); // Đảm bảo rằng tên trường tương ứng với server và chỉ đăng một ảnh
-
+    formData.append("receivedFiles", file);
     try {
-      const response = await filesApi.postFiles(formData); // Gọi API đăng tệp lên server
+      const response = await filesApi.postFiles(formData);
     } catch (error) {
-      console.error("Error uploading files:", error);
-      // Xử lý lỗi khi tải lên không thành công
     } finally {
-      // setLoading(false);
     }
   };
   const generateRandomString = (length: number = 5) => {
@@ -125,8 +115,6 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       .getMaterial(id)
       .then((data) => {
         if (data.data.isSuccess) {
-          console.log("DATA GET MATERIAL", data.data.data);
-          // fillImage(linkImage);
           data.data.data.quantityPerUnit = data.data.data.quantityPerUnit
             .toString()
             .trim();
@@ -141,11 +129,9 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
           filesApi
             .getFile(data.data.data.image as string)
             .then((res) => {
-              // setImageLink(res.data.data);
               fillImage(res.data.data);
             })
             .catch((error) => {
-              console.log("Error in get image", error);
             });
         }
       })
@@ -158,7 +144,6 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
 
   const formSubmit = async () => {
 
-    console.log("DATA", form.getValues());
     const file = (await handleUploadPhoto(materialImage)) as File;
     if (file !== null && file !== undefined) {
       form.setValue("image", file.name);
@@ -166,7 +151,6 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
     try {
       await handlePostImage(file);
     } catch (error) {
-      console.log("Error in Up Image", error);
     }
     if (form.getValues().quantityInStock === "") {
       return toast.error("Số lượng kho không thể bé hơn 0");
@@ -248,19 +232,13 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
                         const inputValue = event.target.value;
-                        // Remove any characters that are not digits or a decimal point
                         let filteredInput = inputValue.replace(/[^\d.]/g, "");
-
-                        // Split by decimal point and ensure only one decimal point is present
                         const parts = filteredInput.split(".");
                         if (parts.length > 2) {
-                          // More than one decimal point
-                          // Join the first part with the rest of the string, excluding additional decimal points
                           filteredInput = `${parts[0]}.${parts
                             .slice(1)
                             .join("")}`;
                         }
-
                         field.onChange(filteredInput);
                       }}
                     />
@@ -275,9 +253,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Miêu tả</FormLabel> */}
                   <FormControl>
-                    {/* <Input placeholder="Nhập miêu tả ở đây" {...field} /> */}
                     <InputAnimation nameFor="Miêu tả" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
@@ -298,19 +274,13 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
                         event: React.ChangeEvent<HTMLInputElement>
                       ) => {
                         const inputValue = event.target.value;
-                        // Remove any characters that are not digits or a decimal point
                         let filteredInput = inputValue.replace(/[^\d.]/g, "");
-
-                        // Split by decimal point and ensure only one decimal point is present
                         const parts = filteredInput.split(".");
                         if (parts.length > 2) {
-                          // More than one decimal point
-                          // Join the first part with the rest of the string, excluding additional decimal points
                           filteredInput = `${parts[0]}.${parts
                             .slice(1)
                             .join("")}`;
                         }
-
                         field.onChange(filteredInput);
                       }}
                     />
