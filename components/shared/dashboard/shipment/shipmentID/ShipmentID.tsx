@@ -232,7 +232,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
               <Dialog.Description></Dialog.Description>
               <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md ">
-                  <h2 className="text-2xl text-white">Thông tin đơn vận chuyển</h2>
+                  <h2 className="text-2xl text-white">Thông Tin Đơn Vận Chuyển</h2>
                   <Button variant="outline" size="icon" onClick={handleOffDialog}>
                     <X className="w-4 h-4" />
                   </Button>
@@ -246,7 +246,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                     <CardHeader className="flex flex-row items-start bg-muted/50">
                       <div className="grid gap-0.5">
                         <CardTitle className="group flex items-center gap-2 text-lg">
-                          Vận chuyển
+                          Thông tin vận chuyển
                         </CardTitle>
                         <CardDescription>
                           Ngày:{" "}
@@ -288,8 +288,8 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                         />{" "}
                                       </Link>
                                     </span>
-                                    <span>{item?.product?.name}</span>
                                     <span>{item?.product?.code}</span>
+                                    <span>{item?.product?.name}</span>
                                   </>
                                 ) : item?.material ? (
                                   <>
@@ -329,7 +329,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-3">
                           <div className="font-semibold">
-                            Thông tin nhân viên vận chuyển
+                            Nhân viên vận chuyển
                           </div>
                           <address className="grid gap-0.5 not-italic text-muted-foreground">
                             <Link
@@ -350,20 +350,20 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                       <Separator className="my-4" />
                       <div className="grid gap-3">
                         <div className="font-semibold">
-                          Thông tin công ty gửi hàng
+                          Công ty gửi hàng
                         </div>
                         <dl className="grid gap-1">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                            <dt className="text-muted-foreground">
-                              Tên chủ tịch
-                            </dt>
-                            <dd>{data?.from.directorName}</dd>
-                          </div>
                           <div className="flex flex-col  sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
                               Tên công ty
                             </dt>
                             <dd>{data?.from.companyTypeDescription}</dd>
+                          </div>
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                            <dt className="text-muted-foreground">
+                              Tên giám đốc
+                            </dt>
+                            <dd>{data?.from.directorName}</dd>
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">Địa chỉ</dt>
@@ -386,20 +386,20 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                       <Separator className="my-4" />
                       <div className="grid gap-3">
                         <div className="font-semibold">
-                          Thông tin công ty nhận hàng
+                          Công ty nhận hàng
                         </div>
                         <dl className="grid gap-1">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
-                            <dt className="text-muted-foreground">
-                              Tên chủ tịch
-                            </dt>
-                            <dd>{data?.to.directorName}</dd>
-                          </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
                               Tên công ty
                             </dt>
                             <dd>{data?.to.companyTypeDescription}</dd>
+                          </div>
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                            <dt className="text-muted-foreground">
+                              Tên giám đốc
+                            </dt>
+                            <dd>{data?.to.directorName}</dd>
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">Địa chỉ</dt>
@@ -416,7 +416,6 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                               <Phone className="h-3.5 w-3.5" /> <a href="tel:">{data?.to.directorPhone}</a>
                             </dd>
                           </div>
-
                         </dl>
                       </div>
                       <Separator className="my-4" />
@@ -425,7 +424,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
 
                     <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
                       <div className="text-xs text-muted-foreground">
-                        Công ty mây che đan Tiến Huy
+                        Công ty mây tre đan Tiến Huy
                       </div>
                     </CardFooter>
                   </Card>
