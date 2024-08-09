@@ -359,8 +359,8 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       setLoading(true);
       orderApi.createOrderId(requestBody).then(({ data }) => {
         if (data.isSuccess) {
-          ForceRender()
-          setOpen(false)
+          ForceRender();
+          setOpen(false);
           toast.success("Cặp nhật sản phẩm thành công");
         }
       });

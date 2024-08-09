@@ -169,7 +169,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
   const [searchTermAll, setSearchTermAll] = useState<string>("");
   const [pageSize, setPageSize] = useState<number>(10);
   const [company, setCompany] = useState<Company[]>([]);
-
+console.log("orderId",orderId)
   const form = useForm({
     resolver: zodResolver(UpdateOrderSchema),
     defaultValues: {
@@ -201,15 +201,15 @@ export default function UpdateOrder({ orderId }: OrderId) {
     fetchDataCompany();
     if (orderId) {
       form.reset({
-        companyId: orderId.companyId,
-        status: orderId.status,
-        startOrder: formatDate(orderId.startOrder),
-        endOrder: formatDate(orderId.endOrder),
-        vat: orderId.vat,
+        companyId: orderId?.company.id,
+        status: orderId?.status,
+        startOrder: formatDate(orderId?.startOrder),
+        endOrder: formatDate(orderId?.endOrder),
+        vat: orderId?.vat,
       });
     }
-  }, [orderId, currentPage, pageSize, searchTermAll, form, fetchTrigger]);
-
+  }, [orderId, currentPage, pageSize, searchTermAll, form, fetchTrigger, company]);
+console.log("company",company)
   const [dataShipOrder, setDataShipOrder] = useState<ShipOrder[]>([]);
   useEffect(() => {
     setLoading(true);
@@ -226,15 +226,17 @@ export default function UpdateOrder({ orderId }: OrderId) {
           setLoading(false);
         });
     }
-  }, [orderId,]);
+  }, [orderId]);
 
   const onSubmit = async (formData: z.infer<typeof UpdateOrderSchema>) => {
     console.log("formData", formData);
-    setLoading(true);
+  
     const requestBody = {
       ...formData,
       orderId: orderId?.id,
     };
+    console.log("requestBodyrequestBody",requestBody)
+    setLoading(true);
     orderApi
       .updateOrder(requestBody)
       .then(({ data }) => {
@@ -254,9 +256,21 @@ export default function UpdateOrder({ orderId }: OrderId) {
           errors.Status.forEach((error: any) => {
             toast.error(error);
           });
+        
+        }
+        if (errors.CompanyId) {
+          const companyIdError = errors.CompanyId;
+          if (typeof companyIdError === 'string') {
+            toast.error(companyIdError);
+          } else {
+            toast.error(JSON.stringify(companyIdError));
+          }
         }
         console.log("errordddddddddd", error);
-      });
+      })
+      .finally(()=>(
+        setLoading(false)
+      ))
   };
 
   const { pending } = useFormStatus();

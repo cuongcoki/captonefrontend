@@ -171,7 +171,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     const [currentPageP, setCurrentPageP] = useState<number>(1);
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [totalPagesP, setTotalPagesP] = useState<number>(1);
-    const [pageSizeP, setPageSizeP] = useState<number>(20);
+    const [pageSizeP, setPageSizeP] = useState<number>(40);
     const [isInProcessing, setIsInProcessing] = useState<boolean>(true);
     const [dataP, setDataP] = useState<Product[]>([]);
 
@@ -179,7 +179,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     const [currentPageM, setCurrentPageM] = useState<number>(1);
     const [searchTermM, setSearchTermM] = useState<string>("");
     const [totalPagesM, setTotalPagesM] = useState<number>(1);
-    const [pageSizeM, setPageSizeM] = useState<number>(20);
+    const [pageSizeM, setPageSizeM] = useState<number>(40);
     const [dataM, setDataM] = useState<Material[]>([]);
     // ** state Shipment
     const [shipmentDetailRequests, setShipmentDetailRequests] = useState<ShipmentDetailRequest[]>([]);
@@ -753,35 +753,26 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         form.reset();
         setShipmentDetailRequests([]);
         setProductDetail([]);
+
     }
 
+    const [originalShipmentDetailRequests, setOriginalShipmentDetailRequests] = useState<ShipmentDetailRequest[]>([]);
+
+    const { formState } = form;
+
     const handleOffDialog = () => {
-        const currentFormValues = shipmentDetailRequests
-        console.log("shipmentDetailRequests", currentFormValues)
-        if (initialFormValuesShipment === null) {
-            initialFormValuesShipment = currentFormValues;
-        }
-        console.log("initialFormValuesShipment", initialFormValuesShipment)
-
-        const isFormChanged = JSON.stringify(initialFormValuesShipment) === JSON.stringify(currentFormValues);
-
-
-        // form
-        const currentFormValues1 = form.getValues();
-        console.log("currentFormValues1", currentFormValues1)
-        if (initialFormValuesForm === null) {
-            initialFormValuesForm = currentFormValues1;
-        }
-        console.log("initialFormValuesForm", initialFormValuesForm)
-
-        const isFormChanged1 = JSON.stringify(initialFormValuesForm) === JSON.stringify(currentFormValues1);
-
-        console.log("isFormChanged", isFormChanged)
-        console.log("isFormChanged", isFormChanged1)
-
-        if (isFormChanged && isFormChanged1) {
+        setOriginalShipmentDetailRequests(shipmentDetailRequests);
+        const isFormChanged = JSON.stringify(shipmentDetailRequests) === JSON.stringify(originalShipmentDetailRequests);
+            console.log("isFormChanged",isFormChanged)
+            console.log(shipmentDetailRequests)
+            console.log(originalShipmentDetailRequests)
+        if (!formState.isDirty && isFormChanged) {
             setOpen(false);
-        } else {
+            setFetchTrigger((prev) => prev + 1);
+        } else if(Array.isArray(originalShipmentDetailRequests) && originalShipmentDetailRequests.length === 0 ){
+            setOpen(false);
+            setFetchTrigger((prev) => prev + 1);
+        }else {
             setOpenAlert(true);
         }
     };
