@@ -126,7 +126,7 @@ export const columns: ColumnDef<Shipment>[] = [
           <HoverCard>
             <HoverCardTrigger>
               {" "}
-              {limitLength(row.original.from.companyTypeDescription, 30)}
+              {limitLength(row.original.from.name, 30)}
             </HoverCardTrigger>
             <HoverCardContent>
               <div className="max-w-sm mx-auto">
@@ -215,7 +215,7 @@ export const columns: ColumnDef<Shipment>[] = [
           <HoverCard>
             <HoverCardTrigger>
               {" "}
-              {limitLength(row.original.to.companyTypeDescription, 30)}
+              {limitLength(row.original.to.name, 30)}
             </HoverCardTrigger>
             <HoverCardContent>
               <div className="max-w-sm mx-auto">
@@ -342,14 +342,9 @@ export const columns: ColumnDef<Shipment>[] = [
             toast.success(data.message);
           })
           .catch((error) => {
-            // console.log(error)
-            if (error.response.data.error) {
+            console.log(error)
               toast.error(error.response.data.message);
-            } else {
-              for (const key in error.response.data.error) {
-                toast.error(error.response.data.error[key][0]);
-              }
-            }
+            
           });
       };
 

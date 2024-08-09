@@ -150,13 +150,7 @@ export default function RenderTableOrderShipment() {
           <MyContext.Provider value={{ forceUpdate }}>
             <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
-                <Input
-                  placeholder="Tìm kiếm đơn hàng..."
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="md:w-[300px] w-full"
-                />
-
+             
                 <Select
                   value={status || ""}
                   onValueChange={(value) => handleStatusChange(value)}

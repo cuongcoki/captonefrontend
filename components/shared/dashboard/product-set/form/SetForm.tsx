@@ -674,16 +674,14 @@ export const SetForm = () => {
                                             )
                                           }
                                         />
-                                        <Button
-                                          className="col-span-1"
-                                          variant="outline"
-                                          size="icon"
+                                         <span
+                                          className="hover:bg-slate-50 cursor-pointer col-span-1 border p-3 rounded-lg"
                                           onClick={() =>
                                             handleMinusProducts(product.id)
                                           }
                                         >
                                           <Minus className="h-4 w-4" />
-                                        </Button>
+                                        </span>
                                       </div>
 
                                     </div>

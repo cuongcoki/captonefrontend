@@ -259,8 +259,6 @@ export default function CreateOrder() {
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any, productType: any) => {
     console.warn("product", product.id);
-    setSearchTerm("");
-    setSearchTermSet("");
     // Kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
     const existingDetailProUpdate = getDetailsProUpdate.some(
       (item) => item.productId === product.id
@@ -325,7 +323,7 @@ export default function CreateOrder() {
     );
     setProductsRequest(updatedProductsRequest);
 
-    toast.success("Đã xóa sản phẩm khỏi danh sách");
+    // toast.success("Đã xóa sản phẩm khỏi danh sách");
   };
 
   const handleChange = (productId: string, name: string, value: any) => {
@@ -487,8 +485,8 @@ export default function CreateOrder() {
                       <Card>
                         <CardHeader>
                           <TitleComponent
-                          title="Thông tin đơn hàng"
-                          description="Thông tin công ty - thuế - thời gian đặt hàng của đơn đặt hàng."
+                            title="Thông tin đơn hàng"
+                            description="Thông tin công ty - thuế - thời gian đặt hàng của đơn đặt hàng."
                           />
                         </CardHeader>
                         <CardContent className="flex gap-4">
@@ -766,16 +764,14 @@ export default function CreateOrder() {
                                                 />
                                               </div>
                                               <div>
-                                                <Button
-                                                  variant={"ghost"}
-                                                  size={"icon"}
+                                                <span
                                                   className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                                   onClick={() =>
                                                     handleAddProducts(product, productType)
                                                   }
                                                 >
                                                   <Plus className="text-white" />
-                                                </Button>
+                                                </span>
                                               </div>
                                             </div>
                                           ))
@@ -816,16 +812,14 @@ export default function CreateOrder() {
                                                 />
                                               </div>
                                               <div>
-                                                <Button
-                                                  variant={"ghost"}
-                                                  size={"icon"}
+                                                <span
                                                   className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                                   onClick={() =>
                                                     handleAddProducts(product, setType)
                                                   }
                                                 >
                                                   <Plus className="text-white" />
-                                                </Button>
+                                                </span>
                                               </div>
                                             </div>
                                           ))
@@ -965,16 +959,15 @@ export default function CreateOrder() {
                                               {/* </div> */}
                                             </TableCell>
 
-                                            <TableCell className="font-medium">
-                                              <Button
-                                                variant="outline"
-                                                size="icon"
+                                            <TableCell className="">
+                                              <div
+                                                className="hover:bg-slate-50 cursor-pointer col-span-1 border p-3 rounded-lg"
                                                 onClick={() =>
                                                   handleMinusProducts(product.id)
                                                 }
                                               >
-                                                <Minus className="h-4 w-4" />
-                                              </Button>
+                                                <Minus className=" h-4 w-4 " />
+                                              </div>
                                             </TableCell>
                                           </TableRow>
                                         ))}
