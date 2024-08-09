@@ -20,7 +20,7 @@ import React, { useEffect, useState } from "react";
 
 import CountProduct from "@/components/shared/dashboard/attendance/update-attendance/count-product";
 import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
-var indexData: any | null = null;
+const indexData: any | null = null;
 
 export function ContextMenuForAttendance({
   children,

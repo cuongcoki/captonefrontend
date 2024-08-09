@@ -770,10 +770,10 @@ export default function CreateShipment() {
     if (valueString === "") return "0";
 
     // Convert to number to format with toLocaleString
-    let numberValue = parseInt(valueString, 10);
+    const numberValue = parseInt(valueString, 10);
 
     // Format number with commas as thousands separators
-    let formatted = numberValue.toLocaleString("vi-VN");
+    const formatted = numberValue.toLocaleString("vi-VN");
 
     return formatted;
   };

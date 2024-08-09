@@ -64,7 +64,7 @@ export default function UpdateAttendanceEm({
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
 
   const colorSlaryByProduct = "bg-white";
-  function formatDate(dateStr: String) {
+  function formatDate(dateStr: string) {
     const [day, month, year] = dateStr.split("/");
     const formattedDay = day.padStart(2, "0");
     const formattedMonth = month.padStart(2, "0");
@@ -133,7 +133,7 @@ export default function UpdateAttendanceEm({
   }, [isChangeCompany]);
 
   useEffect(() => {
-    let localWareHouse = wareHouseRef.current || "";
+    const localWareHouse = wareHouseRef.current || "";
     let userD: User[] = [];
     // GET WAREHOUSE DATA
     // if (selectWareHouseDataRef.current.length === 0) {
@@ -401,8 +401,8 @@ export default function UpdateAttendanceEm({
   };
   // Convert date format from dd/MM/yyyy to yyyy-MM-dd
   function convertDateFormat(inputDate: string) {
-    let parts = inputDate.split("/");
-    let formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+    const parts = inputDate.split("/");
+    const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
     return formattedDate;
   }
   useEffect(() => {

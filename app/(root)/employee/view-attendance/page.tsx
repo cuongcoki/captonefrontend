@@ -29,7 +29,7 @@ export default function Page({ searchParams }: Props) {
   const pathName = usePathname();
   function convertDateToISO(dateString: string) {
     // Tách chuỗi ngày được truyền vào thành các phần
-    let parts = dateString.split("/");
+    const parts = dateString.split("/");
 
     // Kiểm tra định dạng ngày nhập vào
     if (parts.length !== 3) {
@@ -37,7 +37,7 @@ export default function Page({ searchParams }: Props) {
     }
 
     // Tái cấu trúc theo định dạng yyyy-MM-dd
-    let convertedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+    const convertedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
 
     return convertedDate;
   }
@@ -85,7 +85,7 @@ export default function Page({ searchParams }: Props) {
       const startDayOfWeek = firstDayOfMonth.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
 
       // Calculate the number of days from the previous month to display
-      let daysInPreviousMonth = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1; // adjust to start week on Monday
+      const daysInPreviousMonth = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1; // adjust to start week on Monday
 
       // Get the actual last day of the previous month
       const lastDayOfPreviousMonth = new Date(year, month - 1, 0).getDate();

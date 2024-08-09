@@ -61,14 +61,14 @@ export default function DragAndDropFile({
     });
 
     function showFile() {
-      let fileType = file?.type; // Getting selected file type
-      let validExtensions = ["image/jpeg", "image/jpg", "image/png"]; // Adding some valid image extensions in array
+      const fileType = file?.type; // Getting selected file type
+      const validExtensions = ["image/jpeg", "image/jpg", "image/png"]; // Adding some valid image extensions in array
       if (fileType && validExtensions.includes(fileType)) {
         ChangeImage(file);
         // If user selected file is an image file
-        let fileReader = new FileReader(); // Creating new FileReader object
+        const fileReader = new FileReader(); // Creating new FileReader object
         fileReader.onload = () => {
-          let fileURL = fileReader.result;
+          const fileURL = fileReader.result;
 
           if (dropArea && image && labelForImage) {
             // setImageSrc(fileURL?.toString() as string);

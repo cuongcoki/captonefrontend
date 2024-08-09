@@ -87,9 +87,9 @@ interface SetProduct {
   quantity: number;
   product: Product;
 }
-let initialFormValuesSet: any = null;
-let initialFormValuesSetUpdate: any = null;
-let initialFormValuesForm: any = null;
+const initialFormValuesSet: any = null;
+const initialFormValuesSetUpdate: any = null;
+const initialFormValuesForm: any = null;
 export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   // console.log('setId',setId)
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);

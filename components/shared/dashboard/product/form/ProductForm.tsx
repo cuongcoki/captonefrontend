@@ -286,9 +286,9 @@ export const ProductForm = () => {
     valueString = valueString.replace(/\D/g, "");
     valueString = valueString.replace(/^0+/, "");
     if (valueString === "") return "0";
-    let reversed = valueString.split("").reverse().join("");
-    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    let formatted = formattedReversed.split("").reverse().join("");
+    const reversed = valueString.split("").reverse().join("");
+    const formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+    const formatted = formattedReversed.split("").reverse().join("");
     return formatted;
   };
 

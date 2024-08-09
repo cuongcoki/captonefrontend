@@ -36,7 +36,7 @@ export const columnsForMaterial: ColumnDef<materialType>[] = [
       return <div className="text-center">Ảnh minh họa</div>;
     },
     cell: async ({ row }) => {
-      var href;
+      let href;
       try {
         const res = await filesApi.getFile(
           (row.original.image?.trim() || "%20") as string

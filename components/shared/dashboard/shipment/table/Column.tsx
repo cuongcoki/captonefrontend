@@ -106,8 +106,8 @@ function formatDate(isoString: string) {
   return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
 }
 function convertUtcToVn(utcDateStr: string): string {
-  let utcDate = new Date(utcDateStr);
-  let vnDateStr = utcDate.toLocaleDateString("vi-VN");
+  const utcDate = new Date(utcDateStr);
+  const vnDateStr = utcDate.toLocaleDateString("vi-VN");
   return vnDateStr;
 }
 export const columns: ColumnDef<Shipment>[] = [

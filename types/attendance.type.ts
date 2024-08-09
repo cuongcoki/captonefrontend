@@ -135,8 +135,8 @@ export type AttendanceDetailProps = {
 export type GetAllProductBody = {
   SearchTerm: string;
   IsInProcessing: boolean;
-  PageIndex: Number;
-  PageSize: Number;
+  PageIndex: number;
+  PageSize: number;
 };
 
 type ImageResponse = {
@@ -150,7 +150,7 @@ export type Product = {
   id: string;
   name: string;
   code: string;
-  price: Number;
+  price: number;
   size: string;
   description: string;
   isInProcessing: boolean;
@@ -173,13 +173,13 @@ export type GetAllPhaseResponse = SuccessResponse<PhaseType[]>;
 export type ProductEmployee = {
   productId: string;
   phaseId: string;
-  quantity: Number;
+  quantity: number;
   userId: string;
   isMold: boolean;
 };
 export type UpdateEmployeeProductBody = {
   date: string;
-  slotId: Number;
+  slotId: number;
   companyId: string;
   createQuantityProducts: ProductEmployee[];
 };

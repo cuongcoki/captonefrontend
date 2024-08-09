@@ -140,8 +140,8 @@ const ProductPhaseType = [
 interface ShipmentIDProps {
     shipmentIDDes: string;
 }
-let initialFormValuesShipment: any = null;
-let initialFormValuesForm: any = null;
+const initialFormValuesShipment: any = null;
+const initialFormValuesForm: any = null;
 export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
     //state 
     const [loading, setLoading] = useState<boolean>(false);
@@ -737,8 +737,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         valueString = valueString.replace(/[^0-9]/g, "");
         valueString = valueString.replace(/^0+/, "");
         if (valueString === "") return "0";
-        let numberValue = parseInt(valueString, 10);
-        let formatted = numberValue.toLocaleString("vi-VN");
+        const numberValue = parseInt(valueString, 10);
+        const formatted = numberValue.toLocaleString("vi-VN");
         return formatted;
     };
 

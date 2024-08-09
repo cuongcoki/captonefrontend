@@ -86,13 +86,13 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
     if (valueString === "") return "0";
 
     // Reverse the string to handle grouping from the end
-    let reversed = valueString.split("").reverse().join("");
+    const reversed = valueString.split("").reverse().join("");
 
     // Add dots every 3 characters
-    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+    const formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
 
     // Reverse back to original order
-    let formatted = formattedReversed.split("").reverse().join("");
+    const formatted = formattedReversed.split("").reverse().join("");
 
     return formatted;
   };

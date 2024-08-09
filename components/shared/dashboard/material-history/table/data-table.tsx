@@ -85,14 +85,14 @@ export function DataTableForMaterialHistory<TData, TValue>({
 
   // Convert date format from dd/MM/yyyy to yyyy-MM-dd
   function convertDateFormat(inputDate: string) {
-    let parts = inputDate.split("/");
-    let formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
+    const parts = inputDate.split("/");
+    const formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
     return formattedDate;
   }
   // Convert date format from  yyyy-MM-dd to dd/MM/yyyy
   function convertDateFormatToDMY(inputDate: string) {
-    let parts = inputDate.split("-");
-    let formattedDate = parts[2] + "/" + parts[1] + "/" + parts[0];
+    const parts = inputDate.split("-");
+    const formattedDate = parts[2] + "/" + parts[1] + "/" + parts[0];
     return formattedDate;
   }
   useEffect(() => {

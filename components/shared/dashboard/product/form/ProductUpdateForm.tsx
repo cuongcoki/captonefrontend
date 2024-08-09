@@ -423,7 +423,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   // Handle form submission
   const onSubmit = async (formData: z.infer<typeof ProductUpdateSchema>) => {
     if (isSubmitting) return;
-    var ImaNull = null;
+    const ImaNull = null;
     setLoading(true);
     setIsSubmitting(true);
     console.log(imageAddRequests);
@@ -501,9 +501,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     valueString = valueString.replace(/\D/g, "");
     valueString = valueString.replace(/^0+/, "");
     if (valueString === "") return "0";
-    let reversed = valueString.split("").reverse().join("");
-    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    let formatted = formattedReversed.split("").reverse().join("");
+    const reversed = valueString.split("").reverse().join("");
+    const formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+    const formatted = formattedReversed.split("").reverse().join("");
     return formatted;
   };
 

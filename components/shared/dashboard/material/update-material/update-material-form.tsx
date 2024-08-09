@@ -28,7 +28,7 @@ const linkImage =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQnXcFa9HVz9wxTvYDQRoPe76rcZuhUPbH2g&s";
 
 export default function UpdateMaterialForm({ id }: { id: string }) {
-  let { setIsUpdate } = useContext(UpdateMaterialContext);
+  const { setIsUpdate } = useContext(UpdateMaterialContext);
   const [materialImage, setMaterialImage] = useState<any>("");
   const { forceUpdate } = useContext(MyContext);
   const [imageLink, setImageLink] = useState<string>("");
@@ -46,7 +46,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
   const fillImage = (fileURL: string) => {
     const iamgeLabel = document.querySelector(".label_image") as HTMLElement;
     const dropArea = document.querySelector(".drag-area") as HTMLElement;
-    let imgTag = `<img src="${fileURL}" class="absolute top-0 left-0 w-full h-full object-cover">`;
+    const imgTag = `<img src="${fileURL}" class="absolute top-0 left-0 w-full h-full object-cover">`;
     if (iamgeLabel) {
       iamgeLabel.innerHTML += imgTag;
       iamgeLabel.hidden = false;

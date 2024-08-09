@@ -23,7 +23,7 @@ export default function UpdateMaterial({
   // const { isOpen, setIsOpen, handleDialog } = UpdateNewMaterialStore();
   const [open, setOpen] = React.useState(false);
   const [isUpdate, setIsUpdate] = React.useState(false);
-  let handleAlertDialog = (value: boolean) => {
+  const handleAlertDialog = (value: boolean) => {
     if (isUpdate) {
       document.getElementById("alert-dialog-trigger")?.click();
       setIsUpdate(false);
