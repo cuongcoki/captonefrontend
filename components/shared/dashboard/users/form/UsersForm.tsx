@@ -259,32 +259,12 @@ export const UsersForm = () => {
         .catch((err) => {
           console.log(err.response);
           if (err.response && err.response.data && err.response.data.error) {
-            const errors = err.response.data.error;
-            if (errors.Id) {
-              toast.error(errors.Id);
-            }
-
-            if (errors.Phone) {
-              toast.error(errors.Phone);
-            }
-
-            if (errors.FirstName) {
-              toast.error(errors.FirstName);
-            }
-            if (errors.LastName) {
-              toast.error(errors.LastName);
-            }
-            if (errors.DOB && Array.isArray(errors.DOB)) {
-              errors.DOB.forEach((error: any) => {
-                toast.error(error);
-              });
-            }
-            if (errors['SalaryByDayRequest.Salary']) {
-              toast.error(errors['SalaryByDayRequest.Salary'][0]);
-            }
-
-            if (errors['SalaryOverTimeRequest.Salary']) {
-              toast.error(errors['SalaryOverTimeRequest.Salary'][0]);
+            if (err.response.data.error) {
+              for (const key in err.response.data.error) {
+                toast.error(err.response.data.error[key][0]);
+              }
+            } else {
+              toast.error(err.response.data.message);
             }
           } else {
             console.error("Tạo tài khoản không thành công");

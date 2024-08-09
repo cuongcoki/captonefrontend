@@ -375,11 +375,11 @@ export default function CreateOrder() {
       }
     } catch (error: any) {
       if (error.response.data.error) {
-        toast.error(error.response.data.message);
-      } else {
         for (const key in error.response.data.error) {
           toast.error(error.response.data.error[key][0]);
         }
+      } else {
+        toast.error(error.response.data.message);
       }
     } finally {
       setLoading(false);

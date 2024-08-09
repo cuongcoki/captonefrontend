@@ -400,43 +400,16 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       }
     } catch (error: any) {
       if (error.response && error.response.data && error.response.data.error) {
-        const errors = error.response.data.error;
-
-        // Xử lý lỗi chi tiết
-        if (errors.Id) {
-          toast.error(errors.Id);
+        if (error.response.data.error) {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
+        } else {
+          toast.error(error.response.data.message);
         }
-
-        if (errors.Phone) {
-          toast.error(errors.Phone);
-        }
-
-        if (errors.FirstName) {
-          toast.error(errors.FirstName);
-        }
-
-        if (errors.LastName) {
-          toast.error(errors.LastName);
-        }
-
-        if (errors.DOB && Array.isArray(errors.DOB)) {
-          errors.DOB.forEach((error: any) => {
-            toast.error(error);
-          });
-        }
-
-        if (errors['SalaryByDayRequest.Salary']) {
-          toast.error(errors['SalaryByDayRequest.Salary'][0]);
-        }
-
-        if (errors['SalaryOverTimeRequest.Salary']) {
-          toast.error(errors['SalaryOverTimeRequest.Salary'][0]);
-        }
-
       } else {
         toast.error("Có lỗi xảy ra khi cập nhật.");
       }
-
     } finally {
       setLoading(false);
     }

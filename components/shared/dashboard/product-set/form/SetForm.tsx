@@ -361,17 +361,13 @@ export const SetForm = () => {
         toast.error("Vui lòng chọn ảnh bộ");
       }
     } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.error) {
-        const errors = error.response.data.error;
-
-        if (errors.Description) {
-          toast.error(errors.Description);
+      if (error.response.data.error) {
+        for (const key in error.response.data.error) {
+          toast.error(error.response.data.error[key][0]);
         }
-
       } else {
-        console.error("Error submitting form:", error);
+        toast.error(error.response.data.message);
       }
-      console.error("Error creating product:", error);
     } finally {
       setLoading(false);
     }
