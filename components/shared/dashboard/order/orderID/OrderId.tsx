@@ -130,8 +130,8 @@ export default function OrderIdPage({ orderId }: OrderId) {
   });
   const { force } = OrderStore();
 
-  // console.log("data=====", data);
-  // console.log("data=====", dataId);
+  console.log("data=====", data);
+  console.log("data=====", dataId);
   // console.log('ssssssssssssssssssssssssssssssss', params.id)
   useEffect(() => {
     const fetchDataOrderId = () => {
@@ -211,103 +211,75 @@ export default function OrderIdPage({ orderId }: OrderId) {
       />
       <div className="flex flex-col gap-8">
 
-        <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6">
-          <Card className="sm:col-span-1 md:col-span-10 lg:col-span-7 shadow-sm">
+        <div className="grid sm:grid-cols-1 md:grid-cols-9 gap-6">
+          <Card className="sm:col-span-1 md:col-span-9 lg:col-span-3 shadow-sm">
             <CardHeader>
               <TitleComponent
                 title="Thông tin công ty"
-                description="Thông tin công ty đặt hàng."
+                description={`Thông tin công ty đặt hàng - ${data?.company.name}`}
               />
             </CardHeader>
             <CardContent>
-              <div className="grid grid-col-6 gap-2">
-                <div className="col-span-2 flex items-center gap-4 ">
-                  <Building2 className="h-10 w-10" />
-                  <span className="text-xl font-medium">
+              <div className="flex flex-col space-y-2">
+                <div className="flex justify-between">
+                  <span className="font-medium">Tên công ty:</span>
+                  <span >
                     {data?.company.name}
                   </span>
                 </div>
-
-                <div className="hidden  md:flex gap-6">
-
-                  <Card className="w-full xl:w-[250px] h-[130px] overflow-auto shadow-md shadow-primary/50">
-                    <div className="flex items-center justify-center flex-col gap-2 p-2">
-                      <h2 className="font-semibold text-lg">Địa chỉ công ty</h2>
-                      <span className="text-center">
-                        {data?.company.address}
-                      </span>
-                    </div>
-                  </Card>
-
-                  <Card className="w-full xl:w-[250px] h-[130px] overflow-auto shadow-md shadow-primary/50">
-                    <div className="flex items-center justify-center flex-col gap-2 p-2">
-                      <h2 className="font-semibold text-lg">Loại công ty</h2>
-                      <span className="text-center">
-                        {data?.company.companyTypeDescription}
-                      </span>
-                    </div>
-                  </Card>
-
-                  <Card className="w-full xl:w-[250px] h-[130px] overflow-auto shadow-md shadow-primary/50">
-                    <div className="flex items-center justify-center flex-col gap-2 p-2">
-                      <h2 className="font-semibold text-lg">Thông tin giám đốc</h2>
-                      <div className="flex flex-col overflow-auto">
-                        <span >
-                          Tên: {data?.company.directorName}
-                        </span>
-                        <span >
-                          Số điện thoại:  {data?.company.directorPhone}
-                        </span>
-                        <span >
-                          Địa chỉ Gmail: {data?.company.email === "" ? "Không có" : data?.company.email}
-                        </span>
-                      </div>
-                    </div>
-                  </Card>
-
+                <div className="flex justify-between">
+                  <span className="font-medium">Địa chỉ công ty:</span>
+                  <span >
+                    {data?.company.address}
+                  </span>
                 </div>
-
-                <div className="md:hidden flex gap-6">
-                  <Popover>
-                    <PopoverTrigger className="p-1 shadow-md shadow-primary/50 text-sm">Địa chỉ công ty</PopoverTrigger>
-                    <PopoverContent>
-                      <span className="text-center">
-                        {data?.company.address}
-                      </span>
-                    </PopoverContent>
-                  </Popover>
-
-                  <Popover>
-                    <PopoverTrigger className="p-1 shadow-md shadow-primary/50 text-sm">Loại công ty</PopoverTrigger>
-                    <PopoverContent>
-                      <span className="text-center">
-                        {data?.company.companyTypeDescription}
-                      </span>
-                    </PopoverContent>
-                  </Popover>
-
-                  <Popover>
-                    <PopoverTrigger className="p-1 shadow-md shadow-primary/50 text-sm">Thông tin giám đốc</PopoverTrigger>
-                    <PopoverContent className="flex flex-col gap-2">
-                      <span className="text-center">
-                        {data?.company.directorName}
-                      </span>
-                      <span className="text-center">
-                        {data?.company.directorPhone}
-                      </span>
-                      <span className="text-center">
-                        {data?.company.email}
-                      </span>
-                    </PopoverContent>
-                  </Popover>
-
-
+                <div className="flex justify-between">
+                  <span className="font-medium">
+                    Loại công ty:
+                  </span>
+                  <span >
+                    {data?.company.companyTypeDescription}
+                  </span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="sm:col-span-1 md:col-span-10 lg:col-span-3 shadow-sm">
+          <Card className="sm:col-span-1 md:col-span-9 lg:col-span-3 shadow-sm">
+            <CardHeader>
+              <div className="flex justify-between items-center ">
+                {/* <CardTitle className="text-primary">Đơn hàng chi tiết</CardTitle> */}
+                <TitleComponent
+                  title="Thông tin chủ tịch"
+                  description={`Thông tin chủ tịch công ty - ${data?.company.name}`}
+                />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col space-y-2">
+                <div className="flex justify-between">
+                  <span className="font-medium">Tên chủ tịch:</span>
+                  <span >
+                    {data?.company.directorName}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">
+                    Địa chỉ gmail:
+                  </span>
+                  <span >
+                    {data?.company.email}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Điện thoại:</span>
+                  <span > {data?.company.directorPhone}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="sm:col-span-1 md:col-span-9 lg:col-span-3 shadow-sm">
             <CardHeader>
               <div className="flex justify-between items-center ">
                 {/* <CardTitle className="text-primary">Đơn hàng chi tiết</CardTitle> */}
@@ -353,7 +325,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
             </CardContent>
           </Card>
 
-          <Card className="sm:col-span-1 md:col-span-10 shadow-sm overflow-auto">
+          <Card className="sm:col-span-1 md:col-span-9 shadow-sm overflow-auto">
             <CardHeader>
               <div className="flex justify-between items-center ">
                 <TitleComponent
