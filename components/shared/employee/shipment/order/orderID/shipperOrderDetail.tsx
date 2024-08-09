@@ -48,7 +48,7 @@ import toast from "react-hot-toast";
 // ** import Components
 import { NoImage } from "@/constants/images";
 import { Badge } from "@/components/ui/badge";
-import { MoreVertical, Truck, X } from "lucide-react";
+import { Mail, MoreVertical, Phone, Truck, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { shipmentApi } from "@/apis/shipment.api";
 import { format } from "date-fns";
@@ -60,9 +60,9 @@ interface ImageResponse {
     imageUrl: string;
     isBluePrint: boolean;
     isMainImage: boolean;
-  }
-  
-  interface Product {
+}
+
+interface Product {
     id: string;
     name: string;
     code: string;
@@ -71,15 +71,15 @@ interface ImageResponse {
     description: string;
     isInProcessing: boolean;
     image: string;
-  }
-  
-  interface ShipOrderDetailResponse {
+}
+
+interface ShipOrderDetailResponse {
     product: Product | null;
     set: any; // You can replace 'any' with the appropriate type if available.
     quantity: number;
-  }
-  
-  interface CompanyResponse {
+}
+
+interface CompanyResponse {
     id: string;
     name: string;
     address: string;
@@ -89,9 +89,9 @@ interface ImageResponse {
     companyEnum: string;
     companyType: number;
     companyTypeDescription: string;
-  }
-  
-  interface ShipOrderResponse {
+}
+
+interface ShipOrderResponse {
     shipOrderId: string;
     shipperId: string;
     shipperName: string;
@@ -102,8 +102,8 @@ interface ImageResponse {
     deliveryMethodDescription: string;
     shipOrderDetailResponses: ShipOrderDetailResponse[];
     companyResponse: CompanyResponse;
-  }
-  
+}
+
 
 interface ShipOrderProps {
     ShipOrderID: string;
@@ -113,7 +113,7 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
     const [loading, setLoading] = useState<boolean>(false);
     const [data, setData] = useState<ShipOrderResponse>();
     const [open, setOpen] = useState<boolean>(false);
-console.log("datadatadata",data)
+    console.log("datadatadata", data)
     const handleOffDialog = () => {
         setOpen(false);
     };
@@ -142,20 +142,25 @@ console.log("datadatadata",data)
         fetchDataShipperShipOrderId();
     }, [data]);
 
-      // các hàm hiển thị sao cho oke
-  function formatDate(isoString: string) {
-    // Tách chuỗi thành các phần
-    const parts = isoString.split("T")[0].split("-");
+    // các hàm hiển thị sao cho oke
+    function formatDate(isoString: string) {
+        // Tách chuỗi thành các phần
+        const parts = isoString.split("T")[0].split("-");
 
-    // parts[0] là năm, parts[1] là tháng, parts[2] là ngày
-    const year = parts[0];
-    const month = parts[1];
-    const day = parts[2];
+        // parts[0] là năm, parts[1] là tháng, parts[2] là ngày
+        const year = parts[0];
+        const month = parts[1];
+        const day = parts[2];
 
-    // Trả về chuỗi theo định dạng dd/MM/yyyy
-    return `${day}/${month}/${year}`;
-  }
-
+        // Trả về chuỗi theo định dạng dd/MM/yyyy
+        return `${day}/${month}/${year}`;
+    }
+    const limitLength = (text: any, maxLength: any) => {
+        if (text?.length > maxLength) {
+            return `${text.slice(0, maxLength)}...`;
+        }
+        return text;
+    };
     return (
         <>
             <Dialog.Root open={open} onOpenChange={handleOnDialog}>
@@ -223,7 +228,7 @@ console.log("datadatadata",data)
                                                                                 href={`/dashboard/products/product/${item?.product?.id}`}
                                                                             >
                                                                                 {" "}
-                                                                              <Image alt="ảnh sản phẩm" src={item.product.image} width={900} height={900} className="w-full h-full object-cover rounded-md "/>
+                                                                                <Image alt="ảnh sản phẩm" src={item.product.image} width={900} height={900} className="w-full h-full object-cover rounded-md " />
                                                                             </Link>
                                                                         </span>
                                                                         <span>{item?.product?.name}</span>
@@ -286,25 +291,32 @@ console.log("datadatadata",data)
                                                 <div className="font-semibold">
                                                     Thông tin công ty khách hàng
                                                 </div>
-                                                <dl className="grid gap-3">
-                                                    <div className="flex items-center justify-between">
+                                                <dl className="grid gap-1">
+                                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                                                         <dt className="text-muted-foreground">
                                                             Tên chủ tịch
                                                         </dt>
-                                                        <dd>{data?.companyResponse.name}</dd>
+                                                        <dd>{data?.companyResponse.directorName}</dd>
                                                     </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <dt className="text-muted-foreground">Email</dt>
+                                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                                                        <dt className="text-muted-foreground">
+                                                            Tên công ty
+                                                        </dt>
+                                                        <dd>{data?.companyResponse.companyTypeDescription}</dd>
+                                                    </div>
+                                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                                                        <dt className="text-muted-foreground">Địa chỉ</dt>
                                                         <dd>
-                                                            <a href="mailto:">{data?.companyResponse.email}</a>
+                                                            <a href="mailto:">{limitLength(data?.companyResponse.address, 20)}</a>
                                                         </dd>
                                                     </div>
-                                                    <div className="flex items-center justify-between">
-                                                        <dt className="text-muted-foreground">
-                                                            Số điện thoại
-                                                        </dt>
-                                                        <dd>
-                                                            <a href="tel:">{data?.companyResponse.directorPhone}</a>
+                                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                                                        <dt className="text-muted-foreground">Liện hệ</dt>
+                                                        <dd className="flex items-center gap-1">
+                                                            <Mail className="h-3.5 w-3.5" /> <a href="mailto:">{data?.companyResponse.email === "" ? "Không có" : data?.companyResponse.email}</a>
+                                                        </dd>
+                                                        <dd className="flex items-center gap-1">
+                                                            <Phone className="h-3.5 w-3.5" /> <a href="tel:">{data?.companyResponse.directorPhone}</a>
                                                         </dd>
                                                     </div>
                                                 </dl>
