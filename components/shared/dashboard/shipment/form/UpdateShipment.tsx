@@ -140,8 +140,7 @@ const ProductPhaseType = [
 interface ShipmentIDProps {
     shipmentIDDes: string;
 }
-let initialFormValuesShipment: any = null;
-let initialFormValuesForm: any = null;
+
 export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
     //state 
     const [loading, setLoading] = useState<boolean>(false);
@@ -259,9 +258,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     const handleOffDialogA = () => {
         setOpenAlert(false);
     };
-    const handleOnDialogA = () => {
-        setOpenAlert(true);
-    };
 
     const handleStatusChange = (value: number) => {
         setCompanyType(value);
@@ -355,7 +351,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                 );
                 const newData = response.data.data.data;
 
-                // Update imageUrl with links fetched from filesApi
                 const updatedData = await Promise.all(
                     newData.map(async (item: any) => {
                         if (item.image) {
@@ -366,7 +361,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                     image: data.data,
                                 };
                             } catch (error) {
-                                console.error("Error getting file:", error);
                                 return {
                                     ...item,
                                     image: "",
@@ -406,7 +400,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         const fetchDataCompany = () => {
             shipmentApi.getAllCompanyByType(companyType, 1, 20)
                 .then(({ data }) => {
-                    console.log("========", data.data)
                     setCompany(data.data.data);
                 })
                 .catch(error => {
@@ -419,7 +412,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                     setCompany1(data.data.data);
                 })
                 .catch(error => {
-                    console.error('Error fetching companies:', error);
                 });
         }
         fetchDataCompany1();
@@ -441,9 +433,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                 setDataEm(res.data.data.data);
                 setCurrentPage(res.data.data.currentPage);
                 setTotalPages(res.data.data.totalPages);
-                console.log("Response:", res);
             } catch (error: any) {
-                console.error("Error fetching user data:");
                 if (error?.response.data.status === 400) {
                     setDataEm([]);
                 }
@@ -480,7 +470,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                         imageUrl: data.data,
                                     };
                                 } catch (error) {
-                                    console.error("Error getting file:", error);
                                     return {
                                         ...image,
                                         imageUrl: "",
@@ -510,19 +499,16 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
 
     // call gủi form
     const onSubmit = (data: z.infer<typeof ShipmentSchema>) => {
-        console.log('data', data)
         if (data.fromId === data.toId) {
             return toast.error("2 Công ty không được trùng nhau")
         }
 
         if (shipmentDetailRequests.length === 0) {
-            console.error("Không tìm thấy yêu cầu chi tiết lô hàng");
             return;
         }
         let hasError = false;
         shipmentDetailRequests.forEach((request, index) => {
             if (!request.itemId) {
-                console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
                 toast.custom((t) => (
                     <div
                         className={`${t.visible ? 'animate-enter' : 'animate-leave'
@@ -552,7 +538,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                 ));
                 hasError = true;
             } else if (!request.phaseId && request.kindOfShip === 0) {
-                console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
                 toast.custom((t) => (
                     <div
                         className={`${t.visible ? 'animate-enter' : 'animate-leave'
@@ -582,7 +567,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                 ));
                 hasError = true;
             } else if (request.quantity <= 0) {
-                console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
                 toast.custom((t) => (
                     <div
                         className={`${t.visible ? 'animate-enter' : 'animate-leave'
@@ -612,7 +596,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                 ));
                 hasError = true;
             } else if (request.productPhaseType === null && request.kindOfShip === 0) { // Sửa điều kiện ở đây
-                console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
                 toast.custom((t) => (
                     <div
                         className={`${t.visible ? 'animate-enter' : 'animate-leave'
@@ -643,7 +626,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                 hasError = true;
             }
             else if (request.materialPrice <= 0 && request.kindOfShip === 1) {
-                console.error(`Chi tiết lô hàng không hợp lệ tại chỉ mục ${index}:`, request);
                 toast.custom((t) => (
                     <div
                         className={`${t.visible ? 'animate-enter' : 'animate-leave'
@@ -693,11 +675,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
             shipmentDetailRequests: shipmentDetailRequests
         };
 
-        console.log("requestBodyCreateShipment=====", requestBody);
         setLoading(true)
         shipmentApi.updateShipment(requestBody, shipmentIDDes)
             .then(({ data }) => {
-                console.log("data", data)
                 ForceRender();
                 form.reset();
                 setShipmentDetailRequests([]);
@@ -763,9 +743,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     const handleOffDialog = () => {
         setOriginalShipmentDetailRequests(shipmentDetailRequests);
         const isFormChanged = JSON.stringify(shipmentDetailRequests) === JSON.stringify(originalShipmentDetailRequests);
-            console.log("isFormChanged",isFormChanged)
-            console.log(shipmentDetailRequests)
-            console.log(originalShipmentDetailRequests)
+
         if (!formState.isDirty && isFormChanged) {
             setOpen(false);
             setFetchTrigger((prev) => prev + 1);

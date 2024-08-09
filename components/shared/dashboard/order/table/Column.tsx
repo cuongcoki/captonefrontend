@@ -1,13 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { DataTableRowActions } from "./data-table-row-actions";
-import Image from "next/image";
-import { IsInProcessing, StatusOrder } from "./data/data";
-import { ArrowUpDown } from "lucide-react";
+
 export type Order = {
   id: string;
   companyId: string;
@@ -61,29 +56,6 @@ export const columns: ColumnDef<Order>[] = [
     },
   },
 
-  // {
-  //  accessorKey: "company.email",
-  //  header: ({ column }) => {
-  //   return (
-  //    <Button variant="ghost" >
-  //     @mail
-  //    </Button>
-  //   )
-  //  },
-  // },
-
-  // {
-  //  accessorKey: "company.directorPhone",
-  //  header: ({ column }) => {
-  //   return (
-  //    <Button variant="ghost" >
-  //     Điện thoại giám đốc
-  //    </Button>
-  //   )
-  //  },
-  // },
-
-  
 
   {
     accessorKey: "startOrder",
@@ -150,8 +122,4 @@ export const columns: ColumnDef<Order>[] = [
     },
   },
 
-  // {
-  //  id: "actions",
-  //  cell: ({ row }) => <DataTableRowActions row={row} />,
-  // },
 ];

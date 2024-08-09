@@ -3,14 +3,12 @@ import UpdateMaterialHistory from "@/components/shared/dashboard/material-histor
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
+
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import React, { useEffect, useRef, useState } from "react";
-import UpdateMaterialHistoryForm from "../update-material-history/update-material-history-form";
+import React, {useRef, useState } from "react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 
 export default function MaterialHistoryAction({
@@ -19,7 +17,6 @@ export default function MaterialHistoryAction({
   idMaterialHistory: string;
 }) {
   const [open, setOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleOpenUpdateDialog = () => {
     document.getElementById(idMaterialHistory)?.click();

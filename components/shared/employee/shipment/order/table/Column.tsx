@@ -5,13 +5,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { DataTableRowActions } from "./data-table-row-actions";
-import Image from "next/image";
-import { IsInProcessing, StatusOrder } from "./data/data";
-import { ArrowUpDown } from "lucide-react";
 import { ShipperOrderDetail } from "../orderID/shipperOrderDetail";
 import ChangeStatusShipOrderEm from "../orderID/changeStatusShipOrderEm";
 
@@ -213,8 +207,5 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
     },
   },
 
-  // {
-  //  id: "actions",
-  //  cell: ({ row }) => <DataTableRowActions row={row} />,
-  // },
+
 ];

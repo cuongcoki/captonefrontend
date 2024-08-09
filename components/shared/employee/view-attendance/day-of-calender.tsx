@@ -4,10 +4,7 @@ import React from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import EmployeeAttendanceDetail from "@/components/shared/employee/view-attendance/employee-attendance-detail";

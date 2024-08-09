@@ -7,7 +7,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -42,13 +41,11 @@ export function DataTableForAttendanceForm<TData, TValue>({
     useAttendanceStore().listUser as TData[]
   );
   const [selectedValue, setSelectedValue] = useState("1");
-  const { ForceRender } = useContext(AttendanceContext);
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -75,7 +72,6 @@ export function DataTableForAttendanceForm<TData, TValue>({
       createAttendances: tableData,
     };
 
-    console.log("createAttendanceSlotBody", createAttendanceSlotBody);
 
     // attendanceApi
     //   .createAttendance(createAttendanceSlotBody)

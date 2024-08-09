@@ -1,6 +1,6 @@
 // import UI
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { format, parse, parseISO } from "date-fns";
+import { Card } from "@/components/ui/card";
+import { format, parseISO } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -31,9 +31,7 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -41,7 +39,6 @@ import {
 
 import { Calendar } from "@/components/ui/calendar";
 
-import { Input } from "@/components/ui/input";
 // import ICON
 import {
   CalendarIcon,
@@ -60,12 +57,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from "@/components/ui/separator";
 import { shipOrderApi } from "@/apis/shipOrder.api";
-import { error } from "console";
 import { cn } from "@/lib/utils";
 import { userApi } from "@/apis/user.api";
-import { UserSearchParams } from "@/types/userTypes";
 import Image from "next/image";
-import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
 import { OrderStore } from "../../../order-store";
 
@@ -193,8 +187,6 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
 
   // ** state
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<shipOrder>();
-  // const [order, setOrder] = useState<orderIds>(orderId);
   const [order, setOrder] = useState<OrderIdData>({
     orderId: "",
     productOrderResponses: [],
@@ -288,11 +280,9 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
         setDataEm(res.data.data.data);
         setCurrentPage(res.data.data.currentPage);
         setTotalPages(res.data.data.totalPages);
-        console.log("Response:", res);
       } catch (error: any) {
         console.error("Error fetching user data:");
         if (error?.response.data.status === 400) {
-          // toast.error(error?.response.data.message);
           setDataEm([]);
         }
       } finally {
@@ -324,16 +314,10 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
   };
 
   const onSubmit = (data: z.infer<typeof ShipOrderSchema>) => {
-    console.log("data", data);
     const originalDate = data.shipDate;
 
-    // Tạo một đối tượng Date từ chuỗi ban đầu
     const date = new Date(originalDate);
-
-    // Cập nhật thời gian đến 23:59:59
     date.setUTCHours(23, 59, 59, 0);
-
-    // Chuyển đổi lại thành chuỗi theo định dạng ISO và bỏ phần mili giây
     const formattedShipDate = date.toISOString().replace('.000', '');
     // Gọi hàm kiểm tra
     validateShipOrderDetailRequests(shipOrderDetailRequests);
@@ -345,12 +329,10 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
       shipOrderDetailRequests: shipOrderDetailRequests,
     };
 
-    console.log("requestBody", requestBody);
     setLoading(true);
     shipOrderApi
       .createShipOrder(requestBody)
       .then(({ data }) => {
-        console.log("data", data);
         if (data.isSuccess) {
           ForceRender()
           setOpen(false)
@@ -370,12 +352,6 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
         setLoading(false);
       });
   };
-
-  // consolog
-  // console.log("orderFormmmmmmmm", order);
-  // console.log("dataEm", dataEm)
-  // console.log('shipOrderDetailRequests===', shipOrderDetailRequests)
-  // console.log('productDetail==', productDetail)
 
   const productType = 0;
   const setType = 1;

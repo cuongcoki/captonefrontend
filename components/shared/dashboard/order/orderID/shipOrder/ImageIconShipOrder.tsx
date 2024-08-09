@@ -1,6 +1,5 @@
 import { filesApi } from "@/apis/files.api";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface ImageResponse {
@@ -28,13 +27,12 @@ export default function ImageIconShipOrder({ dataImage }: ImageIconShipOrderProp
                         const { data } = await filesApi.getFile(image.imageUrl);
                         return {
                             ...image,
-                            imageUrl: data.data, // Giả sử data.data là URL hình ảnh cập nhật
+                            imageUrl: data.data, 
                         };
                     } catch (error) {
-                        console.error("Error getting file:", error);
                         return {
                             ...image,
-                            imageUrl: "", // Xử lý trường hợp lỗi nếu cần
+                            imageUrl: "", 
                         };
                     }
                 })
@@ -51,7 +49,6 @@ export default function ImageIconShipOrder({ dataImage }: ImageIconShipOrderProp
     }
 
     const mainImage = linkImages.find(image => image.isMainImage);
-    // console.log("mainImage",mainImage)
     return (
     <> 
          {mainImage ? (

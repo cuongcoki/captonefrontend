@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 
 import { Gender, Role, isActive } from "./data/data";
@@ -29,28 +28,7 @@ export type Employee = {
 };
 
 export const columns: ColumnDef<Employee>[] = [
-  // {
-  //   id: "select",
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={
-  //         table.getIsAllPageRowsSelected() ||
-  //         (table.getIsSomePageRowsSelected() && "indeterminate")
-  //       }
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
+
   {
     accessorKey: "id",
     header: ({ column }) => <Button variant="ghost">CMND/CCCD</Button>,
@@ -113,47 +91,6 @@ export const columns: ColumnDef<Employee>[] = [
     },
   },
 
-  // {
-  //   accessorKey: "salaryByDay",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //       >
-  //         Lương ngày
-  //       </Button>
-  //     )
-  //   },
-  //   cell: ({ row }) => {
-
-  //     // const formatCurrency = (amount:any) => {
-  //     //   return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-  //     // };
-  //     const formatCurrency = (amount: any) => {
-  //       // Định dạng số theo tiêu chuẩn 'vi-VN'
-  //       const formattedAmount = new Intl.NumberFormat('vi-VN', { minimumFractionDigits: 0 }).format(amount);
-
-  //       // Thay đổi dấu chấm thành dấu phẩy
-  //       return formattedAmount.replace(/\./g, ',');
-  //     }
-  //     return (
-  //         <span>{formatCurrency(row.original.salaryByDay)}</span>
-  //     )
-  //   },
-  // },
-
-  // {
-  //   accessorKey: "companyId",
-  //   header: ({ column }) => {
-  //     return (
-  //       <Button
-  //         variant="ghost"
-  //       >
-  //        companyId
-  //       </Button>
-  //     )
-  //   },
-  // },
 
   {
     accessorKey: "isActive",

@@ -2,8 +2,7 @@
 import {
   materialHistoryFormSchema,
   materialHistoryFormType,
-  materialSchema,
-  materialType,
+
 } from "@/schema/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect, useState } from "react";
@@ -18,13 +17,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { DialogFooter } from "@/components/ui/dialog";
 import InputAnimation from "@/components/shared/common/input/input";
-import DragAndDropFile from "@/components/shared/common/input/drag&drop-file/drag&drop-file";
-import { number } from "zod";
 
-import * as Dialog from "@radix-ui/react-dialog";
 
 import {
   AlertDialog,
@@ -48,7 +43,7 @@ import { useMaterialHistoryStore } from "@/components/shared/dashboard/material-
 import { format, parse } from "date-fns";
 import { MaterialHistoryContext } from "@/components/shared/dashboard/material-history/table/data-table";
 import toast from "react-hot-toast";
-import { Plus, X } from "lucide-react";
+import {  X } from "lucide-react";
 
 const linkImage =
   "https://images.pexels.com/photos/986733/pexels-photo-986733.jpeg?cs=srgb&dl=pexels-nickoloui-986733.jpg&fm=jpg";
@@ -69,9 +64,7 @@ export default function UpdateMaterialHistoryForm({
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
-  };
+ 
 
   const handleOnDialog = () => {
     setOpen(true);
@@ -87,7 +80,6 @@ export default function UpdateMaterialHistoryForm({
   });
 
   useEffect(() => {
-    console.log("IMPORT DATE:", importDate);
   }, [importDate]);
 
   useEffect(() => {
@@ -141,7 +133,6 @@ export default function UpdateMaterialHistoryForm({
       description: data.description,
     };
     materiaHistoryApi.updateMaterialHistory(requestBody).then((res) => {
-      console.log("UPDATE MATERIAL HISTORY SUCCESS", res.data);
       ForceRender();
       toast.success("Cập nhật thành công");
     });
@@ -155,15 +146,6 @@ export default function UpdateMaterialHistoryForm({
   const { formState } = form;
 
   const handleOffDialog = () => {
-    // const currentFormValues = form.getValues();
-    // console.log("currentFormValues", currentFormValues);
-    // console.log("initialFormValuesMa", initValueForm);
-    // if (Object.keys(form.getValues()).length > 0) {
-    //   setInitValueForm(form.getValues());
-    // }
-    // // So sánh giá trị hiện tại với giá trị ban đầu
-    // const isFormChanged = JSON.stringify(initValueForm) === JSON.stringify(currentFormValues);
-    // console.log(isFormChanged);
 
     if (!formState.isDirty) {
       setOpen(false);
@@ -174,24 +156,12 @@ export default function UpdateMaterialHistoryForm({
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
   const parseCurrency = (value: any) => {
@@ -269,9 +239,7 @@ export default function UpdateMaterialHistoryForm({
                       name="quantity"
                       render={({ field }) => (
                         <FormItem>
-                          {/* <FormLabel>Đơn vị</FormLabel> */}
                           <FormControl>
-                            {/* <Input placeholder="Nhập đơn vị ở đây" {...field} /> */}
                             <InputAnimation
                               nameFor="Số lượng"
                               {...field}
@@ -279,22 +247,16 @@ export default function UpdateMaterialHistoryForm({
                                 event: React.ChangeEvent<HTMLInputElement>
                               ) => {
                                 const inputValue = event.target.value;
-                                // Remove any characters that are not digits or a decimal point
                                 let filteredInput = inputValue.replace(
                                   /[^\d.]/g,
                                   ""
                                 );
-
-                                // Split by decimal point and ensure only one decimal point is present
                                 const parts = filteredInput.split(".");
                                 if (parts.length > 2) {
-                                  // More than one decimal point
-                                  // Join the first part with the rest of the string, excluding additional decimal points
                                   filteredInput = `${parts[0]}.${parts
                                     .slice(1)
                                     .join("")}`;
                                 }
-
                                 field.onChange(filteredInput);
                               }}
                             />

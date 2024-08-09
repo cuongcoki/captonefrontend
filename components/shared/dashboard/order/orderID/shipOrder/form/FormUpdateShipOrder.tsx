@@ -1,5 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { format, parse, parseISO } from "date-fns";
+import { Card} from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -30,9 +29,7 @@ import {
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -40,9 +37,8 @@ import {
 
 import { Calendar } from "@/components/ui/calendar";
 
-import { Input } from "@/components/ui/input";
 // import ICON
-import { CalendarIcon, Check, CirclePlus, CircleX, PenLine, Plus, X } from "lucide-react";
+import { CalendarIcon, Check, CirclePlus, CircleX, PenLine,  X } from "lucide-react";
 
 // import REACT
 import { useEffect, useState } from "react";
@@ -52,12 +48,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from "@/components/ui/separator";
 import { shipOrderApi } from "@/apis/shipOrder.api";
-import { error } from "console";
 import { cn } from "@/lib/utils";
 import { userApi } from "@/apis/user.api";
-import { UserSearchParams } from "@/types/userTypes";
 import Image from "next/image";
-import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
 import { filesApi } from "@/apis/files.api";
 import { OrderStore } from "../../../order-store";
@@ -209,10 +202,8 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
 
     // ** state
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<shipOrder>();
-    // const [order, setOrder] = useState<orderIds>(orderId);
     const [order, setOrder] = useState<OrderIdData>({ orderId: "", productOrderResponses: [], setOrderResponses: [] });
-    const [shipOrder, setShipOrder] = useState<shipOrder>();
+
     // ** state user
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -225,21 +216,9 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
     // ** các hàm sử lý logic
     const [shipOrderDetailRequests, setShipOrderDetailRequests] = useState<ShipOrderDetailRequest[]>([]);
     const [productDetail, setProductDetail] = useState<any[]>([]);
-    // const handleGetImage = (image: string) => {
-    //     return filesApi.getFile(image)
-    //         .then(response => {
-    //             return response.data;
-    //             console.log("dddddddd", response.data)
-    //         })
-    //         .catch(error => {
-    //             console.error('Failed to get image:', error)
-    //             return null; // Hoặc một giá trị mặc định khi không lấy được ảnh
-    //         })
-    // }
 
     // Hàm thêm sản phẩm
     const handleAddProducts = (imgProducts: string, itemId: string, itemKind: number) => {
-        // check id
         const itemExists = shipOrderDetailRequests.some((item) => item.itemId === itemId);
         if (itemExists) {
             toast.error("sản phẩm này đã thêm");
@@ -300,11 +279,9 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                             imgResponses.map(async (img) => {
                                 try {
                                     const response = await filesApi.getFile(img.imageUrl);
-                                    // Giả sử response.data chứa URL của ảnh
                                     return response.data.data;
                                 } catch (error) {
-                                    console.error('Failed to get image:', error);
-                                    return null; // hoặc giá trị mặc định khi không lấy được ảnh
+                                    return null; 
                                 }
                             })
                         );
@@ -332,7 +309,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                     itemKind: item.product ? 0 : 1,
                 }))
             );
-            fetchImages(); // Gọi fetchImages sau khi setShipOrderDetailRequests
+            fetchImages(); 
         }
 
         if (shipOrderId) {
@@ -361,11 +338,8 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                 setDataEm(res.data.data.data);
                 setCurrentPage(res.data.data.currentPage);
                 setTotalPages(res.data.data.totalPages);
-                console.log("Response:", res);
             } catch (error: any) {
-                console.error("Error fetching user data:");
                 if (error?.response.data.status === 400) {
-                    // toast.error(error?.response.data.message);
                     setDataEm([]);
                 }
             } finally {
@@ -378,17 +352,11 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
 
 
     const onSubmit = (data: z.infer<typeof ShipOrderSchema>) => {
-        console.log('data', data)
 
         const originalDate = data.shipDate;
-
-        // Tạo một đối tượng Date từ chuỗi ban đầu
         const date = new Date(originalDate);
-
-        // Cập nhật thời gian đến 23:59:59
         date.setUTCHours(23, 59, 59, 0);
 
-        // Chuyển đổi lại thành chuỗi theo định dạng ISO và bỏ phần mili giây
         const formattedShipDate = date.toISOString().replace('.000', '');
         const requestBody = {
             id: shipOrderId.shipOrderId,
@@ -399,11 +367,9 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
             shipOrderDetailRequests: shipOrderDetailRequests
         };
 
-        console.log("requestBody", requestBody);
         setLoading(true)
         shipOrderApi.updateShipOrder(requestBody, shipOrderId.shipOrderId)
             .then(({ data }) => {
-                console.log("data", data)
                 if (data.isSuccess) {
                     ForceRender()
                     setOpen(false)
@@ -424,10 +390,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
             })
 
     };
-    // console.log("shipOrderId", shipOrderId)
-    // console.log("orderId",orderId)
-    // console.log("shipOrderDetailRequests",shipOrderDetailRequests)
-    // console.log("productDetail", productDetail)
+
     const productType = 0;
     const setType = 1;
 

@@ -22,7 +22,7 @@ export const authService = {
     const apiUrl = `${endPointConstant.BASE_URL}/auth/refresh-token`
     const storedToken = window.localStorage.getItem(jwtConfig.storageTokenKeyName)
     const payload:any = jwtDecode(storedToken || '') 
-    console.log("Pyloadđ ====== ===",payload)
+    // console.log("Pyloadđ ====== ===",payload)
     const refreshTokenApi = axios.create({
       headers: {
         'Content-Type': 'application/json',
@@ -35,10 +35,10 @@ export const authService = {
 
     try {
       const response = await refreshTokenApi.post(apiUrl, data)
-      console.log("response=====response=====response",response.data)
+      // console.log("response=====response=====response",response.data)
       return response
     } catch (err: any) {
-      console.error('Error refreshing token:', err.response ? err.response.data : err)
+      // console.error('Error refreshing token:', err.response ? err.response.data : err)
       throw err
     }
   },

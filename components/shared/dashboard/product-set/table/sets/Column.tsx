@@ -1,12 +1,10 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { DataTableRowActions } from "./data-table-row-actions";
 import Image from "next/image";
-import { IsInProcessing } from "./data/data";
 export type Product = {
   id: string;
   name: string;

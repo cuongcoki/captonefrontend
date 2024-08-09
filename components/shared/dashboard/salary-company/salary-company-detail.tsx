@@ -35,7 +35,7 @@ import {
 } from "@/types/salary-company.type";
 import { salaryCompanyApi } from "@/apis/salary_company.api";
 import { Button } from "@/components/ui/button";
-import { Check, Copy, CreditCard, MoreVertical, Truck, X } from "lucide-react";
+import { Check, Copy,  MoreVertical,  X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -132,10 +132,9 @@ export default function SalaryCompanyDetail({
       })
       .then((res) => {
         setData(res.data.data);
-        console.log("SALARY COMPANY DETAIL API RESPONSE", res.data.data);
+        // console.log("SALARY COMPANY DETAIL API RESPONSE", res.data.data);
       })
       .catch((e) => {
-        console.log("SALARY DETAIL API ERROR", e);
         setData({
           totalSalaryMaterial: 0,
           totalSalaryProduct: 0,
@@ -167,20 +166,13 @@ export default function SalaryCompanyDetail({
   const formatCurrencyWithNegative = (value: any): string => {
     if (value === null || value === undefined) return "";
     let valueString = value.toString();
-    // Check if the value is negative
     const isNegative = valueString[0] === "-";
-    // Remove all non-numeric characters, except the minus sign if it is the first character
     valueString = valueString.replace(/\D/g, "");
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
     if (valueString === "") return "0";
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-    // Add the negative sign back if it was originally negative
     if (isNegative) {
       formatted = "-" + formatted;
     }

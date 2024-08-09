@@ -34,7 +34,6 @@ export default function RenderTableProduct() {
         const newData = response.data.data.data;
         const totalPages = response.data.data.totalPages;
 
-        // Update imageUrl with links fetched from filesApi
         const updatedData = await Promise.all(
           newData.map(async (item: any) => {
             try {
@@ -44,10 +43,9 @@ export default function RenderTableProduct() {
                 imageUrl: data.data,
               };
             } catch (error) {
-              console.error("Error getting file:", error);
               return {
                 ...item,
-                imageUrl: "", // Handle error case if needed
+                imageUrl: "", 
               };
             }
           })
@@ -57,7 +55,6 @@ export default function RenderTableProduct() {
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(totalPages);
       } catch (error) {
-        console.error("Error fetching product data:", error);
         setData([]);
       } finally {
         setLoading(false);
@@ -66,8 +63,6 @@ export default function RenderTableProduct() {
 
     fetchDataProduct();
   }, [currentPage, pageSize, searchTerm, isInProcessing, force]);
-
-  console.log("data", data);
 
   return (
     <div className="">

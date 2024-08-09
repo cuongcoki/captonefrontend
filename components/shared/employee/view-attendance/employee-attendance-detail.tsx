@@ -28,11 +28,9 @@ export default function EmployeeAttendanceDetail({ Date }: Props) {
         Date: formatDate(Date),
       })
       .then(({ data }) => {
-        console.log("Attendance Detail", data.data.attendanceSlotReports);
         setData(data.data.attendanceSlotReports);
       })
       .catch((error) => {
-        console.log("Error", error);
       });
   }, [Date]);
   return (

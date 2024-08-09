@@ -11,10 +11,8 @@ import {
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
-import { Package, Trash2 , X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Package } from "lucide-react";
 
 interface Product {
     code: string;
@@ -31,7 +29,6 @@ interface ImageDisplayProps {
 }
 
 const ImageDisplayDialog: React.FC<ImageDisplayProps> = ({ images }) => {
-    // console.log("imagesdi", images);
     const handleGotoPID = ()=>{
         window.location.href = `/dashboard/products/product/${images.id}`;
         
@@ -77,11 +74,9 @@ const ImageDisplayDialog: React.FC<ImageDisplayProps> = ({ images }) => {
                         />
                     </div>
                     <div className="flex items-end justify-end">
-                        {/* <Link href={`/dashboard/products/product/${dataImage.id}`}> */}
                         <span className="cursor-pointer flex items-center px-2 py-1 rounded-md text-white hover:bg-primary/90 bg-primary" onClick={handleGotoPID}>
                             <Package className=" mr-1" /><span className="text-[15px]">Chi tiết</span>
                         </span>
-                        {/* </Link> */}
                     </div>
                 </div>
             </div>

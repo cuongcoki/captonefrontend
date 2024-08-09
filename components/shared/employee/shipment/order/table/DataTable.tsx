@@ -7,7 +7,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import Link from "next/link";
 import { useRouter } from 'next/navigation';
 
 interface DataTableProps<TData, TValue> {
@@ -35,7 +34,6 @@ export function DataTable<TData extends OrderData, TValue>({
   const router = useRouter();
   const handleGotoDetail = (id: string) => {
     router.push(`/dashboard/order/${id}`);
-    console.log('id', id)
   }
 
   return (

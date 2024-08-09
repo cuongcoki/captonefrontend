@@ -47,7 +47,7 @@ export function ComboboxForForm({
   }, [materialID]);
 
   React.useEffect(() => {
-    console.log("Value in combobox: ", value);
+    // console.log("Value in combobox: ", value);
   }, [value]);
   return (
     <Popover open={open} onOpenChange={setOpen} modal={true}>

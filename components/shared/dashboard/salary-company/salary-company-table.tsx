@@ -17,7 +17,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Image from "next/image";
 import HeaderComponent from "@/components/shared/common/header";
 import { Button } from "@/components/ui/button";
 import { SearchSalaryCompanyParams } from "@/types/salary-company.type";
@@ -57,20 +56,13 @@ export default function SalaryCompanyTable({
   const formatCurrencyWithNegative = (value: any): string => {
     if (value === null || value === undefined) return "";
     let valueString = value.toString();
-    // Check if the value is negative
     const isNegative = valueString[0] === "-";
-    // Remove all non-numeric characters, except the minus sign if it is the first character
     valueString = valueString.replace(/\D/g, "");
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
     if (valueString === "") return "0";
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-    // Add the negative sign back if it was originally negative
     if (isNegative) {
       formatted = "-" + formatted;
     }
@@ -87,11 +79,9 @@ export default function SalaryCompanyTable({
           PageIndex: params.PageIndex,
           PageSize: 10,
         });
-        console.log("Salary From API", data.data.data);
         setTotalPage(data.data.totalPages);
         setTableData(data.data.data);
       } catch (error) {
-        console.log("Error", error);
       } finally {
         router.push(
           `${pathname}?SearchCompany=${params.SearchCompany}&Year=${params.Year}&Month=${params.Month}&PageIndex=${params.PageIndex}`

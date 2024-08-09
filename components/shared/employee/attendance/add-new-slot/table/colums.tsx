@@ -1,10 +1,8 @@
 "use client";
 import { Checkbox } from "@/components/ui/checkbox";
-import { AttendanceFormEmployeeType } from "@/schema/attendance";
 import { User } from "@/types/attendance.type";
 import { ColumnDef, Table } from "@tanstack/react-table";
-import { el } from "date-fns/locale";
-import Image from "next/image";
+
 import React from "react";
 
 export const columnsForAttendanceForm: ColumnDef<User>[] = [
@@ -27,7 +25,6 @@ export const columnsForAttendanceForm: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <div className="flex justify-center items-center ">
         <div className="w-[60px] h-[80px] bg-gray-400"></div>
-        {/* <Image src={row.original.image} width={60} height={80} alt="Ảnh" /> */}
       </div>
     ),
   },

@@ -11,8 +11,7 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Package, X } from "lucide-react";
+import { Package} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 export type Material = {
@@ -28,20 +27,13 @@ interface ImageIconShipOrderProps {
     dataImage: Material;
 }
 export default function ImageIconMaterial({ dataImage }: ImageIconShipOrderProps) {
-    // console.log("dataImagedataImagedataImage", dataImage)
     const [open, setOpen] = useState<boolean>(false);
-    const handleOffDialog = () => {
-        setOpen(false);
-    };
-    const handleOnDialog = () => {
-        setOpen(true);
-    };
+
     const handleGotoPID = ()=>{
         window.location.href = `/dashboard/material/manager`;
         setOpen(false);
     }
     const mainImage = dataImage.image
-    // console.log("mainImage",mainImage)
     return (
         <>
             {mainImage ? (
@@ -66,11 +58,9 @@ export default function ImageIconMaterial({ dataImage }: ImageIconShipOrderProps
                                     />
                                 </div>
                                 <div className="flex items-end justify-end">
-                                    {/* <Link href={`/dashboard/products/product/${dataImage.id}`}> */}
                                     <span className="cursor-pointer flex items-center px-2 py-1 rounded-md text-white hover:bg-primary/90 bg-primary" onClick={handleGotoPID}>
                                         <Package className=" mr-1" /><span className="text-[15px]">Chi tiết</span>
                                     </span>
-                                    {/* </Link> */}
                                 </div>
                             </div>
                         </div>

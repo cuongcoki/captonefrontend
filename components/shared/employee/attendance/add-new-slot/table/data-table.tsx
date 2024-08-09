@@ -7,7 +7,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -21,11 +20,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
 import { CreateAttendanceSlotBody } from "@/types/attendance.type";
-import { AttendanceContext } from "@/components/shared/dashboard/attendance/table/data-table";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,13 +40,11 @@ export function DataTableForAttendanceForm<TData, TValue>({
     useAttendanceStore().listUser as TData[]
   );
   const [selectedValue, setSelectedValue] = useState("1");
-  const { ForceRender } = useContext(AttendanceContext);
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -77,17 +73,6 @@ export function DataTableForAttendanceForm<TData, TValue>({
 
     console.log("createAttendanceSlotBody", createAttendanceSlotBody);
 
-    // attendanceApi
-    //   .createAttendance(createAttendanceSlotBody)
-    //   .then(({ data }) => {
-    //     console.log(data);
-    //     ForceRender();
-    //     toast.success(data.message);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     toast.error(error.message);
-    //   });
   };
 
   return (

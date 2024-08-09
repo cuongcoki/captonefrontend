@@ -2,14 +2,6 @@
 
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
 } from "@tanstack/react-table";
 
 import {
@@ -28,7 +20,6 @@ import { materialApi } from "@/apis/material.api";
 import { usePathname, useRouter } from "next/navigation";
 import "./material.css";
 import { filesApi } from "@/apis/files.api";
-import { Item } from "@radix-ui/react-dropdown-menu";
 import { materialType } from "@/schema/material";
 import Image from "next/image";
 import UpdateMaterial from "@/components/shared/dashboard/material/update-material/update-material";
@@ -38,7 +29,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -78,7 +68,6 @@ export function DataTableForMaterial<TData, TValue>({
   const [loading, setLoading] = React.useState<boolean>(false);
 
   useEffect(() => {
-    console.log("Call API");
     const getImages = async (data: materialType[]) => {
       try {
         data.forEach((item) => {
@@ -93,20 +82,17 @@ export function DataTableForMaterial<TData, TValue>({
                 });
               })
               .catch((error) => {
-                console.log("error in get image", error);
               });
           }
         });
       } catch (error) {
       } finally {
-        // setImages(imagesFetch);
-        // console.log("Images", imagesFetch);
+
       }
     };
 
     const searchMaterial = async (searchTerm: string) => {
       setLoading(true);
-      console.log("searchTerm", searchTerm);
       try {
         const data = await materialApi.searchMaterial({
           SearchTerm: searchTerm,
@@ -117,7 +103,6 @@ export function DataTableForMaterial<TData, TValue>({
         await getImages(data.data.data.data);
 
         const tableData = data.data.data.data;
-        console.log("Table Data", tableData);
 
         setData(tableData);
         setTotalPages(data.data.data.totalPages);
@@ -125,7 +110,6 @@ export function DataTableForMaterial<TData, TValue>({
           `${pathname}?searchTerm=${searchTerm || ""}&pageIndex=${pageIndex}`
         );
       } catch (error) {
-        console.log(error);
       } finally {
         setLoading(false);
       }
