@@ -23,10 +23,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import { X } from "lucide-react";
 import { useUpdateAttendanceStore } from "@/components/shared/dashboard/attendance/update-attendance/update-attendance-store";
-import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
 import { GetAllProductResponse, Product } from "@/types/attendance.type";
 import { attendanceApi } from "@/apis/attendance.api";
 import { filesApi } from "@/apis/files.api";
@@ -71,7 +69,6 @@ export default function CountProduct({
           timestamp: timestamp,
         })
         .then(({ data }) => {
-          console.log("Search Data: ", data);
           const setProduct = new Set<string>();
           userDataRef.current.products.forEach((product) => {
             setProduct.add(product.productID);
@@ -99,10 +96,8 @@ export default function CountProduct({
     const getImage = async (name: string) => {
       try {
         const res = await filesApi.getFile(name);
-        console.log("Get Image", res.data.data);
         return res.data.data;
       } catch (error: any) {
-        console.log("Error get image: ", error.response.data);
       }
     };
     const imageP = await getImage(product.imageResponses[0]?.imageUrl || "");
@@ -160,12 +155,10 @@ export default function CountProduct({
 
   useEffect(() => {
     if (!dialogIsOpen && isUpdate) {
-      console.log("Update Table Data");
       const data = userData;
       data.products = data.products.filter(
         (product) => product.quantity !== "0"
       );
-      console.log("Data Product Update: ", data);
       setTableDataIndex(index, data);
       setIsUpdate(false);
     }

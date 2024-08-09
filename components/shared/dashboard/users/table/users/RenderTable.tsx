@@ -70,7 +70,6 @@ export default function RenderTableUsers({ searchParams }: Props) {
         setTotalPages(res.data.data.totalPages);
         // console.log("Response:", res);
       } catch (error: any) {
-        console.error("Error fetching user data:");
         if (
           error?.response.data.status === 404 ||
           error?.response.data.status === 400

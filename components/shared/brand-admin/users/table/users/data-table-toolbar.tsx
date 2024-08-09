@@ -5,9 +5,8 @@ import { Table } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
 
-import { Gender, Role } from "./data/data";
+import { Role } from "./data/data";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import {
   DropdownMenu,
@@ -23,21 +22,21 @@ interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }
 const dataSearch = [
-    {
-        id: 1,
-        value: "id",
-        name: "Theo CMND/CCCD",
-    },
-    {
-        id: 2,
-        value: "phone",
-        name: "Theo Số điện thoại",
-    },
-    {
-        id: 3,
-        value: "firstName",
-        name: "Theo Tên nhân viên",
-    }
+  {
+    id: 1,
+    value: "id",
+    name: "Theo CMND/CCCD",
+  },
+  {
+    id: 2,
+    value: "phone",
+    name: "Theo Số điện thoại",
+  },
+  {
+    id: 3,
+    value: "firstName",
+    name: "Theo Tên nhân viên",
+  }
 ]
 
 export function DataTableToolbar<TData>({
@@ -50,7 +49,6 @@ export function DataTableToolbar<TData>({
     console.log("Dataaa", data);
     setSelectSearch(data);
   };
-  console.log("selectSearchselectSearch", selectSearch);
   return (
     <div className="flex items-center justify-between gap-4">
       <div className="flex flex-1 items-center space-x-2 ">

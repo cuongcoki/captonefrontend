@@ -75,11 +75,9 @@ export default function RenderTableShipment() {
           searchTerm
         );
         setData(response.data.data.data);
-        console.log("DATA SHIPMENT", response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error: any) {
-        console.error("Error fetching shipmeent data:", error);
         if (error.response.data.error) {
           toast.error(error.response.data.message);
         } else {

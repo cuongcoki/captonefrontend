@@ -9,48 +9,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { Button } from "@/components/ui/button";
 
-import { Input } from "@/components/ui/input";
-
-import { Label } from "@/components/ui/label";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import * as Dialog from "@radix-ui/react-dialog";
 
 // ** import REACT
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 
 // ** import Components
-import { NoImage } from "@/constants/images";
-import { Badge } from "@/components/ui/badge";
-import { Mail, MoreVertical, Phone, Truck, X } from "lucide-react";
+import { Mail,  Phone, Truck, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { shipmentApi } from "@/apis/shipment.api";
-import { format } from "date-fns";
 import ImageIconShipment from "./ImageIconShipment";
 import Link from "next/link";
 import ImageIconShipmentMa from "./ImageIconShipmentMa";
@@ -163,11 +132,9 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
         .getByShipperID(shipmentIDDes)
         .then(({ data }) => {
           const orderData = data.data;
-          // console.log("SHIPMENT DETAIL", orderData);
           setData(orderData);
         })
         .catch((error) => {
-          // toast.error("ko thấy ");
         })
         .finally(() => {
           setLoading(false);
@@ -196,7 +163,6 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
     }
     return text;
   };
-  // console.log("datashipment=====", data)
   return (
     <>
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>

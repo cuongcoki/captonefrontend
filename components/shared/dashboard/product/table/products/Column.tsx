@@ -1,13 +1,11 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { DataTableRowActions } from "./data-table-row-actions";
 import Image from "next/image";
 import { IsInProcessing } from "./data/data";
-import { ArrowUpDown } from "lucide-react";
 export type Product = {
   id: string;
   name: string;
@@ -52,15 +50,6 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
 
-  // {
-  // accessorKey: "id",
-  // header: ({ column }) => (
-  //   <Button variant="ghost">
-  //   Mã sản phẩm
-  //   </Button>
-  // ),
-  // cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
-  // },
 
   {
     accessorKey: "code",

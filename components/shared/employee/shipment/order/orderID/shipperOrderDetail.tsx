@@ -10,48 +10,19 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 
 import { Button } from "@/components/ui/button";
 
-import { Input } from "@/components/ui/input";
-
-import { Label } from "@/components/ui/label";
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableFooter,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import * as Dialog from "@radix-ui/react-dialog";
 
 // ** import REACT
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 
 // ** import Components
-import { NoImage } from "@/constants/images";
-import { Badge } from "@/components/ui/badge";
-import { Mail, MoreVertical, Phone, Truck, X } from "lucide-react";
+import { Mail, Phone, Truck, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { shipmentApi } from "@/apis/shipment.api";
-import { format } from "date-fns";
 import Link from "next/link";
 import { shipOrderApi } from "@/apis/shipOrder.api";
 
@@ -113,7 +84,6 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
     const [loading, setLoading] = useState<boolean>(false);
     const [data, setData] = useState<ShipOrderResponse>();
     const [open, setOpen] = useState<boolean>(false);
-    console.log("datadatadata", data)
     const handleOffDialog = () => {
         setOpen(false);
     };
@@ -128,11 +98,9 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
                 .getShipOrderIDByShipper(ShipOrderID)
                 .then(({ data }) => {
                     const orderData = data.data;
-                    console.log("tessst", orderData);
                     setData(orderData);
                 })
                 .catch((error) => {
-                    // toast.error("ko thấy ");
                 })
                 .finally(() => {
                     setLoading(false);

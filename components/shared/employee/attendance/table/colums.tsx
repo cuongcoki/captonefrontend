@@ -3,7 +3,7 @@ import { AttendanceOverall } from "@/types/attendance.type";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -27,7 +27,6 @@ export const columnsForAttendance: ColumnDef<AttendanceOverall>[] = [
       );
       return data ? (
         <RedirectCell
-          // wareHouseId={row.original.wareHouseId}
           date={row.original.date}
           slotId={data?.slotId}
           data={{
@@ -51,7 +50,6 @@ export const columnsForAttendance: ColumnDef<AttendanceOverall>[] = [
       );
       return data ? (
         <RedirectCell
-          // wareHouseId={row.original.wareHouseId}
           date={row.original.date}
           slotId={data?.slotId}
           data={{
@@ -75,7 +73,6 @@ export const columnsForAttendance: ColumnDef<AttendanceOverall>[] = [
       );
       return data ? (
         <RedirectCell
-          // wareHouseId={row.original.wareHouseId}
           date={row.original.date}
           slotId={data?.slotId}
           data={{

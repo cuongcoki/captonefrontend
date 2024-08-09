@@ -1,5 +1,4 @@
 import DatePicker from "@/components/shared/common/datapicker/date-picker";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -31,7 +30,6 @@ export default function FillterByDate() {
       toast.error("Ngày bắt đầu phải nhỏ hơn ngày kết thúc");
       return;
     }
-    console.log(data);
   };
 
   return (
@@ -76,9 +74,6 @@ export default function FillterByDate() {
                 </FormItem>
               )}
             />
-            {/* <Button type="submit" className="bg-blue-400">
-              Tìm kiếm
-            </Button> */}
           </div>
         </form>
       </Form>

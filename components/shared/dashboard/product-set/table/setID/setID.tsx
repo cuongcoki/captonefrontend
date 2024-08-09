@@ -27,7 +27,6 @@ export default function SetIDPage() {
   const params = useParams<{ id: string }>();
   const [setId, setSetId] = useState<any>([]);
   const [setProduct, setSetProduct] = useState<any>([]);
-  const [open, setOpen] = useState<boolean>(false);
   const [linkImg, setLinkImg] = useState<string>("");
   const { force } = ProductSetStore();
   useEffect(() => {
@@ -38,14 +37,9 @@ export default function SetIDPage() {
         const userData = res.data.data;
         setSetId(userData);
         setSetProduct(userData.setProducts);
-
-        // Assuming userData.imageUrl contains the image file name or URL
         const { data } = await filesApi.getFile(userData.imageUrl);
-        // Process data as needed, e.g., set state with image data
-
         setLinkImg(data.data);
       } catch (error) {
-        console.error("Error fetching user data:", error);
       } finally {
         setLoading(false);
       }
@@ -54,9 +48,7 @@ export default function SetIDPage() {
     fetchDataProductId();
   }, [params.id, force]);
 
-  console.log("linkImg", linkImg);
-  // console.log('id setIdsetIdsetId', setId)
-  // console.log('setProduct', setProduct)
+
 
   return (
     <>
@@ -65,22 +57,6 @@ export default function SetIDPage() {
         description="Thông tin chi tiết của bộ sản phẩm"
       />
       <div className="flex flex-col gap-6 justify-center">
-        {/* <header className="">
-                <div className="flex items-center gap-4 justify-between">
-                    <Link href={'/dashboard/products/set'}>
-                        <Button variant="outline" size="icon" className="h-7 w-7">
-                            <ChevronLeft className="h-4 w-4" />
-                            <span className="sr-only">Back</span>
-                        </Button>
-                    </Link>
-                    <h1 className=" shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight ">
-                        Đặt sản phẩm
-                    </h1>
-                    <div className=" items-center gap-2 md:ml-auto md:flex">
-                        <SetUpdateForm setId={setId.id} />
-                    </div>
-                </div>
-            </header> */}
         <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
           <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
             <Card x-chunk="dashboard-07-chunk-0">

@@ -15,7 +15,7 @@ export const CheckPermissionEnter = (dataPer: any) => {
       }
     }
     if (user.roleId === dataPer) {
-      console.log("User has permission to enter.");
+      // console.log("User has permission to enter.");
     } else {
       console.log("User does not have permission to enter.");
       window.location.href = "/not-found";
@@ -36,9 +36,9 @@ export const CheckLogin = () => {
     }
    
   } else {
-    console.warn(
-      "đã đăng nhập"
-    );
+    // console.warn(
+    //   "đã đăng nhập"
+    // );
   }
 }
 

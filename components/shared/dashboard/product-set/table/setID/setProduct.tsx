@@ -1,7 +1,6 @@
 import {
   CardHeader,
   CardTitle,
-  CardFooter,
   Card,
   CardContent,
 } from "@/components/ui/card";
@@ -14,23 +13,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import Image from "next/image";
 import { useState } from "react";
-import { Separator } from "@/components/ui/separator";
-import ImageDisplayID from "./ImageDisplayID";
-import ImageDisplay from "./ImageDisplay";
-import { Textarea } from "@/components/ui/textarea";
-import { filesApi } from "@/apis/files.api";
+
 import { IconImage } from "./IconImage";
 
 interface ImageResponse {
@@ -64,7 +49,6 @@ interface SetProductProps {
 
 export default function SetProduct({ setProduct }: SetProductProps) {
   // ** state
-  const [open, setOpen] = useState<boolean>(false);
   const [selectedProduct, setSelectedProduct] = useState<SetProduct | null>(
     null
   );
@@ -78,8 +62,6 @@ export default function SetProduct({ setProduct }: SetProductProps) {
     }
     return text;
   };
-  console.log('setProductdetaill', setProduct)
-  console.log("selectedProductselectedProduct", selectedProduct);
   return (
     <Card x-chunk="dashboard-07-chunk-1" className="h-max">
       <CardHeader>

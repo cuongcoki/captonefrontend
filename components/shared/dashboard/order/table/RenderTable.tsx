@@ -13,12 +13,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { ProductSearchParams } from "@/types/product.type";
 import CreateOrder from "../form/CreateOrder";
 import { orderApi } from "@/apis/order.api";
 import DatePicker from "@/components/shared/common/datapicker/date-picker";
 import toast from "react-hot-toast";
-import { format } from "date-fns";
 import { companyApi } from "@/apis/company.api";
 import { OrderStore } from "../order-store";
 type ContexType = {
@@ -87,9 +85,7 @@ export default function RenderTableOrder() {
   const router = useRouter();
   const pathname = usePathname();
 
-  type Props = {
-    searchParams: ProductSearchParams;
-  };
+ 
 
   useEffect(() => {
     const fetchDataOrder = async () => {
@@ -180,10 +176,6 @@ export default function RenderTableOrder() {
     setEndOrder(date);
     setCurrentPage(1);
   };
-
-
-  // console.log("startOrder", formatDate(startOrder)),
-  // console.log("endOrder", formatDate(endOrder));
 
   return (
     <div className=" mt-3">

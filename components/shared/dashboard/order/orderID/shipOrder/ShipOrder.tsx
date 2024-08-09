@@ -2,7 +2,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -21,18 +20,13 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import { Input } from "@/components/ui/input";
-
 import { Label } from "@/components/ui/label";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -49,7 +43,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -57,17 +50,11 @@ import {
 } from "@/components/ui/dialog";
 
 // ** import REACT
-import Image from "next/image";
 import { useEffect, useState } from "react";
-import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
-import { useParams } from "next/navigation";
 
 // ** import Components
-import { NoImage } from "@/constants/images";
-import { Badge } from "@/components/ui/badge";
-import { Copy, CreditCard, MoreVertical, PenLine, Truck } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import {  PenLine,  } from "lucide-react";
 import { FormShipOrder } from "./form/FormShipOrder";
 import { shipOrderApi } from "@/apis/shipOrder.api";
 import { FormUpdateShipOrder } from "./form/FormUpdateShipOrder";
@@ -215,19 +202,14 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
   const { force,ForceRender } = OrderStore();
 
   const handleSelectChange = (value: any, id: string) => {
-    console.log("value", value);
     setValueStatus(value);
   };
   const handleSubmitOrderStatus = (id: string) => {
-    console.log("value", valueStatus);
-    console.log("id", id);
     const formattedData = {
       shipOrderId: id,
       status: valueStatus,
     };
-    console.log("formattedData", formattedData);
     shipOrderApi.updateStatus(formattedData, id).then(({ data }) => {
-      console.log("data", data);
       toast.success(data.message);
     });
   };
@@ -241,7 +223,6 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
           setData(data.data);
         })
         .catch((error) => {
-          console.error("Error fetching ship order data:", error);
         })
         .finally(() => {
           setLoading(false);
@@ -254,35 +235,20 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
   const handleIndex = (index: number) => {
     setIndexItemShipOrder(index);
     console.log(index);
-    console.log("data", data);
   };
 
-  // ** console
-  // console.log('orderId', orderId)
-  // console.log('order', order)
-  // console.log('data', data)
-  // console.log('vvvvvv', valueStatus)
-  // console.log("checkStatus",checkStatus)
   function formatDate(inputDate: string): string {
-    if (!inputDate) return ''; // Kiểm tra nếu giá trị đầu vào là null hoặc undefined
-  
-    // Cắt chuỗi theo định dạng YYYY-MM-DDTHH:MM:SSZ
+    if (!inputDate) return '';
     const [year, month, day] = inputDate.split('T')[0].split('-');
-  
     return `${day}/${month}/${year}`;
   }
-  
-  
 
   const handleAcceptOrder = (shipOrderId:string) =>{
-
     shipOrderApi.isAcceptedShipOrder(shipOrderId)
       .then(({ data }) => {
-        // console.log("data", data)
         ForceRender()
         toast.success(data.message)
       }).catch(error => {
-        // console.log(error)
         toast.error(error.response.data.message)
       })
   }

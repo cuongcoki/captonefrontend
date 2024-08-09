@@ -14,7 +14,6 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 
@@ -34,7 +33,6 @@ import toast from "react-hot-toast";
 import { companyStore } from "@/components/shared/dashboard/company/company-store";
 import { Button } from "@/components/ui/button";
 import { companyApi } from "@/apis/company.api";
-import { CompanyResponse } from "@/types/company.type";
 export default function CompanyUpdate({
   children,
   index,
@@ -68,7 +66,6 @@ export default function CompanyUpdate({
       },
     };
 
-    console.log("Submit Company Data", updateData);
     companyApi
       .updateCompany(updateData)
       .then(() => {
@@ -84,7 +81,6 @@ export default function CompanyUpdate({
           companyTypeDescription: tableData[index].companyTypeDescription,
           id: tableData[index].id,
         });
-        // form.reset();
       })
       .catch((error) => {
         if (error.response.data.error) {

@@ -2,22 +2,13 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Truck } from "lucide-react";
 import { ShipmentID } from "../shipmentID/ShipmentID";
-import { UpdateShipment } from "../form/UpdateShipment";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,11 +20,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useState } from "react";
 import { shipmentApi } from "@/apis/shipment.api";
 import toast from "react-hot-toast";
 import { ChangeStatusShipment } from "../form/ChangeStatusShipment";
-import { error } from "console";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { ShipmentStore } from "../shipment-store";
 
@@ -60,7 +49,7 @@ export type Shipment = {
     companyType: number;
     companyTypeDescription: string;
   };
-  shipDate: string; // ISO 8601 format
+  shipDate: string; 
   id: string;
   statusDescription: string;
   status: number;
@@ -73,43 +62,6 @@ const limitLength = (text: any, maxLength: any) => {
   return text;
 };
 
-const OrderStatus = [
-  {
-    id: 0,
-    des: "Đang đợi giao",
-    name: "PENDING",
-  },
-  {
-    id: 1,
-    des: "Đang thực hiện",
-    name: "PROCESSING",
-  },
-  {
-    id: 2,
-    des: "Đã hoàn thành",
-    name: "PROCESSING",
-  },
-  {
-    id: 3,
-    des: "Đã hủy",
-    name: "PROCESSING",
-  },
-];
-
-function formatDate(isoString: string) {
-  // Tách chuỗi thành các phần
-  const [datePart, timePart] = isoString.split("T");
-  const [year, month, day] = datePart.split("-");
-  const [hour, minute, second] = timePart.split(":");
-
-  // Trả về chuỗi theo định dạng dd/MM/yyyy HH:mm:ss
-  return `${day}/${month}/${year} ${hour}:${minute}:${second}`;
-}
-function convertUtcToVn(utcDateStr: string): string {
-  let utcDate = new Date(utcDateStr);
-  let vnDateStr = utcDate.toLocaleDateString("vi-VN");
-  return vnDateStr;
-}
 export const columns: ColumnDef<Shipment>[] = [
   {
     accessorKey: "from.companyTypeDescription",
@@ -338,11 +290,9 @@ export const columns: ColumnDef<Shipment>[] = [
           .isAcceptedShipment(row.original.id, true)
           .then(({ data }) => {
             ForceRender()
-            // console.log("data", data)
             toast.success(data.message);
           })
           .catch((error) => {
-            // console.log(error)
             if (error.response.data.error) {
               for (const key in error.response.data.error) {
                 toast.error(error.response.data.error[key][0]);

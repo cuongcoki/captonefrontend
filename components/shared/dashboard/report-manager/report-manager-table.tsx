@@ -23,7 +23,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { companyApi } from "@/apis/company.api";
-import { set } from "date-fns";
 import { ReportManagerUpdate } from "@/components/shared/dashboard/report-manager/report-manager-update";
 import HeaderComponent from "@/components/shared/common/header";
 import { Card } from "@/components/ui/card";
@@ -82,9 +81,7 @@ export default function ReportManagerTable({
             return { ...prev, CompanyId: companyId };
           });
         }
-        console.log("COMPANIES", res.data.data);
       } catch (e) {
-        console.log("ERROR IN GET COMPANIES", e);
       }
     };
 
@@ -104,10 +101,8 @@ export default function ReportManagerTable({
 
         setTableData(res.data.data.data);
         setTotalPage(res.data.data.totalPages);
-        console.log("REPORTS", res.data.data.data);
         router.push(buildUrlParams(pathName, params));
       } catch (e) {
-        console.log("ERROR IN GET REPORTS", e);
       }
     };
 
@@ -120,7 +115,6 @@ export default function ReportManagerTable({
           await fetchGetReports();
         }
       } catch (error) {
-        console.log("ERROR IN LOAD TABLE DATA", error);
       }
     };
     LoadTableData();

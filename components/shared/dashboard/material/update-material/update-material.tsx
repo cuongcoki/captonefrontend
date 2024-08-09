@@ -1,10 +1,9 @@
-import React, { use, useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Plus, X } from "lucide-react";
+import {  X } from "lucide-react";
 import UpdateMaterialForm from "@/components/shared/dashboard/material/update-material/update-material-form";
 
 import ConfirmAlertDialog from "@/components/shared/common/confirm-alert-dialog/confirm-alert-dialog";
-import { set } from "date-fns";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 type UpdateMaterialContextType = {
   setIsUpdate: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,7 +19,6 @@ export default function UpdateMaterial({
   children: any;
   id: string;
 }) {
-  // const { isOpen, setIsOpen, handleDialog } = UpdateNewMaterialStore();
   const [open, setOpen] = React.useState(false);
   const [isUpdate, setIsUpdate] = React.useState(false);
   let handleAlertDialog = (value: boolean) => {

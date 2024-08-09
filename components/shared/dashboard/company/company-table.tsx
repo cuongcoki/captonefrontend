@@ -4,7 +4,7 @@ import { CompanyAdd } from "@/components/shared/dashboard/company/company-add";
 import { companyStore } from "@/components/shared/dashboard/company/company-store";
 import CompanyUpdate from "@/components/shared/dashboard/company/company-update";
 import { Input } from "@/components/ui/input";
-import { CompanyParams, CompanyResponse } from "@/types/company.type";
+import { CompanyParams,  } from "@/types/company.type";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {
@@ -67,12 +67,10 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
         PageSize: 10,
       })
       .then(({ data }) => {
-        console.log("Company From API", data.data.data);
         setTotalPage(data.data.totalPages);
         setTableData(data.data.data);
       })
       .catch((error) => {
-        console.log("Error", error);
       })
       .finally(() => {
         router.push(

@@ -56,9 +56,6 @@ export const ProductForm = () => {
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-  const handleOnDialogA = () => {
-    setOpenAlert(true);
-  };
 
   const handleOnDialog = () => {
     setOpen(true);
@@ -221,9 +218,7 @@ export const ProductForm = () => {
     });
     try {
       const response = await filesApi.postFiles(formData);
-      console.log("Upload successful:", response.data);
     } catch (error) {
-      console.error("Error uploading files:", error);
     } finally {
       setLoading(false);
     }
@@ -249,8 +244,6 @@ export const ProductForm = () => {
             isMainImage: image.isMainImage,
           })),
         };
-
-        console.log("=====requestBody Product Form =====", requestBody);
 
         const response = await productApi.createProduct(requestBody);
         if (response.data.isSuccess) {
@@ -312,10 +305,7 @@ export const ProductForm = () => {
 
     // Sử dụng hàm này để kiểm tra mảng imageRequests
     const isDetailsProEmpty = isArrayEmpty(imageRequests);
-
-    console.log(isDetailsProEmpty);
-    console.log("form", form.getValues());
-    console.log("imageRequests", imageRequests);
+ 
     // Kiểm tra giá trị cụ thể của form
     const isCodeIdEmpty = form.getValues().code === "";
     const isDescriptionEmpty = form.getValues().description === "";
