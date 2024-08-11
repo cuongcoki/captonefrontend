@@ -53,7 +53,7 @@ import {
 
 // ** import react
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { userApi } from "@/apis/user.api";
 import Link from "next/link";
 
@@ -70,6 +70,15 @@ import { authApi } from "@/apis/auth.api";
 import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdateForm";
 import LoadingPage from "@/components/shared/loading/loading-page";
 import TitleComponent from "@/components/shared/common/Title";
+import { UserStore } from "@/components/shared/dashboard/users/user-store";
+
+type UserDetailContextType = {
+  force: number;
+};
+
+export const UserDetailContext = createContext<UserDetailContextType>({
+  force: 0,
+});
 
 export default function UserIDPage() {
   // ** state
@@ -86,6 +95,11 @@ export default function UserIDPage() {
     useState<boolean>(false);
   const [isAlertChnageRole, setIsAlertChangeRole] = useState<boolean>(false);
   const [roleChosed, setRoleChosed] = useState<string>("");
+  const [force, setForce] = useState<number>(0);
+  const ForceRender = () => {
+    setForce((prev) => prev + 1);
+  };
+  const { forceForUserDetail } = UserStore();
   // ** hooks
   const user = useAuth();
   useEffect(() => {
@@ -123,7 +137,7 @@ export default function UserIDPage() {
         });
     };
     fetchDataUserId();
-  }, [params]);
+  }, [params, forceForUserDetail]);
 
   // console.log("datauserId", userId);
 
@@ -254,6 +268,7 @@ export default function UserIDPage() {
           ...userId,
           roleId: Number(roleIdChange),
         });
+        ForceRender();
       })
       .catch((e) => {
         console.error("Error changing user role:", e);
@@ -397,11 +412,13 @@ export default function UserIDPage() {
                         <TabsList className="grid w-[300px] grid-cols-3">
                           <TabsTrigger value="status">Trạng thái</TabsTrigger>
                           <TabsTrigger value="role">Vai trò</TabsTrigger>
-                          <UpdateUser userId={userId.id}>
-                            <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
-                              Chỉnh sửa
-                            </div>
-                          </UpdateUser>
+                          <UserDetailContext.Provider value={{ force }}>
+                            <UpdateUser userId={userId.id}>
+                              <div className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+                                Chỉnh sửa
+                              </div>
+                            </UpdateUser>
+                          </UserDetailContext.Provider>
                         </TabsList>
                         <TabsContent value="status">
                           <div className="grid gap-3">

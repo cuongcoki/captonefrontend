@@ -66,7 +66,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { UserDetailContext } from "@/components/shared/dashboard/users/table/users/userID/userID";
+import { UserStore } from "@/components/shared/dashboard/users/user-store";
 
 // ** type
 
@@ -112,7 +114,8 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const [openAlert, setOpenAlert] = useState<boolean>(false);
-
+  const { force } = useContext(UserDetailContext);
+  const { ForceRenderForUserDetai } = UserStore();
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
@@ -192,13 +195,12 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
 
     setLoading(true);
     const formData = new FormData();
-    formData.append("receivedFiles", imageUrls); 
+    formData.append("receivedFiles", imageUrls);
 
     try {
-      const response = await filesApi.postFiles(formData); 
-      const fileName = imageUrls.name; 
+      const response = await filesApi.postFiles(formData);
+      const fileName = imageUrls.name;
       const { data } = await filesApi.getFile(fileName);
-
     } catch (error) {
     } finally {
       setLoading(false);
@@ -220,7 +222,36 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
     const formattedDate = `${day}/${month}/${year}`;
     return formattedDate;
   }
-
+  const form = useForm({
+    resolver: zodResolver(UpdateUserForm),
+    defaultValues: {
+      id: user?.id,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      phone: user?.phone,
+      address: user?.address,
+      gender: user?.gender,
+      dob: formatDate(user?.dob),
+      roleId: user?.roleId,
+      companyId: user?.companyId,
+      salaryHistoryResponse: {
+        salaryByDayResponses: {
+          salary:
+            user?.salaryHistoryResponse?.salaryByDayResponses?.salary || "",
+          startDate:
+            user?.salaryHistoryResponse?.salaryByDayResponses?.startDate || "",
+        },
+        salaryByOverTimeResponses: {
+          salary:
+            user?.salaryHistoryResponse?.salaryByOverTimeResponses?.salary ||
+            "",
+          startDate:
+            user?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate ||
+            "",
+        },
+      },
+    },
+  });
   useEffect(() => {
     const fetchDataCompany = async () => {
       const { data } = await companyApi.getCompanyByType(0);
@@ -259,8 +290,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           });
           form.reset(formattedUserData);
         })
-        .catch((error) => {
-        })
+        .catch((error) => {})
         .finally(() => {
           setLoading(false);
         });
@@ -271,38 +301,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
     if (userId) {
       fetchDataUserId();
     }
-  }, [userId, fetchTrigger]);
-
-  const form = useForm({
-    resolver: zodResolver(UpdateUserForm),
-    defaultValues: {
-      id: user?.id,
-      firstName: user?.firstName,
-      lastName: user?.lastName,
-      phone: user?.phone,
-      address: user?.address,
-      gender: user?.gender,
-      dob: formatDate(user?.dob),
-      roleId: user?.roleId,
-      companyId: user?.companyId,
-      salaryHistoryResponse: {
-        salaryByDayResponses: {
-          salary:
-            user?.salaryHistoryResponse?.salaryByDayResponses?.salary || "",
-          startDate:
-            user?.salaryHistoryResponse?.salaryByDayResponses?.startDate || "",
-        },
-        salaryByOverTimeResponses: {
-          salary:
-            user?.salaryHistoryResponse?.salaryByOverTimeResponses?.salary ||
-            "",
-          startDate:
-            user?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate ||
-            "",
-        },
-      },
-    },
-  });
+  }, [userId, fetchTrigger, form, force]);
 
   const formatDateData = (dateString: any) => {
     const formattedDate =
@@ -380,6 +379,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       if (response.data.isSuccess) {
         forceUpdate();
         setOpen(false);
+        ForceRenderForUserDetai();
         toast.success(response.data.message);
       }
     } catch (error: any) {
@@ -399,13 +399,11 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
     }
   };
 
-
-
   const handleClearForm = () => {
-    setOpen(false)
-    setOpenAlert(false)
+    setOpen(false);
+    setOpenAlert(false);
     setFetchTrigger((prev) => prev + 1);
-  }
+  };
 
   const { formState } = form;
   const handleOffDialog = () => {
@@ -418,25 +416,30 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   };
   return (
     <>
-      {
-        openAlert && (
-          <AlertDialog open={openAlert} >
-            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-      }
+      {openAlert && (
+        <AlertDialog open={openAlert}>
+          <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Bạn có chắc chắn muốn tắt biểu mẫu này không ??
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
+                những dữ liệu mà bạn đã nhập
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleOffDialogA}>
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearForm}>
+                Tiếp tục
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
         <Dialog.Trigger className="w-full">
           <div onClick={handleOnDialog}>{children}</div>
@@ -449,7 +452,11 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                   <h2 className="text-2xl text-white">
                     Chỉnh sửa thông tin nhân viên
                   </h2>
-                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleOffDialog}
+                  >
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
@@ -552,12 +559,14 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                         <FormControl>
                                           <InputOTP maxLength={12} {...field}>
                                             <InputOTPGroup className="w-full xl:w-[350px]">
-                                              {[...Array(12)].map((_, index) => (
-                                                <InputOTPSlot
-                                                  key={index}
-                                                  index={index}
-                                                />
-                                              ))}
+                                              {[...Array(12)].map(
+                                                (_, index) => (
+                                                  <InputOTPSlot
+                                                    key={index}
+                                                    index={index}
+                                                  />
+                                                )
+                                              )}
                                             </InputOTPGroup>
                                           </InputOTP>
                                         </FormControl>
@@ -828,7 +837,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                               className={cn(
                                                 "w-full pl-3 text-left font-normal",
                                                 !field.value &&
-                                                "text-muted-foreground"
+                                                  "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -912,7 +921,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                               className={cn(
                                                 "w-full pl-3 text-left font-normal",
                                                 !field.value &&
-                                                "text-muted-foreground"
+                                                  "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
