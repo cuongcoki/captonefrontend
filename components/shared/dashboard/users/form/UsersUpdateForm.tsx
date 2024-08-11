@@ -68,6 +68,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { UserDetailContext } from "@/components/shared/dashboard/users/table/users/userID/userID";
+import { UserStore } from "@/components/shared/dashboard/users/user-store";
 
 // ** type
 
@@ -114,6 +115,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const { force } = useContext(UserDetailContext);
+  const { ForceRenderForUserDetai } = UserStore();
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
@@ -377,6 +379,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       if (response.data.isSuccess) {
         forceUpdate();
         setOpen(false);
+        ForceRenderForUserDetai();
         toast.success(response.data.message);
       }
     } catch (error: any) {

@@ -70,6 +70,7 @@ import { authApi } from "@/apis/auth.api";
 import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdateForm";
 import LoadingPage from "@/components/shared/loading/loading-page";
 import TitleComponent from "@/components/shared/common/Title";
+import { UserStore } from "@/components/shared/dashboard/users/user-store";
 
 type UserDetailContextType = {
   force: number;
@@ -98,6 +99,7 @@ export default function UserIDPage() {
   const ForceRender = () => {
     setForce((prev) => prev + 1);
   };
+  const { forceForUserDetail } = UserStore();
   // ** hooks
   const user = useAuth();
   useEffect(() => {
@@ -135,7 +137,7 @@ export default function UserIDPage() {
         });
     };
     fetchDataUserId();
-  }, [params]);
+  }, [params, forceForUserDetail]);
 
   // console.log("datauserId", userId);
 
