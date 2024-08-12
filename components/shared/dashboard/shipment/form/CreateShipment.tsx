@@ -77,6 +77,7 @@ import {
   CalendarIcon,
   Check,
   CircleX,
+  Eye,
   Plus,
   Truck,
   X,
@@ -160,19 +161,24 @@ export type Employee = {
 };
 
 export type Product = {
-  id: string;
-  name: string;
+  availableQuantity: number;
+  brokenAvailableQuantity: number;
+  brokenQuantity: number;
   code: string;
-  price: number;
-  size: string;
+  companyId: string;
   description: string;
+  errorAvailableQuantity: number;
+  errorQuantity: number;
+  failureAvailableQuantity: number;
+  failureQuantity: number;
+  id: string;
+  imageUrl: string;
   isInProcessing: boolean;
-  imageResponses: Array<{
-    id: string;
-    imageUrl: string;
-    isBluePrint: boolean;
-    isMainImage: boolean;
-  }>;
+  name: string;
+  phaseId: string;
+  price: number;
+  quantity: number;
+  size: string;
 };
 
 export type ShipmentDetailRequest = {
@@ -372,7 +378,7 @@ export default function CreateShipment() {
               } catch (error) {
                 return {
                   ...item,
-                  image: "", 
+                  image: "",
                 };
               }
             }
@@ -447,55 +453,87 @@ export default function CreateShipment() {
   }, [isActive, roleId, searchTearm, currentPage, pageSize, dataEm]);
 
   // call data product
+  // useEffect(() => {
+  //   const fetchDataProduct = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const response = await productApi.allProducts(
+  //         isInProcessing,
+  //         currentPageP,
+  //         pageSizeP,
+  //         searchTerm
+  //       );
+  //       const newData = response.data.data.data;
+
+  //       const updatedData = await Promise.all(
+  //         newData.map(async (item: any) => {
+  //           const updatedImageResponses = await Promise.all(
+  //             item.imageResponses.map(async (image: any) => {
+  //               try {
+  //                 const { data } = await filesApi.getFile(image.imageUrl);
+  //                 return {
+  //                   ...image,
+  //                   imageUrl: data.data,
+  //                 };
+  //               } catch (error) {
+  //                 return {
+  //                   ...image,
+  //                   imageUrl: "",
+  //                 };
+  //               }
+  //             })
+  //           );
+  //           return {
+  //             ...item,
+  //             imageResponses: updatedImageResponses,
+  //           };
+  //         })
+  //       );
+
+  //       setDataP(updatedData);
+  //       setCurrentPageP(response.data.data.currentPage);
+  //       setTotalPagesP(response.data.data.totalPages);
+  //     } catch (error) {
+  //       setDataP([]);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchDataProduct();
+  // }, [currentPageP, pageSizeP, searchTerm, isInProcessing]);
+  const handleSelectChange = (value: string) => {
+    // Cập nhật giá trị form từ dropdown
+    setCompanyId(value);
+  };
+
+  const [phaseId, setPhaseId] = useState<string | undefined>();
+  const [companyId, setCompanyId] = useState<string | undefined>();
+
   useEffect(() => {
-    const fetchDataProduct = async () => {
+    const handleSearch = () => {
       setLoading(true);
-      try {
-        const response = await productApi.allProducts(
-          isInProcessing,
-          currentPageP,
-          pageSizeP,
-          searchTerm
-        );
-        const newData = response.data.data.data;
-
-        const updatedData = await Promise.all(
-          newData.map(async (item: any) => {
-            const updatedImageResponses = await Promise.all(
-              item.imageResponses.map(async (image: any) => {
-                try {
-                  const { data } = await filesApi.getFile(image.imageUrl);
-                  return {
-                    ...image,
-                    imageUrl: data.data,
-                  };
-                } catch (error) {
-                  return {
-                    ...image,
-                    imageUrl: "",
-                  };
-                }
-              })
-            );
-            return {
-              ...item,
-              imageResponses: updatedImageResponses,
-            };
-          })
-        );
-
-        setDataP(updatedData);
-        setCurrentPageP(response.data.data.currentPage);
-        setTotalPagesP(response.data.data.totalPages);
-      } catch (error) {
-        setDataP([]);
-      } finally {
-        setLoading(false);
-      }
+      productApi
+        .searchProduct(searchTerm, phaseId, companyId, currentPageP, pageSizeP)
+        .then(({ data }) => {
+          setDataP(data.data.data);
+        })
+        .catch((error) => {
+          setDataP([]);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     };
 
-    fetchDataProduct();
-  }, [currentPageP, pageSizeP, searchTerm, isInProcessing]);
+    handleSearch();
+  }, [searchTerm, phaseId, companyId, currentPageP, pageSizeP]);
+
+  console.log("companyId", companyId)
+  console.log("pahsseId", phaseId)
+  console.log("dataP", dataP)
+
+
   // ** form
   const form = useForm({
     resolver: zodResolver(ShipmentSchema),
@@ -854,14 +892,19 @@ export default function CreateShipment() {
                                     render={({ field }) => (
                                       <FormItem>
                                         <Select
-                                          onValueChange={field.onChange}
+                                          onValueChange={(value) => {
+                                            field.onChange(value);
+                                            handleSelectChange(value);
+                                          }}
                                           defaultValue={field.value}
+
                                         >
                                           <FormControl>
                                             <SelectTrigger className="h-32">
                                               <SelectValue
                                                 placeholder="Hãy chọn công ty"
                                                 defaultValue={field.value}
+
                                               />
                                             </SelectTrigger>
                                           </FormControl>
@@ -941,6 +984,7 @@ export default function CreateShipment() {
                                               <SelectValue
                                                 placeholder="Hãy chọn công ty"
                                                 defaultValue={field.value}
+
                                               />
                                             </SelectTrigger>
                                           </FormControl>
@@ -1117,45 +1161,88 @@ export default function CreateShipment() {
                                 />
                               </CardHeader>
                               <CardContent className="space-y-2">
-                                <Input
-                                  placeholder="Tìm kiếm sản phẩm..."
-                                  value={searchTerm}
-                                  onChange={(e) => setSearchTerm(e.target.value)}
-                                  className="md:w-[300px] w-full mb-3"
-                                />
-                                <div className=" w-full grid grid-cols-3 md:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
-                                  {dataP.map((item) => (
-                                    <div
-                                      className="group relative w-[80px] h-[80px] shadow-md rounded-md"
-                                      key={item.id}
-                                    >
-                                      <ImageIconShipmentForm dataImage={item} />
-                                      <Check
-                                        className={`${shipmentDetailRequests.some(
-                                          (item1) => item1.itemId === item.id
-                                        )
-                                          ? "absolute top-0 right-0 bg-primary text-white"
-                                          : "hidden"
-                                          }`}
-                                      />
-                                      <span
-                                        className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                        onClick={() => {
-                                          const mainImage =
-                                            item?.imageResponses.find(
-                                              (image) => image.isMainImage
-                                            );
-                                          handleAddProducts(
-                                            mainImage ? mainImage.imageUrl : "",
-                                            item?.id,
-                                            productType
-                                          );
-                                        }}
-                                      >
-                                        <Plus className="text-white" />
-                                      </span>
-                                    </div>
-                                  ))}
+
+                                <div className="flex items-center mb-3 gap-3">
+                                  <Input
+                                    placeholder="Tìm kiếm sản phẩm..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="md:w-[300px] w-full "
+                                  />
+
+                                  <Select
+                                    defaultValue={phaseId}
+                                    onValueChange={(value) => setPhaseId(value)}
+                                  >
+                                    <SelectTrigger className="w-[150px]">
+                                      <SelectValue placeholder="Giai đoạn sản phẩm" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectGroup>
+                                        {dataPh.map((item) => (
+                                          <SelectItem
+                                            key={item.id}
+                                            value={item.id}
+                                          >
+                                            {item.name}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectGroup>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+
+                                <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                  {dataP && dataP.length > 0 ? (
+                                    dataP.map((item) => (
+                                      <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
+                                        <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
+                                          <ImageIconShipmentForm dataImage={item} />
+                                          <Check
+                                            className={`${shipmentDetailRequests.some((item1) => item1.itemId === item.id)
+                                                ? "absolute top-0 right-0 bg-primary text-white"
+                                                : "hidden"
+                                              }`}
+                                          />
+                                          <span
+                                            className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                            onClick={() => {
+                                              handleAddProducts(
+                                                item.imageUrl ? item.imageUrl : "",
+                                                item?.id,
+                                                productType
+                                              );
+                                            }}
+                                          >
+                                            <Plus className="text-white" />
+                                          </span>
+                                        </div>
+                                        <div className="flex flex-col w-full text-sm my-1">
+                                          <div className="flex gap-2">
+                                            <span className="font-medium">Mã:</span>
+                                            <span className="font-light">{item.code}</span>
+                                          </div>
+                                          <div className="flex gap-2">
+                                            <span className="font-medium">Tên:</span>
+                                            <span className="font-light">{item.name}</span>
+                                          </div>
+                                          <div className="flex gap-2">
+                                            <span className="font-medium">Kích thước:</span>
+                                            <span className="font-light">{item.size}</span>
+                                          </div>
+                                          <div className="flex gap-2">
+                                            <span className="font-medium">Giá thành:</span>
+                                            <span className="font-light text-primary">
+                                              {formatCurrency(item.price)} .đ
+                                            </span>
+                                          </div>
+                                        </div>
+                                      </Card>
+                                    ))
+                                  ) : (
+                                    <div className="text-center text-gray-500">Không có kết quả.</div>
+                                  )}
+
                                 </div>
                               </CardContent>
                               <CardFooter className="flex justify-end">

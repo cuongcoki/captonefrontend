@@ -167,7 +167,6 @@ export default function UpdateOrder({ orderId }: OrderId) {
   const [searchTermAll, setSearchTermAll] = useState<string>("");
   const [pageSize, setPageSize] = useState<number>(10);
   const [company, setCompany] = useState<Company[]>([]);
-console.log("orderId",orderId)
   const form = useForm({
     resolver: zodResolver(UpdateOrderSchema),
     defaultValues: {

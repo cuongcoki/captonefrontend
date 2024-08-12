@@ -86,6 +86,7 @@ type Company = {
 export const UsersForm = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [fetchTrigger, setFetchTrigger] = useState<number>(0);
 
   const [loading, setLoading] = useState(false);
   const [company, setCompany] = useState<Company[]>([]);
@@ -212,7 +213,7 @@ export const UsersForm = () => {
         gender: data.gender,
         address: data.address.trim(),
         phone: data.phone.trim(),
-        password: data.password,
+        // password: data.password,
         roleId: Number(data.roleId),
         isActive: data.isActive,
         companyId: data.companyId,
@@ -234,10 +235,10 @@ export const UsersForm = () => {
         .then(({ data }) => {
           if (data.isSuccess) {
             toast.success(data.message);
-            setTimeout(() => {
-              setOpen(false);
-              forceUpdate();
-            }, 2000);
+            setOpen(false);
+            forceUpdate();
+            form.reset();
+            setImageRequests(null);
           }
         })
         .catch((err) => {
@@ -277,7 +278,8 @@ export const UsersForm = () => {
     setOpen(false)
     setOpenAlert(false)
     form.reset();
-
+    setImageRequests(null);
+    setFetchTrigger((prev) => prev + 1);
   }
 
   const { formState } = form;
@@ -285,7 +287,7 @@ export const UsersForm = () => {
     if (!formState.isDirty) {
       setOpen(false);
       form.reset();
-
+      setFetchTrigger((prev) => prev + 1);
     } else {
       setOpenAlert(true);
     }
@@ -506,7 +508,7 @@ export const UsersForm = () => {
                                   />
 
                                   {/* Password */}
-                                  <FormField
+                                  {/* <FormField
                                     control={form.control}
                                     name="password"
                                     render={({ field }) => {
@@ -522,7 +524,7 @@ export const UsersForm = () => {
                                         </FormItem>
                                       );
                                     }}
-                                  />
+                                  /> */}
                                 </div>
                               </div>
                             </CardContent>

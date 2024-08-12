@@ -20,7 +20,7 @@ export default function RenderTableProduct() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(5);
+  const [pageSize, setPageSize] = useState<number>(8);
   const [isInProcessing, setIsInProcessing] = useState<boolean>(true);
   const [data, setData] = useState<Product[]>([]);
   const [force, setForce] = useState<number>(1);
