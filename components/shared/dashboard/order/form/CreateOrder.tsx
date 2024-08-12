@@ -29,6 +29,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -71,11 +72,11 @@ import { z } from "zod";
 import { format, parse } from "date-fns";
 
 // ** import ICON
-import { CalendarIcon, Check, Plus, X } from "lucide-react";
+import { CalendarIcon, Check, CircleX, Plus, X } from "lucide-react";
 import { ChevronDown, Minus, Search } from "lucide-react";
 
 // ** import TYPE & SCHEMA
-import { OrderSchema} from "@/schema/order";
+import { OrderSchema } from "@/schema/order";
 import { cn } from "@/lib/utils";
 import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
@@ -89,7 +90,21 @@ import Image from "next/image";
 import { NoImage } from "@/constants/images";
 import { OrderStore } from "../order-store";
 import TitleComponent from "@/components/shared/common/Title";
+import { phaseApi } from "@/apis/phase.api";
+import { shipmentApi } from "@/apis/shipment.api";
+import { Phase } from "@/types/shipment.type";
+import ImageDisplayDialogSet from "./imageDisplayDialogSet";
+import HoverComponent from "@/components/shared/common/hover-card";
 
+const enumCompany = [
+  {
+    description: "Nhà xưởng",
+    id: 0,
+    value: "0"
+  },
+
+
+];
 // Define Company Type
 type Company = {
   id: string;
@@ -100,10 +115,29 @@ type Company = {
   email: string | null;
   companyType: number;
   companyTypeDescription: string;
-  companyEnum: string; 
+  companyEnum: string;
 };
 
-
+export type Product = {
+  availableQuantity: number;
+  brokenAvailableQuantity: number;
+  brokenQuantity: number;
+  code: string;
+  companyId: string;
+  description: string;
+  errorAvailableQuantity: number;
+  errorQuantity: number;
+  failureAvailableQuantity: number;
+  failureQuantity: number;
+  id: string;
+  imageUrl: string;
+  isInProcessing: boolean;
+  name: string;
+  phaseId: string;
+  price: number;
+  quantity: number;
+  size: string;
+};
 
 export default function CreateOrder() {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
@@ -133,11 +167,10 @@ export default function CreateOrder() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTermAll, setSearchTermAll] = useState<string>("");
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(1000);
   const [company, setCompany] = useState<Company[]>([]);
   const [nextStep, setNextStep] = useState<boolean>(false);
   const [idOrder, setIdOrder] = useState<string>();
-  console.log("setCompany", company);
 
   useEffect(() => {
     const fetchDataCompany = async () => {
@@ -158,8 +191,8 @@ export default function CreateOrder() {
   };
 
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
-  const [searchTerm, setSearchTerm] = useState<string>();
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
 
   const [searchTermSet, setSearchTermSet] = useState<string>();
   const [searchResultsSet, setSearchResultsSet] = useState<any[]>([]);
@@ -200,18 +233,68 @@ export default function CreateOrder() {
       .finally(() => { });
   };
 
-  const handleSearch = () => {
-    productApi
-      .searchProduct(searchTerm)
-      .then(({ data }) => {
+  // const handleSearch = () => {
+  //   productApi
+  //     .searchProduct(searchTerm)
+  //     .then(({ data }) => {
+  //       setSearchResults(data.data);
+  //     })
+  //     .catch((error) => {
+  //       setSearchResults([]);
+  //     })
+  //     .finally(() => { });
+  // };
 
-        setSearchResults(data.data);
-      })
-      .catch((error) => {
-        setSearchResults([]);
-      })
-      .finally(() => { });
+  // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
+  const [phaseId, setPhaseId] = useState<string | undefined>();
+  const [companyId, setCompanyId] = useState<string | undefined>();
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [pageSizeS, setPageSizeS] = useState<number>(1000);
+
+  // ** state phase
+  const [dataPh, setDataPh] = useState<Phase[]>([]);
+
+  useEffect(() => {
+    const handleSearch = () => {
+      setLoading(true);
+      productApi
+        .searchProduct(searchTerm, "0f54b781-8286-42d2-9dce-b19b22b43700", companyId, pageIndex, pageSizeS)
+        .then(({ data }) => {
+          setSearchResults(data.data.data);
+        })
+        .catch((error) => {
+          setSearchResults([]);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };
+
+    handleSearch();
+  }, [searchTerm, phaseId, companyId, pageIndex, pageSizeS]);
+
+  const [companyForShip, setCompanyForShip] = useState<Company[]>([]);
+  // call data company
+  useEffect(() => {
+    const fetchDataCompany = () => {
+      shipmentApi.getAllCompanyByType(0, 1, 20)
+        .then(({ data }) => {
+          setCompanyForShip(data.data.data);
+        })
+        .catch(error => {
+        });
+    };
+
+    fetchDataCompany()
+  }, [companyForShip]);
+
+  const handleSelectChange = (value: string) => {
+    setCompanyId(value);
   };
+
+  console.log("companyId", companyId)
+  console.log("pahsseId", phaseId)
+  console.log("dataP", searchResults)
 
   useEffect(() => {
 
@@ -222,7 +305,6 @@ export default function CreateOrder() {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      handleSearch();
     }
   }, [debouncedSearchTerm, searchTerm]);
 
@@ -333,7 +415,6 @@ export default function CreateOrder() {
   };
 
   const onSubmit = async (formData: z.infer<typeof OrderSchema>) => {
-    console.log("formData", formData);
     const productsRequestTrimmed = productsRequest.map((product) => ({
       productIdOrSetId: product.productIdOrSetId,
       quantity: product.quantity,
@@ -399,19 +480,14 @@ export default function CreateOrder() {
     setSearchResultsSet([]);
   }
 
+  const { formState } = form;
   const handleOffDialog = () => {
     // Kiểm tra xem mảng có rỗng hay không
     const isDetailsProEmpty = Array.isArray(getDetailsPro) && getDetailsPro.length === 0;
     const isProductsRequestEmpty = Array.isArray(productsRequest) && productsRequest.length === 0;
 
-    // Kiểm tra giá trị cụ thể của form
-    const isCompanyIdEmpty = form.getValues().companyId === "";
-    const isEndOrderEmpty = form.getValues().endOrder === "";
-    const isStartOrderEmpty = form.getValues().startOrder === "";
-    const isVatEmpty = form.getValues().vat === 0;
-
     // Nếu tất cả các trường trong form đều trống hoặc không có giá trị và các mảng rỗng
-    if (isDetailsProEmpty && isProductsRequestEmpty && isCompanyIdEmpty && isEndOrderEmpty && isStartOrderEmpty && isVatEmpty) {
+    if (isDetailsProEmpty && isProductsRequestEmpty && !formState.isDirty) {
       setOpen(false);
     } else {
       setOpenAlert(true);
@@ -486,7 +562,10 @@ export default function CreateOrder() {
                                     Công ty *
                                   </FormLabel>
                                   <Select
-                                    onValueChange={field.onChange}
+                                    onValueChange={(value) => {
+                                      field.onChange(value);
+                                      handleSelectChange(value);
+                                    }}
                                     defaultValue={field.value}
                                   >
                                     <FormControl>
@@ -684,7 +763,7 @@ export default function CreateOrder() {
                               />
                             </CardHeader>
                             <CardContent>
-                              <div className="flex items-center my-4">
+                              <div className="flex flex-col  items-center my-4">
                                 <div className="flex items-center border w-full rounded-lg px-2 ">
                                   <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
                                   <DropdownMenu>
@@ -705,11 +784,11 @@ export default function CreateOrder() {
 
                                   {!checkProducts ? (
                                     <Input
-                                      placeholder="Tìm kiếm sản phẩm..."
+                                      placeholder="Tìm kiếm mã - tên sản phẩm ..."
                                       value={searchTerm}
-                                      onChange={(e) =>
-                                        setSearchTerm(e.target.value)
-                                      }
+                                      onChange={(e) => {
+                                        setSearchTerm(e.target.value);
+                                      }}
                                       className="border-none w-full"
                                     />
                                   ) : (
@@ -723,6 +802,43 @@ export default function CreateOrder() {
                                     />
                                   )}
                                 </div>
+                                {
+                                  !checkProducts ? (
+                                    <div className="flex items-center my-4 w-full">
+                                      <Select
+                                        onValueChange={(value) => setCompanyId(value)}
+                                        defaultValue={companyId}
+                                      >
+                                        <SelectTrigger className="h-32">
+                                          <SelectValue placeholder="Hãy chọn công ty" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {companyForShip.map((item) => (
+                                            <SelectItem
+                                              key={item.id}
+                                              value={item.id}
+                                              className="hover:bg-slate-100 shadow-md mb-1"
+                                            >
+                                              <div className="flex flex-col items-start">
+                                                <span>
+                                                  {limitLength(item.name, 30)} - {limitLength(item.address, 30)}
+                                                </span>
+                                                <span className="text-sm text-gray-500">
+                                                  {item.directorName}
+                                                </span>
+                                                <span className="text-sm text-gray-500">
+                                                  {`${item.directorPhone} - ${item.email || "Không có"}`}
+                                                </span>
+                                              </div>
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                  ) : (
+                                    <></>
+                                  )
+                                }
                               </div>
                               {!checkProducts ? (
                                 <>
@@ -731,11 +847,11 @@ export default function CreateOrder() {
                                       <CardHeader className="font-semibold text-xl">
                                         <span>Thông tin sản phẩm</span>
                                       </CardHeader>
-                                      <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
+                                      <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                         {searchResults !== null ? (
                                           searchResults.map((product) => (
-                                            <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
-                                              <div className="font-medium flex flex-col rounded-md">
+                                            <Card className="h-[90px] flex gap-2 shadow-md group relative" key={product.id} >
+                                              <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
                                                 <ImageDisplayDialog
                                                   images={product}
                                                   checkProduct={productCheck}
@@ -748,8 +864,6 @@ export default function CreateOrder() {
                                                     : "hidden"
                                                     }`}
                                                 />
-                                              </div>
-                                              <div>
                                                 <span
                                                   className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                                   onClick={() =>
@@ -759,14 +873,33 @@ export default function CreateOrder() {
                                                   <Plus className="text-white" />
                                                 </span>
                                               </div>
-                                            </div>
+
+                                              <div className="flex flex-col w-full text-sm my-1">
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Mã:</span>
+                                                  <span className="font-light">{product.code}</span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Tên:</span>
+                                                  <span className="font-light">{product.name}</span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Kích thước:</span>
+                                                  <span className="font-light">{product.size}</span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Giá thành:</span>
+                                                  <span className="font-light text-primary">{formatCurrency(product.price)} .đ</span>
+                                                </div>
+                                              </div>
+                                            </Card>
                                           ))
                                         ) : (
                                           <div className="text-center flex justify-center items-center w-full">
                                             Không tìm thấy sản phẩm nào.
                                           </div>
                                         )}
-                                      </CardContent>
+                                      </div>
                                     </Card>
                                   ) : (
                                     ""
@@ -779,12 +912,12 @@ export default function CreateOrder() {
                                       <CardHeader className="font-semibold text-xl">
                                         <span>Thông tin bộ sản phẩm</span>
                                       </CardHeader>
-                                      <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
+                                      <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                         {searchResultsSet !== null ? (
                                           searchResultsSet.map((product) => (
-                                            <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
-                                              <div className="font-medium flex flex-col rounded-md">
-                                                <ImageDisplayDialog
+                                            <Card className=" h-[90px] flex gap-2 shadow-md group relative" key={product.id} >
+                                              <div className="group relative w-[100px] max-h-[90px] shadow-md rounded-md">
+                                                <ImageDisplayDialogSet
                                                   images={product}
                                                   checkProduct={setCheck}
                                                 />
@@ -807,14 +940,30 @@ export default function CreateOrder() {
                                                   <Plus className="text-white" />
                                                 </span>
                                               </div>
-                                            </div>
+
+                                              <div className="flex flex-col w-full text-sm my-1">
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Mã:</span>
+                                                  <span className="font-light">{product.code}</span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Tên:</span>
+                                                  <span className="font-light">
+                                                    <HoverComponent Num={20} >
+                                                      {product.name}
+                                                    </HoverComponent>
+                                                  </span>
+                                                </div>
+
+                                              </div>
+                                            </Card>
                                           ))
                                         ) : (
                                           <div className="text-center flex justify-center items-center w-full">
                                             Không tìm thấy bộ sản phẩm nào.
                                           </div>
                                         )}
-                                      </CardContent>
+                                      </div>
                                     </Card>
                                   ) : (
                                     ""
@@ -947,12 +1096,12 @@ export default function CreateOrder() {
 
                                             <TableCell className="">
                                               <div
-                                                className="hover:bg-slate-50 cursor-pointer col-span-1 border p-3 rounded-lg"
+                                                className="cursor-pointer"
                                                 onClick={() =>
                                                   handleMinusProducts(product.id)
                                                 }
                                               >
-                                                <Minus className=" h-4 w-4 " />
+                                                <CircleX />
                                               </div>
                                             </TableCell>
                                           </TableRow>

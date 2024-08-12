@@ -370,7 +370,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
         companyId: data.companyId,
         roleId: data.roleId,
       };
-
+      console.log("formattedData", formattedData)
       // Đợi cho ảnh được tải lên trước
       await handlePostImage();
 
@@ -447,6 +447,8 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
             <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2  max-w-[1100px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white  text-gray-900 shadow">
+              <Dialog.Title className="hidden visible"></Dialog.Title>
+              <Dialog.Description className="hidden visible"></Dialog.Description>
               <div className="bg-slate-100  flex flex-col rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-md ">
                   <h2 className="text-2xl text-white">
@@ -549,6 +551,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
                                   {/* CMND/CCCD */}
                                   <FormField
+
                                     control={form.control}
                                     name="id"
                                     render={({ field }) => (
@@ -557,7 +560,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                           CCCD/CMND *
                                         </FormLabel>
                                         <FormControl>
-                                          <InputOTP maxLength={12} {...field}>
+                                          <InputOTP maxLength={12} {...field} disabled>
                                             <InputOTPGroup className="w-full xl:w-[350px]">
                                               {[...Array(12)].map(
                                                 (_, index) => (

@@ -162,21 +162,6 @@ export const UsersSchema = z.object({
     },
     { message: "Số điện thoại phải đúng 10 chữ số" }
   ),
-  password: z
-    .string()
-    .min(6, { message: "Mật khẩu phải dài ít nhất 6 ký tự" })
-    .refine(
-      (password) => {
-        return /[A-Z]/.test(password);
-      },
-      { message: "Mật khẩu phải chứa ít nhất một chữ cái viết hoa" }
-    )
-    .refine(
-      (password) => {
-        return /[!@#$%^&*(),.?":{}|<>]/.test(password);
-      },
-      { message: "Mật khẩu phải chứa ít nhất một ký tự đặc biệt" }
-    ),
   roleId: z.string().min(1, { message: "Vui lòng chọn vai trò" }),
   isActive: z.boolean(),
   companyId: z.string().min(1, { message: "Vui lòng chọn cơ sở" }),
@@ -236,7 +221,7 @@ export const UsersUpdateSchema = z.object({
 });
 
 export const UserUpdateSchema = UsersSchema.omit({
-  password: true,
+  // password: true,
   isActive: true,
 });
 

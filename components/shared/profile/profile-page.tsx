@@ -40,6 +40,7 @@ import { authApi } from "@/apis/auth.api";
 import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdateForm";
 import { NoImage } from "@/constants/images";
 import TitleComponent from "../common/Title";
+import LoadingPage from "../loading/loading-page";
 
 
 export default function ProfilePage() {
@@ -73,7 +74,7 @@ export default function ProfilePage() {
     const fetchDataGetMe = () => {
       setLoading(true);
       userApi
-        .getMe()
+        .getMe(params.id)
         .then((res) => {
           const userData = res.data.data;
           filesApi.getFile(userData.avatar).then((res) => {
@@ -88,7 +89,7 @@ export default function ProfilePage() {
         });
     };
     fetchDataGetMe();
-  }, [params, userId?.id]);
+  }, [params.id, userId?.id,]);
 
 
   function validatePassword(password: string) {
@@ -186,9 +187,12 @@ export default function ProfilePage() {
     return formatted;
   };
 
+
+  console.log("user?.user?.id",user?.user?.id)
+  console.log("userId?.id",userId?.id)
   return (
     <>
-      {user?.user?.id === userId?.id && (
+      {user?.user?.id === userId?.id ? (
         <div className="flex flex-col gap-6 justify-center">
           <header className=" flex justify-center p-2">
             {/* Card User  */}
@@ -422,6 +426,8 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+      ):(
+        <LoadingPage />
       )}
     </>
   );
