@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Check,
   ChevronDown,
+  CircleX,
   Minus,
   PenLine,
   Plus,
@@ -49,7 +50,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Card, CardContent, CardHeader} from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
@@ -64,12 +74,25 @@ import useDebounce from "./useDebounce";
 import { orderApi } from "@/apis/order.api";
 import { OrderStore } from "../order-store";
 import TitleComponent from "@/components/shared/common/Title";
+import { shipmentApi } from "@/apis/shipment.api";
+import { phaseApi } from "@/apis/phase.api";
+import { Company } from "@/types/shipment.type";
+import HoverComponent from "@/components/shared/common/hover-card";
+import ImageDisplayDialogSet from "./imageDisplayDialogSet";
 
+const enumCompany = [
+  {
+    description: "Nhà xưởng",
+    id: 0,
+    value: "0"
+  },
+
+
+];
 interface OrderID {
   orderId?: any;
 }
 
-let initialFormValuesProduct: any = null;
 export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   //state
   const [open, setOpen] = useState<boolean>(false);
@@ -84,7 +107,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
- 
+
 
   const [loading, setLoading] = useState<boolean>(false);
   const [checkProducts, setCheckProducts] = useState<boolean>(false);
@@ -148,18 +171,55 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       .finally(() => { });
   };
 
-  const handleSearch = () => {
-    productApi
-      .searchProduct(searchTerm)
-      .then(({ data }) => {
+  // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
+  const [phaseId, setPhaseId] = useState<string | undefined>("0f54b781-8286-42d2-9dce-b19b22b43700");
+  const [companyId, setCompanyId] = useState<string | undefined>();
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(1000);
 
-        setSearchResults(data.data);
-      })
-      .catch((error) => {
-        setSearchResults([])
-      })
-      .finally(() => { });
+  //state ** company
+  const [company, setCompany] = useState<Company[]>([]);
+  const [companyType, setCompanyType] = useState<number | undefined>();
+
+  useEffect(() => {
+    const handleSearch = () => {
+      setLoading(true);
+      productApi
+        .searchProduct(searchTerm, phaseId, companyId, pageIndex, pageSize)
+        .then(({ data }) => {
+          setSearchResults(data.data.data);
+        })
+        .catch((error) => {
+          setSearchResults([]);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };
+
+    handleSearch();
+  }, [searchTerm, phaseId, companyId, pageIndex, pageSize]);
+
+  // call data company
+  useEffect(() => {
+    const fetchDataCompany = () => {
+      shipmentApi.getAllCompanyByType(0, 1, 20)
+        .then(({ data }) => {
+          setCompany(data.data.data);
+        })
+        .catch(error => {
+        });
+    };
+
+    fetchDataCompany()
+  }, [company, companyType]);
+
+  const handleStatusChange = (value: number) => {
+    setCompanyType(value);
   };
+  // console.log("companyId", companyId)
+  // console.log("pahsseId", phaseId)
+  // console.log("searchResults", searchResults)
 
   useEffect(() => {
     if (debouncedSearchTermSet) {
@@ -169,7 +229,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
 
   useEffect(() => {
     if (debouncedSearchTerm) {
-      handleSearch();
     }
   }, [debouncedSearchTerm, searchTerm]);
 
@@ -190,6 +249,8 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       isProductId: boolean;
     }[]
   >([]);
+  // console.log("getDetailsPro", getDetailsPro)
+  // console.log("productsRequest", productsRequest)
 
   useEffect(() => {
     const productRequests = orderId.productOrderResponses.map(
@@ -258,8 +319,14 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     );
 
     if (!existingDetailProduct) {
-      // Nếu chưa có, thêm sản phẩm vào danh sách getDetailsPro
-      const updatedDetailsPro = [...getDetailsPro, product];
+      // Tạo một bản sao của product với thuộc tính isProductId
+      const productWithIsProductId = {
+        ...product,
+        isProductId: checkProducts ? false : true,
+      };
+
+      // Thêm sản phẩm vào danh sách getDetailsPro
+      const updatedDetailsPro = [...getDetailsPro, productWithIsProductId];
       setGetDetailsPro(updatedDetailsPro);
     }
 
@@ -350,6 +417,11 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       orderApi.createOrderId(requestBody).then(({ data }) => {
         if (data.isSuccess) {
           ForceRender();
+          setSearchResultsSet([])
+          setSearchResults([])
+          setSearchTermSet("")
+          setSearchTerm("")
+          setFetchTrigger((prev) => prev + 1);
           setOpen(false);
           toast.success("Cặp nhật sản phẩm thành công");
         }
@@ -396,20 +468,21 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     setSearchResultsSet([]);
   }
 
+  const [initialProductsRequest, setInitialProductsRequest] = useState<any[]>([]);
   useEffect(() => {
-
-  }, [initialFormValuesProduct])
+    setInitialProductsRequest(productsRequest)
+  }, [])
 
   const handleOffDialog = () => {
     const currentFormValues = productsRequest;
-    if (initialFormValuesProduct === null) {
-      initialFormValuesProduct = currentFormValues;
-    }
-    const isFormChanged = JSON.stringify(initialFormValuesProduct) === JSON.stringify(productsRequest);
+    setInitialProductsRequest(productsRequest)
+    const isFormChanged = JSON.stringify(initialProductsRequest) === JSON.stringify(currentFormValues);
     if (isFormChanged) {
       setOpen(false);
-    } else if (initialFormValuesProduct === null) {
-      setOpen(false)
+      setFetchTrigger((prev) => prev + 1);
+    } else if (Array.isArray(initialProductsRequest) && initialProductsRequest.length === 0) {
+      setOpen(false);
+      setFetchTrigger((prev) => prev + 1);
     } else {
       setOpenAlert(true);
     }
@@ -464,7 +537,8 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                       />
                     </CardHeader>
                     <CardContent>
-                      <div className="flex items-center my-4">
+                      <div className="flex flex-col  items-center my-4">
+
                         <div className="flex items-center border w-full rounded-lg px-2 ">
                           <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
                           <DropdownMenu>
@@ -480,7 +554,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
-
                           {!checkProducts ? (
                             <Input
                               placeholder="Tìm kiếm sản phẩm..."
@@ -488,6 +561,8 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                               onChange={(e) => setSearchTerm(e.target.value)}
                               className="border-none w-full"
                             />
+
+
                           ) : (
                             <Input
                               placeholder="Tìm kiếm bộ sản phẩm..."
@@ -497,6 +572,58 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                             />
                           )}
                         </div>
+
+                        {!checkProducts ? (
+                          <div className="w-full">
+                            <Card className="w-full mt-2">
+                              <CardContent className="mt-5">
+                                {/* <Select onValueChange={(value) => handleStatusChange(parseInt(value))}>
+                                  <SelectTrigger className="mb-2"> <SelectValue placeholder="Chọn kiểu công ty" /></SelectTrigger>
+                                  <SelectContent>
+                                    {
+                                      enumCompany.map((item) => (
+                                        <SelectItem value={item.value} key={item.id}>{item.description}</SelectItem>
+                                      ))
+                                    }
+                                  </SelectContent>
+                                </Select> */}
+                                <Select
+                                  onValueChange={(value) => setCompanyId(value)}
+                                  defaultValue={companyId}
+                                >
+                                  <SelectTrigger className="h-32">
+                                    <SelectValue placeholder="Hãy chọn công ty" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {company.map((item) => (
+                                      <SelectItem
+                                        key={item.id}
+                                        value={item.id}
+                                        className="hover:bg-slate-100 shadow-md mb-1"
+                                      >
+                                        <div className="flex flex-col items-start">
+                                          <span>
+                                            {limitLength(item.name, 30)} - {limitLength(item.address, 30)}
+                                          </span>
+                                          <span className="text-sm text-gray-500">
+                                            {item.directorName}
+                                          </span>
+                                          <span className="text-sm text-gray-500">
+                                            {`${item.directorPhone} - ${item.email || "Không có"}`}
+                                          </span>
+                                        </div>
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </CardContent>
+                            </Card>
+                          </div>
+
+                        ) : (
+                          <></>
+                        )
+                        }
                       </div>
                       {!checkProducts ? (
                         <>
@@ -505,15 +632,17 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                               <CardHeader className="font-semibold text-xl">
                                 <span>Thông tin sản phẩm</span>
                               </CardHeader>
-                              <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
+                              <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                 {searchResults !== null ? (
                                   searchResults.map((product) => (
-                                    <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
-                                      <div className="font-medium flex flex-col rounded-md">
+                                    <Card className="flex gap-2 shadow-md group relative" key={product.id} >
+                                      <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
+
                                         <ImageDisplayDialog
                                           images={product}
                                           checkProduct={productCheck}
                                         />
+
                                         <Check
                                           className={`w-5 h-5 ${productsRequest.some(
                                             (item1) => item1.productIdOrSetId === product.id
@@ -523,26 +652,42 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                             }`}
                                         />
                                       </div>
-                                      <div>
-                                        <Button
-                                          variant={"ghost"}
-                                          size={"icon"}
-                                          className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                          onClick={() =>
-                                            handleAddProducts(product)
-                                          }
-                                        >
-                                          <Plus className="text-white" />
-                                        </Button>
+
+                                      <span
+                                        className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                        onClick={() =>
+                                          handleAddProducts(product)
+                                        }
+                                      >
+                                        <Plus className="text-white" />
+                                      </span>
+
+                                      <div className="flex flex-col w-full text-sm my-1">
+                                        <div className="flex gap-2">
+                                          <span className="font-medium">Mã:</span>
+                                          <span className="font-light">{product.code}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                          <span className="font-medium">Tên:</span>
+                                          <span className="font-light">{product.name}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                          <span className="font-medium">Kích thước:</span>
+                                          <span className="font-light">{product.size}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                          <span className="font-medium">Giá thành:</span>
+                                          <span className="font-light text-primary">{formatCurrency(product.price)} .đ</span>
+                                        </div>
                                       </div>
-                                    </div>
+                                    </Card>
                                   ))
                                 ) : (
-                                  <TableRow className="text-center flex justify-center items-center w-full">
-                                    Không tìm thấy sản phẩm nào.
-                                  </TableRow>
+                                  <div className="text-center flex justify-center items-center w-full">
+                                    Không có kết quả.
+                                  </div>
                                 )}
-                              </CardContent>
+                              </div>
                             </Card>
                           ) : (
                             ""
@@ -555,12 +700,12 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                               <CardHeader className="font-semibold text-xl">
                                 <span>Thông tin bộ sản phẩm</span>
                               </CardHeader>
-                              <CardContent className="w-full grid grid-cols-12 gap-4 min-h-[100px]  overflow-y-auto ">
+                              <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                 {searchResultsSet !== null ? (
                                   searchResultsSet.map((product) => (
-                                    <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
-                                      <div className="font-medium flex flex-col rounded-md">
-                                        <ImageDisplayDialog
+                                    <Card className=" h-[90px] flex gap-2 shadow-md group relative" key={product.id} >
+                                      <div className="group relative w-[100px] max-h-[90px] shadow-md rounded-md">
+                                        <ImageDisplayDialogSet
                                           images={product}
                                           checkProduct={setCheck}
                                         />
@@ -573,26 +718,39 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                             }`}
                                         />
                                       </div>
-                                      <div>
-                                        <Button
-                                          variant={"ghost"}
-                                          size={"icon"}
-                                          className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                          onClick={() =>
-                                            handleAddProducts(product)
-                                          }
-                                        >
-                                          <Plus className="text-white" />
-                                        </Button>
+
+                                      <span
+                                        className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                        onClick={() =>
+                                          handleAddProducts(product)
+                                        }
+                                      >
+                                        <Plus className="text-white" />
+                                      </span>
+
+                                      <div className="flex flex-col w-full text-sm my-1">
+                                        <div className="flex gap-2">
+                                          <span className="font-medium">Mã:</span>
+                                          <span className="font-light">{product.code}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                          <span className="font-medium">Tên:</span>
+                                          <span className="font-light">
+                                            <HoverComponent Num={20}>
+                                              {product.name}
+                                            </HoverComponent>
+                                          </span>
+                                        </div>
+
                                       </div>
-                                    </div>
+                                    </Card>
                                   ))
                                 ) : (
                                   <div className="text-center flex justify-center items-center w-full">
-                                    Không tìm thấy bộ sản phẩm nào.
+                                    Không có kết quả.
                                   </div>
                                 )}
-                              </CardContent>
+                              </div>
                             </Card>
                           ) : (
                             ""
@@ -715,15 +873,14 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                     </TableCell>
 
                                     <TableCell className="font-medium">
-                                      <Button
-                                        variant="outline"
-                                        size="icon"
+                                      <div
+                                        className="cursor-pointer"
                                         onClick={() =>
                                           handleMinusProducts(product.id)
                                         }
                                       >
-                                        <Minus className="h-4 w-4" />
-                                      </Button>
+                                        <CircleX />
+                                      </div>
                                     </TableCell>
                                   </TableRow>
                                 ))}

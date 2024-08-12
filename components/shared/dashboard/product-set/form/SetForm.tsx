@@ -56,7 +56,7 @@ import { NoImage } from "@/constants/images";
 import { MyContext } from "../table/sets/RenderTable";
 import { Label } from "@/components/ui/label";
 import TitleComponent from "@/components/shared/common/Title";
-let initialFormValuesSetProduct: any = null;
+
 export const SetForm = () => {
   // state
   const [openAlert, setOpenAlert] = useState<boolean>(false);
@@ -134,8 +134,8 @@ export const SetForm = () => {
     const formData = new FormData();
     formData.append("receivedFiles", imageUrls);
     try {
-      const response = await filesApi.postFiles(formData); 
-      const fileName = imageUrls.name; 
+      const response = await filesApi.postFiles(formData);
+      const fileName = imageUrls.name;
       const { data } = await filesApi.getFile(fileName);
     } catch (error) {
     } finally {
@@ -151,7 +151,7 @@ export const SetForm = () => {
     }
     setLoading(true);
     try {
-      const fileName = imageUrls.name; 
+      const fileName = imageUrls.name;
       const { data } = await filesApi.getFile(fileName);
       const names = data.data;
       setNameImage(names);
@@ -165,14 +165,14 @@ export const SetForm = () => {
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-
+  console.log("searchResults", searchResults)
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
       productApi
-        .searchProduct(searchTerm)
+        .searchProductForSet(searchTerm)
         .then(({ data }) => {
-          setSearchResults(data.data);
+          setSearchResults(data.data.data);
         })
         .catch((error) => {
           toast.error("không tìm thấy");
@@ -368,18 +368,12 @@ export const SetForm = () => {
   }
 
   const handleOffDialog = () => {
-    const currentFormValues = productsRequest;
-
-    if (initialFormValuesSetProduct === null) {
-      initialFormValuesSetProduct = currentFormValues;
-    }
-    const isFormChanged = JSON.stringify(initialFormValuesSetProduct) === JSON.stringify(productsRequest);
-
+    const isDetailsProEmpty = Array.isArray(getDetailsPro) && getDetailsPro.length === 0;
     const isCodeIdEmpty = form.getValues().code === "";
     const isDescriptionEmpty = form.getValues().description === "";
     const isNameEmpty = form.getValues().name === "";
 
-    if (isFormChanged && isCodeIdEmpty && isDescriptionEmpty && isNameEmpty) {
+    if (isDetailsProEmpty && isCodeIdEmpty && isDescriptionEmpty && isNameEmpty) {
       setOpen(false);
     } else {
       setOpenAlert(true);
@@ -618,10 +612,10 @@ export const SetForm = () => {
                                             width={900}
                                             height={900}
                                             src={
-                                              product?.imageUrl ===
+                                              product?.image ===
                                                 "Image_not_found"
                                                 ? NoImage
-                                                : product?.imageUrl
+                                                : product?.image
                                             }
                                           />
                                         </div>
@@ -648,7 +642,7 @@ export const SetForm = () => {
                                             )
                                           }
                                         />
-                                         <span
+                                        <span
                                           className="hover:bg-slate-50 cursor-pointer col-span-1 border p-3 rounded-lg"
                                           onClick={() =>
                                             handleMinusProducts(product.id)

@@ -256,12 +256,12 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   const handleSearch = () => {
     setLoading(true);
     productApi
-      .searchProduct(searchTerm)
+      .searchProductForSet(searchTerm)
       .then(({ data }) => {
-        setSearchResults(data.data);
+        setSearchResults(data.data.data);
       })
       .catch((error) => {
-        toast.error("không tìm thấy");
+        setSearchResults([])
       })
       .finally(() => {
         setLoading(false);
@@ -845,10 +845,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                             width={900}
                                             height={900}
                                             src={
-                                              product?.imageUrl ===
+                                              product?.image ===
                                                 "Image_not_found"
                                                 ? NoImage
-                                                : product?.imageUrl
+                                                : product?.image
                                             }
                                           />
                                         </div>

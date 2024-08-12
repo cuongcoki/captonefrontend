@@ -34,6 +34,7 @@ import { ShipOrder } from "./shipOrder/ShipOrder";
 import TitleComponent from "@/components/shared/common/Title";
 import HeaderComponent from "@/components/shared/common/header";
 import { OrderStore } from "../order-store";
+import HoverComponent from "@/components/shared/common/hover-card";
 
 interface OrderId {
   orderId?: string;
@@ -201,7 +202,9 @@ export default function OrderIdPage({ orderId }: OrderId) {
                 <div className="flex justify-between">
                   <span className="font-medium">Địa chỉ công ty:</span>
                   <span >
+                    <HoverComponent Num={25}>
                     {data?.company.address}
+                    </HoverComponent>
                   </span>
                 </div>
                 <div className="flex justify-between">

@@ -66,9 +66,14 @@ axiosClient.interceptors.response.use(
             console.log(err);
             toast.error(err.response.data.message)
             authService.removeLocalStorageWhenLogout();
-            if (window.location.pathname !== '/sign-in') {
-              window.location.href = jwtConfig.loginEndpoint;
-            }
+            // const currentPath = window.location.pathname;
+
+            // // Kiểm tra nếu người dùng không ở trang /forgot-password hoặc /sign-in
+            // if (currentPath !== '/forgot-password' && currentPath !== '/sign-in') {
+            //   window.location.href = jwtConfig.loginEndpoint;
+            // }
+
+           
           });
       }
 

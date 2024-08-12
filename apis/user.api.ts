@@ -24,7 +24,7 @@ type userType = {
   lastName: string;
   phone: string;
   address: string;
-  password: string;
+  // password: string;
   roleId: number;
   dob: string;
   gender: string;
@@ -79,8 +79,8 @@ export const userApi = {
 
 
     return axiosClient.get(`${endPointConstant.BASE_URL}/users`, {
-      params: requestBody, 
-      id: cacheId, 
+      params: requestBody,
+      id: cacheId,
     });
   },
 
@@ -109,7 +109,7 @@ export const userApi = {
 
     return axiosClient.put(
       `${endPointConstant.BASE_URL}/users/${id}/status/${isActive}`,
-      null, 
+      null,
       {
         cache: {
           update: () => {
@@ -166,11 +166,11 @@ export const userApi = {
             listUserCacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
-            listUserCacheIds.clear(); 
+            listUserCacheIds.clear();
             cacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
-            cacheIds.clear(); 
+            cacheIds.clear();
 
             const userCacheId = userCacheIds.get(user.id);
             if (userCacheId) {
@@ -192,7 +192,7 @@ export const userApi = {
             cacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
-            cacheIds.clear(); 
+            cacheIds.clear();
           },
         },
       }
@@ -207,8 +207,11 @@ export const userApi = {
     });
   },
 
-  getMe: () =>
-    axiosClient.get(`${endPointConstant.BASE_URL}/users/me`)
-
+  getMe: (UserID: string) =>
+    axiosClient.get(`${endPointConstant.BASE_URL}/users/me`, {
+      params: {
+        CompanyId: UserID
+      }
+    })
 
 };

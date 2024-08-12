@@ -11,7 +11,7 @@ export const CheckPermissionEnter = (dataPer: any) => {
     const user = storage.getProfile();
     if (user === null) {
       {
-        window.location.href = "/sign-in";
+        // window.location.href = "/sign-in";
       }
     }
     if (user.roleId === dataPer) {
