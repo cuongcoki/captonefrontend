@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 
 // ** import react
-import {  useParams, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { userApi } from "@/apis/user.api";
 
@@ -159,7 +159,13 @@ export default function ProfilePage() {
       })
       .catch((error) => {
         console.error("Error changing password:", error);
-        toast.error("Đổi mật khẩu thất bại");
+        if (error.response.data.error) {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
+        } else {
+          toast.error(error.response.data.message);
+        }
       });
   };
 
