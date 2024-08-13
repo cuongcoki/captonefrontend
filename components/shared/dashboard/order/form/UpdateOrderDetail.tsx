@@ -423,7 +423,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
           setSearchTerm("")
           setFetchTrigger((prev) => prev + 1);
           setOpen(false);
-          toast.success("Cặp nhật sản phẩm thành công");
+          toast.success("Cập nhật sản phẩm thành công");
         }
       });
     } catch (error: any) {

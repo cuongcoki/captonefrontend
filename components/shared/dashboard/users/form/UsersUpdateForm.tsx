@@ -290,7 +290,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           });
           form.reset(formattedUserData);
         })
-        .catch((error) => {})
+        .catch((error) => { })
         .finally(() => {
           setLoading(false);
         });
@@ -840,7 +840,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                               className={cn(
                                                 "w-full pl-3 text-left font-normal",
                                                 !field.value &&
-                                                  "text-muted-foreground"
+                                                "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -924,7 +924,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                               className={cn(
                                                 "w-full pl-3 text-left font-normal",
                                                 !field.value &&
-                                                  "text-muted-foreground"
+                                                "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -970,7 +970,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                         className="w-full bg-primary hover:bg-primary/90"
                         disabled={loading}
                       >
-                        {loading ? "Loading..." : "Cặp nhật thông tin"}
+                        {loading ? "Loading..." : "Cập nhật thông tin"}
                       </Button>
                     </form>
                   </Form>
