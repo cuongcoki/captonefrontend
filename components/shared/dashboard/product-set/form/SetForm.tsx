@@ -170,7 +170,7 @@ export const SetForm = () => {
     const handleSearch = () => {
       setLoading(true);
       productApi
-        .searchProductForSet(searchTerm)
+        .searchProductForSet(searchTerm,1,100)
         .then(({ data }) => {
           setSearchResults(data.data.data);
         })
@@ -184,7 +184,6 @@ export const SetForm = () => {
 
     handleSearch();
   }, [searchTerm]);
-
   // ========================================================= các hàm để thêm sản phẩm và số lượng vào bộ sản phẩm =========================================================
 
   const [getDetailsPro, setGetDetailsPro] = useState<any[]>([]);
