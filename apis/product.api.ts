@@ -72,9 +72,21 @@ export const productApi = {
       }
     ),
 
-  searchProduct: (searchTerm?: string) =>
+  searchProduct: (searchTerm?: string, phaseId?: string, companyId?: string, pageIndex: number = 1, pageSize: number = 10) =>
     axiosClient.get(
-      `${endPointConstant.BASE_URL}/products/search?search=${searchTerm}`
+      `${endPointConstant.BASE_URL}/products/search?search=${searchTerm}&phaseId=${phaseId}&companyId=${companyId}&pageIndex=${pageIndex}&pageSize=${pageSize}`
+    ),
+
+  searchProductForSet: (searchTerm?: string, pageIndex: number = 1, pageSize: number = 10) =>
+    axiosClient.get(
+      `${endPointConstant.BASE_URL}/products/search-for-set`,
+      {
+        params: {
+          SearchTerm: searchTerm,
+          PageIndex: pageIndex,
+          PageSize: pageSize
+        }
+      }
     ),
 
   allMaterial: (
@@ -82,7 +94,7 @@ export const productApi = {
     PageSize?: any,
     searchTerm?: string
   ) => {
-    const requestBody = {  searchTerm, PageIndex, PageSize };
+    const requestBody = { searchTerm, PageIndex, PageSize };
     const cacheId = createCacheId("all-products", requestBody);
     cacheIds.add(cacheId);
     return axiosClient.get(`${endPointConstant.BASE_URL}/material`, {

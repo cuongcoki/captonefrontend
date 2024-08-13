@@ -303,11 +303,11 @@ export default function CountProduct({
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  Bạn có chắc chắn muốn xóa sản phẩm này
+                  Bạn có chắc chắn muốn xóa sản phẩm này?
                 </AlertDialogTitle>
                 <AlertDialogDescription>
                   Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh
-                  viên những dữ liệu mà bạn đã nhập
+                  viễn những dữ liệu mà bạn đã nhập!
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

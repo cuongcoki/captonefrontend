@@ -11,7 +11,7 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import { Package} from "lucide-react";
+import { Package } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
 export type Material = {
@@ -29,7 +29,7 @@ interface ImageIconShipOrderProps {
 export default function ImageIconMaterial({ dataImage }: ImageIconShipOrderProps) {
     const [open, setOpen] = useState<boolean>(false);
 
-    const handleGotoPID = ()=>{
+    const handleGotoPID = () => {
         window.location.href = `/dashboard/material/manager`;
         setOpen(false);
     }
@@ -48,15 +48,25 @@ export default function ImageIconMaterial({ dataImage }: ImageIconShipOrderProps
                             </div>
                             <Separator className="opacity-60" />
                             <div className="grid gap-2">
-                                <div className="grid grid-cols-3 items-center gap-4">
-                                    <Label htmlFor="maxWidth">Tên sp</Label>
-                                    <Input
-                                        id="maxWidth"
-                                        defaultValue={dataImage.name}
-                                        className="col-span-2 h-8"
-                                        readOnly
-                                    />
-                                </div>
+                                    <div className="m-1 ">
+                                        <div className="flex gap-2">
+                                            <span className="font-light">Tên:</span>
+                                            <span className="font-light">{dataImage.name}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <span className="font-light">Mô tả:</span>
+                                            <span className="font-light">{dataImage.description}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <span className="font-light">Số lượng trên một đơn vị:</span>
+                                            <span className="font-light">{dataImage.quantityPerUnit}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <span className="font-light">Số lượng còn hàng:</span>
+                                            <span className="font-light">{dataImage.quantityInStock}</span>
+                                        </div>
+                                        <Separator className="opacity-60 mt-1" />
+                                    </div>
                                 <div className="flex items-end justify-end">
                                     <span className="cursor-pointer flex items-center px-2 py-1 rounded-md text-white hover:bg-primary/90 bg-primary" onClick={handleGotoPID}>
                                         <Package className=" mr-1" /><span className="text-[15px]">Chi tiết</span>

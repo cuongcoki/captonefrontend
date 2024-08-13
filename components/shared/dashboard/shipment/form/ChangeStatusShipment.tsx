@@ -84,7 +84,6 @@ export const ChangeStatusShipment: React.FC<ShipmentIDProps> = ({ shipmentID }) 
         setLoading(true);
         shipmentApi.changeStatus(shipmentID.id, requestBody)
             .then(({ data }) => {
-                console.log("data", data)
                 ForceRender();
                 setOpen(false)
                 toast.success(data.message)

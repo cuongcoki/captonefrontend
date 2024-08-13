@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import {  useEffect,  useState } from "react";
+import { useEffect, useState } from "react";
 
 // ** import UI
 import { Label } from "@/components/ui/label";
@@ -60,7 +60,7 @@ interface productPhaseSalaries {
 
 export default function ProductIDPage() {
   const [open, setOpen] = useState<boolean>(false);
-  
+
   //state
   const [loading, setLoading] = useState<boolean>(false);
   const params = useParams<{ id: string }>();
@@ -216,7 +216,7 @@ export default function ProductIDPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="hidden sm:block">Tên</TableHead>
+                      <TableHead className="hidden sm:table-cell">Tên</TableHead>
                       <TableHead>Mô tả</TableHead>
                       <TableHead>Giá tiền</TableHead>
                     </TableRow>

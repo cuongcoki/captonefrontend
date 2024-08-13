@@ -167,7 +167,6 @@ export default function UpdateOrder({ orderId }: OrderId) {
   const [searchTermAll, setSearchTermAll] = useState<string>("");
   const [pageSize, setPageSize] = useState<number>(10);
   const [company, setCompany] = useState<Company[]>([]);
-console.log("orderId",orderId)
   const form = useForm({
     resolver: zodResolver(UpdateOrderSchema),
     defaultValues: {
@@ -225,7 +224,7 @@ console.log("orderId",orderId)
   }, [orderId]);
 
   const onSubmit = async (formData: z.infer<typeof UpdateOrderSchema>) => {
-  
+
     const requestBody = {
       ...formData,
       orderId: orderId?.id,
@@ -237,7 +236,7 @@ console.log("orderId",orderId)
         if (data.isSuccess) {
           ForceRender();
           setOpen(false)
-          toast.success("Cặp nhật đơn hàng thành công");
+          toast.success("Cập nhật đơn hàng thành công");
         }
       })
       .catch((error) => {
@@ -249,7 +248,7 @@ console.log("orderId",orderId)
           errors.Status.forEach((error: any) => {
             toast.error(error);
           });
-        
+
         }
         if (errors.CompanyId) {
           const companyIdError = errors.CompanyId;
@@ -260,7 +259,7 @@ console.log("orderId",orderId)
           }
         }
       })
-      .finally(()=>(
+      .finally(() => (
         setLoading(false)
       ))
   };
