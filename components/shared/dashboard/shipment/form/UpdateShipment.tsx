@@ -206,19 +206,21 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     const [productDetail, setProductDetail] = useState<any[]>([]);
     // ** state ShipmentID
     const [dataSID, setDataSID] = useState<shipmentID>();
-
+    console.log("dataSID", dataSID)
     // Hàm thêm sản phẩm
     const handleAddProducts = (
         imgProducts: string,
         itemId: string,
-        itemKind: number
+        itemKind: number,
+        phaseId?: any,
+        price?: any,
     ) => {
 
         setShipmentDetailRequests((prev: any) => [
             ...prev,
             {
                 itemId: itemId,
-                phaseId: null,
+                phaseId: phaseId,
                 quantity: 1,
                 kindOfShip: itemKind,
                 productPhaseType: 0,
@@ -230,11 +232,12 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
             {
                 itemId: itemId,
                 imgProducts,
-                phaseId: null,
+                phaseId: phaseId,
                 quantity: 1,
                 kindOfShip: itemKind,
                 productPhaseType: 0,
                 materialPrice: 0,
+                price: price,
             },
         ]);
     };
@@ -353,7 +356,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                     quantity: detail?.quantity || 0,
                     kindOfShip: detail?.product === null ? 1 : 0,
                     productPhaseType: detail?.productPhaseType || 0,
-                    imgProducts: detail?.product?.imageResponses?.find(image => image.isMainImage)?.imageUrl || detail?.material?.image
+                    imgProducts: detail?.product?.imageResponses?.find(image => image.isMainImage)?.imageUrl || detail?.material?.image,
+                    price: detail?.product?.price
                 })));
             }
         }
@@ -529,12 +533,12 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
 
     useEffect(() => {
         if (dataSID?.from?.id) {
-          setCompanyId(dataSID.from.id);
+            setCompanyId(dataSID.from.id);
         }
-      }, [dataSID]);
-      
+    }, [dataSID]);
+
     useEffect(() => {
-     
+
         const handleSearch = () => {
             setLoading(true);
             productApi
@@ -1086,7 +1090,13 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                 <Tabs defaultValue="account">
                                                     <TabsList className="grid w-[200px] grid-cols-2">
                                                         <TabsTrigger value="account" className="data-[state=active]:shadow-lg">Sản phẩm</TabsTrigger>
-                                                        <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
+                                                        {
+                                                            companyType === 0 ? (
+                                                                <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
+                                                            ) : (
+                                                                ""
+                                                            )
+                                                        }
                                                     </TabsList>
                                                     <TabsContent value="account">
                                                         <Card>
@@ -1100,6 +1110,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
 
                                                                 <div className="flex items-center mb-3 gap-3">
                                                                     <Input
+                                                                        disabled={phaseId === undefined}
                                                                         placeholder="Tìm kiếm sản phẩm..."
                                                                         value={searchTerm}
                                                                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -1107,6 +1118,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                     />
 
                                                                     <Select
+                                                                        disabled={companyId === undefined}
                                                                         defaultValue={phaseId}
                                                                         onValueChange={(value) => setPhaseId(value)}
                                                                     >
@@ -1146,7 +1158,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                             handleAddProducts(
                                                                                                 item.imageUrl ? item.imageUrl : "",
                                                                                                 item?.id,
-                                                                                                productType
+                                                                                                productType,
+                                                                                                item?.phaseId,
+                                                                                                item.price,
                                                                                             );
                                                                                         }}
                                                                                     >
@@ -1293,7 +1307,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                             )
                                                                                         }
                                                                                     >
-                                                                                        <SelectTrigger className="w-[100px]">
+                                                                                        <SelectTrigger disabled className="w-[100px]">
                                                                                             <SelectValue placeholder="Giai đoạn sản phẩm" />
                                                                                         </SelectTrigger>
                                                                                         <SelectContent>
@@ -1402,7 +1416,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                     />
 
                                                                                 ) : (
-                                                                                    <>Không có</>
+                                                                                    <span className="font-light text-primary">{formatCurrency(proDetail.price)} .đ</span>
                                                                                 )}
                                                                             </TableCell>
                                                                             <TableCell>
