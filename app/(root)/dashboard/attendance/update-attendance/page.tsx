@@ -7,15 +7,26 @@ type Props = {
 };
 
 export default async function page({ searchParams }: Props) {
+  const options = { timeZone: "Asia/Ho_Chi_Minh", hour12: false };
   const day = new Date();
-  const month =
-    day.getMonth() + 1 < 10 ? "0" + (day.getMonth() + 1) : day.getMonth() + 1;
-  const toDay = day.getDate() + "/" + month + "/" + day.getFullYear();
+  const vietnamTime = new Intl.DateTimeFormat("en-US", options).formatToParts(
+    day
+  );
+
+  const vietnamHours = parseInt(
+    vietnamTime.find((part) => part.type === "hour")?.value || "0",
+    10
+  );
+  const vietnamMonth = vietnamTime.find((part) => part.type === "month")?.value;
+  const vietnamDate = vietnamTime.find((part) => part.type === "day")?.value;
+  const vietnamYear = vietnamTime.find((part) => part.type === "year")?.value;
+
+  const toDay = `${vietnamDate}/${vietnamMonth}/${vietnamYear}`;
   searchParams.date = searchParams.date || toDay;
-  const slot = day.getHours() < 12 ? "1" : day.getHours() < 18 ? "2" : "3";
+
+  const slot = vietnamHours < 12 ? "1" : vietnamHours < 18 ? "2" : "3";
   searchParams.slot = searchParams.slot || slot;
   searchParams.warehouse = searchParams.warehouse || "";
-  // console.log("searchParams", searchParams);
 
   return (
     <div className="">
