@@ -268,18 +268,20 @@ export default function CreateShipment() {
     ShipmentDetailRequest[]
   >([]);
   const [productDetail, setProductDetail] = useState<any[]>([]);
-
+  console.log("shipmentDetailRequests", shipmentDetailRequests)
   // Hàm thêm sản phẩm
   const handleAddProducts = (
     imgProducts: string,
     itemId: string,
-    itemKind: number
+    itemKind: number,
+    phaseId?: any,
+    price?: any,
   ) => {
     setShipmentDetailRequests((prev: any) => [
       ...prev,
       {
         itemId: itemId,
-        phaseId: null,
+        phaseId: phaseId,
         quantity: 1,
         kindOfShip: itemKind,
         productPhaseType: 0,
@@ -291,11 +293,12 @@ export default function CreateShipment() {
       {
         itemId: itemId,
         imgProducts,
-        phaseId: null,
+        phaseId: phaseId,
         quantity: 1,
         kindOfShip: itemKind,
         productPhaseType: 0,
         materialPrice: 0,
+        price: price,
       },
     ]);
   };
@@ -776,6 +779,7 @@ export default function CreateShipment() {
     const cleanedValue = value.replace(/\./g, "");
     return parseInt(cleanedValue);
   };
+
   const handleClearForm = () => {
     setOpen(false)
     setOpenAlert(false)
@@ -783,6 +787,9 @@ export default function CreateShipment() {
     form.reset();
     setShipmentDetailRequests([]);
     setProductDetail([]);
+    setCompanyId(undefined);
+    setPhaseId(undefined);
+
   }
 
   const handleOffDialog = () => {
@@ -803,6 +810,7 @@ export default function CreateShipment() {
     }
   };
 
+  console.log("companyType", companyType)
   const { pending } = useFormStatus();
   return (
     <>
@@ -1150,7 +1158,13 @@ export default function CreateShipment() {
                         <Tabs defaultValue="account">
                           <TabsList className="grid w-[200px] grid-cols-2">
                             <TabsTrigger value="account" className="data-[state=active]:shadow-lg">Sản phẩm</TabsTrigger>
-                            <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
+                            {
+                              companyType === 0 ? (
+                                <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
+                              ) : (
+                               ""
+                              )
+                            }
                           </TabsList>
                           <TabsContent value="account">
                             <Card>
@@ -1164,6 +1178,7 @@ export default function CreateShipment() {
 
                                 <div className="flex items-center mb-3 gap-3">
                                   <Input
+                                    disabled={phaseId === undefined}
                                     placeholder="Tìm kiếm sản phẩm..."
                                     value={searchTerm}
                                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -1171,6 +1186,7 @@ export default function CreateShipment() {
                                   />
 
                                   <Select
+                                    disabled={companyId === undefined}
                                     defaultValue={phaseId}
                                     onValueChange={(value) => setPhaseId(value)}
                                   >
@@ -1200,8 +1216,8 @@ export default function CreateShipment() {
                                           <ImageIconShipmentForm dataImage={item} />
                                           <Check
                                             className={`${shipmentDetailRequests.some((item1) => item1.itemId === item.id)
-                                                ? "absolute top-0 right-0 bg-primary text-white"
-                                                : "hidden"
+                                              ? "absolute top-0 right-0 bg-primary text-white"
+                                              : "hidden"
                                               }`}
                                           />
                                           <span
@@ -1210,7 +1226,9 @@ export default function CreateShipment() {
                                               handleAddProducts(
                                                 item.imageUrl ? item.imageUrl : "",
                                                 item?.id,
-                                                productType
+                                                productType,
+                                                item?.phaseId,
+                                                item.price,
                                               );
                                             }}
                                           >
@@ -1356,11 +1374,11 @@ export default function CreateShipment() {
                                             )
                                           }
                                         >
-                                          <SelectTrigger className="w-[100px]">
+                                          <SelectTrigger disabled className="w-[100px]">
                                             <SelectValue placeholder="Giai đoạn sản phẩm" />
                                           </SelectTrigger>
-                                          <SelectContent>
-                                            <SelectGroup>
+                                          <SelectContent >
+                                            <SelectGroup >
                                               {dataPh.map((item) => (
                                                 <SelectItem
                                                   key={item.id}
@@ -1465,7 +1483,7 @@ export default function CreateShipment() {
                                           className="w-[150px] text-left outline-none"
                                         />
                                       ) : (
-                                        <>Không có</>
+                                        <span className="font-light text-primary">{formatCurrency(proDetail.price)} .đ</span>
                                       )}
                                     </TableCell>
                                     <TableCell>
