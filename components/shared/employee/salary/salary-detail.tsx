@@ -130,7 +130,7 @@ export default function SalaryDetailEm({
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
             <Card className="sm:col-span-2" x-chunk="dashboard-05-chunk-0">
               <CardHeader className="pb-3">
-                <CardDescription>Lương khả dụng</CardDescription>
+                <CardDescription>Lương tháng</CardDescription>
                 <CardTitle className="text-4xl text-primary">
                   {data.salary === 0 ? 0 : formatCurrency(data.salary)} VNĐ
                 </CardTitle>

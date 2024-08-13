@@ -224,7 +224,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
   }, [orderId]);
 
   const onSubmit = async (formData: z.infer<typeof UpdateOrderSchema>) => {
-  
+
     const requestBody = {
       ...formData,
       orderId: orderId?.id,
@@ -236,7 +236,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
         if (data.isSuccess) {
           ForceRender();
           setOpen(false)
-          toast.success("Cặp nhật đơn hàng thành công");
+          toast.success("Cập nhật đơn hàng thành công");
         }
       })
       .catch((error) => {
@@ -248,7 +248,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
           errors.Status.forEach((error: any) => {
             toast.error(error);
           });
-        
+
         }
         if (errors.CompanyId) {
           const companyIdError = errors.CompanyId;
@@ -259,7 +259,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
           }
         }
       })
-      .finally(()=>(
+      .finally(() => (
         setLoading(false)
       ))
   };
