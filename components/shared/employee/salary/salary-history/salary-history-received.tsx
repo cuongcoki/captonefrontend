@@ -156,7 +156,7 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
           <div className="text-sm text-primary">
             Lương khả dụng còn lại:{" "}
             <span className="text-primary font-bold">
-              {formatCurrency(accountBalance)} VNĐ
+              {accountBalance === 0 ? 0 : formatCurrency(accountBalance)} VNĐ
             </span>
           </div>
           <Pagination className="ml-auto mr-0 w-auto">
