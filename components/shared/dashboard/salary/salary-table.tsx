@@ -104,6 +104,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
               return {
                 ...prev,
                 searchUser: event.target.value,
+                pageIndex: 1,
               };
             });
           }}
@@ -116,6 +117,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
                 return {
                   ...prev,
                   year: value,
+                  pageIndex: 1,
                 };
               });
             }}
@@ -144,6 +146,7 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
                 return {
                   ...prev,
                   month: value,
+                  pageIndex: 1,
                 };
               });
             }}
