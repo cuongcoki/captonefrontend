@@ -1,5 +1,5 @@
 "use client";
-import React, {  useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   AttendanceDetailProductType,
   AttendanceDetailType,
@@ -21,7 +21,7 @@ import {
 } from "@/types/attendance.type";
 import toast from "react-hot-toast";
 import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
-import { format} from "date-fns";
+import { format } from "date-fns";
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import { Combobox } from "@/components/shared/common/combobox/combobox";
 import { usePathname, useRouter } from "next/navigation";
@@ -127,7 +127,7 @@ export default function UpdateAttendanceEm({
   useEffect(() => {
     let localWareHouse = wareHouseRef.current || "";
     let userD: User[] = [];
-   
+
     const FetchGetUser = async () => {
       try {
         const response = await attendanceApi.getUserByCompanyId({
@@ -135,8 +135,7 @@ export default function UpdateAttendanceEm({
         });
         const data = response.data.data;
         userD = data;
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     // GET IMAGE OF USER
     const FetchImageOfUser = async () => {
@@ -147,8 +146,7 @@ export default function UpdateAttendanceEm({
         try {
           const response = await filesApi.getFile(userD[i].avatar);
           iamges.set(userD[i].id, response.data.data);
-        } catch (error) {
-        }
+        } catch (error) {}
       }
       setImageOfUser(iamges);
       setUsers(userD);
@@ -159,8 +157,7 @@ export default function UpdateAttendanceEm({
       try {
         const res = await filesApi.getFile(name);
         return res.data.data;
-      } catch (error: any) {
-      }
+      } catch (error: any) {}
     };
     const setOfUser = new Set<string>();
     // GET ATTENDANCE DATA
@@ -228,7 +225,8 @@ export default function UpdateAttendanceEm({
         })
         .finally(() => {
           router.push(
-            `${pathname}?${userData.roleId == "2" ? "" : `warehouse=${warehouse}&`
+            `${pathname}?${
+              userData.roleId == "2" ? "" : `warehouse=${warehouse}&`
             }date=${date}&slot=${slot}`
           );
         });
@@ -241,7 +239,6 @@ export default function UpdateAttendanceEm({
       setIsChangeCompany(false);
     };
     FetchData();
-
   }, [
     setUser,
     pathname,
@@ -277,7 +274,7 @@ export default function UpdateAttendanceEm({
       .then(({ data }) => {
         console.log(data);
         // ForceRender();
-        toast.success(data.message);
+        // toast.success(data.message);
       });
   };
 
@@ -317,7 +314,6 @@ export default function UpdateAttendanceEm({
       };
     }
 
-
     if (isCreate) {
       attendanceApi
         .createAttendance(DataBody as CreateAttendanceBody)
@@ -336,13 +332,13 @@ export default function UpdateAttendanceEm({
             toast.error(error.response.data.message);
           }
         })
-        .finally(() => {
-        });
+        .finally(() => {});
     } else {
       attendanceApi
         .updateAttendance(DataBody as UpdateAttendanceBody)
         .then(({ data }) => {
           console.log(data);
+          toast.success(data.message);
           updateEmployeeProduct();
         })
         .catch((error) => {
@@ -354,8 +350,7 @@ export default function UpdateAttendanceEm({
             toast.error(error.response.data.message);
           }
         })
-        .finally(() => {
-        });
+        .finally(() => {});
     }
   };
   function convertDateFormat(inputDate: string) {
@@ -363,15 +358,15 @@ export default function UpdateAttendanceEm({
     let formattedDate = parts[2] + "-" + parts[1] + "-" + parts[0];
     return formattedDate;
   }
-  useEffect(() => {
-  }, [tableData]);
+  useEffect(() => {}, [tableData]);
 
   return (
     <div>
       <HeaderComponent
         title={`Điểm danh nhân viên - ${CheckUser.user?.companyName}`}
-        description={`Điểm danh nhân viên ngày ${dateProp} - ${comboboxData.find((item) => item.value === slotProp)?.label
-          }.`}
+        description={`Điểm danh nhân viên ngày ${dateProp} - ${
+          comboboxData.find((item) => item.value === slotProp)?.label
+        }.`}
       />
       <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 mb-5 flex-wrap ">
         <div className="">
@@ -597,10 +592,11 @@ export default function UpdateAttendanceEm({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
+                          className={`${
+                            item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
                               : "bg-white dark:bg-card "
-                            }`}
+                          }`}
                         >
                           Nhấn vào
                         </td>
@@ -610,10 +606,11 @@ export default function UpdateAttendanceEm({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
+                          className={`${
+                            item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
                               : "bg-white dark:bg-card"
-                            }`}
+                          }`}
                         >
                           Để tạo
                         </td>
@@ -623,10 +620,11 @@ export default function UpdateAttendanceEm({
                           data-index={index}
                           data-ismanufacture={item.isManufacture}
                           data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
+                          className={`${
+                            item.isSalaryByProduct === true
                               ? "dark:bg-[#1c1917] "
                               : "bg-white dark:bg-card"
-                            }`}
+                          }`}
                         >
                           Sản phẩm
                         </td>
