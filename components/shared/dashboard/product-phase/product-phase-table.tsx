@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -53,6 +53,7 @@ export default function ProductPhaseTable({
   const [total, setTotal] = React.useState(0);
   const pathname = usePathname();
   const router = useRouter();
+  const CompanyIDSetRef = useRef(new Set<string>());
 
   useEffect(() => {
     attendanceApi
@@ -76,6 +77,9 @@ export default function ProductPhaseTable({
           label: item.name,
           value: item.id,
         }));
+        res.data.data.forEach((item) => {
+          CompanyIDSetRef.current.add(item.id);
+        });
       } catch (e) {
         console.log(e);
       }
@@ -223,44 +227,82 @@ export default function ProductPhaseTable({
                   </TableCell>
                 </TableRow>
               ) : (
-                tableData.map((item, index) => (
-                  <ProductPhaseChangeQuantityType
-                    index={index}
-                    key={item.productId + item.phaseId}
-                  >
-                    <TableRow className="hover:cursor-pointer">
-                      <TableCell>
-                        <div className="size-10 bg-gray-400">
-                          <Image
-                            className="object-cover size-10"
-                            src={item.imageUrl}
-                            width={100}
-                            height={100}
-                            alt={item.productName}
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell>{item.productName}</TableCell>
-                      <TableCell>{item.productCode}</TableCell>
-                      <TableCell>{item.phaseDescription}</TableCell>
-                      <TableCell>
-                        {formatCurrency(item.availableQuantity)}
-                      </TableCell>
-                      <TableCell>
-                        {formatCurrency(item.failureAvailabeQuantity)}
-                      </TableCell>
-                      <TableCell>
-                        {formatCurrency(item.errorAvailableQuantity)}
-                      </TableCell>
-                      <TableCell>
-                        {formatCurrency(item.brokenAvailableQuantity)}
-                      </TableCell>
-                      {/* <TableCell className="flex justify-center">
-                      <ProductPhaseAction index={index} />
-                    </TableCell> */}
-                    </TableRow>
-                  </ProductPhaseChangeQuantityType>
-                ))
+                tableData.map((item, index) => {
+                  if (CompanyIDSetRef.current.has(item.companyId)) {
+                    return (
+                      <ProductPhaseChangeQuantityType
+                        index={index}
+                        key={item.productId + item.phaseId}
+                      >
+                        <TableRow className="hover:cursor-pointer">
+                          <TableCell>
+                            <div className="size-10 bg-gray-400">
+                              <Image
+                                className="object-cover size-10"
+                                src={item.imageUrl}
+                                width={100}
+                                height={100}
+                                alt={item.productName}
+                              />
+                            </div>
+                          </TableCell>
+                          <TableCell>{item.productName}</TableCell>
+                          <TableCell>{item.productCode}</TableCell>
+                          <TableCell>{item.phaseDescription}</TableCell>
+                          <TableCell>
+                            {formatCurrency(item.availableQuantity)}
+                          </TableCell>
+                          <TableCell>
+                            {formatCurrency(item.failureAvailabeQuantity)}
+                          </TableCell>
+                          <TableCell>
+                            {formatCurrency(item.errorAvailableQuantity)}
+                          </TableCell>
+                          <TableCell>
+                            {formatCurrency(item.brokenAvailableQuantity)}
+                          </TableCell>
+                          {/* <TableCell className="flex justify-center">
+                            <ProductPhaseAction index={index} />
+                          </TableCell> */}
+                        </TableRow>
+                      </ProductPhaseChangeQuantityType>
+                    );
+                  } else {
+                    return (
+                      <TableRow key={item.productId + item.phaseId}>
+                        <TableCell>
+                          <div className="size-10 bg-gray-400">
+                            <Image
+                              className="object-cover size-10"
+                              src={item.imageUrl}
+                              width={100}
+                              height={100}
+                              alt={item.productName}
+                            />
+                          </div>
+                        </TableCell>
+                        <TableCell>{item.productName}</TableCell>
+                        <TableCell>{item.productCode}</TableCell>
+                        <TableCell>{item.phaseDescription}</TableCell>
+                        <TableCell>
+                          {formatCurrency(item.availableQuantity)}
+                        </TableCell>
+                        <TableCell>
+                          {formatCurrency(item.failureAvailabeQuantity)}
+                        </TableCell>
+                        <TableCell>
+                          {formatCurrency(item.errorAvailableQuantity)}
+                        </TableCell>
+                        <TableCell>
+                          {formatCurrency(item.brokenAvailableQuantity)}
+                        </TableCell>
+                        {/* <TableCell className="flex justify-center">
+                          <ProductPhaseAction index={index} />
+                        </TableCell> */}
+                      </TableRow>
+                    );
+                  }
+                })
               )}
             </TableBody>
           </Table>
