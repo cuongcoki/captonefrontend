@@ -1162,7 +1162,7 @@ export default function CreateShipment() {
                               companyType === 0 ? (
                                 <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
                               ) : (
-                               ""
+                                ""
                               )
                             }
                           </TabsList>
@@ -1513,7 +1513,7 @@ export default function CreateShipment() {
                         className="w-full bg-primary hover:bg-primary/90"
                         disabled={pending}
                       >
-                        {pending ? "Loading..." : "Tạo đơn"}
+                        {pending ? "Đang xử lý" : "Tạo đơn"}
                       </Button>
                     </form>
                   </Form>

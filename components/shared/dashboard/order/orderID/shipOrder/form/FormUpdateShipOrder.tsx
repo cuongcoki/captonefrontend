@@ -1,4 +1,4 @@
-import { Card} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
@@ -38,7 +38,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 
 // import ICON
-import { CalendarIcon, Check, CirclePlus, CircleX, PenLine,  X } from "lucide-react";
+import { CalendarIcon, Check, CirclePlus, CircleX, PenLine, X } from "lucide-react";
 
 // import REACT
 import { useEffect, useState } from "react";
@@ -281,7 +281,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                     const response = await filesApi.getFile(img.imageUrl);
                                     return response.data.data;
                                 } catch (error) {
-                                    return null; 
+                                    return null;
                                 }
                             })
                         );
@@ -309,7 +309,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                     itemKind: item.product ? 0 : 1,
                 }))
             );
-            fetchImages(); 
+            fetchImages();
         }
 
         if (shipOrderId) {
@@ -379,11 +379,11 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
             .catch(error => {
                 if (error.response.data.error) {
                     for (const key in error.response.data.error) {
-                      toast.error(error.response.data.error[key][0]);
+                        toast.error(error.response.data.error[key][0]);
                     }
-                  } else {
+                } else {
                     toast.error(error.response.data.message);
-                  }
+                }
             })
             .finally(() => {
                 setLoading(false)
@@ -615,7 +615,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                             className="w-full bg-primary hover:bg-primary/90"
                                             disabled={loading}
                                         >
-                                            {loading ? "Loading..." : "Tạo đơn"}
+                                            {loading ? "Đang xử lý" : "Tạo đơn"}
                                         </Button>
                                     </form>
                                 </Form>
