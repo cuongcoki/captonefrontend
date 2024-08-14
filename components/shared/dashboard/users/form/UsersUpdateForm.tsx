@@ -1007,7 +1007,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                         className="w-full bg-primary hover:bg-primary/90"
                         disabled={loading}
                       >
-                        {loading ? "Loading..." : "Cập nhật thông tin"}
+                        {loading ? "Đang xử lý" : "Cập nhật thông tin"}
                       </Button>
                     </form>
                   </Form>
