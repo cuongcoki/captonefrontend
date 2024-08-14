@@ -112,6 +112,26 @@ interface ShipmentIDProps {
   shipmentIDDes: string;
 }
 
+
+const ProductPhaseType = [
+  {
+    id: 0,
+    des: "bình thường",
+  },
+  {
+    id: 1,
+    des: "lỗi bên cơ sở",
+  },
+  {
+    id: 2,
+    des: "lỗi bên hợp tác",
+  },
+  {
+    id: 3,
+    des: "lỗi không sửa đc nữa",
+  },
+];
+
 export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
   //state
   const [loading, setLoading] = useState<boolean>(false);
@@ -271,7 +291,9 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                   {item.product && (`- ${item?.phase?.description}`)}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
-                                  {item.product && (`- ${item?.productPhaseTypeDescription}`)}
+                                  {item.product && (
+                                    `- Sản phẩm ${ProductPhaseType.find(phase => phase.id === item.productPhaseType)?.des || "Không có"}`
+                                  )}
                                 </span>
 
                               </div>
