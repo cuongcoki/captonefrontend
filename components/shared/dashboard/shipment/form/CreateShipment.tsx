@@ -118,19 +118,19 @@ const enumCompany = [
 const ProductPhaseType = [
   {
     id: 0,
-    des: "bình thường",
+    des: "Bình thường",
   },
   {
     id: 1,
-    des: "lỗi bên cơ sở",
+    des: "Lỗi bên cơ sở",
   },
   {
     id: 2,
-    des: "lỗi bên hợp tác",
+    des: "Lỗi bên hợp tác",
   },
   {
     id: 3,
-    des: "lỗi k sửa đc nữa",
+    des: "Lỗi không sửa đc nữa",
   },
 ];
 
@@ -1201,14 +1201,19 @@ export default function CreateShipment() {
                                     </SelectTrigger>
                                     <SelectContent>
                                       <SelectGroup>
-                                        {dataPh.map((item) => (
-                                          <SelectItem
-                                            key={item.id}
-                                            value={item.id}
-                                          >
-                                            {item.name}-{item.description}
-                                          </SelectItem>
-                                        ))}
+                                        {dataPh
+                                          .filter(item =>
+                                            item.id === "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
+                                            item.id === "4d2113f9-2009-4c37-82b1-195ecbb9c706"
+                                          )
+                                          .map(item => (
+                                            <SelectItem
+                                              key={item.id}
+                                              value={item.id}
+                                            >
+                                              {item.name}-{item.description}
+                                            </SelectItem>
+                                          ))}
                                       </SelectGroup>
                                     </SelectContent>
                                   </Select>

@@ -341,6 +341,16 @@ export const columns: ColumnDef<Shipment>[] = [
 
   {
     id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: ({ row }) =>
+      <>
+        {
+            row.original.isAccepted === false ? (
+              <DataTableRowActions row={row} />
+            ) : (
+            ""
+            )
+          }
+      </>
+    ,
   },
 ];

@@ -73,11 +73,18 @@ export default function RenderTableShipment() {
           status,
           searchTerm
         );
-        setData(response.data.data.data);
+        const responseData = response.data.data.data;
+        setData(responseData);
         console.log("response", response.data)
-        setCurrentPage(response.data.data.currentPage);
-        setTotalPages(response.data.data.totalPages);
+        if (responseData.length === 0) {
+          setTotalPages(1);
+          setCurrentPage(1);
+        } else {
+          setCurrentPage(response.data.data.currentPage);
+          setTotalPages(response.data.data.totalPages);
+        }
       } catch (error: any) {
+
         if (error.response.data.error) {
           toast.error(error.response.data.message);
         } else {
