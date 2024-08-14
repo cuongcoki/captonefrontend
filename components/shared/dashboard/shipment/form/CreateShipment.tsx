@@ -118,19 +118,19 @@ const enumCompany = [
 const ProductPhaseType = [
   {
     id: 0,
-    des: "Sản phẩm bình thường",
+    des: "bình thường",
   },
   {
     id: 1,
-    des: "Sản phẩm lỗi do bên cơ sở",
+    des: "lỗi bên cơ sở",
   },
   {
     id: 2,
-    des: "Sản phẩm lỗi do bên thứ 3",
+    des: "lỗi bên hợp tác",
   },
   {
     id: 3,
-    des: "Sản phẩm lỗi k sửa đc nữa",
+    des: "lỗi k sửa đc nữa",
   },
 ];
 
@@ -271,6 +271,7 @@ export default function CreateShipment() {
   console.log("shipmentDetailRequests", shipmentDetailRequests)
   // Hàm thêm sản phẩm
   const handleAddProducts = (
+    item: any,
     imgProducts: string,
     itemId: string,
     itemKind: number,
@@ -291,6 +292,7 @@ export default function CreateShipment() {
     setProductDetail((prev) => [
       ...prev,
       {
+        item,
         itemId: itemId,
         imgProducts,
         phaseId: phaseId,
@@ -1194,7 +1196,7 @@ export default function CreateShipment() {
                                     defaultValue={phaseId}
                                     onValueChange={(value) => setPhaseId(value)}
                                   >
-                                    <SelectTrigger className="w-[150px]">
+                                    <SelectTrigger className="w-[250px]">
                                       <SelectValue placeholder="Giai đoạn sản phẩm" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -1204,7 +1206,7 @@ export default function CreateShipment() {
                                             key={item.id}
                                             value={item.id}
                                           >
-                                            {item.name}
+                                            {item.name}-{item.description}
                                           </SelectItem>
                                         ))}
                                       </SelectGroup>
@@ -1228,6 +1230,7 @@ export default function CreateShipment() {
                                             className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                             onClick={() => {
                                               handleAddProducts(
+                                                item,
                                                 item.imageUrl ? item.imageUrl : "",
                                                 item?.id,
                                                 productType,
@@ -1308,6 +1311,7 @@ export default function CreateShipment() {
                                         className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                         onClick={() =>
                                           handleAddProducts(
+                                            item,
                                             item?.image,
                                             item?.id,
                                             materialType
@@ -1343,9 +1347,10 @@ export default function CreateShipment() {
                               <TableHeader>
                                 <TableRow>
                                   <TableHead className="w-[100px]">Hình ảnh</TableHead>
+                                  <TableHead>Tên mặt hàng</TableHead>
                                   <TableHead>Giai đoạn</TableHead>
                                   <TableHead>Số lượng</TableHead>
-                                  <TableHead>Loại hàng</TableHead>
+                                  {/* <TableHead>Loại hàng</TableHead> */}
                                   <TableHead>Chất lượng</TableHead>
                                   <TableHead>Giá Tiền</TableHead>
                                   <TableHead></TableHead>
@@ -1365,35 +1370,16 @@ export default function CreateShipment() {
                                         />
                                       </div>
                                     </TableCell>
+                                    <TableCell className=" text-sm">
+                                      {proDetail.kindOfShip === 0
+                                        ? `${proDetail?.item?.code}-${proDetail?.item?.name}`
+                                        : `NVL-${proDetail?.item?.name}`}
+                                    </TableCell>
                                     <TableCell>
                                       {proDetail.kindOfShip === 0 ? (
-                                        <Select
-                                          defaultValue={String(proDetail.phaseId)}
-                                          onValueChange={(value) =>
-                                            handleChange(
-                                              proDetail.itemId,
-                                              "phaseId",
-                                              value,
-                                              index
-                                            )
-                                          }
-                                        >
-                                          <SelectTrigger disabled className="w-[100px]">
-                                            <SelectValue placeholder="Giai đoạn sản phẩm" />
-                                          </SelectTrigger>
-                                          <SelectContent >
-                                            <SelectGroup >
-                                              {dataPh.map((item) => (
-                                                <SelectItem
-                                                  key={item.id}
-                                                  value={item.id}
-                                                >
-                                                  {item.name}
-                                                </SelectItem>
-                                              ))}
-                                            </SelectGroup>
-                                          </SelectContent>
-                                        </Select>
+                                        <span className="w-[100px] block">
+                                          {dataPh.find((item) => item.id === proDetail.phaseId)?.name || "Giai đoạn sản phẩm"}
+                                        </span>
                                       ) : (
                                         <>Không có</>
                                       )}
@@ -1421,11 +1407,11 @@ export default function CreateShipment() {
                                         className="w-16 text-center outline-none"
                                       />
                                     </TableCell>
-                                    <TableCell>
+                                    {/* <TableCell>
                                       {proDetail.kindOfShip === 0
                                         ? "Sản phẩm"
                                         : "Vật liệu"}
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell>
                                       {proDetail.kindOfShip === 0 ? (
                                         <Select
@@ -1458,7 +1444,7 @@ export default function CreateShipment() {
                                           </SelectContent>
                                         </Select>
                                       ) : (
-                                        <div>Không có</div>
+                                        <div>Bình thường</div>
                                       )}
                                     </TableCell>
                                     <TableCell>
