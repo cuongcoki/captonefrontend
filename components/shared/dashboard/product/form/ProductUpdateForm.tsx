@@ -15,7 +15,7 @@ import { EllipsisVertical, Trash2, Upload } from "lucide-react";
 import { ProductUpdateSchema } from "@/schema/product";
 import toast from "react-hot-toast";
 import { productApi } from "@/apis/product.api";
-import {  z } from "zod";
+import { z } from "zod";
 
 import {
   Select,
@@ -58,7 +58,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import * as Dialog from "@radix-ui/react-dialog";
-import {  X } from "lucide-react";
+import { X } from "lucide-react";
 
 interface ProductData {
   code: string;
@@ -479,7 +479,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     } catch (error: any) {
     } finally {
       setLoading(false);
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
     }
   };
 

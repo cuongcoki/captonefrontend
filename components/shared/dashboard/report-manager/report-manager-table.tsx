@@ -81,8 +81,7 @@ export default function ReportManagerTable({
             return { ...prev, CompanyId: companyId };
           });
         }
-      } catch (e) {
-      }
+      } catch (e) {}
     };
 
     const fetchGetReports = async () => {
@@ -102,8 +101,7 @@ export default function ReportManagerTable({
         setTableData(res.data.data.data);
         setTotalPage(res.data.data.totalPages);
         router.push(buildUrlParams(pathName, params));
-      } catch (e) {
-      }
+      } catch (e) {}
     };
 
     const LoadTableData = async () => {
@@ -114,8 +112,7 @@ export default function ReportManagerTable({
         } else {
           await fetchGetReports();
         }
-      } catch (error) {
-      }
+      } catch (error) {}
     };
     LoadTableData();
   }, [
@@ -146,6 +143,7 @@ export default function ReportManagerTable({
                 setParams((prev) => ({
                   ...prev,
                   CompanyId: value,
+                  PageIndex: 1,
                 }));
               }}
             >
@@ -173,6 +171,7 @@ export default function ReportManagerTable({
               setParams((prev) => ({
                 ...prev,
                 ReportType: value === "-1" ? "" : value,
+                PageIndex: 1,
               }));
             }}
           >
@@ -207,6 +206,7 @@ export default function ReportManagerTable({
               setParams((prev) => ({
                 ...prev,
                 Status: value === "-1" ? "" : value,
+                PageIndex: 1,
               }));
             }}
           >
@@ -294,8 +294,9 @@ export default function ReportManagerTable({
                     </TableCell>
                     <TableCell>
                       <div
-                        className={`text-center ${ColorOfTypeStatus[report.status]
-                          }`}
+                        className={`text-center ${
+                          ColorOfTypeStatus[report.status]
+                        }`}
                       >
                         {StatusDescription[report.status]}
                       </div>

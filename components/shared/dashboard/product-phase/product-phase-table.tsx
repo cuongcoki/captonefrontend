@@ -149,7 +149,11 @@ export default function ProductPhaseTable({
           value={params.SearchProduct}
           placeholder="Tìm kiếm theo tên hoặc mã sản phẩm"
           onChange={(event) => {
-            setParams({ ...params, SearchProduct: event.target.value });
+            setParams({
+              ...params,
+              SearchProduct: event.target.value,
+              PageIndex: 1,
+            });
           }}
         />
         <div className="flex flex-col sm:flex-row items-start gap-3">
@@ -158,7 +162,7 @@ export default function ProductPhaseTable({
               data={companyData}
               title="Vui lòng chọn công ty"
               setValue={(value: string) => {
-                setParams({ ...params, SearchCompany: value });
+                setParams({ ...params, SearchCompany: value, PageIndex: 1 });
               }}
               value={
                 params.SearchCompany
@@ -172,10 +176,10 @@ export default function ProductPhaseTable({
               value={params.SearchPhase}
               onValueChange={(value) => {
                 if (value == "-1") {
-                  setParams({ ...params, SearchPhase: "" });
+                  setParams({ ...params, SearchPhase: "", PageIndex: 1 });
                   return;
                 }
-                setParams({ ...params, SearchPhase: value });
+                setParams({ ...params, SearchPhase: value, PageIndex: 1 });
               }}
             >
               <SelectTrigger className="sm:w-[180px] w-full">

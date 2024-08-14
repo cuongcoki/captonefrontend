@@ -4,7 +4,7 @@ import { CompanyAdd } from "@/components/shared/dashboard/company/company-add";
 import { companyStore } from "@/components/shared/dashboard/company/company-store";
 import CompanyUpdate from "@/components/shared/dashboard/company/company-update";
 import { Input } from "@/components/ui/input";
-import { CompanyParams,  } from "@/types/company.type";
+import { CompanyParams } from "@/types/company.type";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import {
@@ -45,11 +45,11 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
   const handleChangeCompanyType = (value: string) => {
     if (value === "-1") {
       setParams((prev) => {
-        return { ...prev, companyType: "" };
+        return { ...prev, companyType: "", pageIndex: 1 };
       });
     } else {
       setParams((prev) => {
-        return { ...prev, companyType: value };
+        return { ...prev, companyType: value, pageIndex: 1 };
       });
     }
   };
@@ -70,8 +70,7 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
         setTotalPage(data.data.totalPages);
         setTableData(data.data.data);
       })
-      .catch((error) => {
-      })
+      .catch((error) => {})
       .finally(() => {
         router.push(
           `${pathname}?name=${params.name}&companyType=${params.companyType}&pageIndex=${params.pageIndex}`
@@ -94,6 +93,7 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
               return {
                 ...prev,
                 name: event.target.value,
+                pageIndex: 1,
               };
             });
           }}

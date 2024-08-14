@@ -230,9 +230,15 @@ export default function UserIDPage() {
           isActive: !userId.isActive,
         });
       })
-      .catch((e) => {
-        console.error("Error changing user status:", e);
-        toast.error("Thay đổi trạng thái thất bại");
+      .catch((error) => {
+        console.error("Error changing user status:", error);
+        if (error.response.data.error) {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
+        } else {
+          toast.error(error.response.data.message);
+        }
       });
   };
 
