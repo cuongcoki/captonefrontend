@@ -36,7 +36,7 @@ import {
 import { X } from "lucide-react";
 
 // ** import REACT
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {  z } from "zod";
@@ -53,6 +53,7 @@ import { NoImage } from "@/constants/images";
 import { ProductSetStore } from "@/components/shared/dashboard/product-set/product-set-store";
 import { Label } from "@/components/ui/label";
 import TitleComponent from "@/components/shared/common/Title";
+import { MyContext } from "../table/sets/RenderTable";
 
 interface ImageResponse {
   id: string;
@@ -86,7 +87,7 @@ interface SetProduct {
 
 export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
-
+  const { forceUpdate } = useContext(MyContext);
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -104,7 +105,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   const [nameImage, setNameImage] = useState<any>("");
   const [imageRequests, setImageRequests] = useState<string>("");
   const [imageUrls, setImageUrls] = useState<File | null>(null);
-  const { ForceRender } = ProductSetStore();
+
   // ** các hàm để sử lý đăng ảnh
 
   const generateRandomString = (length: number = 5) => {
@@ -448,16 +449,22 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       .then((res) => {
         toast.success(res.data.message);
         form.reset();
+        forceUpdate();
         setGetDetailsPro([]);
         setProductsRequest([]);
         setGetDetailsProUpdate([]);
         setUpdateProducts([]);
         setRemoveProductIds([])
-        ForceRender();
         setOpen(false);
       })
-      .catch((e) => {
-        toast.error("Cập nhật thất bại", e);
+      .catch((error) => {
+        if (error.response.data.error) {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
+        } else {
+          toast.error(error.response.data.message);
+        }
       });
   };
 

@@ -15,7 +15,7 @@ export default function Page({
     : dateNow.getFullYear().toString();
   searchParams.month = searchParams.month
     ? searchParams.month
-    : (dateNow.getMonth() + 1).toString();
+    : dateNow.getMonth().toString();
 
   // console.log(params.id)
   return (

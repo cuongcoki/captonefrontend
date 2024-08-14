@@ -54,7 +54,6 @@ export const setApi = {
                         axiosClient.storage.remove(id);
                     });
                     setCacheIds.clear();
-
                     const setCacheId = setsCacheIds.get(setId);
                     if (setCacheId) {
                         axiosClient.storage.remove(setCacheId);

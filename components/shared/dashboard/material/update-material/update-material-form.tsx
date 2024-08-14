@@ -131,8 +131,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
             .then((res) => {
               fillImage(res.data.data);
             })
-            .catch((error) => {
-            });
+            .catch((error) => {});
         }
       })
       .catch((error) => {
@@ -140,18 +139,14 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
       });
   }, [id, form]);
 
-  const onSubmit = (data: materialType) => { };
-
   const formSubmit = async () => {
-
     const file = (await handleUploadPhoto(materialImage)) as File;
     if (file !== null && file !== undefined) {
       form.setValue("image", file.name);
     }
     try {
       await handlePostImage(file);
-    } catch (error) {
-    }
+    } catch (error) {}
     if (form.getValues().quantityInStock === "") {
       return toast.error("Số lượng kho không thể bé hơn 0");
     }
@@ -187,7 +182,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
   }, [watchedValues, firstValue, setIsUpdate]);
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(formSubmit)}>
         <div className="grid grid-rows-2 md:grid-cols-2 md:grid-rows-1 md:space-x-5">
           <div className="space-y-7">
             <FormField
@@ -310,7 +305,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
           <Button
             className="mt-3"
             type="submit"
-            onClick={formSubmit}
+            // onClick={formSubmit}
             disabled={loading}
           >
             {loading ? "Đang xử lý" : "Lưu thay đổi"}

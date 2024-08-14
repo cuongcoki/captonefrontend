@@ -83,7 +83,13 @@ export const ChangeStatusShipmentShipper: React.FC<ShipmentIDProps> = ({ shipmen
                 toast.success(data.message)
             })
             .catch(error => {
-                toast.error(error.response.data.message)
+                if (error.response.data.error) {
+                    for (const key in error.response.data.error) {
+                      toast.error(error.response.data.error[key][0]);
+                    }
+                  } else {
+                    toast.error(error.response.data.message);
+                  }
             })
             .finally(() => {
                 setLoading(false)

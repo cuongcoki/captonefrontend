@@ -107,6 +107,7 @@ export default function SalaryCompanyTable({
               return {
                 ...prev,
                 SearchCompany: event.target.value,
+                PageIndex: 1,
               };
             });
           }}
@@ -119,6 +120,7 @@ export default function SalaryCompanyTable({
                 return {
                   ...prev,
                   Year: value,
+                  PageIndex: 1,
                 };
               });
             }}
@@ -147,6 +149,7 @@ export default function SalaryCompanyTable({
                 return {
                   ...prev,
                   Month: value,
+                  PageIndex: 1,
                 };
               });
             }}

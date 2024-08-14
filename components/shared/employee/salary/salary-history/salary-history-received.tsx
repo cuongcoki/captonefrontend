@@ -48,6 +48,9 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
   const [index, setIndex] = React.useState(1);
   const [totalPage, setTotalPage] = React.useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const accountBalance = JSON.parse(
+    localStorage.getItem("userData") as string
+  )?.accountBalance;
   const [salaryHistoryDelete, setSalaryHistoryDelete] =
     useState<SalaryHistoryType>({
       id: "",
@@ -150,6 +153,12 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
           </Table>
         </CardContent>
         <CardFooter className="flex flex-row items-center px-6">
+          <div className="text-sm text-primary">
+            Lương khả dụng còn lại:{" "}
+            <span className="text-primary font-bold">
+              {accountBalance === 0 ? 0 : formatCurrency(accountBalance)} VNĐ
+            </span>
+          </div>
           <Pagination className="ml-auto mr-0 w-auto">
             <PaginationContent>
               <PaginationItem>

@@ -30,13 +30,14 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     React.useEffect(() => {
       if (dateFromForm) {
         setDate(parse(dateFromForm, "dd/MM/yyyy", new Date()));
+        form?.trigger(name);
       }
-    }, [dateFromForm]);
+    }, [dateFromForm, name, form]);
 
     React.useEffect(() => {
       if (form !== undefined && name && date)
         form.setValue(name, format(date, "dd/MM/yyyy"));
-      form?.trigger(name);
+      // form?.trigger(name);
     }, [date, name, form]);
 
     return (
@@ -61,7 +62,11 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             mode="single"
             selected={date}
             defaultMonth={date}
-            onSelect={setDate}
+            onSelect={(date) => {
+              setDate(date);
+              // form?.trigger(name);
+            }}
+            // onDayClick={() => form?.trigger(name)}
             initialFocus
             {...props}
           />

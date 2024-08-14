@@ -206,7 +206,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     const [productDetail, setProductDetail] = useState<any[]>([]);
     // ** state ShipmentID
     const [dataSID, setDataSID] = useState<shipmentID>();
-    console.log("dataSID", dataSID)
+    // console.log("dataSID", dataSID)
     // Hàm thêm sản phẩm
     const handleAddProducts = (
         imgProducts: string,
@@ -559,9 +559,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         handleSearch();
     }, [searchTerm, phaseId, companyId, currentPageP, pageSizeP]);
 
-    console.log("companyId", companyId)
-    console.log("pahsseId", phaseId)
-    console.log("dataP", dataP)
+    // console.log("companyId", companyId)
+    // console.log("pahsseId", phaseId)
+    // console.log("dataP", dataP)
 
     // call gủi form
     const onSubmit = (data: z.infer<typeof ShipmentSchema>) => {
@@ -1091,7 +1091,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                     <TabsList className="grid w-[200px] grid-cols-2">
                                                         <TabsTrigger value="account" className="data-[state=active]:shadow-lg">Sản phẩm</TabsTrigger>
                                                         {
-                                                            companyType === 0 ? (
+                                                            companyType === 0 && companyType1 !== 0 ? (
                                                                 <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
                                                             ) : (
                                                                 ""
