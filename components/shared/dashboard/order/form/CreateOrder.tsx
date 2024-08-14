@@ -573,7 +573,7 @@ export default function CreateOrder() {
                                           <SelectItem value="8">
                                             8%
                                           </SelectItem>
-                                          <SelectItem value="20">
+                                          <SelectItem value="10">
                                             10%
                                           </SelectItem>
                                         </SelectContent>

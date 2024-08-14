@@ -25,6 +25,13 @@ const getDaysInMonth = (month: any, year: any) => {
       throw new Error("Tháng không hợp lệ");
   }
 };
+
+// Hàm kiểm tra định dạng ngày "DD/MM/YYYY"
+const dateFormat = (date: any) => {
+  const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+  return regex.test(date);
+};
+
 export const RegisterSchema = z.object({
   email: z.string().email({
     message: "Vui lòng nhập địa chỉ email hợp lệ",
@@ -109,22 +116,12 @@ const salaryRequestSchema = z.object({
       { message: "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày hiện tại" }
     ),
 });
+
 const salaryRequestSchemaForUpdate = z.object({
   salary: z.coerce.string().min(1, { message: "Vui lòng nhập lương" }),
-  startDate: z
-    .string()
-    .min(1, { message: "Vui lòng nhập ngày bắt đầu" })
-    .refine(
-      (dateStr) => {
-        // Parse the date string
-        const parsedDate = parse(dateStr, "yyyy-MM-dd", new Date());
-
-        // Check if the parsed date is before or equal to the current date
-        const now = new Date();
-        return isBefore(parsedDate, now) || isEqual(parsedDate, now);
-      },
-      { message: "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày hiện tại" }
-    ),
+  startDate: z.string().refine(dateFormat, {
+    message: "Ngày phải theo định dạng DD/MM/YYYY",
+  }), // Kiểm tra chuỗi với định dạng DD/MM/YYYY
 });
 
 export const UsersSchema = z.object({
