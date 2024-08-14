@@ -207,21 +207,28 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
     }
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: any) => {
     try {
-      const parsedDate = parseISO(dateString);
-      return format(parsedDate, "dd/MM/yyyy");
+      const [year, month, day] = dateString.split("-");
+      const formattedDay = day.padStart(2, "0");
+      const formattedMonth = month.padStart(2, "0");
+      return `${formattedDay}/${formattedMonth}/${year}`;
     } catch (error) {
-      // console.error("Error formatting date:", error);
-      return "";
+      return dateString;
     }
   };
 
-  function formatDate2(inputDate: string) {
-    const [year, month, day] = inputDate.split("-");
-    const formattedDate = `${day}/${month}/${year}`;
-    return formattedDate;
-  }
+
+  const formatDateData = (dateString: any) => {
+    const formattedDate =
+      typeof dateString === "string"
+        ? dateString.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
+        : dateString;
+
+    const parsedDate = parse(formattedDate, "yyyy-MM-dd", new Date());
+    return format(parsedDate, "dd/MM/yyyy");
+  };
+
   const form = useForm({
     resolver: zodResolver(UpdateUserForm),
     defaultValues: {
@@ -239,19 +246,21 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           salary:
             user?.salaryHistoryResponse?.salaryByDayResponses?.salary || "",
           startDate:
-            user?.salaryHistoryResponse?.salaryByDayResponses?.startDate || "",
+          formatDate(user?.salaryHistoryResponse?.salaryByDayResponses?.startDate) || "",
         },
         salaryByOverTimeResponses: {
           salary:
             user?.salaryHistoryResponse?.salaryByOverTimeResponses?.salary ||
             "",
           startDate:
-            user?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate ||
+          formatDate( user?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate) ||
             "",
         },
       },
     },
   });
+
+  // console.log("datetime", form.getValues().salaryHistoryResponse.salaryByDayResponses.startDate)
   useEffect(() => {
     const fetchDataCompany = async () => {
       const { data } = await companyApi.getCompanyByType(0);
@@ -284,6 +293,23 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           const formattedUserData = {
             ...userData,
             dob: formatDate(userData.dob),
+            salaryHistoryResponse: {
+              salaryByDayResponses: {
+                salary:
+                  userData?.salaryHistoryResponse?.salaryByDayResponses?.salary || "",
+                startDate: formatDate(
+                  userData?.salaryHistoryResponse?.salaryByDayResponses?.startDate || ""
+                ),
+              },
+              salaryByOverTimeResponses: {
+                salary:
+                  userData?.salaryHistoryResponse?.salaryByOverTimeResponses?.salary ||
+                  "",
+                startDate: formatDate(
+                  userData?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate || ""
+                ),
+              },
+            },
           };
           filesApi.getFile(userData.avatar).then(({ data }) => {
             setImageRequests(data.data);
@@ -303,15 +329,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
     }
   }, [userId, fetchTrigger, form, force]);
 
-  const formatDateData = (dateString: any) => {
-    const formattedDate =
-      typeof dateString === "string"
-        ? dateString.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
-        : dateString;
 
-    const parsedDate = parse(formattedDate, "yyyy-MM-dd", new Date());
-    return format(parsedDate, "dd/MM/yyyy");
-  };
 
   const formatCurrency = (value: any): string => {
     if (!value) return "";
@@ -736,7 +754,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                         </FormLabel>
                                         <FormControl>
                                           <Select
-                                            value={field.value.toString()}
+                                            value={String(field.value)}
                                             onValueChange={(value) => {
                                               field.onChange(parseInt(value));
                                             }}
@@ -824,12 +842,13 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                     );
                                   }}
                                 />
+
                                 <FormField
                                   control={form.control}
                                   name="salaryHistoryResponse.salaryByDayResponses.startDate"
                                   render={({ field }) => (
-                                    <FormItem className="flex flex-col ">
-                                      <FormLabel className="text-primary">
+                                    <FormItem className="flex flex-col">
+                                      <FormLabel className="flex items-center text-primary-backgroudPrimary">
                                         Ngày bắt đầu *
                                       </FormLabel>
                                       <Popover modal={true}>
@@ -838,13 +857,13 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                             <Button
                                               variant={"outline"}
                                               className={cn(
-                                                "w-full pl-3 text-left font-normal",
+                                                "w-[240px] pl-3 text-left font-normal",
                                                 !field.value &&
                                                 "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
-                                                formatDate2(field.value)
+                                                field.value
                                               ) : (
                                                 <span>Chọn ngày</span>
                                               )}
@@ -858,14 +877,23 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                         >
                                           <Calendar
                                             mode="single"
+                                            selected={
+                                              field.value
+                                                ? parse(
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
+                                                : undefined
+                                            }
                                             onSelect={(date: any) =>
                                               field.onChange(
-                                                format(date, "yyyy-MM-dd")
+                                                format(date, "dd/MM/yyyy")
                                               )
                                             }
-                                            disabled={(date) =>
-                                              date < new Date("2024-01-01")
-                                            }
+                                            // disabled={(date) =>
+                                            //   date > new Date() || date < new Date("1900-01-01")
+                                            // }
                                             initialFocus
                                           />
                                         </PopoverContent>
@@ -907,13 +935,13 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                     );
                                   }}
                                 />
-
+                              
                                 <FormField
                                   control={form.control}
                                   name="salaryHistoryResponse.salaryByOverTimeResponses.startDate"
                                   render={({ field }) => (
                                     <FormItem className="flex flex-col">
-                                      <FormLabel className="flex items-center text-primary">
+                                      <FormLabel className="flex items-center text-primary-backgroudPrimary">
                                         Ngày bắt đầu *
                                       </FormLabel>
                                       <Popover modal={true}>
@@ -922,13 +950,13 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                             <Button
                                               variant={"outline"}
                                               className={cn(
-                                                "w-full pl-3 text-left font-normal",
+                                                "w-[240px] pl-3 text-left font-normal",
                                                 !field.value &&
                                                 "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
-                                                formatDate2(field.value)
+                                                field.value
                                               ) : (
                                                 <span>Chọn ngày</span>
                                               )}
@@ -942,14 +970,23 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                         >
                                           <Calendar
                                             mode="single"
+                                            selected={
+                                              field.value
+                                                ? parse(
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
+                                                : undefined
+                                            }
                                             onSelect={(date: any) =>
                                               field.onChange(
-                                                format(date, "yyyy-MM-dd")
+                                                format(date, "dd/MM/yyyy")
                                               )
                                             }
-                                            disabled={(date) =>
-                                              date < new Date("2024-01-01")
-                                            }
+                                            // disabled={(date) =>
+                                            //   date > new Date() || date < new Date("1900-01-01")
+                                            // }
                                             initialFocus
                                           />
                                         </PopoverContent>
@@ -970,7 +1007,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                         className="w-full bg-primary hover:bg-primary/90"
                         disabled={loading}
                       >
-                        {loading ? "Loading..." : "Cập nhật thông tin"}
+                        {loading ? "Đang xử lý" : "Cập nhật thông tin"}
                       </Button>
                     </form>
                   </Form>

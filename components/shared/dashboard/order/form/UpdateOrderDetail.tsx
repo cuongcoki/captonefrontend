@@ -171,26 +171,23 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       .finally(() => { });
   };
 
+
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
-  const [phaseId, setPhaseId] = useState<string | undefined>("0f54b781-8286-42d2-9dce-b19b22b43700");
-  const [companyId, setCompanyId] = useState<string | undefined>();
   const [pageIndex, setPageIndex] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(1000);
+  const [pageSizeS, setPageSizeS] = useState<number>(100);
 
-  //state ** company
-  const [company, setCompany] = useState<Company[]>([]);
-  const [companyType, setCompanyType] = useState<number | undefined>();
-
+  console.log("searchResults", searchResultsSet)
+  console.log("searchResults", searchResults)
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
       productApi
-        .searchProduct(searchTerm, phaseId, companyId, pageIndex, pageSize)
+        .searchProductForSet(searchTerm, pageIndex, pageSizeS)
         .then(({ data }) => {
           setSearchResults(data.data.data);
         })
         .catch((error) => {
-          setSearchResults([]);
+          toast.error("không tìm thấy");
         })
         .finally(() => {
           setLoading(false);
@@ -198,25 +195,11 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     };
 
     handleSearch();
-  }, [searchTerm, phaseId, companyId, pageIndex, pageSize]);
+  }, [searchTerm]);
 
-  // call data company
-  useEffect(() => {
-    const fetchDataCompany = () => {
-      shipmentApi.getAllCompanyByType(0, 1, 20)
-        .then(({ data }) => {
-          setCompany(data.data.data);
-        })
-        .catch(error => {
-        });
-    };
+  console.log("dataP", searchResults)
 
-    fetchDataCompany()
-  }, [company, companyType]);
 
-  const handleStatusChange = (value: number) => {
-    setCompanyType(value);
-  };
   // console.log("companyId", companyId)
   // console.log("pahsseId", phaseId)
   // console.log("searchResults", searchResults)
@@ -538,7 +521,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                     </CardHeader>
                     <CardContent>
                       <div className="flex flex-col  items-center my-4">
-
                         <div className="flex items-center border w-full rounded-lg px-2 ">
                           <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
                           <DropdownMenu>
@@ -562,7 +544,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                               className="border-none w-full"
                             />
 
-
                           ) : (
                             <Input
                               placeholder="Tìm kiếm bộ sản phẩm..."
@@ -573,189 +554,132 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                           )}
                         </div>
 
-                        {!checkProducts ? (
-                          <div className="w-full">
-                            <Card className="w-full mt-2">
-                              <CardContent className="mt-5">
-                                {/* <Select onValueChange={(value) => handleStatusChange(parseInt(value))}>
-                                  <SelectTrigger className="mb-2"> <SelectValue placeholder="Chọn kiểu công ty" /></SelectTrigger>
-                                  <SelectContent>
-                                    {
-                                      enumCompany.map((item) => (
-                                        <SelectItem value={item.value} key={item.id}>{item.description}</SelectItem>
-                                      ))
-                                    }
-                                  </SelectContent>
-                                </Select> */}
-                                <Select
-                                  onValueChange={(value) => setCompanyId(value)}
-                                  defaultValue={companyId}
-                                >
-                                  <SelectTrigger className="h-32">
-                                    <SelectValue placeholder="Hãy chọn công ty" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {company.map((item) => (
-                                      <SelectItem
-                                        key={item.id}
-                                        value={item.id}
-                                        className="hover:bg-slate-100 shadow-md mb-1"
-                                      >
-                                        <div className="flex flex-col items-start">
-                                          <span>
-                                            {limitLength(item.name, 30)} - {limitLength(item.address, 30)}
-                                          </span>
-                                          <span className="text-sm text-gray-500">
-                                            {item.directorName}
-                                          </span>
-                                          <span className="text-sm text-gray-500">
-                                            {`${item.directorPhone} - ${item.email || "Không có"}`}
-                                          </span>
-                                        </div>
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </CardContent>
-                            </Card>
-                          </div>
-
-                        ) : (
-                          <></>
-                        )
-                        }
                       </div>
                       {!checkProducts ? (
-                        <>
-                          {searchResults !== null ? (
-                            <Card className="my-4">
-                              <CardHeader className="font-semibold text-xl">
-                                <span>Thông tin sản phẩm</span>
-                              </CardHeader>
-                              <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
-                                {searchResults !== null ? (
-                                  searchResults.map((product) => (
-                                    <Card className="flex gap-2 shadow-md group relative" key={product.id} >
-                                      <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
 
-                                        <ImageDisplayDialog
-                                          images={product}
-                                          checkProduct={productCheck}
-                                        />
+                        <Card className="my-4">
+                          <CardHeader className="font-semibold text-xl">
+                            <span>Thông tin sản phẩm</span>
+                          </CardHeader>
+                          <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                            {searchResults !== null ? (
+                              searchResults.map((product) => (
+                                <Card className="flex gap-2 shadow-md group relative" key={product.id} >
+                                  <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
 
-                                        <Check
-                                          className={`w-5 h-5 ${productsRequest.some(
-                                            (item1) => item1.productIdOrSetId === product.id
-                                          )
-                                            ? "absolute top-0 right-0 bg-primary text-white"
-                                            : "hidden"
-                                            }`}
-                                        />
-                                      </div>
+                                    <ImageDisplayDialog
+                                      images={product}
+                                      checkProduct={productCheck}
+                                    />
 
-                                      <span
-                                        className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                        onClick={() =>
-                                          handleAddProducts(product)
-                                        }
-                                      >
-                                        <Plus className="text-white" />
-                                      </span>
-
-                                      <div className="flex flex-col w-full text-sm my-1">
-                                        <div className="flex gap-2">
-                                          <span className="font-medium">Mã:</span>
-                                          <span className="font-light">{product.code}</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                          <span className="font-medium">Tên:</span>
-                                          <span className="font-light">{product.name}</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                          <span className="font-medium">Kích thước:</span>
-                                          <span className="font-light">{product.size}</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                          <span className="font-medium">Giá thành:</span>
-                                          <span className="font-light text-primary">{formatCurrency(product.price)} .đ</span>
-                                        </div>
-                                      </div>
-                                    </Card>
-                                  ))
-                                ) : (
-                                  <div className="text-center flex justify-center items-center w-full">
-                                    Không có kết quả.
+                                    <Check
+                                      className={`w-5 h-5 ${productsRequest.some(
+                                        (item1) => item1.productIdOrSetId === product.id
+                                      )
+                                        ? "absolute top-0 right-0 bg-primary text-white"
+                                        : "hidden"
+                                        }`}
+                                    />
                                   </div>
-                                )}
+
+                                  <span
+                                    className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                    onClick={() =>
+                                      handleAddProducts(product)
+                                    }
+                                  >
+                                    <Plus className="text-white" />
+                                  </span>
+
+                                  <div className="flex flex-col w-full text-sm my-1">
+                                    <div className="flex gap-2">
+                                      <span className="font-medium">Mã:</span>
+                                      <span className="font-light">{product.code}</span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                      <span className="font-medium">Tên:</span>
+                                      <span className="font-light">
+                                        <HoverComponent Num={10}>
+                                        {product.name}
+                                        </HoverComponent>
+                                      </span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                      <span className="font-medium">Kích thước:</span>
+                                      <span className="font-light">{product.size}</span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                      <span className="font-medium">Giá thành:</span>
+                                      <span className="font-light text-primary">{formatCurrency(product.price)} .đ</span>
+                                    </div>
+                                  </div>
+                                </Card>
+                              ))
+                            ) : (
+                              <div className="text-center flex justify-center items-center w-full">
+                                Không có kết quả.
                               </div>
-                            </Card>
-                          ) : (
-                            ""
-                          )}
-                        </>
+                            )}
+                          </div>
+                        </Card>
                       ) : (
-                        <>
-                          {searchResultsSet !== null ? (
-                            <Card className="my-4">
-                              <CardHeader className="font-semibold text-xl">
-                                <span>Thông tin bộ sản phẩm</span>
-                              </CardHeader>
-                              <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
-                                {searchResultsSet !== null ? (
-                                  searchResultsSet.map((product) => (
-                                    <Card className=" h-[90px] flex gap-2 shadow-md group relative" key={product.id} >
-                                      <div className="group relative w-[100px] max-h-[90px] shadow-md rounded-md">
-                                        <ImageDisplayDialogSet
-                                          images={product}
-                                          checkProduct={setCheck}
-                                        />
-                                        <Check
-                                          className={`w-5 h-5 ${productsRequest.some(
-                                            (item1) => item1.productIdOrSetId === product.id
-                                          )
-                                            ? "absolute top-0 right-0 bg-primary text-white"
-                                            : "hidden"
-                                            }`}
-                                        />
-                                      </div>
 
-                                      <span
-                                        className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                        onClick={() =>
-                                          handleAddProducts(product)
-                                        }
-                                      >
-                                        <Plus className="text-white" />
-                                      </span>
-
-                                      <div className="flex flex-col w-full text-sm my-1">
-                                        <div className="flex gap-2">
-                                          <span className="font-medium">Mã:</span>
-                                          <span className="font-light">{product.code}</span>
-                                        </div>
-                                        <div className="flex gap-2">
-                                          <span className="font-medium">Tên:</span>
-                                          <span className="font-light">
-                                            <HoverComponent Num={20}>
-                                              {product.name}
-                                            </HoverComponent>
-                                          </span>
-                                        </div>
-
-                                      </div>
-                                    </Card>
-                                  ))
-                                ) : (
-                                  <div className="text-center flex justify-center items-center w-full">
-                                    Không có kết quả.
+                        <Card className="my-4">
+                          <CardHeader className="font-semibold text-xl">
+                            <span>Thông tin bộ sản phẩm</span>
+                          </CardHeader>
+                          <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                            {searchResultsSet !== null ? (
+                              searchResultsSet.map((product) => (
+                                <Card className=" h-[90px] flex gap-2 shadow-md group relative" key={product.id} >
+                                  <div className="group relative w-[100px] max-h-[90px] shadow-md rounded-md">
+                                    <ImageDisplayDialogSet
+                                      images={product}
+                                      checkProduct={setCheck}
+                                    />
+                                    <Check
+                                      className={`w-5 h-5 ${productsRequest.some(
+                                        (item1) => item1.productIdOrSetId === product.id
+                                      )
+                                        ? "absolute top-0 right-0 bg-primary text-white"
+                                        : "hidden"
+                                        }`}
+                                    />
                                   </div>
-                                )}
+
+                                  <span
+                                    className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                    onClick={() =>
+                                      handleAddProducts(product)
+                                    }
+                                  >
+                                    <Plus className="text-white" />
+                                  </span>
+
+                                  <div className="flex flex-col w-full text-sm my-1">
+                                    <div className="flex gap-2">
+                                      <span className="font-medium">Mã:</span>
+                                      <span className="font-light">{product.code}</span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                      <span className="font-medium">Tên:</span>
+                                      <span className="font-light">
+                                        <HoverComponent Num={20}>
+                                          {product.name}
+                                        </HoverComponent>
+                                      </span>
+                                    </div>
+
+                                  </div>
+                                </Card>
+                              ))
+                            ) : (
+                              <div className="text-center flex justify-center items-center w-full">
+                                Không có kết quả.
                               </div>
-                            </Card>
-                          ) : (
-                            ""
-                          )}
-                        </>
+                            )}
+                          </div>
+                        </Card>
                       )}
 
                       <div className="md:col-span-1  md:mt-0">
@@ -788,10 +712,11 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                           width={900}
                                           height={900}
                                           src={
-                                            product?.imageUrl ===
-                                              "Image_not_found"
-                                              ? NoImage
-                                              : product?.imageUrl
+                                            product?.imageUrl && product.imageUrl !== "Image_not_found"
+                                              ? product.imageUrl
+                                              : product?.image === "Image_not_found"
+                                                ? NoImage
+                                                : product?.image
                                           }
                                         />
 

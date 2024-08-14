@@ -218,7 +218,7 @@ export function DataTableForMaterial<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center"
                   >
-                    {loading ? "Loading..." : "Không có dữ liệu"}
+                    {loading ? "Đang xử lý" : "Không có dữ liệu"}
                   </TableCell>
                 </TableRow>
               )}

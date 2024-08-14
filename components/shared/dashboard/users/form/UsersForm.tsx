@@ -751,6 +751,15 @@ export const UsersForm = () => {
                                         >
                                           <Calendar
                                             mode="single"
+                                            selected={
+                                              field.value
+                                                ? parse(
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
+                                                : undefined
+                                            }
                                             onDayClick={(date: any) =>
                                               field.onChange(
                                                 format(date, "dd/MM/yyyy")
@@ -873,7 +882,7 @@ export const UsersForm = () => {
                         className="w-full bg-primary hover:bg-primary/90"
                         disabled={loading}
                       >
-                        {loading ? "Loading..." : "Thêm Nhân Viên"}
+                        {loading ? "Đang xử lý" : "Thêm Nhân Viên"}
                       </Button>
                     </form>
                   </Form>

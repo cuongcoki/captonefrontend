@@ -139,24 +139,25 @@ const enumCompany = [
 
 ];
 
+
 const ProductPhaseType = [
     {
         id: 0,
-        des: "Sản phẩm bình thường",
+        des: "Bình thường",
     },
     {
         id: 1,
-        des: "Sản phẩm lỗi do bên cơ sở",
+        des: "Lỗi bên cơ sở",
     },
     {
         id: 2,
-        des: "Sản phẩm lỗi do bên thứ 3",
+        des: "Lỗi bên hợp tác",
     },
     {
         id: 3,
-        des: "Sản phẩm lỗi k sửa đc nữa",
+        des: "Lỗi không sửa đc nữa",
     },
-]
+];
 
 interface ShipmentIDProps {
     shipmentIDDes: string;
@@ -206,19 +207,22 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     const [productDetail, setProductDetail] = useState<any[]>([]);
     // ** state ShipmentID
     const [dataSID, setDataSID] = useState<shipmentID>();
-
+    // console.log("dataSID", dataSID)
     // Hàm thêm sản phẩm
     const handleAddProducts = (
+        item: any,
         imgProducts: string,
         itemId: string,
-        itemKind: number
+        itemKind: number,
+        phaseId?: any,
+        price?: any,
     ) => {
 
         setShipmentDetailRequests((prev: any) => [
             ...prev,
             {
                 itemId: itemId,
-                phaseId: null,
+                phaseId: phaseId,
                 quantity: 1,
                 kindOfShip: itemKind,
                 productPhaseType: 0,
@@ -228,13 +232,15 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         setProductDetail((prev) => [
             ...prev,
             {
+                item,
                 itemId: itemId,
                 imgProducts,
-                phaseId: null,
+                phaseId: phaseId,
                 quantity: 1,
                 kindOfShip: itemKind,
                 productPhaseType: 0,
                 materialPrice: 0,
+                price: price,
             },
         ]);
     };
@@ -330,7 +336,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                 setLoading(false);
             }
         };
-
+        console.log("dataSID", dataSID)
         if (shipmentIDDes) {
             reset({
                 toId: dataSID?.to?.id,
@@ -348,12 +354,14 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                     productPhaseType: detail?.productPhaseType || 0,
                 })));
                 setProductDetail(dataSID.details.map(detail => ({
+                    item: detail?.product === null ? detail?.material : detail?.product,
                     itemId: detail?.product?.id || detail?.material?.id,
                     phaseId: detail?.phase?.id || null,
                     quantity: detail?.quantity || 0,
                     kindOfShip: detail?.product === null ? 1 : 0,
                     productPhaseType: detail?.productPhaseType || 0,
-                    imgProducts: detail?.product?.imageResponses?.find(image => image.isMainImage)?.imageUrl || detail?.material?.image
+                    imgProducts: detail?.product?.imageResponses?.find(image => image.isMainImage)?.imageUrl || detail?.material?.image,
+                    price: detail?.product?.price
                 })));
             }
         }
@@ -529,12 +537,12 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
 
     useEffect(() => {
         if (dataSID?.from?.id) {
-          setCompanyId(dataSID.from.id);
+            setCompanyId(dataSID.from.id);
         }
-      }, [dataSID]);
-      
+    }, [dataSID]);
+
     useEffect(() => {
-     
+
         const handleSearch = () => {
             setLoading(true);
             productApi
@@ -555,9 +563,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         handleSearch();
     }, [searchTerm, phaseId, companyId, currentPageP, pageSizeP]);
 
-    console.log("companyId", companyId)
-    console.log("pahsseId", phaseId)
-    console.log("dataP", dataP)
+    // console.log("companyId", companyId)
+    // console.log("pahsseId", phaseId)
+    // console.log("dataP", dataP)
 
     // call gủi form
     const onSubmit = (data: z.infer<typeof ShipmentSchema>) => {
@@ -1086,7 +1094,13 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                 <Tabs defaultValue="account">
                                                     <TabsList className="grid w-[200px] grid-cols-2">
                                                         <TabsTrigger value="account" className="data-[state=active]:shadow-lg">Sản phẩm</TabsTrigger>
-                                                        <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
+                                                        {
+                                                            companyType === 0 && companyType1 !== 0 ? (
+                                                                <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
+                                                            ) : (
+                                                                ""
+                                                            )
+                                                        }
                                                     </TabsList>
                                                     <TabsContent value="account">
                                                         <Card>
@@ -1100,6 +1114,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
 
                                                                 <div className="flex items-center mb-3 gap-3">
                                                                     <Input
+                                                                        disabled={phaseId === undefined}
                                                                         placeholder="Tìm kiếm sản phẩm..."
                                                                         value={searchTerm}
                                                                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -1107,22 +1122,28 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                     />
 
                                                                     <Select
+                                                                        disabled={companyId === undefined}
                                                                         defaultValue={phaseId}
                                                                         onValueChange={(value) => setPhaseId(value)}
                                                                     >
-                                                                        <SelectTrigger className="w-[150px]">
+                                                                        <SelectTrigger className="w-[250px]">
                                                                             <SelectValue placeholder="Giai đoạn sản phẩm" />
                                                                         </SelectTrigger>
                                                                         <SelectContent>
                                                                             <SelectGroup>
-                                                                                {dataPh.map((item) => (
-                                                                                    <SelectItem
-                                                                                        key={item.id}
-                                                                                        value={item.id}
-                                                                                    >
-                                                                                        {item.name}
-                                                                                    </SelectItem>
-                                                                                ))}
+                                                                                {dataPh
+                                                                                    .filter(item =>
+                                                                                        item.id === "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
+                                                                                        item.id === "4d2113f9-2009-4c37-82b1-195ecbb9c706"
+                                                                                    )
+                                                                                    .map(item => (
+                                                                                        <SelectItem
+                                                                                            key={item.id}
+                                                                                            value={item.id}
+                                                                                        >
+                                                                                            {item.name}-{item.description}
+                                                                                        </SelectItem>
+                                                                                    ))}
                                                                             </SelectGroup>
                                                                         </SelectContent>
                                                                     </Select>
@@ -1144,9 +1165,12 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                         className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                                                                         onClick={() => {
                                                                                             handleAddProducts(
+                                                                                                item,
                                                                                                 item.imageUrl ? item.imageUrl : "",
                                                                                                 item?.id,
-                                                                                                productType
+                                                                                                productType,
+                                                                                                item?.phaseId,
+                                                                                                item.price,
                                                                                             );
                                                                                         }}
                                                                                     >
@@ -1222,6 +1246,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                 className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                                                                 onClick={() =>
                                                                                     handleAddProducts(
+                                                                                        item,
                                                                                         item?.image,
                                                                                         item?.id,
                                                                                         materialType
@@ -1257,9 +1282,10 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                             <TableHeader>
                                                                 <TableRow>
                                                                     <TableHead className="w-[100px]">Hình ảnh</TableHead>
+                                                                    <TableHead>Tên mặt hàng</TableHead>
                                                                     <TableHead>Giai đoạn</TableHead>
                                                                     <TableHead>Số lượng</TableHead>
-                                                                    <TableHead>Loại hàng</TableHead>
+                                                                    {/* <TableHead>Loại hàng</TableHead> */}
                                                                     <TableHead>Chất lượng</TableHead>
                                                                     <TableHead>Giá Tiền</TableHead>
                                                                     <TableHead></TableHead>
@@ -1280,35 +1306,16 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                     />
                                                                                 </div>
                                                                             </TableCell>
+                                                                            <TableCell className="text-sm">
+                                                                                {proDetail.kindOfShip === 0
+                                                                                    ? `${proDetail?.item?.code}-${proDetail?.item?.name}`
+                                                                                    : `NVL-${proDetail?.item?.name}`}
+                                                                            </TableCell>
                                                                             <TableCell>
                                                                                 {proDetail.kindOfShip === 0 ? (
-                                                                                    <Select
-                                                                                        defaultValue={String(proDetail.phaseId)}
-                                                                                        onValueChange={(value) =>
-                                                                                            handleChange(
-                                                                                                proDetail.itemId,
-                                                                                                "phaseId",
-                                                                                                value,
-                                                                                                index
-                                                                                            )
-                                                                                        }
-                                                                                    >
-                                                                                        <SelectTrigger className="w-[100px]">
-                                                                                            <SelectValue placeholder="Giai đoạn sản phẩm" />
-                                                                                        </SelectTrigger>
-                                                                                        <SelectContent>
-                                                                                            <SelectGroup>
-                                                                                                {dataPh.map((item) => (
-                                                                                                    <SelectItem
-                                                                                                        key={item.id}
-                                                                                                        value={item.id}
-                                                                                                    >
-                                                                                                        {item.name}
-                                                                                                    </SelectItem>
-                                                                                                ))}
-                                                                                            </SelectGroup>
-                                                                                        </SelectContent>
-                                                                                    </Select>
+                                                                                    <span className="w-[100px] block">
+                                                                                        {dataPh.find((item) => item.id === proDetail.phaseId)?.name || "Giai đoạn sản phẩm"}
+                                                                                    </span>
                                                                                 ) : (
                                                                                     <>Không có</>
                                                                                 )}
@@ -1336,11 +1343,11 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                     className="w-16 text-center outline-none"
                                                                                 />
                                                                             </TableCell>
-                                                                            <TableCell>
+                                                                            {/* <TableCell>
                                                                                 {proDetail.kindOfShip === 0
                                                                                     ? "Sản phẩm"
                                                                                     : "Vật liệu"}
-                                                                            </TableCell>
+                                                                            </TableCell> */}
                                                                             <TableCell>
                                                                                 {proDetail.kindOfShip === 0 ? (
                                                                                     <Select
@@ -1402,7 +1409,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                     />
 
                                                                                 ) : (
-                                                                                    <>Không có</>
+                                                                                    <span className="font-light text-primary">{formatCurrency(proDetail.price)} .đ</span>
                                                                                 )}
                                                                             </TableCell>
                                                                             <TableCell>

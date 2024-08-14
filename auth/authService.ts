@@ -21,24 +21,41 @@ export const authService = {
   refreshToken: async () => {
     const apiUrl = `${endPointConstant.BASE_URL}/auth/refresh-token`
     const storedToken = window.localStorage.getItem(jwtConfig.storageTokenKeyName)
-    const payload:any = jwtDecode(storedToken || '') 
-    // console.log("Pyloadđ ====== ===",payload)
-    const refreshTokenApi = axios.create({
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
+  
+    if (!storedToken) {
+      throw new Error('No token found')
+    }
+  
+    const payload: any = jwtDecode(storedToken)
+    console.log("Payload ====== ===", payload)
+  
+    const refreshToken = localStorage.getItem(jwtConfig.onTokenExpiration) // Đảm bảo key đúng
+    if (!refreshToken) {
+      throw new Error('No refresh token found')
+    }
+  
     const data = {
       userId: payload?.UserID,
-      refreshToken: localStorage.getItem(jwtConfig.onTokenExpiration)
+      refreshToken: refreshToken
     }
-
+    console.log("Request data:", data)
+  
     try {
-      const response = await refreshTokenApi.post(apiUrl, data)
-      // console.log("response=====response=====response",response.data)
-      return response
+      const response = await axios.post(apiUrl, data, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      console.log("authService response:", response.data)
+  
+      // Kiểm tra phản hồi API để đảm bảo chứa các token mới
+      if (response.data && response.data.data) {
+        return response
+      } else {
+        throw new Error('Invalid response from refresh token API')
+      }
     } catch (err: any) {
-      // console.error('Error refreshing token:', err.response ? err.response.data : err)
+      console.error('authService Error refreshing token:', err.response ? err.response.data : err)
       throw err
     }
   },

@@ -11,6 +11,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { productApi } from "@/apis/product.api";
 import { ProductUpdateForm } from "../../form/ProductUpdateForm";
+import { filesApi } from "@/apis/files.api";
+import { ProductStore } from "../../product-store";
 
 interface DataTableRowActionsProps<TData extends { id: string }> {
   row: Row<TData>;
@@ -20,21 +22,45 @@ export function DataTableRowActions<TData extends { id: string }>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const [productId, setProductId] = useState<any>([]);
+  const { force } = ProductStore();
   useEffect(() => {
-    const fetchDataProductId = () => {
-      productApi
-        .getProductId(row.original.id)
-        .then((res) => {
-          const userData = res.data.data;
-          setProductId(userData);
-        })
-        .catch((error) => {
-        })
-        .finally(() => {});
+    const fetchDataProductId = async () => {
+      try {
+        const res = await productApi.getProductId(row.original.id);
+        const userData = res.data.data;
+  
+        if (userData) {
+          const updatedData = await Promise.all(
+            userData.imageResponses.map(async (image:any) => {
+              try {
+                const { data } = await filesApi.getFile(image.imageUrl);
+                return {
+                  ...image,
+                  imageUrl: data.data,
+                };
+              } catch (error) {
+                return {
+                  ...image,
+                  imageUrl: "",
+                };
+              }
+            })
+          );
+  
+          // Cập nhật lại thông tin sản phẩm với dữ liệu đã được cập nhật
+          const updatedProductData = { ...userData, imageResponses: updatedData };
+          setProductId(updatedProductData);
+        }
+      } catch (error) {
+        console.error("Error fetching product by ID:", error);
+      } finally {
+        // Bạn có thể thêm setLoading(false) ở đây nếu có sử dụng loading state
+      }
     };
-
+  
     fetchDataProductId();
-  }, [row.original.id]);
+  }, [row.original.id,force]);
+  
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
