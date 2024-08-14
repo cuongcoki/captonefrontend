@@ -47,7 +47,7 @@ export default function ImageIconMaterial({ dataImage }: ImageIconShipOrderProps
                                 </div>
                             </div>
                             <Separator className="opacity-60" />
-                            <div className="grid gap-2">
+                            <div className="grid gap-2 text-sm">
                                     <div className="m-1 ">
                                         <div className="flex gap-2">
                                             <span className="font-light">Tên:</span>
@@ -61,13 +61,13 @@ export default function ImageIconMaterial({ dataImage }: ImageIconShipOrderProps
                                             <span className="font-light">Số lượng trên một đơn vị:</span>
                                             <span className="font-light">{dataImage.quantityPerUnit}</span>
                                         </div>
-                                        <div className="flex gap-2">
-                                            <span className="font-light">Số lượng còn hàng:</span>
-                                            <span className="font-light">{dataImage.quantityInStock}</span>
-                                        </div>
                                         <Separator className="opacity-60 mt-1" />
                                     </div>
-                                <div className="flex items-end justify-end">
+                                    <div className="flex items-center justify-between">
+                                    <div className="flex gap-2 text-sm">
+                                        <span className="font-light ">Sẵn có:</span>
+                                        <span className="font-light text-primary">{dataImage.quantityInStock}</span>
+                                    </div>
                                     <span className="cursor-pointer flex items-center px-2 py-1 rounded-md text-white hover:bg-primary/90 bg-primary" onClick={handleGotoPID}>
                                         <Package className=" mr-1" /><span className="text-[15px]">Chi tiết</span>
                                     </span>

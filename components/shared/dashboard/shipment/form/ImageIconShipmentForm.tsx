@@ -37,8 +37,8 @@ interface ImageIconShipOrderProps {
 
 const data = [
     { id: 0, status: 'hỏng', quantityAvailable: 'Số lượng có sẵn', quantity: 'Số lượng' },
-    { id: 1, status: 'lỗi', quantityAvailable: 'Số lượng có sẵn', quantity: 'Số lượng' },
-    { id: 2, status: 'thất bại', quantityAvailable: 'Số lượng có sẵn', quantity: 'Số lượng' },
+    { id: 1, status: 'lỗi bên cơ sở', quantityAvailable: 'Số lượng có sẵn', quantity: 'Số lượng' },
+    { id: 2, status: 'lỗi bên hợp tác', quantityAvailable: 'Số lượng có sẵn', quantity: 'Số lượng' },
 ];
 
 export default function ImageIconShipmentForm({ dataImage }: ImageIconShipOrderProps) {
@@ -81,7 +81,7 @@ export default function ImageIconShipmentForm({ dataImage }: ImageIconShipOrderP
                                                                     : null}
                                                     </span>
                                                 </div>
-                                                <div className="flex gap-2">
+                                                {/* <div className="flex gap-2">
                                                     <span className="font-light">{item.quantity}:</span>
                                                     <span className="font-light">
                                                         {item.id === 0
@@ -92,7 +92,7 @@ export default function ImageIconShipmentForm({ dataImage }: ImageIconShipOrderP
                                                                     ? dataImage.failureQuantity
                                                                     : null}
                                                     </span>
-                                                </div>
+                                                </div> */}
                                                 <Separator className="opacity-60 mt-1" />
                                             </div>
                                         ))}
