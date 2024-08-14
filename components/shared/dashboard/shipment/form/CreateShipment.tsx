@@ -1517,7 +1517,7 @@ export default function CreateShipment() {
                         className="w-full bg-primary hover:bg-primary/90"
                         disabled={pending}
                       >
-                        {pending ? "Loading..." : "Tạo đơn"}
+                        {pending ? "Đang xử lý" : "Tạo đơn"}
                       </Button>
                     </form>
                   </Form>

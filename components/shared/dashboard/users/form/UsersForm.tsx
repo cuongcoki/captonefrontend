@@ -882,7 +882,7 @@ export const UsersForm = () => {
                         className="w-full bg-primary hover:bg-primary/90"
                         disabled={loading}
                       >
-                        {loading ? "Loading..." : "Thêm Nhân Viên"}
+                        {loading ? "Đang xử lý" : "Thêm Nhân Viên"}
                       </Button>
                     </form>
                   </Form>

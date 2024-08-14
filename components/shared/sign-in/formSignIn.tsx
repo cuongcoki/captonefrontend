@@ -48,17 +48,17 @@ export default function FormSignIn() {
     authApi
       .login({ id, password })
       .then(({ data }) => {
-          const { user, accessToken, refreshToken } = data.data;
-          auth.login(user, rememberMe, accessToken, refreshToken);
-          console.log(data);
-          toast.success(data.message);
-          router.push(`/profile/${data.data.user.id}`);
+        const { user, accessToken, refreshToken } = data.data;
+        auth.login(user, rememberMe, accessToken, refreshToken);
+        console.log(data);
+        toast.success(data.message);
+        router.push(`/profile/${data.data.user.id}`);
       })
       .catch((error) => {
         const errors = error.response.data.message
         console.log(error.data)
         toast.error(errors)
-        
+
       })
       .finally(() => {
         setLoading(false);
@@ -115,14 +115,14 @@ export default function FormSignIn() {
             </FormItem>
           )}
         />
-   
+
         <FormLabel className="flex items-center text-secondary-backgroudPrimary"></FormLabel>
         <Button
           type="submit"
           className="w-full bg-secondary-backgroudPrimary text-primary-backgroudPrimary hover:bg-yellow-300"
           disabled={loading}
         >
-          {loading ? "Loading..." : "ĐĂNG NHẬP"}
+          {loading ? "Đang xử lý" : "ĐĂNG NHẬP"}
         </Button>
       </form>
     </Form>

@@ -730,7 +730,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                         className="w-full bg-primary hover:bg-primary/90"
                         disabled={loading}
                       >
-                        {loading ? "Loading..." : "Tạo đơn"}
+                        {loading ? "Đang xử lý" : "Tạo đơn"}
                       </Button>
                     </form>
                   </Form>
