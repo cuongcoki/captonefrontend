@@ -328,6 +328,7 @@ export const SetForm = () => {
             setProductsRequest([])
             setGetDetailsPro([]);
             setUpdateProducts([])
+            setImageRequests(null)
           }, 2000);
         } else {
           toast.error(response.data.message);

@@ -2,11 +2,22 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import storage from "./storage";
 import { redirect } from 'next/navigation'
+import { jwtDecode } from "jwt-decode";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export const CheckPermissionEnter = (dataPer: any) => {
+  // const storedToken = window.localStorage.getItem("accessToken")
+  // const refreshToken = localStorage.getItem("refreshToken")
+  // const payload:any = jwtDecode(storedToken || '') 
+  // console.log("Pyloadđ ====== ===",payload)
+  // console.log("storedToken",storedToken)
+  // const data = {
+  //   userId: payload?.UserID,
+  //   refreshToken: refreshToken
+  // }
+  // console.log("data",data)
   if (typeof storage !== "undefined" && typeof window !== "undefined") {
     const user = storage.getProfile();
     if (user === null) {

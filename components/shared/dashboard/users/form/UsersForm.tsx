@@ -751,6 +751,15 @@ export const UsersForm = () => {
                                         >
                                           <Calendar
                                             mode="single"
+                                            selected={
+                                              field.value
+                                                ? parse(
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
+                                                : undefined
+                                            }
                                             onDayClick={(date: any) =>
                                               field.onChange(
                                                 format(date, "dd/MM/yyyy")
