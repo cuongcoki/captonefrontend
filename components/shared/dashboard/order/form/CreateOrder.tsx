@@ -396,8 +396,13 @@ export default function CreateOrder() {
       }
     } catch (error: any) {
       if (error.response.data.error) {
-        for (const key in error.response.data.error) {
-          toast.error(error.response.data.error[key][0]);
+        const Check = error.response.data.error;
+        if (typeof(Check) === 'string') {
+          toast.error(Check);
+        } else {
+          for (const key in error.response.data.error) {
+            toast.error(error.response.data.error[key][0]);
+          }
         }
       } else {
         toast.error(error.response.data.message);
