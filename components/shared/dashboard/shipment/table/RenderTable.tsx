@@ -62,7 +62,7 @@ export default function RenderTableShipment() {
   const router = useRouter();
   const pathname = usePathname();
   const { force } = ShipmentStore();
-
+  console.log("data", data)
   useEffect(() => {
     const fetchDataShipment = async () => {
       setLoading(true);
@@ -74,6 +74,7 @@ export default function RenderTableShipment() {
           searchTerm
         );
         setData(response.data.data.data);
+        console.log("response", response.data)
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error: any) {
@@ -154,6 +155,7 @@ export default function RenderTableShipment() {
       <div className="overflow-x-auto">
         <DataTable columns={columns} data={data} />
         <DataTablePagination
+          data={data}
           currentPage={currentPage}
           totalPages={totalPages}
           setCurrentPage={setCurrentPage}
