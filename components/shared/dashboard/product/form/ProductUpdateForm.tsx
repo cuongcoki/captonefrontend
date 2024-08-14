@@ -99,29 +99,17 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const [imageRequests, setImageRequests] = useState<any[]>([]);
   const [imageRequestsUpdate, setImageRequestsUpdate] = useState<any[]>([]);
+  console.log("imageRequests",imageRequests)
+  console.log("imageRequestsUpdate",imageRequestsUpdate)
+  console.log("updatedProduct",updatedProduct)
+  console.log("productId",productId)
   useEffect(() => {
     const fetchUpdatedProduct = async () => {
       if (productId) {
         setImageRequestsUpdate(productId.imageResponses);
         try {
-          const updatedData = await Promise.all(
-            productId.imageResponses.map(async (image) => {
-              try {
-                const { data } = await filesApi.getFile(image.imageUrl);
-                return {
-                  ...image,
-                  imageUrl: data.data,
-                };
-              } catch (error) {
-                return {
-                  ...image,
-                  imageUrl: "",
-                };
-              }
-            })
-          );
-          setUpdatedProduct({ ...productId, imageResponses: updatedData });
-          setImageRequests(updatedData);
+          setUpdatedProduct(productId);
+          setImageRequests(productId.imageResponses);
         } catch (error) {
         } finally {
           setLoading(false);
@@ -130,7 +118,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     };
 
     fetchUpdatedProduct();
-  }, [productId, fetchTrigger]);
+  }, [productId]);
 
   const initialImageRequests =
     updatedProduct?.imageResponses.map((image) => ({
@@ -149,9 +137,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
       priceFinished:
         productId?.productPhaseSalaries[0].salaryPerProduct.toString() || "",
       pricePhase2:
-        productId?.productPhaseSalaries[1].salaryPerProduct.toString() || "",
-      pricePhase1:
         productId?.productPhaseSalaries[2].salaryPerProduct.toString() || "",
+      pricePhase1:
+        productId?.productPhaseSalaries[1].salaryPerProduct.toString() || "",
       size: productId?.size || "",
       description: productId?.description || "",
       name: productId?.name || "",

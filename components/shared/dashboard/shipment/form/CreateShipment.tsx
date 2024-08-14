@@ -734,7 +734,10 @@ export default function CreateShipment() {
         ForceRender();
         setOpen(false);
         form.reset();
+        setProductDetail([]);
         setShipmentDetailRequests([]);
+        setCompanyId(undefined);
+        setPhaseId(undefined);
         if (data.isSuccess) {
           toast.success(data.message);
         }
@@ -1159,12 +1162,13 @@ export default function CreateShipment() {
                           <TabsList className="grid w-[200px] grid-cols-2">
                             <TabsTrigger value="account" className="data-[state=active]:shadow-lg">Sản phẩm</TabsTrigger>
                             {
-                              companyType === 0 ? (
+                              companyType === 0 && companyType1 !== 0 ? (
                                 <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
                               ) : (
-                               ""
+                                ""
                               )
                             }
+
                           </TabsList>
                           <TabsContent value="account">
                             <Card>

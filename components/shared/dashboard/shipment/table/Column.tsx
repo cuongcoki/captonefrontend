@@ -49,7 +49,7 @@ export type Shipment = {
     companyType: number;
     companyTypeDescription: string;
   };
-  shipDate: string; 
+  shipDate: string;
   id: string;
   statusDescription: string;
   status: number;
@@ -264,7 +264,11 @@ export const columns: ColumnDef<Shipment>[] = [
 
       return <>
         {
-          row.original.status !== 2 && row.original.status !== 3 ? (
+          row.original.isAccepted === false ? (
+            <span>
+              <ChangeStatusShipment shipmentID={row.original} />
+            </span>
+          ) : row.original.status !== 2 && row.original.status !== 3 ? (
             <span>
               <ChangeStatusShipment shipmentID={row.original} />
               {/* {limitLength(row.original.statusDescription, 30)} */}
