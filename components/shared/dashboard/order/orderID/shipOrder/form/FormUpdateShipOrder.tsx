@@ -473,8 +473,8 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                         <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[600px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
                             <Dialog.Title className="hidden visible">hidden</Dialog.Title>
                             <Dialog.Description className="hidden visible">hidden</Dialog.Description>
-                            <div className="bg-slate-100  flex flex-col ">
-                                <div className="p-4 flex items-center justify-between bg-primary  rounded-t-md">
+                            <div className="bg-slate-100 flex flex-col rounded-md">
+                                <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                                     <h2 className="text-2xl text-white">Chỉnh sửa đơn vận chuyển</h2>
                                     <Button variant="outline" size="icon" onClick={handleOffDialog}>
                                         <X className="w-4 h-4 dark:text-white" />

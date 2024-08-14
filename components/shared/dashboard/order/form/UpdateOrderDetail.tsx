@@ -410,13 +410,14 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         }
       });
     } catch (error: any) {
+      console.log("=>>>>>>>>>>");
       if (error.response.data.error) {
-        const Check = error.response.data.error;
-        if (typeof(Check) === 'string') {
-          toast.error(Check);
+        const keys = error.response.data.error;
+        if (typeof (keys) === 'string') {
+          toast.error(keys);
         } else {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+          for (const key in keys) {
+            toast.error(keys[key][0]);
           }
         }
       } else {
@@ -605,7 +606,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                       <span className="font-medium">Tên:</span>
                                       <span className="font-light">
                                         <HoverComponent Num={10}>
-                                        {product.name}
+                                          {product.name}
                                         </HoverComponent>
                                       </span>
                                     </div>
