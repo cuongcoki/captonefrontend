@@ -293,7 +293,7 @@ export const columns: ColumnDef<Shipment>[] = [
         shipmentApi
           .isAcceptedShipment(row.original.id, true)
           .then(({ data }) => {
-            ForceRender()
+            ForceRender();
             toast.success(data.message);
           })
           .catch((error) => {

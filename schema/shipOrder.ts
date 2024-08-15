@@ -10,7 +10,7 @@ export const ShipOrderDetailRequestSchema = z.object({
 export const ShipOrderSchema = z.object({
   shipperId: z.string({ message: "ID người giao hàng không hợp lệ" }),
   kindOfShipOrder: z.number().int().min(0, { message: "Loại đơn giao hàng không hợp lệ" }),
-  shipDate: z.string()
+  shipDate: z.string().nonempty({ message: "Ngày giao hàng không được để trống" }),
 //   orderId: z.string().uuid({ message: "ID đơn hàng không hợp lệ" }),
 //   shipOrderDetailRequests: z.array(ShipOrderDetailRequestSchema).nonempty({ message: "Danh sách chi tiết đơn giao hàng không được rỗng" })
 });
