@@ -266,7 +266,7 @@ export const columns: ColumnDef<Shipment>[] = [
     header: ({ column }) => {
       return (
         <Button variant="ghost" className=" ">
-          Ngày nhận hàng
+          Ngày giao hàng
         </Button>
       );
     },
