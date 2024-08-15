@@ -35,7 +35,7 @@ import {
 } from "@/types/salary-company.type";
 import { salaryCompanyApi } from "@/apis/salary_company.api";
 import { Button } from "@/components/ui/button";
-import { Check, Copy,  MoreVertical,  X } from "lucide-react";
+import { Check, Copy, MoreVertical, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -113,7 +113,7 @@ export default function SalaryCompanyDetail({
           return {
             ...prev,
             status: status,
-            note: note,
+            note: status === 1 ? note : "",
           };
         });
         toast.success("Thay đổi trạng thái thành công");

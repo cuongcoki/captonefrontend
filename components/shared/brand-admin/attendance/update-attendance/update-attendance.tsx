@@ -97,6 +97,7 @@ export default function UpdateAttendance({
     new Map<string, string>()
   );
   const [isChangeCompany, setIsChangeCompany] = useState(false);
+  const [nameSearch, setNameSearch] = useState("");
 
   const wareHouseRef = useRef(warehouse);
   const selectWareHouseDataRef = useRef(selectWareHouseData);
@@ -254,7 +255,8 @@ export default function UpdateAttendance({
         })
         .finally(() => {
           router.push(
-            `${pathname}?${userData.roleId == "2" ? "" : `warehouse=${warehouse}&`
+            `${pathname}?${
+              userData.roleId == "2" ? "" : `warehouse=${warehouse}&`
             }date=${date}&slot=${slot}`
           );
         });
@@ -403,10 +405,11 @@ export default function UpdateAttendance({
     <div>
       <HeaderComponent
         title={`Điểm danh nhân viên - ${CheckUser.user?.companyName}`}
-        description={`Điểm danh nhân viên ngày ${dateProp} - ${comboboxData.find((item) => item.value === slotProp)?.label
-          }.`}
+        description={`Điểm danh nhân viên ngày ${dateProp} - ${
+          comboboxData.find((item) => item.value === slotProp)?.label
+        }.`}
       />
-      <div className="flex space-y-2 sm:space-y-0 sm:space-x-5 mb-5 flex-wrap ">
+      <div className="flex items-center mb-5 flex-wrap md:flex-nowrap">
         {userData.roleId != "2" && (
           <Combobox
             title="Vui lòng chọn cơ sở"
@@ -418,7 +421,7 @@ export default function UpdateAttendance({
             }}
           />
         )}
-        <div className="">
+        <div className="ml-2">
           <DatePickerLimit
             selected={new Date(convertDateFormat(date || ""))}
             name="from"
@@ -430,13 +433,21 @@ export default function UpdateAttendance({
             }}
           />
         </div>
-        <Combobox
-          title="Vui lòng chọn slot"
-          data={comboboxData}
-          value={slot}
-          setValue={(value: string) => {
-            setSlot(value);
-          }}
+        <div className="my-2 ml-0 sm:ml-2">
+          <Combobox
+            title="Vui lòng chọn slot"
+            data={comboboxData}
+            value={slot}
+            setValue={(value: string) => {
+              setSlot(value);
+            }}
+          />
+        </div>
+        <Input
+          value={nameSearch}
+          onChange={(e) => setNameSearch(e.target.value)}
+          className="md:ml-2"
+          placeholder="Tìm kiếm nhân viên"
         />
       </div>
       <div className="w-full overflow-auto">
@@ -514,239 +525,252 @@ export default function UpdateAttendance({
             </tr>
           </thead>
           <tbody>
-            {tableData?.map((item, index) => (
-              <React.Fragment key={index}>
-                {item.products.length > 0 ? (
-                  item.products.map((product, productIndex) => (
-                    <tr key={product.productID}>
-                      {productIndex === 0 && (
-                        <>
-                          <td rowSpan={item.products.length}>
-                            <div className="w-[90px] h-[120px] bg-gray-400 mx-auto">
-                              <Image
-                                width={90}
-                                height={120}
-                                src={
-                                  (imageOfUser.get(item.userID) as string) ||
-                                  noIamge
-                                }
-                                alt={item.userName}
-                                className="object-cover w-full h-full"
-                              />
-                            </div>
-                          </td>
-                          <td
-                            className="dark:bg-[#1c1917]"
-                            rowSpan={item.products.length}
-                          >
-                            {item.userName}
-                          </td>
-                          <td
-                            className="dark:bg-[#1c1917]"
-                            rowSpan={item.products.length}
-                          >
-                            {item.userID}
-                          </td>
-                          <td
-                            className="dark:bg-[#1c1917]"
-                            rowSpan={item.products.length}
-                          >
-                            <input
-                              className="size-[30px]"
-                              type="checkbox"
-                              checked={item.isSalaryByProduct === true}
-                              onChange={(event) =>
-                                updateSalaryByProduct(
-                                  index,
-                                  event.target.checked
-                                )
-                              }
-                            />
-                          </td>
-                        </>
-                      )}
-                      <CountProduct index={index}>
-                        <td
-                          className={
-                            item.isSalaryByProduct === true
-                              ? "dark:bg-[#1c1917]"
-                              : colorSlaryByProduct + " dark:bg-black"
-                          }
-                          data-index={index}
-                          data-ismanufacture={item.isManufacture}
-                          data-issalarybyproduct={item.isSalaryByProduct}
-                        >
-                          {product.productName}
-                        </td>
-                      </CountProduct>
-                      <CountProduct index={index}>
-                        <td
-                          className={
-                            item.isSalaryByProduct === true
-                              ? "dark:bg-[#1c1917]"
-                              : colorSlaryByProduct + " dark:bg-black"
-                          }
-                          data-index={index}
-                          data-ismanufacture={item.isManufacture}
-                          data-issalarybyproduct={item.isSalaryByProduct}
-                        >
-                          {product.phaseName}
-                        </td>
-                      </CountProduct>
-                      <CountProduct index={index}>
-                        <td
-                          className={
-                            item.isSalaryByProduct === true
-                              ? "dark:bg-[#1c1917]"
-                              : colorSlaryByProduct + " dark:bg-black"
-                          }
-                          data-index={index}
-                          data-ismanufacture={item.isManufacture}
-                          data-issalarybyproduct={item.isSalaryByProduct}
-                        >
-                          {product.quantity}
-                        </td>
-                      </CountProduct>
-                      {productIndex == 0 && (
-                        <>
-                          <td rowSpan={item.products.length}>
-                            <div className="flex items-center">
-                              <Input
-                                className="w-[70px] mx-auto"
-                                type="number"
-                                value={item.hourOverTime}
-                                onChange={(event) => {
-                                  updateOverTime(index, event.target.value);
-                                }}
-                                step={0.5}
-                                disabled={
-                                  item.isAttendance === false ||
-                                  item.isSalaryByProduct === true
+            {tableData?.map((item, index) => {
+              if (
+                item.userName
+                  .toLowerCase()
+                  .trim()
+                  .indexOf(nameSearch.toLowerCase().trim()) === -1
+              )
+                return null;
+              return (
+                <React.Fragment key={item.userID}>
+                  {item.products.length > 0 ? (
+                    item.products.map((product, productIndex) => (
+                      <tr key={product.productID}>
+                        {productIndex === 0 && (
+                          <>
+                            <td rowSpan={item.products.length}>
+                              <div className="w-[90px] h-[120px] bg-gray-400 mx-auto">
+                                <Image
+                                  width={90}
+                                  height={120}
+                                  src={
+                                    (imageOfUser.get(item.userID) as string) ||
+                                    noIamge
+                                  }
+                                  alt={item.userName}
+                                  className="object-cover w-full h-full"
+                                />
+                              </div>
+                            </td>
+                            <td
+                              className="dark:bg-[#1c1917]"
+                              rowSpan={item.products.length}
+                            >
+                              {item.userName}
+                            </td>
+                            <td
+                              className="dark:bg-[#1c1917]"
+                              rowSpan={item.products.length}
+                            >
+                              {item.userID}
+                            </td>
+                            <td
+                              className="dark:bg-[#1c1917]"
+                              rowSpan={item.products.length}
+                            >
+                              <input
+                                className="size-[30px]"
+                                type="checkbox"
+                                checked={item.isSalaryByProduct === true}
+                                onChange={(event) =>
+                                  updateSalaryByProduct(
+                                    index,
+                                    event.target.checked
+                                  )
                                 }
                               />
-                              <div>giờ</div>
-                            </div>
+                            </td>
+                          </>
+                        )}
+                        <CountProduct index={index}>
+                          <td
+                            className={
+                              item.isSalaryByProduct === true
+                                ? "dark:bg-[#1c1917]"
+                                : colorSlaryByProduct + " dark:bg-black"
+                            }
+                            data-index={index}
+                            data-ismanufacture={item.isManufacture}
+                            data-issalarybyproduct={item.isSalaryByProduct}
+                          >
+                            {product.productName}
                           </td>
-                          <td rowSpan={item.products.length}>
-                            <input
-                              className="size-[30px]"
-                              type="checkbox"
-                              checked={item.isAttendance === true}
-                              onChange={(event) =>
-                                handleAttendanceChange(
-                                  index,
-                                  event.target.checked
-                                )
-                              }
-                            />
+                        </CountProduct>
+                        <CountProduct index={index}>
+                          <td
+                            className={
+                              item.isSalaryByProduct === true
+                                ? "dark:bg-[#1c1917]"
+                                : colorSlaryByProduct + " dark:bg-black"
+                            }
+                            data-index={index}
+                            data-ismanufacture={item.isManufacture}
+                            data-issalarybyproduct={item.isSalaryByProduct}
+                          >
+                            {product.phaseName}
                           </td>
-                        </>
-                      )}
+                        </CountProduct>
+                        <CountProduct index={index}>
+                          <td
+                            className={
+                              item.isSalaryByProduct === true
+                                ? "dark:bg-[#1c1917]"
+                                : colorSlaryByProduct + " dark:bg-black"
+                            }
+                            data-index={index}
+                            data-ismanufacture={item.isManufacture}
+                            data-issalarybyproduct={item.isSalaryByProduct}
+                          >
+                            {product.quantity}
+                          </td>
+                        </CountProduct>
+                        {productIndex == 0 && (
+                          <>
+                            <td rowSpan={item.products.length}>
+                              <div className="flex items-center">
+                                <Input
+                                  className="w-[70px] mx-auto"
+                                  type="number"
+                                  value={item.hourOverTime}
+                                  onChange={(event) => {
+                                    updateOverTime(index, event.target.value);
+                                  }}
+                                  step={0.5}
+                                  disabled={
+                                    item.isAttendance === false ||
+                                    item.isSalaryByProduct === true
+                                  }
+                                />
+                                <div>giờ</div>
+                              </div>
+                            </td>
+                            <td rowSpan={item.products.length}>
+                              <input
+                                className="size-[30px]"
+                                type="checkbox"
+                                checked={item.isAttendance === true}
+                                onChange={(event) =>
+                                  handleAttendanceChange(
+                                    index,
+                                    event.target.checked
+                                  )
+                                }
+                              />
+                            </td>
+                          </>
+                        )}
+                      </tr>
+                    ))
+                  ) : (
+                    // Hiển thị hàng trống nếu không có sản phẩm
+                    <tr>
+                      <td>
+                        <div className="w-[90px] h-[120px] bg-gray-400 mx-auto">
+                          <Image
+                            width={90}
+                            height={120}
+                            src={
+                              (imageOfUser.get(item.userID) as string) ||
+                              noIamge
+                            }
+                            alt={item.userName}
+                            className="object-cover w-full h-full"
+                          />
+                        </div>
+                      </td>
+                      <td>{item.userName}</td>
+                      <td>{item.userID}</td>
+                      <td>
+                        <input
+                          className="size-[30px]"
+                          type="checkbox"
+                          checked={item.isSalaryByProduct === true}
+                          onChange={(event) =>
+                            updateSalaryByProduct(index, event.target.checked)
+                          }
+                        />
+                      </td>
+
+                      <>
+                        <CountProduct index={index}>
+                          <td
+                            data-index={index}
+                            data-ismanufacture={item.isManufacture}
+                            data-issalarybyproduct={item.isSalaryByProduct}
+                            className={`${
+                              item.isSalaryByProduct === true
+                                ? "dark:bg-[#1c1917] "
+                                : "bg-white dark:bg-card "
+                            }`}
+                          >
+                            Nhấn vào
+                          </td>
+                        </CountProduct>
+                        <CountProduct index={index}>
+                          <td
+                            data-index={index}
+                            data-ismanufacture={item.isManufacture}
+                            data-issalarybyproduct={item.isSalaryByProduct}
+                            className={`${
+                              item.isSalaryByProduct === true
+                                ? "dark:bg-[#1c1917] "
+                                : "bg-white dark:bg-card"
+                            }`}
+                          >
+                            Để tạo
+                          </td>
+                        </CountProduct>
+                        <CountProduct index={index}>
+                          <td
+                            data-index={index}
+                            data-ismanufacture={item.isManufacture}
+                            data-issalarybyproduct={item.isSalaryByProduct}
+                            className={`${
+                              item.isSalaryByProduct === true
+                                ? "dark:bg-[#1c1917] "
+                                : "bg-white dark:bg-card"
+                            }`}
+                          >
+                            Sản phẩm
+                          </td>
+                        </CountProduct>
+                      </>
+
+                      <td>
+                        <div className="flex items-center">
+                          <Input
+                            className="w-[70px] mx-auto"
+                            type="number"
+                            value={item.hourOverTime}
+                            onChange={(event) => {
+                              updateOverTime(index, event.target.value);
+                            }}
+                            step={0.5}
+                            disabled={
+                              item.isAttendance === false ||
+                              item.isSalaryByProduct === true
+                            }
+                          />
+                          <div>giờ</div>
+                        </div>
+                      </td>
+                      <td>
+                        <input
+                          className="size-[30px]"
+                          type="checkbox"
+                          checked={item.isAttendance === true}
+                          onChange={(event) =>
+                            handleAttendanceChange(index, event.target.checked)
+                          }
+                        />
+                      </td>
                     </tr>
-                  ))
-                ) : (
-                  // Hiển thị hàng trống nếu không có sản phẩm
-                  <tr>
-                    <td>
-                      <div className="w-[90px] h-[120px] bg-gray-400 mx-auto">
-                        <Image
-                          width={90}
-                          height={120}
-                          src={
-                            (imageOfUser.get(item.userID) as string) || noIamge
-                          }
-                          alt={item.userName}
-                          className="object-cover w-full h-full"
-                        />
-                      </div>
-                    </td>
-                    <td>{item.userName}</td>
-                    <td>{item.userID}</td>
-                    <td>
-                      <input
-                        className="size-[30px]"
-                        type="checkbox"
-                        checked={item.isSalaryByProduct === true}
-                        onChange={(event) =>
-                          updateSalaryByProduct(index, event.target.checked)
-                        }
-                      />
-                    </td>
-
-                    <>
-                      <CountProduct index={index}>
-                        <td
-                          data-index={index}
-                          data-ismanufacture={item.isManufacture}
-                          data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
-                            ? "dark:bg-[#1c1917] "
-                            : "bg-white dark:bg-card "
-                            }`}
-                        >
-                          Nhấn vào
-                        </td>
-                      </CountProduct>
-                      <CountProduct index={index}>
-                        <td
-                          data-index={index}
-                          data-ismanufacture={item.isManufacture}
-                          data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
-                            ? "dark:bg-[#1c1917] "
-                            : "bg-white dark:bg-card"
-                            }`}
-                        >
-                          Để tạo
-                        </td>
-                      </CountProduct>
-                      <CountProduct index={index}>
-                        <td
-                          data-index={index}
-                          data-ismanufacture={item.isManufacture}
-                          data-issalarybyproduct={item.isSalaryByProduct}
-                          className={`${item.isSalaryByProduct === true
-                            ? "dark:bg-[#1c1917] "
-                            : "bg-white dark:bg-card"
-                            }`}
-                        >
-                          Sản phẩm
-                        </td>
-                      </CountProduct>
-                    </>
-
-                    <td>
-                      <div className="flex items-center">
-                        <Input
-                          className="w-[70px] mx-auto"
-                          type="number"
-                          value={item.hourOverTime}
-                          onChange={(event) => {
-                            updateOverTime(index, event.target.value);
-                          }}
-                          step={0.5}
-                          disabled={
-                            item.isAttendance === false ||
-                            item.isSalaryByProduct === true
-                          }
-                        />
-                        <div>giờ</div>
-                      </div>
-                    </td>
-                    <td>
-                      <input
-                        className="size-[30px]"
-                        type="checkbox"
-                        checked={item.isAttendance === true}
-                        onChange={(event) =>
-                          handleAttendanceChange(index, event.target.checked)
-                        }
-                      />
-                    </td>
-                  </tr>
-                )}
-              </React.Fragment>
-            ))}
+                  )}
+                </React.Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
