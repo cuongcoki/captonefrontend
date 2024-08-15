@@ -172,9 +172,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
     const [fetchTrigger, setFetchTrigger] = useState<number>(0);
     //state ** company
     const [company, setCompany] = useState<Company[]>([]);
-    const [companyType, setCompanyType] = useState<number | undefined>();
+    const [companyType, setCompanyType] = useState<any>();
     const [company1, setCompany1] = useState<Company[]>([]);
-    const [companyType1, setCompanyType1] = useState<number | undefined>();
+    const [companyType1, setCompanyType1] = useState<any>();
 
     // ** state user
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -337,7 +337,11 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
             }
         };
         console.log("dataSID", dataSID)
+        console.log("companyType", companyType)
+        console.log("companyType1", companyType1)
         if (shipmentIDDes) {
+            setCompanyType(dataSID?.from.companyType);
+            setCompanyType1(dataSID?.to.companyType);
             reset({
                 toId: dataSID?.to?.id,
                 fromId: dataSID?.from?.id,
@@ -883,8 +887,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                             <FormLabel className="text-primary-backgroudPrimary ">Công ty gửi *</FormLabel>
                                                             <Card className="w-full mt-2">
                                                                 <CardContent className="mt-5">
-                                                                    <Select onValueChange={(value) => handleStatusChange(parseInt(value))}>
-                                                                        <SelectTrigger className="mb-2"> <SelectValue placeholder="Chọn kiểu công ty" /></SelectTrigger>
+                                                                    <Select value={String(companyType)} onValueChange={(value) => handleStatusChange(parseInt(value))}>
+                                                                        <SelectTrigger className="mb-2"> <SelectValue  placeholder="Chọn kiểu công ty" /></SelectTrigger>
                                                                         <SelectContent>
                                                                             {
                                                                                 enumCompany.map((item) => (
@@ -943,7 +947,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                             <FormLabel className="text-primary-backgroudPrimary ">Công ty nhận *</FormLabel>
                                                             <Card className="w-full mt-2">
                                                                 <CardContent className="mt-5">
-                                                                    <Select onValueChange={(value) => handleStatusChange1(parseInt(value))}>
+                                                                    <Select value={String(companyType1)} onValueChange={(value) => handleStatusChange1(parseInt(value))}>
                                                                         <SelectTrigger className="mb-2"> <SelectValue placeholder="Chọn kiểu công ty" /></SelectTrigger>
                                                                         <SelectContent>
                                                                             {
@@ -1227,35 +1231,53 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                     onChange={(e) => setSearchTermM(e.target.value)}
                                                                     className="md:w-[300px] w-full mb-3"
                                                                 />
-                                                                <div className=" w-full grid grid-cols-3 sm:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
+                                                                <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                                                     {dataM.map((item) => (
-                                                                        <div
-                                                                            className="group relative w-[80px] h-[80px] shadow-md rounded-md"
-                                                                            key={item.id}
-                                                                        >
-                                                                            <ImageIconMaterial dataImage={item} />
-                                                                            <Check
-                                                                                className={`${shipmentDetailRequests.some(
-                                                                                    (item1) => item1.itemId === item.id
-                                                                                )
-                                                                                    ? "absolute top-0 right-0 bg-primary text-white"
-                                                                                    : "hidden"
-                                                                                    }`}
-                                                                            />
-                                                                            <span
-                                                                                className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                                                                onClick={() =>
-                                                                                    handleAddProducts(
-                                                                                        item,
-                                                                                        item?.image,
-                                                                                        item?.id,
-                                                                                        materialType
+                                                                        <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
+                                                                            <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
+                                                                                <ImageIconMaterial dataImage={item} />
+                                                                                <Check
+                                                                                    className={`${shipmentDetailRequests.some(
+                                                                                        (item1) => item1.itemId === item.id
                                                                                     )
-                                                                                }
-                                                                            >
-                                                                                <Plus className="text-white" />
-                                                                            </span>
-                                                                        </div>
+                                                                                        ? "absolute top-0 right-0 bg-primary text-white"
+                                                                                        : "hidden"
+                                                                                        }`}
+                                                                                />
+                                                                                <span
+                                                                                    className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                                                    onClick={() =>
+                                                                                        handleAddProducts(
+                                                                                            item,
+                                                                                            item?.image,
+                                                                                            item?.id,
+                                                                                            materialType
+                                                                                        )
+                                                                                    }
+                                                                                >
+                                                                                    <Plus className="text-white" />
+                                                                                </span>
+                                                                            </div>
+
+                                                                            <div className="flex flex-col w-full text-sm my-1">
+                                                                                <div className="flex gap-2">
+                                                                                    <span className="font-medium">Tên:</span>
+                                                                                    <span className="font-light">{item.name}</span>
+                                                                                </div>
+                                                                                <div className="flex gap-2">
+                                                                                    <span className="font-medium">Mô tả:</span>
+                                                                                    <span className="font-light">{item.description}</span>
+                                                                                </div>
+                                                                                <div className="flex gap-2">
+                                                                                    <span className="font-medium">Số lượng/một đơn vị:</span>
+                                                                                    <span className="font-light">{item.quantityPerUnit}</span>
+                                                                                </div>
+                                                                                <div className="flex gap-2">
+                                                                                    <span className="font-medium">Sẵn có:</span>
+                                                                                    <span className="font-light text-primary">{item.quantityInStock}</span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </Card>
                                                                     ))}
                                                                 </div>
                                                             </CardContent>

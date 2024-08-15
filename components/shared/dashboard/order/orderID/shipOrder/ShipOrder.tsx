@@ -444,7 +444,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                           />{" "}
                         </Link>
                       </span>
-                      {products.product?.name}
+                      {products.product?.code}-{products.product?.name}
                       <span>x</span>
                       <span>{products.quantity}</span>
                     </span>

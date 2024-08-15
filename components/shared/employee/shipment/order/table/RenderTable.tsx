@@ -24,7 +24,7 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => {},
+  forceUpdate: () => { },
 });
 
 const enumStatus = [
@@ -108,10 +108,10 @@ export default function RenderTableOrderShipment() {
       }
     };
 
-    
+
 
     fetchDataOrder();
-  }, [currentPage, pageSize, companyName,  status, force]);
+  }, [currentPage, pageSize, companyName, status, force]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
@@ -146,7 +146,7 @@ export default function RenderTableOrderShipment() {
           <MyContext.Provider value={{ forceUpdate }}>
             <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
-             
+
                 <Select
                   value={status || ""}
                   onValueChange={(value) => handleStatusChange(value)}
@@ -183,6 +183,7 @@ export default function RenderTableOrderShipment() {
         <div className="overflow-x-auto">
           <DataTable columns={columns} data={data} />
           <DataTablePagination
+            data={data}
             currentPage={currentPage}
             totalPages={totalPages}
             setCurrentPage={setCurrentPage}
