@@ -84,7 +84,7 @@ export function BreadcrumbComponent() {
       case `/dashboard/salary-company`:
         return `Chi phí gia công`;
       case `/dashboard/salary-company/detail`:
-        return `Chi phí gia công chi tiết`;
+        return `Chi phí chi tiết`;
       // nhân viên
       case "/employee":
         return "Nhân viên";
