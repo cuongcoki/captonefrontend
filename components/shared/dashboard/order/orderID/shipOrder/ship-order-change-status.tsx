@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -22,6 +23,7 @@ export default function ShipOrderChangeStatus({
   const [open, setOpen] = React.useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      <DialogDescription></DialogDescription>
       <DialogTrigger asChild>
         <Button variant="outline"> {item.statusDescription}</Button>
       </DialogTrigger>

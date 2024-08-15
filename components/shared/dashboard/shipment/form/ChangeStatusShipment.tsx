@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -86,7 +87,7 @@ export const ChangeStatusShipment: React.FC<ShipmentIDProps> = ({
     // if (shipmentID.status === 1) {
     //     return toast.error("Đơn hàng đang trong quá trình vận chuyển ,thay đổi trạng thái sẽ dẫn đến tình trạng nhầm lẫn của của nhận viên vận chuyển")
     // }
-
+    console.log("handleSubmitOrderStatus");
     const requestBody = {
       shipmentId: shipmentID.id,
       status: valueStatus,
@@ -115,7 +116,8 @@ export const ChangeStatusShipment: React.FC<ShipmentIDProps> = ({
 
   return (
     <>
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogDescription></DialogDescription>
         <DialogTrigger asChild>
           <div className="rounded p-2 hover:bg-[#2bff7e] bg-[#24d369] w-max font-medium">
             {shipmentID.statusDescription}
@@ -151,10 +153,8 @@ export const ChangeStatusShipment: React.FC<ShipmentIDProps> = ({
 
           <DialogFooter>
             <Button
-              type="submit"
               onClick={() => {
-                handleSubmitOrderStatus;
-                setOpen(false);
+                handleSubmitOrderStatus();
               }}
             >
               Lưu thay đổi
