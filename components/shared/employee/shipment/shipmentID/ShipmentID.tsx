@@ -113,22 +113,22 @@ interface ShipmentIDProps {
 }
 
 const ProductPhaseType = [
-  {
-    id: 0,
-    des: "Bình thường",
-  },
-  {
-    id: 1,
-    des: "Lỗi bên cơ sở",
-  },
-  {
-    id: 2,
-    des: "Lỗi bên hợp tác",
-  },
-  {
-    id: 3,
-    des: "Hàng hỏng",
-  },
+    {
+        id: 0,
+        des: "Bình thường",
+    },
+    {
+        id: 1,
+        des: "Lỗi bên cơ sở",
+    },
+    {
+        id: 2,
+        des: "Lỗi bên hợp tác",
+    },
+    {
+        id: 3,
+        des: "Hàng hỏng",
+    },
 ];
 
 export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
