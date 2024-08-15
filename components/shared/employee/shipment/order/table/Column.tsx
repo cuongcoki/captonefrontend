@@ -200,7 +200,7 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
   {
     accessorKey: "shipDate",
     header: ({ column }) => {
-      return <Button variant="ghost">Ngày Giao Hàng</Button>;
+      return <Button variant="ghost">Ngày giao hàng</Button>;
     },
     cell: ({ row }) => {
       return <span>{formatDate(row.original.shipDate)}</span>;
