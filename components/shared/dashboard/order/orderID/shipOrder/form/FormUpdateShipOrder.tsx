@@ -66,6 +66,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { filesApi } from "@/apis/files.api";
 import { OrderStore } from "../../../order-store";
+import HoverComponent from "@/components/shared/common/hover-card";
 
 // Define Status Enum
 const OrderStatus = [
@@ -130,6 +131,7 @@ interface productOrderResponses {
 interface setOrderResponses {
     setId: string,
     setName: string,
+    setCode: string,
     setDescription: string,
     imageSetUrl: string,
     productResponses: productResponses[]
@@ -238,7 +240,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
     const [productDetail, setProductDetail] = useState<any[]>([]);
 
     // Hàm thêm sản phẩm
-    const handleAddProducts = (imgProducts: string, itemId: string, itemKind: number) => {
+    const handleAddProducts = (item: any, imgProducts: string, itemId: string, itemKind: number) => {
         const itemExists = shipOrderDetailRequests.some((item) => item.itemId === itemId);
         if (itemExists) {
             toast.error("sản phẩm này đã thêm");
@@ -250,9 +252,11 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         ]);
         setProductDetail((prev) => [
             ...prev,
-            { itemId: itemId, imgProducts, itemKind }
+            { itemId: itemId, imgProducts, itemKind, item }
         ]);
     };
+
+    console.log("productDetail",productDetail)
 
     // Hàm xóa sản phẩm
     const handleDeleteProducts = (itemId: string) => {
@@ -340,7 +344,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
             });
         }
 
-    }, [, reset, orderId, shipOrderId,fetchTrigger]);
+    }, [, reset, orderId, shipOrderId, fetchTrigger]);
 
 
 
@@ -368,7 +372,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         };
 
         fetchData();
-    }, [isActive, roleId, searchTearm, currentPage, pageSize, dataEm ]);
+    }, [isActive, roleId, searchTearm, currentPage, pageSize, dataEm]);
 
 
     const onSubmit = (data: z.infer<typeof ShipOrderSchema>) => {
@@ -443,6 +447,16 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         }
     };
 
+    const formatCurrency = (value: any): string => {
+        if (!value) return "0";
+        let valueString = value.toString();
+        valueString = valueString.replace(/[^0-9]/g, "");
+        valueString = valueString.replace(/^0+/, "");
+        if (valueString === "") return "0";
+        let numberValue = parseInt(valueString, 10);
+        let formatted = numberValue.toLocaleString("vi-VN");
+        return formatted;
+    };
     return (
         <>
             {
@@ -470,7 +484,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                 </Dialog.Trigger>
                 <Dialog.Portal>
                     <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
-                        <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[600px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
+                        <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[750px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
                             <Dialog.Title className="hidden visible">hidden</Dialog.Title>
                             <Dialog.Description className="hidden visible">hidden</Dialog.Description>
                             <div className="bg-slate-100 flex flex-col rounded-md">
@@ -483,72 +497,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
 
 
                                 <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4">
-                                    <div className=" w-full grid grid-cols-3 md:grid-cols-6 gap-4 min-h-[100px]  overflow-y-auto ">
-                                        {
-                                            order.productOrderResponses.map(pro => (
-                                                <div className="group relative w-[60px] h-[60px] shadow-lg rounded-md" key={pro.productId}>
-                                                    <Image src={pro.imageProductUrl} alt="ảnh sản phẩm" className="w-full h-full object-cover shadow-lg rounded-md" width={900} height={900} />
-                                                    <Check className={`h-5 w-5 ${shipOrderDetailRequests.some(item => item.itemId === pro.productId) ? "absolute top-0 right-0 bg-primary  text-white" : "hidden"}`} />
-                                                    <span className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6" onClick={() => handleAddProducts(pro.imageProductUrl, pro.productId, productType)}><Plus className="text-white" /></span>
-                                                </div>
-                                            ))
-                                        }
-                                        {
-                                            order.setOrderResponses.map(pro => (
-                                                <div className="group relative w-[60px] h-[60px] shadow-lg rounded-md" key={pro.setId}>
-                                                    <Image src={pro.imageSetUrl} alt="ảnh bộ sản phẩm" className="w-full h-full object-cover shadow-lg rounded-md" width={900} height={900} />
-                                                    <Check className={`h-5 w-5 ${shipOrderDetailRequests.some(item => item.itemId === pro.setId) ? "absolute top-0 right-0 bg-primary text-white" : "hidden"}`} />
-                                                    <span className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6" onClick={() => handleAddProducts(pro.imageSetUrl, pro.setId, setType)}><Plus className="text-white" /></span>
-                                                </div>
-                                            ))
-                                        }
-                                    </div>
-                                    {productDetail.length > 0 && (
-                                        <Card >
-                                            <Table>
-                                                <TableHeader>
-                                                    <TableRow>
-                                                        <TableHead className="w-[100px]">Ảnh</TableHead>
-                                                        <TableHead>Số lượng</TableHead>
-                                                        <TableHead>Sản phẩm</TableHead>
-                                                    </TableRow>
-                                                </TableHeader>
-                                                <TableBody className="min-h-[200px] overflow-y-auto">
-                                                    {
-                                                        productDetail.map((proDetail, index) => (
-                                                            <TableRow key={proDetail.itemId}>
-                                                                <TableCell className="font-medium">
-                                                                    <div className="w-[50px] h-[50px] rounded-md shadow-md">
-                                                                        <Image src={proDetail.imgProducts[0]} width={900} height={900} alt="ảnh sản phẩm" className="w-ful h-ful object-contain" />
-                                                                    </div>
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    <input
-                                                                        type="number"
-                                                                        name="quantity"
-                                                                        value={
-                                                                            shipOrderDetailRequests.find(
-                                                                                (item) => item.itemId === proDetail.itemId
-                                                                            )?.quantity || 0
-                                                                        }
-                                                                        onChange={(e) => handleChange(proDetail.itemId, 'quantity', parseInt(e.target.value))}
-                                                                        className="w-16 text-center outline-none"
-                                                                    />
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {proDetail.itemKind === 0 ? "Sản phẩm" : "Bộ sản phẩm"}
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    <Button variant={"ghost"} size={"icon"} onClick={() => handleDeleteProducts(proDetail.itemId)}><CircleX /></Button>
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        ))
-                                                    }
-                                                </TableBody>
 
-                                            </Table>
-                                        </Card>
-                                    )}
                                     <Form {...form}>
                                         <form
                                             onSubmit={form.handleSubmit(onSubmit)}
@@ -678,6 +627,160 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                             />
 
 
+                                            <h2>Hãy chọn sản phẩm</h2>
+                                            <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+
+                                                {
+                                                    order.productOrderResponses.map(pro => (
+                                                        <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={pro.productId}>
+                                                            <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
+                                                                <Image src={pro.imageProductUrl} alt="ảnh sản phẩm" className="w-full h-full object-cover shadow-lg rounded-md" width={900} height={900} />
+                                                                <Check className={`h-5 w-5 ${shipOrderDetailRequests.some(item => item.itemId === pro.productId) ? "absolute top-0 right-0 bg-primary  text-white" : "hidden"}`} />
+                                                                <span className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6" onClick={() => handleAddProducts(pro, pro.imageProductUrl, pro.productId, productType)}><Plus className="text-white" /></span>
+                                                            </div>
+
+                                                            <div className="flex flex-col w-full text-sm my-1">
+                                                                <div className="flex gap-2">
+                                                                    <span className="font-medium">Mã:</span>
+                                                                    <span className="font-light">
+                                                                        <HoverComponent Num={10}>
+                                                                            {pro.productCode}
+                                                                        </HoverComponent>
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex gap-2">
+                                                                    <span className="font-medium">Tên:</span>
+                                                                    <span className="font-light">
+                                                                        <HoverComponent Num={10}>
+                                                                            {pro.productName}
+                                                                        </HoverComponent>
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex gap-2">
+                                                                    <span className="font-medium">Giá thành:</span>
+                                                                    <span className="font-light text-primary">
+                                                                        <HoverComponent Num={15}>{formatCurrency(pro.unitPrice)}</HoverComponent> .đ
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </Card>
+                                                    ))
+                                                }
+                                                {
+                                                    order.setOrderResponses.map(pro => (
+                                                        <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={pro.setId}>
+                                                            <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
+                                                                <Image
+                                                                    src={pro.imageSetUrl}
+                                                                    alt="ảnh bộ sản phẩm"
+                                                                    className="w-full h-full object-cover shadow-lg "
+                                                                    width={900}
+                                                                    height={900}
+                                                                />
+                                                                <Check
+                                                                    className={` h-5 w-5 ${shipOrderDetailRequests.some(
+                                                                        (item) => item.itemId === pro.setId
+                                                                    )
+                                                                        ? "absolute top-0 right-0 bg-primary text-white"
+                                                                        : "hidden"
+                                                                        }`}
+                                                                />
+                                                                <span
+                                                                    className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                                    onClick={() =>
+                                                                        handleAddProducts(pro, pro.imageSetUrl, pro.setId, setType)
+                                                                    }
+                                                                >
+                                                                    <Plus className="text-white" />
+                                                                </span>
+                                                            </div>
+
+                                                            <div className="flex flex-col w-full text-sm my-1">
+                                                                <div className="flex gap-2">
+                                                                    <span className="font-medium">Mã:</span>
+                                                                    <span className="font-light">
+                                                                        <HoverComponent Num={10}>
+                                                                            {pro.setCode}
+                                                                        </HoverComponent>
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex gap-2">
+                                                                    <span className="font-medium">Tên:</span>
+                                                                    <span className="font-light">
+                                                                        <HoverComponent Num={10}>
+                                                                            {pro.setName}
+                                                                        </HoverComponent>
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex gap-2">
+                                                                    <span className="font-medium">Giá thành:</span>
+                                                                    <span className="font-light text-primary">
+                                                                        <HoverComponent Num={15}>{formatCurrency(pro.unitPrice)}</HoverComponent> .đ
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </Card>
+                                                    ))
+                                                }
+                                            </div>
+                                            {productDetail.length > 0 && (
+                                                <Card >
+                                                    <Table>
+                                                        <TableHeader>
+                                                            <TableRow>
+                                                                <TableHead className="w-[100px]">Ảnh</TableHead>
+                                                                {/* <TableHead >Mã</TableHead>
+                                                                <TableHead >Tên</TableHead> */}
+                                                                <TableHead>Số lượng</TableHead>
+                                                                <TableHead>Sản phẩm</TableHead>
+                                                            </TableRow>
+                                                        </TableHeader>
+                                                        <TableBody className="min-h-[200px] overflow-y-auto">
+                                                            {
+                                                                productDetail.map((proDetail, index) => (
+                                                                    <TableRow key={proDetail.itemId}>
+                                                                        <TableCell className="font-medium">
+                                                                            <div className="w-[50px] h-[50px] rounded-md shadow-md">
+                                                                                <Image src={proDetail.imgProducts[0]} width={900} height={900} alt="ảnh sản phẩm" className="w-ful h-ful object-contain" />
+                                                                            </div>
+                                                                        </TableCell>
+                                                                        {/* <TableCell className="font-medium">
+                                                                            {proDetail.itemKind === 0
+                                                                                ? `${proDetail?.item?.productCode}`
+                                                                                : `${proDetail?.item?.setCode}`}
+                                                                        </TableCell>
+                                                                        <TableCell className="font-medium">
+                                                                            {proDetail.itemKind === 0
+                                                                                ? `${proDetail?.item?.productName}`
+                                                                                : `${proDetail?.item?.setName}`}
+                                                                        </TableCell> */}
+                                                                        <TableCell>
+                                                                            <input
+                                                                                type="number"
+                                                                                name="quantity"
+                                                                                value={
+                                                                                    shipOrderDetailRequests.find(
+                                                                                        (item) => item.itemId === proDetail.itemId
+                                                                                    )?.quantity || 0
+                                                                                }
+                                                                                onChange={(e) => handleChange(proDetail.itemId, 'quantity', parseInt(e.target.value))}
+                                                                                className="w-16 text-center outline-none"
+                                                                            />
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                            {proDetail.itemKind === 0 ? "Sản phẩm" : "Bộ sản phẩm"}
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                            <span className="cursor-pointer" onClick={() => handleDeleteProducts(proDetail.itemId)}><CircleX /></span>
+                                                                        </TableCell>
+                                                                    </TableRow>
+                                                                ))
+                                                            }
+                                                        </TableBody>
+
+                                                    </Table>
+                                                </Card>
+                                            )}
 
                                             <Separator className="h-1 my-1" />
                                             <Button

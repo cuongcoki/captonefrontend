@@ -49,16 +49,14 @@ interface Phase {
 }
 
 export type Material = {
-  id: string
+  id: string;
   name: string;
   description: string;
   unit: string;
   quantityPerUnit: number;
   image: string;
   quantityInStock: number;
-}
-
-
+};
 
 export interface Detail {
   product: Product;
@@ -113,22 +111,22 @@ interface ShipmentIDProps {
 }
 
 const ProductPhaseType = [
-    {
-        id: 0,
-        des: "Bình thường",
-    },
-    {
-        id: 1,
-        des: "Lỗi bên cơ sở",
-    },
-    {
-        id: 2,
-        des: "Lỗi bên hợp tác",
-    },
-    {
-        id: 3,
-        des: "Hàng hỏng",
-    },
+  {
+    id: 0,
+    des: "Bình thường",
+  },
+  {
+    id: 1,
+    des: "Lỗi bên cơ sở",
+  },
+  {
+    id: 2,
+    des: "Lỗi bên hợp tác",
+  },
+  {
+    id: 3,
+    des: "Hàng hỏng",
+  },
 ];
 
 export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
@@ -153,8 +151,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
           const orderData = data.data;
           setData(orderData);
         })
-        .catch((error) => {
-        })
+        .catch((error) => {})
         .finally(() => {
           setLoading(false);
         });
@@ -237,7 +234,9 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                     </CardHeader>
                     <CardContent className="p-6 text-sm">
                       <div className="grid gap-3">
-                        <div className="font-semibold">Danh sách hàng vận chuyển</div>
+                        <div className="font-semibold">
+                          Danh sách hàng vận chuyển
+                        </div>
                         <ul className="grid gap-3">
                           {data?.details.map((item, index) => (
                             <li
@@ -253,18 +252,28 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                       >
                                         {" "}
                                         <ImageIconShipment
-                                          dataImage={item?.product?.imageResponses}
+                                          dataImage={
+                                            item?.product?.imageResponses
+                                          }
                                         />{" "}
                                       </Link>
                                     </span>
-                                    <span>{item?.product?.code}-{item?.product?.name}</span>
+                                    <span>
+                                      {item?.product?.code}-
+                                      {item?.product?.name}
+                                    </span>
                                   </>
                                 ) : item?.material ? (
                                   <>
                                     <span className="w-[50px] h-[50px] shadow-md rounded-md">
-                                      <ImageIconShipmentMa dataImage={item?.material?.image} />
+                                      <ImageIconShipmentMa
+                                        dataImage={item?.material?.image}
+                                      />
                                     </span>
-                                    <span>{item?.material?.name}/{item?.material?.unit}</span>
+                                    <span>
+                                      {item?.material?.name}/
+                                      {item?.material?.unit}
+                                    </span>
                                   </>
                                 ) : null}
                                 <span>x</span>
@@ -275,20 +284,24 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                   {item?.product ? "Sản phẩm: " : "Vật liệu: "}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
-                                  {item.material && (`${item?.materialPrice} đ`)}
+                                  {item.material && `${item?.materialPrice} đ`}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
-                                  {item.product && (`${item?.phase?.name}`)}
+                                  {item.product && `${item?.phase?.name}`}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
-                                  {item.product && (`- ${item?.phase?.description}`)}
+                                  {item.product &&
+                                    `- ${item?.phase?.description}`}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
-                                  {item.product && (
-                                    `- Sản phẩm ${ProductPhaseType.find(phase => phase.id === item.productPhaseType)?.des || "Không có"}`
-                                  )}
+                                  {item.product &&
+                                    `- ${
+                                      ProductPhaseType.find(
+                                        (phase) =>
+                                          phase.id === item.productPhaseType
+                                      )?.des || "Không có"
+                                    }`}
                                 </span>
-
                               </div>
                             </li>
                           ))}
@@ -324,7 +337,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                         <dl className="grid gap-1">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
-                              Tên giám đốc
+                              Người đại diện
                             </dt>
                             <dd>{data?.from.directorName}</dd>
                           </div>
@@ -332,24 +345,31 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                             <dt className="text-muted-foreground">
                               Tên công ty
                             </dt>
-                            <dd>{data?.from.companyTypeDescription}</dd>
+                            <dd>{data?.from.name}</dd>
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">Địa chỉ</dt>
                             <dd>
-                              <a href="mailto:">{limitLength(data?.from.address, 20)}</a>
+                              <a href="mailto:">
+                                {limitLength(data?.from.address, 20)}
+                              </a>
                             </dd>
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">Liện hệ</dt>
                             <dd className="flex items-center gap-1">
-                              <Mail className="h-3.5 w-3.5" /> <a href="mailto:">{data?.from.email === "" ? "Không có" : data?.from.email}</a>
+                              <Mail className="h-3.5 w-3.5" />{" "}
+                              <a href="mailto:">
+                                {data?.from.email === ""
+                                  ? "Không có"
+                                  : data?.from.email}
+                              </a>
                             </dd>
                             <dd className="flex items-center gap-1">
-                              <Phone className="h-3.5 w-3.5" /> <a href="tel:">{data?.from.directorPhone}</a>
+                              <Phone className="h-3.5 w-3.5" />{" "}
+                              <a href="tel:">{data?.from.directorPhone}</a>
                             </dd>
                           </div>
-
                         </dl>
                       </div>
                       <Separator className="my-4" />
@@ -361,7 +381,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                         <dl className="grid gap-1">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
-                              Tên giám đốc
+                              Người đại diện
                             </dt>
                             <dd>{data?.to.directorName}</dd>
                           </div>
@@ -369,27 +389,33 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                             <dt className="text-muted-foreground">
                               Tên công ty
                             </dt>
-                            <dd>{data?.to.companyTypeDescription}</dd>
+                            <dd>{data?.to.name}</dd>
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">Địa chỉ</dt>
                             <dd>
-                              <a href="mailto:">{limitLength(data?.to.address, 20)}</a>
+                              <a href="mailto:">
+                                {limitLength(data?.to.address, 20)}
+                              </a>
                             </dd>
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">Liện hệ</dt>
                             <dd className="flex items-center gap-1">
-                              <Mail className="h-3.5 w-3.5" /> <a href="mailto:">{data?.to.email === "" ? "Không có" : data?.to.email}</a>
+                              <Mail className="h-3.5 w-3.5" />{" "}
+                              <a href="mailto:">
+                                {data?.to.email === ""
+                                  ? "Không có"
+                                  : data?.to.email}
+                              </a>
                             </dd>
                             <dd className="flex items-center gap-1">
-                              <Phone className="h-3.5 w-3.5" /> <a href="tel:">{data?.to.directorPhone}</a>
+                              <Phone className="h-3.5 w-3.5" />{" "}
+                              <a href="tel:">{data?.to.directorPhone}</a>
                             </dd>
                           </div>
-
                         </dl>
                       </div>
-
                     </CardContent>
                     <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
                       <div className="text-xs text-muted-foreground">

@@ -18,63 +18,35 @@ import {
   Coins,
   Warehouse,
   HandCoins,
+  SunIcon,
+  MoonIcon,
 } from "lucide-react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Command } from "@/components/ui/command";
+
 import { Button } from "@/components/ui/button";
 import { useWindowWidth } from "@react-hook/window-size";
-import { ModeToggle } from "@/components/shared/common/mode-toggle";
 import { useAuth } from "@/hooks/useAuth";
-import { authApi } from "@/apis/auth.api";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { CardContent } from "../home/DashbroadComponents/Cards/Card";
-import Link from "next/link";
+
 
 type Props = {};
-export default function SideNavbar({}: Props) {
+export default function SideNavbar({ }: Props) {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   // ** hooks
   const user = useAuth();
-  const router = useRouter();
-
   const onlyWidth = useWindowWidth();
   const mobileWidth = onlyWidth < 768;
-
   function toggleSidebar() {
     setIsCollapsed(!isCollapsed);
   }
+  
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  const handleLogout = () => {
-    setLoading(true);
-    const id: any = user.user?.id;
+  
 
-    authApi
-      .logout(id)
-      .then(({ data }) => {
-        user.logout();
-        router.push("/sign-in");
-        toast.success(data.message);
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+
   return (
     <div className="relative min-w-[80px] border-r  px-3 dark:bg-[#1c1917]">
       {isClient ? (
@@ -256,50 +228,103 @@ export default function SideNavbar({}: Props) {
           />
         </div>
       ) : null}
-      <div className="absolute bottom-0 w-full">
-        {!mobileWidth && (
-          <>
-            {isCollapsed ? (
-              <div className="mb-3 ml-2.5 w-[30px]">
-                <Command className="ml-2.5 focus:ring-2 focus:ring-blue-500">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Settings />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
-                      <DropdownMenuLabel>
-                        <Button>
-                          <Link href={`/profile/${user.user?.id}`}>
-                            Trang cá nhân
-                          </Link>
-                        </Button>
-                      </DropdownMenuLabel>
-                      <DropdownMenuItem onClick={handleLogout}>
-                        <Button onClick={handleLogout}>
-                          <LogOut className="mr-1" /> đăng xuất
-                        </Button>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <ModeToggle />
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </Command>
-              </div>
-            ) : (
-              <CardContent className="m-1 mb-3  w-[170px]">
-                <Button>
-                  <Link href={`/profile/${user.user?.id}`}>Trang cá nhân</Link>
-                </Button>
-                <Button onClick={handleLogout}>
-                  <LogOut className="mr-1" /> đăng xuất
-                </Button>
-                <ModeToggle />
-              </CardContent>
-            )}
-          </>
-        )}
-      </div>
+     
     </div>
   );
 }
+
+
+{/* <CardContent className="m-1 mb-3  w-[170px]">
+<Button>
+  <Link href={`/profile/${user.user?.id}`} className="flex items-center gap-2"><UserRound /> cá nhân</Link>
+</Button>
+<div className="items-center flex gap-3">
+  <ModeToggle />
+  <Button onClick={handleLogout} size={"icon"}>
+    <LogOut className="mr-1" />
+  </Button>
+</div>
+</CardContent> */}
+
+{/* <div className="absolute bottom-0 w-full">
+{!mobileWidth && (
+  <>
+    {isCollapsed ? (
+      <div className="mb-3 ml-2.5 w-[30px]">
+        <Command className="ml-2.5 focus:ring-2 focus:ring-blue-500">
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Settings />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuLabel>
+                <Button>
+                  <Link href={`/profile/${user.user?.id}`}>
+                    Trang cá nhân
+                  </Link>
+                </Button>
+              </DropdownMenuLabel>
+              <DropdownMenuItem onClick={handleLogout}>
+                <Button onClick={handleLogout}>
+                  <LogOut className="mr-1" /> đăng xuất
+                </Button>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <ModeToggle />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </Command>
+      </div>
+    ) : (
+      <CardDescription className="m-1 mb-3  w-[170px] bg-white border shadow-md rounded-lg overflow-hidden transition-all ease-in-out duration-300 hover:shadow-xl">
+        <div className="flex flex-row items-start gap-4 p-2">
+          <Avatar>
+            <Link href={`/profile/${user.user?.id}`} className="flex items-center gap-2">
+              <AvatarImage src={String(avatar === "" ? NoImage : avatar)} alt="Channel Logo" />
+              <AvatarFallback>{user.user?.firstName.charAt(0)}</AvatarFallback>
+            </Link>
+          </Avatar>
+          <div className="space-y-1">
+            <h2 className="text-md font-semibold"><HoverComponent Num={10}>{user.user?.lastName}{user.user?.firstName}</HoverComponent></h2>
+            <h2 className="text-md font-semibold">{formatDate(user.user?.dob)}</h2>
+          </div>
+        </div>
+        <div className="px-2">
+
+        </div>
+        <div className="p-2 flex flex-col gap-2">
+          <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 py-2" onClick={handleLogout}>
+            <div className="w-full flex items-center gap-2 ml-2">
+              <LogOut className="h-[1.2rem] w-[1.2rem]" /> Đăng xuất
+            </div>
+          </Badge>
+          <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 py-2 ">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="w-full flex items-center gap-2  ml-2">
+                  <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                  <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                  Chế độ
+                </div>
+
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuItem onClick={() => setTheme("light")}>
+                  Sáng
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                  Tối
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTheme("system")}>
+                  Hệ thống
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </Badge>
+        </div>
+      </CardDescription>
+    )}
+  </>
+)}
+</div> */}

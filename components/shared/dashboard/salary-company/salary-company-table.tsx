@@ -176,7 +176,7 @@ export default function SalaryCompanyTable({
           <TableHeader>
             <TableRow>
               <TableHead>Tên công ty</TableHead>
-              <TableHead>Tên giám đốc</TableHead>
+              <TableHead>Người đại diện</TableHead>
               <TableHead>Chi phí</TableHead>
               <TableHead>Trạng thái</TableHead>
             </TableRow>

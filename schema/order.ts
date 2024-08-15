@@ -28,7 +28,7 @@ export const CompanyRequestSchema = z.object({
     message: "Địa chỉ không được để trống",
   }),
   directorName: z.string().nonempty({
-    message: "Tên giám đốc không được để trống",
+    message: "Người đại diện không được để trống",
   }),
   directorPhone: z.string().regex(/^\d{10}$/, {
     message: "Số điện thoại phải gồm 10 chữ số",

@@ -18,6 +18,7 @@ export type UsersType = {
   companyId:string;
   companyName:string;
   accountBalance:number;
+  avatar:string;
 };
 
 export type UserSearchParams = {
