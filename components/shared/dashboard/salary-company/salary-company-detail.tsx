@@ -48,6 +48,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
+import TitleComponent from "@/components/shared/common/Title";
 const dataNow = new Date();
 const YearNow = dataNow.getFullYear();
 const listYear = [YearNow, YearNow - 1, YearNow - 2, YearNow - 3];
@@ -182,8 +183,8 @@ export default function SalaryCompanyDetail({
   return (
     <>
       <HeaderComponent
-        title="Thông tin lương"
-        description="Thông tin chi tiết lương của nhân viên."
+        title="Thông tin chi phí gia công"
+        description={`Thông tin chi tiết của chi phí gia công của công ty tháng ${params.Month}/${params.Year}`}
       />
       <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8 lg:grid-cols-3 xl:grid-cols-3">
         <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
@@ -298,36 +299,37 @@ export default function SalaryCompanyDetail({
             {/* ------------------------------------------------------------Product------------------------------------------------------------ */}
             <TabsContent value="product">
               <Card x-chunk="dashboard-05-chunk-3">
-                <CardHeader className="px-7">
-                  <CardTitle className="mb-3 text-primary">
-                    Sản phẩm tạo ra
-                  </CardTitle>
-                  <div className="flex">
-                    <div>
-                      Số lượng sản phẩm tạo ra trong tháng {params.Month} năm{" "}
-                      {params.Year}
-                    </div>
-                    <div className="ml-auto">
+                <div className="flex justify-between items-center">
+                  <CardHeader className="">
+                    <TitleComponent
+                      title="Sản phẩm tạo ra"
+                      description={`Số lượng sản phẩm tạo ra trong tháng ${params.Month} năm ${params.Year}.`}
+                    />
+                  </CardHeader>
+
+                  <div className="ml-auto p-5">
+                    <span className="text-sm text-muted-foreground">
                       Tổng chi phí tạo sản phẩm:{" "}
-                      <span className="font-bold text-primary">
-                        {data.totalSalaryProduct === 0
-                          ? 0
-                          : formatCurrencyWithNegative(
-                              data.totalSalaryProduct
-                            )}{" "}
-                        VNĐ
-                      </span>
-                    </div>
+                    </span>
+                    <span className="font-bold text-primary text-sm">
+                      {data.totalSalaryProduct === 0
+                        ? 0
+                        : formatCurrencyWithNegative(
+                            data.totalSalaryProduct
+                          )}{" "}
+                      VNĐ
+                    </span>
                   </div>
-                </CardHeader>
+                </div>
                 <CardContent>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead className="hidden sm:table-cell">
-                          Ảnh
+                          Hình ảnh
                         </TableHead>
                         <TableHead className="">Tên sản phẩm</TableHead>
+                        <TableHead className="">Mã sản phẩm</TableHead>
                         <TableHead className="">Số lượng</TableHead>
                         <TableHead className="">Chi phí</TableHead>
                         <TableHead className="text-right hidden sm:table-cell">
@@ -362,6 +364,9 @@ export default function SalaryCompanyDetail({
                               {item.productName}
                             </TableCell>
                             <TableCell className="">
+                              {item.productCode}
+                            </TableCell>
+                            <TableCell className="">
                               {item.quantity}
                               {/* <Badge
                               className="text-xs"
@@ -388,34 +393,34 @@ export default function SalaryCompanyDetail({
             {/* ------------------------------------------------------------Material------------------------------------------------------------ */}
             <TabsContent value="material">
               <Card x-chunk="dashboard-05-chunk-3">
-                <CardHeader className="px-7">
-                  <CardTitle className="mb-3 text-primary">
-                    Nguyên liệu đã giao
-                  </CardTitle>
-                  <div className="flex">
-                    <div>
-                      Số lượng nguyên liệu đã giao trong tháng {params.Month}{" "}
-                      năm {params.Year}
-                    </div>
-                    <div className="ml-auto">
-                      Tổng giá trị vật liệu:{" "}
-                      <span className="font-bold text-primary">
-                        {data.totalSalaryMaterial === 0
-                          ? 0
-                          : formatCurrencyWithNegative(
-                              data.totalSalaryMaterial
-                            )}{" "}
-                        VNĐ
-                      </span>
-                    </div>
+                <div className="flex justify-between items-center">
+                  <CardHeader className="">
+                    <TitleComponent
+                      title="Nguyên liệu đã giao"
+                      description={`Số lượng nguyên liệu đã giao trong tháng ${params.Month} năm ${params.Year}.`}
+                    />
+                  </CardHeader>
+
+                  <div className="ml-auto p-5">
+                    <span className="text-sm text-muted-foreground">
+                      Tổng giá trị vật liệu: {""}
+                    </span>
+                    <span className="font-bold text-primary text-sm">
+                      {data.totalSalaryMaterial === 0
+                        ? 0
+                        : formatCurrencyWithNegative(
+                            data.totalSalaryMaterial
+                          )}{" "}
+                      VNĐ
+                    </span>
                   </div>
-                </CardHeader>
+                </div>
                 <CardContent>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead className="hidden sm:table-cell">
-                          Ảnh
+                          Hình ảnh
                         </TableHead>
                         <TableHead className="">Tên nguyên liệu</TableHead>
                         <TableHead className="">Số lượng</TableHead>
@@ -478,36 +483,37 @@ export default function SalaryCompanyDetail({
             {/* ------------------------------------------------------------Broken------------------------------------------------------------ */}
             <TabsContent value="broken">
               <Card x-chunk="dashboard-05-chunk-3">
-                <CardHeader className="px-7">
-                  <CardTitle className="mb-3 text-primary">
-                    Sản phẩm lỗi
-                  </CardTitle>
-                  <div className="flex">
-                    <div>
-                      Số lượng sản phẩm lỗi phát hiện trong tháng {params.Month}{" "}
-                      năm {params.Year}
-                    </div>
-                    <div className="ml-auto">
+                <div className="flex justify-between items-center">
+                  <CardHeader className="">
+                    <TitleComponent
+                      title="Sản phẩm lỗi"
+                      description={`Số lượng sản phẩm lỗi phát hiện trong tháng ${params.Month} năm ${params.Year}.`}
+                    />
+                  </CardHeader>
+
+                  <div className="ml-auto p-5">
+                    <span className="text-sm text-muted-foreground">
                       Tổng giá trị sản phẩm lỗi:{" "}
-                      <span className="font-bold text-primary">
-                        {data.totalSalaryBroken === 0
-                          ? 0
-                          : formatCurrencyWithNegative(
-                              data.totalSalaryBroken
-                            )}{" "}
-                        VNĐ
-                      </span>
-                    </div>
+                    </span>
+                    <span className="font-bold text-primary text-sm">
+                      {data.totalSalaryBroken === 0
+                        ? 0
+                        : formatCurrencyWithNegative(
+                            data.totalSalaryBroken
+                          )}{" "}
+                      VNĐ
+                    </span>
                   </div>
-                </CardHeader>
+                </div>
                 <CardContent>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead className="hidden sm:table-cell">
-                          Ảnh
+                          Hình ảnh
                         </TableHead>
                         <TableHead className="">Tên sản phẩm</TableHead>
+                        <TableHead className="">Mã sản phẩm</TableHead>
                         <TableHead className="">Số lượng</TableHead>
                         <TableHead className="">Chi phí</TableHead>
                         <TableHead className="text-right hidden sm:table-cell">
@@ -542,6 +548,9 @@ export default function SalaryCompanyDetail({
                               {item.productName}
                             </TableCell>
                             <TableCell className="">
+                              {item.productCode}
+                            </TableCell>
+                            <TableCell className="">
                               {item.quantity}
                               {/* <Badge
                               className="text-xs"
@@ -573,14 +582,6 @@ export default function SalaryCompanyDetail({
               <div className="grid gap-0.5">
                 <CardTitle className="group flex items-center gap-2 text-lg text-primary">
                   Thanh Toán
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                  >
-                    <Copy className="h-3 w-3" />
-                    <span className="sr-only">Copy Order ID</span>
-                  </Button>
                 </CardTitle>
                 <CardDescription>
                   Tháng {params.Month} Năm {params.Year}

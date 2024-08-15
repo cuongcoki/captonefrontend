@@ -60,6 +60,7 @@ export type GetSalaryDetailParams = {
 type ProductWorkingResponses = {
   productId: string;
   productName: string;
+  productCode: string;
   productImage: string;
   phaseId: string;
   phaseName: string;

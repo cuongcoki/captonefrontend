@@ -262,6 +262,7 @@ export default function SalaryDetail({
                           Hình ảnh
                         </TableHead>
                         <TableHead className="">Tên sản phẩm</TableHead>
+                        <TableHead className="">Mã sản phẩm</TableHead>
                         <TableHead className="">Số lượng</TableHead>
                         <TableHead className="">Lương</TableHead>
                         <TableHead className="text-right hidden sm:table-cell">
@@ -294,6 +295,9 @@ export default function SalaryDetail({
                             </TableCell>
                             <TableCell className="">
                               {item.productName}
+                            </TableCell>
+                            <TableCell className="">
+                              {item.productCode}
                             </TableCell>
                             <TableCell className="">
                               {item.quantity}
