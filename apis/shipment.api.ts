@@ -6,7 +6,7 @@ import { endPointConstant } from '@/constants/endpoint'
 export type ShipmentDetailRequest = {
   itemId: string;
   phaseId: string;
-  quantity: number;
+  quantity: any;
   kindOfShip: number;
   productPhaseType: number;
 };
@@ -121,8 +121,21 @@ export const shipmentApi = {
       },
     }),
 
-  isAcceptedShipment: (id: string, isAccepted: boolean) =>
-    axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/accept/${isAccepted}`),
+    isAcceptedShipment: (id: string, isAccepted: boolean) =>
+      axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/accept/${isAccepted}`, {}, {
+        cache: {
+          update: () => {
+            shipmentCacheIds.forEach((cacheId) => axiosClient.storage.remove(cacheId));
+            shipmentCacheIds.clear();
+    
+            const shipmentCacheId = shipmentsCacheIds.get(id);
+            if (shipmentCacheId) {
+              axiosClient.storage.remove(shipmentCacheId);
+              shipmentsCacheIds.delete(id);
+            }
+          },
+        },
+      }),
 
   changeStatusByShipper: (id: string, data: updateStatusShipment) =>
     axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/shipper/change-status`, data,{

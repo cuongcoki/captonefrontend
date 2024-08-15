@@ -115,19 +115,19 @@ interface ShipmentIDProps {
 const ProductPhaseType = [
   {
     id: 0,
-    des: "bình thường",
+    des: "Bình thường",
   },
   {
     id: 1,
-    des: "lỗi bên cơ sở",
+    des: "Lỗi bên cơ sở",
   },
   {
     id: 2,
-    des: "lỗi bên hợp tác",
+    des: "Lỗi bên hợp tác",
   },
   {
     id: 3,
-    des: "lỗi không sửa đc nữa",
+    des: "Hàng hỏng",
   },
 ];
 

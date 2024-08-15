@@ -55,6 +55,7 @@ export type Shipment = {
   id: string;
   statusDescription: string;
   status: number;
+  isAccepted: boolean;
 };
 const limitLength = (text: any, maxLength: any) => {
   if (text.length > maxLength) {
@@ -288,8 +289,19 @@ export const columns: ColumnDef<Shipment>[] = [
       );
     },
     cell: ({ row }) => <span>
-      <ChangeStatusShipmentShipper shipmentID={row.original} />
-      {/* {limitLength(row.original.statusDescription, 30)} */}
+       {
+          row.original.isAccepted === false ? (
+            <span>
+             <ChangeStatusShipmentShipper shipmentID={row.original} />
+            </span>
+          ) : row.original.status !== 2 && row.original.status !== 3 ? (
+            <span>
+              <ChangeStatusShipmentShipper shipmentID={row.original} />
+            </span>
+          ) : (
+            <span>{row.original.statusDescription}</span>
+          )
+        }
     </span>,
   },
 
