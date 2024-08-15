@@ -47,7 +47,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 import { Calendar } from "@/components/ui/calendar";
 
@@ -78,14 +78,14 @@ import { OrderStore } from "../../../order-store";
 // Define Status Enum
 const OrderStatus = [
   {
-    id: 0,
-    des: "Trả hàng lỗi",
-    name: "PENDING",
-  },
-  {
     id: 1,
     des: "Gửi hàng đi",
     name: "PROCESSING",
+  },
+  {
+    id: 0,
+    des: "Trả hàng lỗi",
+    name: "PENDING",
   },
 ];
 
@@ -310,14 +310,22 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
     };
 
     fetchData();
-  }, [isActive, roleId, searchTearm, currentPage, pageSize, dataEm,fetchTrigger]);
+  }, [
+    isActive,
+    roleId,
+    searchTearm,
+    currentPage,
+    pageSize,
+    dataEm,
+    fetchTrigger,
+  ]);
 
   // ** form
   const form = useForm({
     resolver: zodResolver(ShipOrderSchema),
     defaultValues: {
       shipperId: "",
-      kindOfShipOrder: 0,
+      kindOfShipOrder: 1,
       shipDate: "",
     },
   });
@@ -337,7 +345,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
 
     const date = new Date(originalDate);
     date.setUTCHours(23, 59, 59, 0);
-    const formattedShipDate = date.toISOString().replace('.000', '');
+    const formattedShipDate = date.toISOString().replace(".000", "");
     // Gọi hàm kiểm tra
     validateShipOrderDetailRequests(shipOrderDetailRequests);
     const requestBody = {
@@ -353,9 +361,10 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
       .createShipOrder(requestBody)
       .then(({ data }) => {
         if (data.isSuccess) {
-          ForceRender()
-          setOpen(false)
+          ForceRender();
+          setOpen(false);
           toast.success(data.message);
+          form.reset();
         }
       })
       .catch((error) => {
@@ -376,18 +385,19 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
   const setType = 1;
 
   const handleClearForm = () => {
-    setOpen(false)
-    setOpenAlert(false)
+    setOpen(false);
+    setOpenAlert(false);
     form.reset();
     setFetchTrigger((prev) => prev + 1);
-    setShipOrderDetailRequests([])
-    setProductDetail([])
-  }
+    setShipOrderDetailRequests([]);
+    setProductDetail([]);
+  };
 
   const handleOffDialog = () => {
     // Kiểm tra xem mảng có rỗng hay không
-    const shipOrderDetailRequests = Array.isArray(productDetail) && productDetail.length === 0;
-    console.log(form.getValues())
+    const shipOrderDetailRequests =
+      Array.isArray(productDetail) && productDetail.length === 0;
+    console.log(form.getValues());
     // Kiểm tra giá trị cụ thể của form
     const shipDateEmpty = form.getValues().shipDate === "";
     const isShipperIdEmpty = form.getValues().shipperId === "";
@@ -404,25 +414,30 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
 
   return (
     <>
-      {
-        openAlert && (
-          <AlertDialog open={openAlert} >
-            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-      }
+      {openAlert && (
+        <AlertDialog open={openAlert}>
+          <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Bạn có chắc chắn muốn tắt biểu mẫu này không ??
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
+                những dữ liệu mà bạn đã nhập
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleOffDialogA}>
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearForm}>
+                Tiếp tục
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
         <Dialog.Trigger className="rounded p-2 hover:bg-primary/90 bg-primary">
           <Plus onClick={handleOnDialog} />
@@ -431,15 +446,20 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
             <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[600px] max-h-[90%]  -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
               <Dialog.Title className="hidden visible">hidden</Dialog.Title>
-              <Dialog.Description className="hidden visible">hidden</Dialog.Description>
+              <Dialog.Description className="hidden visible">
+                hidden
+              </Dialog.Description>
               <div className="bg-slate-100 flex flex-col rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">Tạo đơn vận chuyển</h2>
-                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleOffDialog}
+                  >
                     <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
-
 
                 <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4">
                   <div className=" w-full grid grid-cols-3 md:grid-cols-6 gap-4 min-h-[100px]  overflow-y-auto ">
@@ -456,12 +476,13 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                           height={900}
                         />
                         <Check
-                          className={`h-5 w-5 ${shipOrderDetailRequests.some(
-                            (item) => item.itemId === pro.productId
-                          )
-                            ? "absolute top-0 right-0 bg-primary text-white"
-                            : "hidden"
-                            }`}
+                          className={`h-5 w-5 ${
+                            shipOrderDetailRequests.some(
+                              (item) => item.itemId === pro.productId
+                            )
+                              ? "absolute top-0 right-0 bg-primary text-white"
+                              : "hidden"
+                          }`}
                         />
                         <span
                           className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
@@ -490,17 +511,22 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                           height={900}
                         />
                         <Check
-                          className={` h-5 w-5 ${shipOrderDetailRequests.some(
-                            (item) => item.itemId === pro.setId
-                          )
-                            ? "absolute top-0 right-0 bg-primary text-white"
-                            : "hidden"
-                            }`}
+                          className={` h-5 w-5 ${
+                            shipOrderDetailRequests.some(
+                              (item) => item.itemId === pro.setId
+                            )
+                              ? "absolute top-0 right-0 bg-primary text-white"
+                              : "hidden"
+                          }`}
                         />
                         <span
                           className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                           onClick={() =>
-                            handleAddProducts(pro.imageSetUrl, pro.setId, setType)
+                            handleAddProducts(
+                              pro.imageSetUrl,
+                              pro.setId,
+                              setType
+                            )
                           }
                         >
                           <Plus className="text-white" />
@@ -687,7 +713,10 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                                     )}
                                   >
                                     {field.value ? (
-                                      format(parseISO(field.value), "dd/MM/yyyy")
+                                      format(
+                                        parseISO(field.value),
+                                        "dd/MM/yyyy"
+                                      )
                                     ) : (
                                       <span>Chọn ngày</span>
                                     )}
@@ -709,7 +738,11 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                                   onSelect={(date: any) => {
                                     if (date) {
                                       const formattedDate = new Date(
-                                        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                                        Date.UTC(
+                                          date.getFullYear(),
+                                          date.getMonth(),
+                                          date.getDate()
+                                        )
                                       ).toISOString();
                                       field.onChange(formattedDate);
                                     }
@@ -723,9 +756,8 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                         )}
                       />
 
-
                       <Separator className="h-1 my-1" />
-                       <Button
+                      <Button
                         type="submit"
                         className="w-full bg-primary hover:bg-primary/90"
                         disabled={loading}

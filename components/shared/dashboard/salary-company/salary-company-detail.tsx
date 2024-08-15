@@ -206,7 +206,7 @@ export default function SalaryCompanyDetail({
             </Card>
             <Card x-chunk="dashboard-05-chunk-1">
               <CardHeader className="pb-2">
-                <CardDescription>Tông sản phẩm</CardDescription>
+                <CardDescription>Tổng sản phẩm</CardDescription>
                 <CardTitle className="text-4xl text-primary">
                   {data.totalProduct}
                 </CardTitle>
