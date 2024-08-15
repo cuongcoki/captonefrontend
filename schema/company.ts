@@ -5,10 +5,10 @@ export const companyAddSchema = z.object({
   address: z.string().min(1, "Địa chỉ không được để trống"),
   directorName: z
     .string()
-    .min(1, "Tên giám đốc không được để trống")
+    .min(1, "Người đại diện không được để trống")
     .regex(
       /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/,
-      "Tên giám đốc chỉ được chứa ký tự chữ cái và khoảng trắng"
+      "Người đại diện chỉ được chứa ký tự chữ cái và khoảng trắng"
     ),
 
   directorPhone: z

@@ -102,6 +102,8 @@ import { userApi } from "@/apis/user.api";
 import TitleComponent from "@/components/shared/common/Title";
 import { useFormStatus } from "react-dom";
 import HoverComponent from "@/components/shared/common/hover-card";
+import { productPhaseApi } from "@/apis/product-phase.api";
+import ImageIconShipmentFormPF from "./ImageIconShipmentFormPF";
 
 const enumCompany = [
   {
@@ -224,6 +226,19 @@ export type Material = {
   quantityInStock: number;
 };
 
+interface DataProduct {
+  code: string;
+  description: string;
+  id: string;
+  image: string;
+  isInProcessing: boolean;
+  name: string;
+  price: number;
+  size: string;
+  totalAvailableQuantity: number;
+  totalQuantity: number;
+}
+
 export default function CreateShipment() {
   //state
   const [loading, setLoading] = useState<boolean>(false);
@@ -280,9 +295,9 @@ export default function CreateShipment() {
     price?: any,
   ) => {
 
-      if(itemKind ===1 && shipmentDetailRequests.some((item) =>item.itemId === itemId)){
-        return toast.error("Nguyên vật liệu này đã được thêm")
-      }
+    if (itemKind === 1 && shipmentDetailRequests.some((item) => item.itemId === itemId)) {
+      return toast.error("Nguyên vật liệu này đã được thêm")
+    }
 
     setShipmentDetailRequests((prev: any) => [
       ...prev,
@@ -366,6 +381,32 @@ export default function CreateShipment() {
     setCompanyType1(value);
   };
 
+  // ** state product
+  const [currentPagePF, setCurrentPagePF] = useState<number>(1);
+  const [searchTermPF, setSearchTermPF] = useState<string>("");
+  const [pageSizePF, setPageSizePF] = useState<number>(40);
+  const [companyIdPF, setCompanyIdPF] = useState<string | undefined>();
+  const [dataPF, setDataPF] = useState<DataProduct[]>([]);
+  console.log("companyIdPF", companyIdPF)
+  //call data product phase
+  useEffect(() => {
+    const handleSearch = () => {
+      setLoading(true);
+      productPhaseApi
+        .searchProductPhaseShip(searchTermPF, companyIdPF, currentPagePF, pageSizePF)
+        .then(({ data }) => {
+          setDataPF(data.data.data);
+        })
+        .catch((error) => {
+          setDataPF([]);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };
+
+    handleSearch();
+  }, [searchTermPF, companyIdPF, currentPagePF, pageSizePF]);
   //call data material
   useEffect(() => {
     const fetchDataMaterial = async () => {
@@ -515,6 +556,9 @@ export default function CreateShipment() {
   //   fetchDataProduct();
   // }, [currentPageP, pageSizeP, searchTerm, isInProcessing]);
   const handleSelectChange = (value: string) => {
+    if (companyType === 2) {
+      setCompanyIdPF(value)
+    }
     // Cập nhật giá trị form từ dropdown
     setCompanyId(value);
   };
@@ -1213,110 +1257,198 @@ export default function CreateShipment() {
                               </CardHeader>
                               <CardContent className="space-y-2">
 
-                                <div className="flex items-center mb-3 gap-3">
-                                  <Input
-                                    disabled={phaseId === undefined}
-                                    placeholder="Tìm kiếm sản phẩm..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="md:w-[300px] w-full "
-                                  />
+                                {
+                                  companyType === 0 ? (
+                                    <>
+                                      <div className="flex items-center mb-3 gap-3">
+                                        <Input
+                                          disabled={phaseId === undefined}
+                                          placeholder="Tìm kiếm sản phẩm..."
+                                          value={searchTerm}
+                                          onChange={(e) => setSearchTerm(e.target.value)}
+                                          className="md:w-[300px] w-full "
+                                        />
 
-                                  <Select
-                                    disabled={companyId === undefined}
-                                    defaultValue={phaseId}
-                                    onValueChange={(value) => setPhaseId(value)}
-                                  >
-                                    <SelectTrigger className="w-[250px]">
-                                      <SelectValue placeholder="Giai đoạn sản phẩm" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                      <SelectGroup>
-                                        {dataPh
-                                          .filter(item =>
-                                            item.id === "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
-                                            item.id === "4d2113f9-2009-4c37-82b1-195ecbb9c706"
-                                          )
-                                          .map(item => (
-                                            <SelectItem
-                                              key={item.id}
-                                              value={item.id}
-                                            >
-                                              {item.name}-{item.description}
-                                            </SelectItem>
-                                          ))}
-                                      </SelectGroup>
-                                    </SelectContent>
-                                  </Select>
-                                </div>
+                                        <Select
+                                          disabled={companyId === undefined}
+                                          defaultValue={phaseId}
+                                          onValueChange={(value) => setPhaseId(value)}
+                                        >
+                                          <SelectTrigger className="w-[250px]">
+                                            <SelectValue placeholder="Giai đoạn sản phẩm" />
+                                          </SelectTrigger>
+                                          <SelectContent>
+                                            <SelectGroup>
+                                              {dataPh
+                                                .filter(item =>
+                                                  item.id === "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
+                                                  item.id === "4d2113f9-2009-4c37-82b1-195ecbb9c706"
+                                                )
+                                                .map(item => (
+                                                  <SelectItem
+                                                    key={item.id}
+                                                    value={item.id}
+                                                  >
+                                                    {item.name}-{item.description}
+                                                  </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                          </SelectContent>
+                                        </Select>
+                                      </div>
 
-                                <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
-                                  {dataP && dataP.length > 0 ? (
-                                    dataP.map((item) => (
-                                      <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
-                                        <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
-                                          <ImageIconShipmentForm dataImage={item} />
-                                          <Check
-                                            className={`${shipmentDetailRequests.some((item1) => item1.itemId === item.id)
-                                              ? "absolute top-0 right-0 bg-primary text-white"
-                                              : "hidden"
-                                              }`}
-                                          />
-                                          <span
-                                            className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                            onClick={() => {
-                                              handleAddProducts(
-                                                item,
-                                                item.imageUrl ? item.imageUrl : "",
-                                                item?.id,
-                                                productType,
-                                                item?.phaseId,
-                                                item.price,
-                                              );
-                                            }}
-                                          >
-                                            <Plus className="text-white" />
-                                          </span>
-                                        </div>
-                                        <div className="flex flex-col w-full text-sm my-1">
-                                          <div className="flex gap-2">
-                                            <span className="font-medium">Mã:</span>
-                                            <span className="font-light">
-                                              <HoverComponent Num={10}>
-                                                {item.code}
-                                              </HoverComponent>
-                                            </span>
-                                          </div>
-                                          <div className="flex gap-2">
-                                            <span className="font-medium">Tên:</span>
-                                            <span className="font-light">
-                                              <HoverComponent Num={10}>
-                                                {item.name}
-                                              </HoverComponent>
-                                            </span>
-                                          </div>
-                                          <div className="flex gap-2">
-                                            <span className="font-medium">Kích thước:</span>
-                                            <span className="font-light">
-                                              <HoverComponent Num={10}>
-                                                {item.size}
-                                              </HoverComponent>
-                                            </span>
-                                          </div>
-                                          <div className="flex gap-2">
-                                            <span className="font-medium">Giá thành:</span>
-                                            <span className="font-light text-primary">
-                                              <HoverComponent Num={10}> {formatCurrency(item.price)}  </HoverComponent> .đ
-                                            </span>
-                                          </div>
-                                        </div>
-                                      </Card>
-                                    ))
+                                      <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                        {dataP && dataP.length > 0 ? (
+                                          dataP.map((item) => (
+                                            <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
+                                              <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
+                                                <ImageIconShipmentForm dataImage={item} />
+                                                <Check
+                                                  className={`${shipmentDetailRequests.some((item1) => item1.itemId === item.id)
+                                                    ? "absolute top-0 right-0 bg-primary text-white"
+                                                    : "hidden"
+                                                    }`}
+                                                />
+                                                <span
+                                                  className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                  onClick={() => {
+                                                    handleAddProducts(
+                                                      item,
+                                                      item.imageUrl ? item.imageUrl : "",
+                                                      item?.id,
+                                                      productType,
+                                                      item?.phaseId,
+                                                      item.price,
+                                                    );
+                                                  }}
+                                                >
+                                                  <Plus className="text-white" />
+                                                </span>
+                                              </div>
+                                              <div className="flex flex-col w-full text-sm my-1">
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Mã:</span>
+                                                  <span className="font-light">
+                                                    <HoverComponent Num={10}>
+                                                      {item.code}
+                                                    </HoverComponent>
+                                                  </span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Tên:</span>
+                                                  <span className="font-light">
+                                                    <HoverComponent Num={10}>
+                                                      {item.name}
+                                                    </HoverComponent>
+                                                  </span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Kích thước:</span>
+                                                  <span className="font-light">
+                                                    <HoverComponent Num={10}>
+                                                      {item.size}
+                                                    </HoverComponent>
+                                                  </span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Giá thành:</span>
+                                                  <span className="font-light text-primary">
+                                                    <HoverComponent Num={15}>{formatCurrency(item.price)}</HoverComponent> .đ
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            </Card>
+                                          ))
+                                        ) : (
+                                          <div className="text-center text-gray-500">Không có kết quả.</div>
+                                        )}
+
+                                      </div>
+                                    </>
                                   ) : (
-                                    <div className="text-center text-gray-500">Không có kết quả.</div>
-                                  )}
+                                    <>
+                                      <div className="flex items-center mb-3 gap-3">
+                                        <Input
+                                          placeholder="Tìm kiếm sản phẩm..."
+                                          value={searchTermPF}
+                                          onChange={(e) => setSearchTermPF(e.target.value)}
+                                          className="md:w-[300px] w-full "
+                                        />
 
-                                </div>
+                                      </div>
+
+                                      <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                        {dataPF && dataPF.length > 0 ? (
+                                          dataPF.map((item) => (
+                                            <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
+                                              <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
+                                                <ImageIconShipmentFormPF dataImage={item} />
+                                                <Check
+                                                  className={`${shipmentDetailRequests.some((item1) => item1.itemId === item.id)
+                                                    ? "absolute top-0 right-0 bg-primary text-white"
+                                                    : "hidden"
+                                                    }`}
+                                                />
+                                                <span
+                                                  className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                  onClick={() => {
+                                                    handleAddProducts(
+                                                      item,
+                                                      item.image ? item.image : "",
+                                                      item?.id,
+                                                      productType,
+                                                      "",
+                                                      item.price,
+                                                    );
+                                                  }}
+                                                >
+                                                  <Plus className="text-white" />
+                                                </span>
+                                              </div>
+                                              <div className="flex flex-col w-full text-sm my-1">
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Mã:</span>
+                                                  <span className="font-light">
+                                                    <HoverComponent Num={10}>
+                                                      {item.code}
+                                                    </HoverComponent>
+                                                  </span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Tên:</span>
+                                                  <span className="font-light">
+                                                    <HoverComponent Num={10}>
+                                                      {item.name}
+                                                    </HoverComponent>
+                                                  </span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Số lượng có sẵn:</span>
+                                                  <span className="font-light">
+                                                    <HoverComponent Num={10}>
+                                                      {item.totalAvailableQuantity}
+                                                    </HoverComponent>
+                                                  </span>
+                                                </div>
+                                                <div className="flex gap-2">
+                                                  <span className="font-medium">Giá thành:</span>
+                                                  <span className="font-light text-primary">
+                                                    <HoverComponent Num={15}>{formatCurrency(item.price)}</HoverComponent> .đ
+                                                  </span>
+                                                </div>
+                                              </div>
+                                            </Card>
+                                          ))
+                                        ) : (
+                                          <div className="text-center text-gray-500">Không có kết quả.</div>
+                                        )}
+
+                                      </div>
+                                    </>
+                                  )
+                                }
+
+
                               </CardContent>
                               <CardFooter className="flex justify-end">
                                 <span onClick={handleClear} className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5">
@@ -1459,13 +1591,50 @@ export default function CreateShipment() {
                                     </TableCell>
                                     <TableCell>
                                       {proDetail.kindOfShip === 0 ? (
-                                        <span className="w-[100px] block">
-                                          {dataPh.find((item) => item.id === proDetail.phaseId)?.name || "Giai đoạn sản phẩm"}
-                                        </span>
+                                        companyType === 2 ? (
+                                          <Select
+                                            defaultValue={phaseId}
+                                            onValueChange={(value) =>
+                                              handleChange(
+                                                proDetail.itemId,
+                                                "phaseId",
+                                                value,
+                                                index
+                                              )
+                                            }
+                                          >
+                                            <SelectTrigger className="w-[100px]">
+                                              <SelectValue placeholder="Giai đoạn sản phẩm" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              <SelectGroup>
+                                                {dataPh
+                                                  .filter(item =>
+                                                    item.id === "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
+                                                    item.id === "4d2113f9-2009-4c37-82b1-195ecbb9c706"
+                                                  )
+                                                  .map(item => (
+                                                    <SelectItem
+                                                      key={item.id}
+                                                      value={item.id}
+                                                    >
+                                                      {item.name}
+                                                    </SelectItem>
+                                                  ))}
+                                              </SelectGroup>
+                                            </SelectContent>
+                                          </Select>
+                                        ) : (
+                                          <span className="w-[100px] block">
+                                            {dataPh.find((item) => item.id === proDetail.phaseId)?.name ||
+                                              "Giai đoạn sản phẩm"}
+                                          </span>
+                                        )
                                       ) : (
                                         <>Không có</>
                                       )}
                                     </TableCell>
+
                                     <TableCell>
                                       {
                                         proDetail.kindOfShip === 0 ? (

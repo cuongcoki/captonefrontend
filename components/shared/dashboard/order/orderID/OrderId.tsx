@@ -223,15 +223,15 @@ export default function OrderIdPage({ orderId }: OrderId) {
             <CardHeader>
               <div className="flex justify-between items-center ">
                 <TitleComponent
-                  title="Thông tin giám đốc"
-                  description={`Thông tin giám đốc công ty - ${data?.company.name}`}
+                  title="Người đại diện"
+                  description={`Thông tin người đại diện - ${data?.company.name}`}
                 />
               </div>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col space-y-2">
                 <div className="flex justify-between">
-                  <span className="font-medium">Tên giám đốc:</span>
+                  <span className="font-medium">Người đại diện:</span>
                   <span >
                     {data?.company.directorName}
                   </span>

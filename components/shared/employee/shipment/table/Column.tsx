@@ -121,7 +121,7 @@ export const columns: ColumnDef<Shipment>[] = [
               <div className="max-w-sm mx-auto">
                 <div className="mb-2 text-start">
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Tên giám đốc
+                    Người đại diện
                   </label>
                   <input
                     type="email"
@@ -210,7 +210,7 @@ export const columns: ColumnDef<Shipment>[] = [
               <div className="max-w-sm mx-auto">
                 <div className="mb-2 text-start">
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Tên giám đốc
+                    Người đại diện
                   </label>
                   <input
                     type="email"
@@ -289,19 +289,19 @@ export const columns: ColumnDef<Shipment>[] = [
       );
     },
     cell: ({ row }) => <span>
-       {
-          row.original.isAccepted === false ? (
-            <span>
-             <ChangeStatusShipmentShipper shipmentID={row.original} />
-            </span>
-          ) : row.original.status !== 2 && row.original.status !== 3 ? (
-            <span>
-              <ChangeStatusShipmentShipper shipmentID={row.original} />
-            </span>
-          ) : (
-            <span>{row.original.statusDescription}</span>
-          )
-        }
+      {
+        row.original.isAccepted === false ? (
+          <span>
+            <ChangeStatusShipmentShipper shipmentID={row.original} />
+          </span>
+        ) : row.original.status !== 2 && row.original.status !== 3 ? (
+          <span>
+            <ChangeStatusShipmentShipper shipmentID={row.original} />
+          </span>
+        ) : (
+          <span>{row.original.statusDescription}</span>
+        )
+      }
     </span>,
   },
 

@@ -207,11 +207,13 @@ export const userApi = {
     });
   },
 
-  getMe: (UserID: string) =>
-    axiosClient.get(`${endPointConstant.BASE_URL}/users/me`, {
-      params: {
-        CompanyId: UserID
-      }
+  getMe: (id: string) => {
+    const cacheId = createCacheId("get-user", { id });
+    listUserCacheIds.add(cacheId);
+    return axiosClient.get(`${endPointConstant.BASE_URL}/users/me`, {
+      id: cacheId,
     })
+  }
+   
 
 };

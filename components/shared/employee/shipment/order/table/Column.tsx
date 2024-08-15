@@ -50,7 +50,7 @@ function formatDate(isoString: string) {
   return `${day}/${month}/${year}`;
 }
 export const columns: ColumnDef<ShipOrderShipper>[] = [
- 
+
 
   {
     accessorKey: "toCompany.name",
@@ -68,7 +68,7 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
             <div className="max-w-sm mx-auto">
               <div className="mb-2 text-start">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Tên giám đốc
+                  Người đại diện
                 </label>
                 <input
                   type="email"

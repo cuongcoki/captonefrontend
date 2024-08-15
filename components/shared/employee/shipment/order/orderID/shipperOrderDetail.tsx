@@ -257,7 +257,7 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
                                                 <dl className="grid gap-1">
                                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                                                         <dt className="text-muted-foreground">
-                                                            Tên giám đốc
+                                                            Người đại diện
                                                         </dt>
                                                         <dd>{data?.companyResponse.directorName}</dd>
                                                     </div>

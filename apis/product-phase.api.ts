@@ -51,4 +51,9 @@ export const productPhaseApi = {
       }
     );
   },
+
+  searchProductPhaseShip: (searchTerm?: string, companyId?: string, pageIndex: number = 1, pageSize: number = 10) =>
+    axiosClient.get(
+      `${endPointConstant.BASE_URL}/productphase/search?Search=${searchTerm}&CompanyId=${companyId}&PageIndex=${pageIndex}&PageSize=${pageSize}`
+    ),
 };

@@ -148,11 +148,11 @@ export function CompanyAdd() {
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="directorName" className="text-primary">
-                          Tên giám đốc *
+                          Người đại diện *
                         </Label>
                         <Input
                           id="directorName"
-                          placeholder="Vui lòng nhập tên giám đốc công ty"
+                          placeholder="Vui lòng nhập người đại diện đốc công ty"
                           className="col-span-3"
                           {...field}
                         />
