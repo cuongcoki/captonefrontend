@@ -397,23 +397,22 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
 
     try {
       setLoading(true);
-      orderApi.createOrderId(requestBody).then(({ data }) => {
-        if (data.isSuccess) {
-          ForceRender();
-          setSearchResultsSet([])
-          setSearchResults([])
-          setSearchTermSet("")
-          setSearchTerm("")
-          setFetchTrigger((prev) => prev + 1);
-          setOpen(false);
-          toast.success("Cập nhật sản phẩm thành công");
-        }
-      });
+      const { data } = await orderApi.createOrderId(requestBody);
+      if (data.isSuccess) {
+        ForceRender();
+        setSearchResultsSet([]);
+        setSearchResults([]);
+        setSearchTermSet("");
+        setSearchTerm("");
+        setFetchTrigger((prev) => prev + 1);
+        setOpen(false);
+        toast.success("Cập nhật sản phẩm thành công");
+      }
     } catch (error: any) {
-      console.log("=>>>>>>>>>>");
-      if (error.response.data.error) {
+      console.error("Đã xảy ra lỗi:", error);
+      if (error.response && error.response.data && error.response.data.error) {
         const keys = error.response.data.error;
-        if (typeof (keys) === 'string') {
+        if (typeof keys === 'string') {
           toast.error(keys);
         } else {
           for (const key in keys) {
@@ -421,11 +420,12 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
           }
         }
       } else {
-        toast.error(error.response.data.message);
+        toast.error(error.message || "Đã xảy ra lỗi không xác định.");
       }
     } finally {
       setLoading(false);
     }
+    
   };
 
   const { pending } = useFormStatus();
@@ -600,7 +600,11 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                   <div className="flex flex-col w-full text-sm my-1">
                                     <div className="flex gap-2">
                                       <span className="font-medium">Mã:</span>
-                                      <span className="font-light">{product.code}</span>
+                                      <span className="font-light">
+                                        <HoverComponent Num={10}>
+                                          {product.code}
+                                        </HoverComponent>
+                                      </span>
                                     </div>
                                     <div className="flex gap-2">
                                       <span className="font-medium">Tên:</span>
@@ -612,11 +616,15 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                     </div>
                                     <div className="flex gap-2">
                                       <span className="font-medium">Kích thước:</span>
-                                      <span className="font-light">{product.size}</span>
+                                      <span className="font-light">
+                                        <HoverComponent Num={10}>
+                                          {product.size}
+                                        </HoverComponent>
+                                      </span>
                                     </div>
                                     <div className="flex gap-2">
                                       <span className="font-medium">Giá thành:</span>
-                                      <span className="font-light text-primary">{formatCurrency(product.price)} .đ</span>
+                                      <span className="font-light text-primary"><HoverComponent Num={10}>{formatCurrency(product.price)}</HoverComponent> .đ</span>
                                     </div>
                                   </div>
                                 </Card>
@@ -665,7 +673,11 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                   <div className="flex flex-col w-full text-sm my-1">
                                     <div className="flex gap-2">
                                       <span className="font-medium">Mã:</span>
-                                      <span className="font-light">{product.code}</span>
+                                      <span className="font-light">
+                                        <HoverComponent Num={10}>
+                                          {product.code}
+                                        </HoverComponent>
+                                      </span>
                                     </div>
                                     <div className="flex gap-2">
                                       <span className="font-medium">Tên:</span>

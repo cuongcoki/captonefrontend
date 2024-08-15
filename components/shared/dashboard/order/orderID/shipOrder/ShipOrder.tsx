@@ -54,7 +54,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 // ** import Components
-import {  PenLine,  } from "lucide-react";
+import { PenLine, } from "lucide-react";
 import { FormShipOrder } from "./form/FormShipOrder";
 import { shipOrderApi } from "@/apis/shipOrder.api";
 import { FormUpdateShipOrder } from "./form/FormUpdateShipOrder";
@@ -191,7 +191,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<ShipOrder[]>([]);
   const [order, setOrder] = useState<OrderIdData>(orderId);
-  
+
   // ** callData
   useEffect(() => {
     if (orderId) {
@@ -199,7 +199,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
     }
   }, [orderId]);
   const [valueStatus, setValueStatus] = useState<any>(0);
-  const { force,ForceRender } = OrderStore();
+  const { force, ForceRender } = OrderStore();
 
   const handleSelectChange = (value: any, id: string) => {
     setValueStatus(value);
@@ -243,7 +243,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
     return `${day}/${month}/${year}`;
   }
 
-  const handleAcceptOrder = (shipOrderId:string) =>{
+  const handleAcceptOrder = (shipOrderId: string) => {
     shipOrderApi.isAcceptedShipOrder(shipOrderId)
       .then(({ data }) => {
         ForceRender()
@@ -304,65 +304,71 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                     {item.deliveryMethodDescription}
                   </TableCell>
                   <TableCell >
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline">
-                          {" "}
-                          {item.statusDescription}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                          <DialogTitle>Đổi trạng thái đơn hàng</DialogTitle>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="grid grid-cols-4 items-center gap-4">
-                            <Label
-                              htmlFor="Trạng thái"
-                              className="text-right"
-                            >
-                              Trạng thái
-                            </Label>
-                            <Select
-                              defaultValue={String(item.status)}
-                              onValueChange={(value) =>
-                                handleSelectChange(
-                                  Number(value),
-                                  item.shipOrderId
-                                )
-                              }
-                            >
-                              <SelectTrigger className="w-[200px]">
-                                <SelectValue
-                                  placeholder="Hãy chọn loại đơn"
-                                  defaultValue={item.status}
-                                />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {OrderStatus.map((status) => (
-                                  <SelectItem
-                                    key={status.id}
-                                    value={String(status.id)}
-                                  >
-                                    {status.des}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                        <DialogFooter>
-                          <Button
-                            type="submit"
-                            onClick={() =>
-                              handleSubmitOrderStatus(item.shipOrderId)
-                            }
-                          >
-                            Lưu thay đổi
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
+                    {
+                      item.isAccepted === false ? (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline">
+                              {" "}
+                              {item.statusDescription}
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                              <DialogTitle>Đổi trạng thái đơn hàng</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                              <div className="grid grid-cols-4 items-center gap-4">
+                                <Label
+                                  htmlFor="Trạng thái"
+                                  className="text-right"
+                                >
+                                  Trạng thái
+                                </Label>
+                                <Select
+                                  defaultValue={String(item.status)}
+                                  onValueChange={(value) =>
+                                    handleSelectChange(
+                                      Number(value),
+                                      item.shipOrderId
+                                    )
+                                  }
+                                >
+                                  <SelectTrigger className="w-[200px]">
+                                    <SelectValue
+                                      placeholder="Hãy chọn loại đơn"
+                                      defaultValue={item.status}
+                                    />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {OrderStatus.map((status) => (
+                                      <SelectItem
+                                        key={status.id}
+                                        value={String(status.id)}
+                                      >
+                                        {status.des}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                            <DialogFooter>
+                              <Button
+                                type="submit"
+                                onClick={() =>
+                                  handleSubmitOrderStatus(item.shipOrderId)
+                                }
+                              >
+                                Lưu thay đổi
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      ) : (
+                        <span>{item.statusDescription}</span>
+                      )
+                    }
                   </TableCell>
                   <TableCell>
                     {
@@ -381,7 +387,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
-                                <AlertDialogAction onClick={() =>handleAcceptOrder(item.shipOrderId)}>Xác nhận</AlertDialogAction>
+                                <AlertDialogAction onClick={() => handleAcceptOrder(item.shipOrderId)}>Xác nhận</AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
                           </AlertDialog>
@@ -392,11 +398,15 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                     }
                   </TableCell>
                   <TableCell >
-                    {item.status === 2 ||
-                      item.status === 3 ||
-                      checkStatus === false ? (
+                    {item.status === 2 || item.status === 3 || checkStatus === false ? (
                       <>
-                        <Button className="rounded p-2 hover:bg-gray text-black bg-gay" onClick={() => { toast.error("Hãy chuyển sang trạng thái đang đợi giao để chỉnh sửa") }}> <PenLine /></Button>
+                        {
+                          item.isAccepted === false ? (
+                            <Button className="rounded p-2 hover:bg-gray text-black bg-gay" onClick={() => { toast.error("Hãy chuyển sang trạng thái đang đợi giao để chỉnh sửa") }}> <PenLine /></Button>
+                          ) : (
+                            ""
+                          )
+                        }
                       </>
                     ) : (
                       <FormUpdateShipOrder

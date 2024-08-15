@@ -102,6 +102,7 @@ import { userApi } from "@/apis/user.api"
 import { shipmentApi } from "@/apis/shipment.api"
 import TitleComponent from "@/components/shared/common/Title"
 import { useFormStatus } from "react-dom"
+import HoverComponent from "@/components/shared/common/hover-card"
 
 export type Product = {
     availableQuantity: number;
@@ -155,7 +156,7 @@ const ProductPhaseType = [
     },
     {
         id: 3,
-        des: "Lỗi không sửa đc nữa",
+        des: "Hàng hỏng",
     },
 ];
 
@@ -217,6 +218,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         phaseId?: any,
         price?: any,
     ) => {
+        if (itemKind === 1 && shipmentDetailRequests.some((item) => item.itemId === itemId)) {
+            return toast.error("Nguyên vật liệu này đã được thêm")
+        }
 
         setShipmentDetailRequests((prev: any) => [
             ...prev,
@@ -260,7 +264,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         itemId: string,
         name: keyof ShipmentDetailRequest,
         value: any,
-        index: number
+        index: number,
+        kindOfShip?: number
     ) => {
         setShipmentDetailRequests((prev) =>
             prev.map((item, i) => {
@@ -370,7 +375,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
             }
         }
         fetchDataShipID();
-    }, [dataSID, reset, fetchTrigger])
+    }, [dataSID, reset, fetchTrigger,shipmentIDDes])
 
     // call data material
     useEffect(() => {
@@ -580,6 +585,32 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
         if (shipmentDetailRequests.length === 0) {
             return;
         }
+
+        // Tạo một hàm để gộp các yêu cầu lô hàng
+        const groupAndSummarizeRequests = (requests: ShipmentDetailRequest[]) => {
+            const requestMap = new Map<string, ShipmentDetailRequest>();
+
+            requests.forEach((request) => {
+                const key = `${request.itemId}-${request.phaseId}-${request.kindOfShip}-${request.productPhaseType}`;
+                if (requestMap.has(key)) {
+                    // Nếu đã có phần tử với khóa này, cộng dồn quantity
+                    const existingRequest = requestMap.get(key)!;
+                    existingRequest.quantity += request.quantity;
+                } else {
+                    // Nếu chưa có phần tử với khóa này, thêm mới vào Map
+                    requestMap.set(key, { ...request });
+                }
+            });
+
+            return Array.from(requestMap.values());
+        };
+
+        // Sử dụng hàm để gộp và tóm tắt các yêu cầu
+        const updatedShipmentDetailRequests = groupAndSummarizeRequests(shipmentDetailRequests);
+
+        console.log("Updated shipmentDetailRequests", updatedShipmentDetailRequests);
+
+
         let hasError = false;
         shipmentDetailRequests.forEach((request, index) => {
             if (!request.itemId) {
@@ -746,9 +777,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
             toId: data.toId,
             shipperId: data.shipperId,
             shipDate: formattedShipDate,
-            shipmentDetailRequests: shipmentDetailRequests
+            shipmentDetailRequests: updatedShipmentDetailRequests
         };
-
+        console.log("requestBody",requestBody)
         setLoading(true)
         shipmentApi.updateShipment(requestBody, shipmentIDDes)
             .then(({ data }) => {
@@ -887,8 +918,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                             <FormLabel className="text-primary-backgroudPrimary ">Công ty gửi *</FormLabel>
                                                             <Card className="w-full mt-2">
                                                                 <CardContent className="mt-5">
-                                                                    <Select value={String(companyType)} onValueChange={(value) => handleStatusChange(parseInt(value))}>
-                                                                        <SelectTrigger className="mb-2"> <SelectValue  placeholder="Chọn kiểu công ty" /></SelectTrigger>
+                                                                   <Select value={String(companyType)} onValueChange={(value) => handleStatusChange(parseInt(value))}>
+                                                                        <SelectTrigger className="mb-2"> <SelectValue placeholder="Chọn kiểu công ty" /></SelectTrigger>
                                                                         <SelectContent>
                                                                             {
                                                                                 enumCompany.map((item) => (
@@ -1184,20 +1215,32 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                 <div className="flex flex-col w-full text-sm my-1">
                                                                                     <div className="flex gap-2">
                                                                                         <span className="font-medium">Mã:</span>
-                                                                                        <span className="font-light">{item.code}</span>
+                                                                                        <span className="font-light">
+                                                                                            <HoverComponent Num={10}>
+                                                                                                {item.code}
+                                                                                            </HoverComponent>
+                                                                                        </span>
                                                                                     </div>
                                                                                     <div className="flex gap-2">
                                                                                         <span className="font-medium">Tên:</span>
-                                                                                        <span className="font-light">{item.name}</span>
+                                                                                        <span className="font-light">
+                                                                                            <HoverComponent Num={10}>
+                                                                                                {item.name}
+                                                                                            </HoverComponent>
+                                                                                        </span>
                                                                                     </div>
                                                                                     <div className="flex gap-2">
                                                                                         <span className="font-medium">Kích thước:</span>
-                                                                                        <span className="font-light">{item.size}</span>
+                                                                                        <span className="font-light">
+                                                                                            <HoverComponent Num={10}>
+                                                                                                {item.size}
+                                                                                            </HoverComponent>
+                                                                                        </span>
                                                                                     </div>
                                                                                     <div className="flex gap-2">
                                                                                         <span className="font-medium">Giá thành:</span>
                                                                                         <span className="font-light text-primary">
-                                                                                            {formatCurrency(item.price)} .đ
+                                                                                            <HoverComponent Num={10}>{formatCurrency(item.price)}</HoverComponent> .đ
                                                                                         </span>
                                                                                     </div>
                                                                                 </div>
@@ -1259,22 +1302,38 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                 </span>
                                                                             </div>
 
-                                                                            <div className="flex flex-col w-full text-sm my-1">
+                                                                           <div className="flex flex-col w-full text-sm my-1">
                                                                                 <div className="flex gap-2">
                                                                                     <span className="font-medium">Tên:</span>
-                                                                                    <span className="font-light">{item.name}</span>
+                                                                                    <span className="font-light">
+                                                                                        <HoverComponent Num={10}>
+                                                                                            {item.name}
+                                                                                        </HoverComponent>
+                                                                                    </span>
                                                                                 </div>
                                                                                 <div className="flex gap-2">
                                                                                     <span className="font-medium">Mô tả:</span>
-                                                                                    <span className="font-light">{item.description}</span>
+                                                                                    <span className="font-light">
+                                                                                        <HoverComponent Num={10}>
+                                                                                            {item.description}
+                                                                                        </HoverComponent>
+                                                                                    </span>
                                                                                 </div>
                                                                                 <div className="flex gap-2">
                                                                                     <span className="font-medium">Số lượng/một đơn vị:</span>
-                                                                                    <span className="font-light">{item.quantityPerUnit}</span>
+                                                                                    <span className="font-light">
+                                                                                        <HoverComponent Num={10}>
+                                                                                            {item.quantityPerUnit}
+                                                                                        </HoverComponent>
+                                                                                    </span>
                                                                                 </div>
                                                                                 <div className="flex gap-2">
                                                                                     <span className="font-medium">Sẵn có:</span>
-                                                                                    <span className="font-light text-primary">{item.quantityInStock}</span>
+                                                                                    <span className="font-light text-primary">
+                                                                                        <HoverComponent Num={10}>
+                                                                                            {item.quantityInStock}
+                                                                                        </HoverComponent>
+                                                                                    </span>
                                                                                 </div>
                                                                             </div>
                                                                         </Card>
@@ -1343,27 +1402,56 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                 )}
                                                                             </TableCell>
                                                                             <TableCell>
-                                                                                <Input
-                                                                                    min={0}
-                                                                                    type="number"
-                                                                                    name="quantity"
-                                                                                    value={
-                                                                                        shipmentDetailRequests.find(
-                                                                                            (item, i) =>
-                                                                                                item.itemId === proDetail.itemId &&
-                                                                                                i === index
-                                                                                        )?.quantity || 0
-                                                                                    }
-                                                                                    onChange={(e) =>
-                                                                                        handleChange(
-                                                                                            proDetail.itemId,
-                                                                                            "quantity",
-                                                                                            parseInt(e.target.value),
-                                                                                            index
-                                                                                        )
-                                                                                    }
-                                                                                    className="w-16 text-center outline-none"
-                                                                                />
+                                                                                {
+                                                                                    proDetail.kindOfShip === 0 ? (
+                                                                                        <Input
+                                                                                            min={0}
+                                                                                            type="number"
+                                                                                            name="quantity"
+                                                                                            value={
+                                                                                                shipmentDetailRequests.find(
+                                                                                                    (item, i) =>
+                                                                                                        item.itemId === proDetail.itemId &&
+                                                                                                        i === index
+                                                                                                )?.quantity || 0
+                                                                                            }
+                                                                                            onChange={(e) =>
+                                                                                                handleChange(
+                                                                                                    proDetail.itemId,
+                                                                                                    "quantity",
+                                                                                                    parseInt(e.target.value),
+                                                                                                    index,
+                                                                                                    proDetail.kindOfShip
+                                                                                                )
+                                                                                            }
+                                                                                            className="w-20 text-center outline-none"
+                                                                                        />
+                                                                                    ) : (
+                                                                                        <Input
+                                                                                            min={0}
+                                                                                            step={0.01}
+                                                                                            type="number"
+                                                                                            name="quantity"
+                                                                                            value={
+                                                                                                shipmentDetailRequests.find(
+                                                                                                    (item, i) =>
+                                                                                                        item.itemId === proDetail.itemId &&
+                                                                                                        i === index
+                                                                                                )?.quantity || 0
+                                                                                            }
+                                                                                            onChange={(e) =>
+                                                                                                handleChange(
+                                                                                                    proDetail.itemId,
+                                                                                                    "quantity",
+                                                                                                    parseFloat(e.target.value),
+                                                                                                    index,
+                                                                                                    proDetail.kindOfShip
+                                                                                                )
+                                                                                            }
+                                                                                            className="w-20 text-center outline-none"
+                                                                                        />
+                                                                                    )
+                                                                                }
                                                                             </TableCell>
                                                                             {/* <TableCell>
                                                                                 {proDetail.kindOfShip === 0

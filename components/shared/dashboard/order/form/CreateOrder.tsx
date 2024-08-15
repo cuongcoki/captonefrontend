@@ -273,7 +273,7 @@ export default function CreateOrder() {
   const [productsRequest, setProductsRequest] = useState<
     {
       productIdOrSetId: string;
-      quantity: string;
+      quantity: number;
       unitPrice: string;
       note: string;
       isProductId: boolean;
@@ -326,7 +326,7 @@ export default function CreateOrder() {
         ...productsRequest,
         {
           productIdOrSetId: product.id,
-          quantity: "1",
+          quantity: 1,
           unitPrice: product.price,
           note: "",
           isProductId: checkProducts ? false : true,
@@ -397,7 +397,7 @@ export default function CreateOrder() {
     } catch (error: any) {
       if (error.response.data.error) {
         const Check = error.response.data.error;
-        if (typeof(Check) === 'string') {
+        if (typeof (Check) === 'string') {
           toast.error(Check);
         } else {
           for (const key in error.response.data.error) {
@@ -797,19 +797,32 @@ export default function CreateOrder() {
                                           <div className="flex flex-col w-full text-sm my-1">
                                             <div className="flex gap-2">
                                               <span className="font-medium">Mã:</span>
-                                              <span className="font-light">{product.code}</span>
+                                              <span className="font-light">
+                                                <HoverComponent Num={10}>
+                                                  {product.code}
+                                                </HoverComponent>
+                                              </span>
                                             </div>
                                             <div className="flex gap-2">
                                               <span className="font-medium">Tên:</span>
-                                              <span className="font-light">{product.name}</span>
+                                              <span className="font-light">
+                                                <HoverComponent Num={10}>
+                                                  {product.name}
+                                                </HoverComponent>
+                                              </span>
                                             </div>
                                             <div className="flex gap-2">
                                               <span className="font-medium">Kích thước:</span>
-                                              <span className="font-light">{product.size}</span>
+                                              <span className="font-light">
+                                                <HoverComponent Num={10}>
+                                                  {product.size}
+                                                </HoverComponent>
+                                              </span>
                                             </div>
                                             <div className="flex gap-2">
                                               <span className="font-medium">Giá thành:</span>
-                                              <span className="font-light text-primary">{formatCurrency(product.price)} .đ</span>
+                                              <span className="font-light text-primary">
+                                                <HoverComponent Num={10}>{formatCurrency(product.price)}</HoverComponent> .đ</span>
                                             </div>
                                           </div>
                                         </Card>
@@ -856,7 +869,11 @@ export default function CreateOrder() {
                                           <div className="flex flex-col w-full text-sm my-1">
                                             <div className="flex gap-2">
                                               <span className="font-medium">Mã:</span>
-                                              <span className="font-light">{product.code}</span>
+                                              <span className="font-light">
+                                                <HoverComponent Num={10} >
+                                                  {product.code}
+                                                </HoverComponent>
+                                              </span>
                                             </div>
                                             <div className="flex gap-2">
                                               <span className="font-medium">Tên:</span>

@@ -43,7 +43,7 @@ export type Product = {
 export type ShipmentDetailRequest = {
     itemId: string;
     phaseId: any;
-    quantity: number;
+    quantity: any;
     kindOfShip: number;
     productPhaseType: number;
     materialPrice:number;
