@@ -1,8 +1,8 @@
 // ** Axios client import
-import axiosClient from '../auth/jwtService'
+import axiosClient from "../auth/jwtService";
 
 // ** Constants import
-import { endPointConstant } from '@/constants/endpoint'
+import { endPointConstant } from "@/constants/endpoint";
 export type ShipmentDetailRequest = {
   itemId: string;
   phaseId: string;
@@ -20,7 +20,7 @@ export type Shipment = {
 };
 
 export type ShipmentId = {
-  shipmentId: string,
+  shipmentId: string;
   fromId: string;
   toId: string;
   shipperId: string;
@@ -29,8 +29,8 @@ export type ShipmentId = {
 };
 
 interface updateStatusShipment {
-  shipmentId: string,
-  status: number
+  shipmentId: string;
+  status: number;
 }
 
 // ** Function to create unique cache ID
@@ -42,7 +42,6 @@ const createCacheId = (base: string, params: Record<string, any>): string => {
 // ** Store for cache IDs
 const shipmentCacheIds: Set<string> = new Set();
 const shipmentsCacheIds: Map<string, string> = new Map();
-
 
 export const shipmentApi = {
   getShipments: (
@@ -61,7 +60,8 @@ export const shipmentApi = {
     if (Status) url += `Status=${Status}&`;
     if (SearchTerm) url += `SearchTerm=${SearchTerm}&`;
 
-    url = url.slice(-1) === '&' || url.slice(-1) === '?' ? url.slice(0, -1) : url;
+    url =
+      url.slice(-1) === "&" || url.slice(-1) === "?" ? url.slice(0, -1) : url;
 
     return axiosClient.get(url, { id: cacheId });
   },
@@ -91,43 +91,35 @@ export const shipmentApi = {
           shipmentCacheIds.forEach((id) => axiosClient.storage.remove(id));
           shipmentCacheIds.clear();
 
-          const shipmentCacheId = shipmentsCacheIds.get(id);
-          if (shipmentCacheId) {
-            axiosClient.storage.remove(shipmentCacheId);
-            shipmentsCacheIds.delete(id);
-          }
+          shipmentsCacheIds.forEach((cacheId) =>
+            axiosClient.storage.remove(cacheId)
+          );
+          shipmentsCacheIds.clear();
         },
       },
     }),
 
-  getAllCompanyByType: (companyType?: any, pageIndex?: number, pageSize?: number) =>
-    axiosClient.get(`${endPointConstant.BASE_URL}/companies?CompanyType=${companyType}&PageIndex=${pageIndex}&PageSize=${pageSize}`),
+  getAllCompanyByType: (
+    companyType?: any,
+    pageIndex?: number,
+    pageSize?: number
+  ) =>
+    axiosClient.get(
+      `${endPointConstant.BASE_URL}/companies?CompanyType=${companyType}&PageIndex=${pageIndex}&PageSize=${pageSize}`
+    ),
 
   changeStatus: (id: string, data: updateStatusShipment) =>
-    axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/status`, data, {
-      cache: {
-        update: () => {
-          shipmentCacheIds.forEach((id) => {
-            axiosClient.storage.remove(id);
-          });
-          shipmentCacheIds.clear();
-
-          const shipmentCacheId = shipmentsCacheIds.get(id);
-          if (shipmentCacheId) {
-            axiosClient.storage.remove(shipmentCacheId);
-            shipmentsCacheIds.delete(id);
-          }
-        },
-      },
-    }),
-
-    isAcceptedShipment: (id: string, isAccepted: boolean) =>
-      axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/accept/${isAccepted}`, {}, {
+    axiosClient.patch(
+      `${endPointConstant.BASE_URL}/shipments/${id}/status`,
+      data,
+      {
         cache: {
           update: () => {
-            shipmentCacheIds.forEach((cacheId) => axiosClient.storage.remove(cacheId));
+            shipmentCacheIds.forEach((id) => {
+              axiosClient.storage.remove(id);
+            });
             shipmentCacheIds.clear();
-    
+
             const shipmentCacheId = shipmentsCacheIds.get(id);
             if (shipmentCacheId) {
               axiosClient.storage.remove(shipmentCacheId);
@@ -135,25 +127,52 @@ export const shipmentApi = {
             }
           },
         },
-      }),
+      }
+    ),
+
+  isAcceptedShipment: (id: string, isAccepted: boolean) =>
+    axiosClient.patch(
+      `${endPointConstant.BASE_URL}/shipments/${id}/accept/${isAccepted}`,
+      {},
+      {
+        cache: {
+          update: () => {
+            shipmentCacheIds.forEach((cacheId) =>
+              axiosClient.storage.remove(cacheId)
+            );
+            shipmentCacheIds.clear();
+
+            const shipmentCacheId = shipmentsCacheIds.get(id);
+            if (shipmentCacheId) {
+              axiosClient.storage.remove(shipmentCacheId);
+              shipmentsCacheIds.delete(id);
+            }
+          },
+        },
+      }
+    ),
 
   changeStatusByShipper: (id: string, data: updateStatusShipment) =>
-    axiosClient.patch(`${endPointConstant.BASE_URL}/shipments/${id}/shipper/change-status`, data,{
-      cache: {
-        update: () => {
-          shipmentCacheIds.forEach((id) => {
-            axiosClient.storage.remove(id);
-          });
-          shipmentCacheIds.clear();
+    axiosClient.patch(
+      `${endPointConstant.BASE_URL}/shipments/${id}/shipper/change-status`,
+      data,
+      {
+        cache: {
+          update: () => {
+            shipmentCacheIds.forEach((id) => {
+              axiosClient.storage.remove(id);
+            });
+            shipmentCacheIds.clear();
 
-          const shipmentCacheId = shipmentsCacheIds.get(id);
-          if (shipmentCacheId) {
-            axiosClient.storage.remove(shipmentCacheId);
-            shipmentsCacheIds.delete(id);
-          }
+            const shipmentCacheId = shipmentsCacheIds.get(id);
+            if (shipmentCacheId) {
+              axiosClient.storage.remove(shipmentCacheId);
+              shipmentsCacheIds.delete(id);
+            }
+          },
         },
-      },
-    }),
+      }
+    ),
 
   getByShipper: (
     PageIndex?: number,
@@ -170,12 +189,14 @@ export const shipmentApi = {
     if (PageSize !== undefined) url += `PageSize=${PageSize}&`;
     if (Status) url += `Status=${Status}&`;
     if (SearchTerm) url += `SearchTerm=${SearchTerm}&`;
-    
-    url = url.slice(-1) === '&' || url.slice(-1) === '?' ? url.slice(0, -1) : url;
+
+    url =
+      url.slice(-1) === "&" || url.slice(-1) === "?" ? url.slice(0, -1) : url;
     return axiosClient.get(url, { id: cacheId });
   },
 
   getByShipperID: (id: string) =>
-    axiosClient.get(`${endPointConstant.BASE_URL}/shipments/${id}/get-by-shipper`),
-}
-
+    axiosClient.get(
+      `${endPointConstant.BASE_URL}/shipments/${id}/get-by-shipper`
+    ),
+};
