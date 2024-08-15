@@ -306,7 +306,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
                                   {item.product &&
-                                    `- Sản phẩm ${
+                                    `- ${
                                       ProductPhaseType.find(
                                         (phase) =>
                                           phase.id === item.productPhaseType
@@ -348,7 +348,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                             <dt className="text-muted-foreground">
                               Tên công ty
                             </dt>
-                            <dd>{data?.from.companyTypeDescription}</dd>
+                            <dd>{data?.from.name}</dd>
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
@@ -389,7 +389,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                             <dt className="text-muted-foreground">
                               Tên công ty
                             </dt>
-                            <dd>{data?.to.companyTypeDescription}</dd>
+                            <dd>{data?.to.name}</dd>
                           </div>
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
