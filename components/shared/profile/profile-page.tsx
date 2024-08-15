@@ -41,6 +41,7 @@ import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdate
 import { NoImage } from "@/constants/images";
 import TitleComponent from "../common/Title";
 import LoadingPage from "../loading/loading-page";
+import { UserStore } from "../dashboard/users/user-store";
 
 
 export default function ProfilePage() {
@@ -54,7 +55,7 @@ export default function ProfilePage() {
   const [avatar, setAvatar] = useState<string>("");
   const [lastDay, setLastDay] = useState<string>("");
   const router = useRouter();
-
+  const { forceForUserDetail } = UserStore();
   // ** hooks
   const user = useAuth();
   useEffect(() => {
@@ -89,7 +90,7 @@ export default function ProfilePage() {
         });
     };
     fetchDataGetMe();
-  }, [params.id, userId?.id,]);
+  }, [params.id, userId?.id,forceForUserDetail]);
 
 
   function validatePassword(password: string) {
@@ -188,8 +189,8 @@ export default function ProfilePage() {
   };
 
 
-  console.log("user?.user?.id",user?.user?.id)
-  console.log("userId?.id",userId?.id)
+  console.log("user?.user?.id", user?.user?.id)
+  console.log("userId?.id", userId?.id)
   return (
     <>
       {user?.user?.id === userId?.id ? (
@@ -201,38 +202,36 @@ export default function ProfilePage() {
                 {Role.find((role) => role.value === userId.roleId)?.label}
               </span>
 
-              <div className="w-full flex justify-center sm:justify-start sm:w-auto">
-                <Image
-                  alt="avatar"
-                  width={80}
-                  height={80}
-                  className="object-cover w-20 h-20 mt-3 mr-3 rounded-full"
-                  src={avatar === "" ? NoImage : avatar}
-                />
-              </div>
-
-              <div className="w-full sm:w-auto flex flex-col items-center sm:items-start">
-                <p className="font-display mb-2 text-xl font-semibold">
-                  {userId?.firstName} {userId?.lastName}
-                </p>
-
-                <div className="mb-4 text-sm sm:text-md md:text-lg text-center sm:text-start">
-                  <p className="font-display mb-2 text-lg sm:text-xl font-semibold">
-                    {userId?.address}
-                  </p>
+              <div className="w-full flex flex-col items-center gap-6">
+                <div className="w-full flex justify-center items-center">
+                  <Image
+                    alt="avatar"
+                    width={800}
+                    height={800}
+                    className="object-cover w-36 h-36 mt-3 mr-3 rounded-full"
+                    src={avatar === "" ? NoImage : avatar}
+                  />
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
-                  <div className="flex gap-4 text-sm sm:text-base">
-                    <Phone size={23} />
-                    {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}
+                <div className="w-full flex flex-col gap-3 justify-center items-center">
+                  <div className="text-lg">
+                    {userId?.firstName} {userId?.lastName}
                   </div>
-                  <div className="flex gap-4  text-sm sm:text-base">
-                    <Contact size={23} />
-                    {userId?.id === "" ? "Chưa cập nhật" : userId?.id}
+                  <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
+                    <div className="flex gap-4 text-sm sm:text-base">
+                      <Phone size={23} />
+                      {userId?.phone === "" ? "Chưa cập nhật" : userId?.phone}
+                    </div>
+                    <div className="flex gap-4  text-sm sm:text-base">
+                      <Contact size={23} />
+                      {userId?.id === "" ? "Chưa cập nhật" : userId?.id}
+                    </div>
                   </div>
+
                 </div>
               </div>
+
+
               <div className="absolute right-2 top-2 hover:cursor-pointer">
                 {userId.roleId === 1 && (
                   <UpdateUser userId={userId.id}>
@@ -426,7 +425,7 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-      ):(
+      ) : (
         <LoadingPage />
       )}
     </>

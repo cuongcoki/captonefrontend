@@ -337,7 +337,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                         <dl className="grid gap-1">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
-                              Tên giám đốc
+                              Người đại diện
                             </dt>
                             <dd>{data?.from.directorName}</dd>
                           </div>
@@ -381,7 +381,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                         <dl className="grid gap-1">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
-                              Tên giám đốc
+                              Người đại diện
                             </dt>
                             <dd>{data?.to.directorName}</dd>
                           </div>

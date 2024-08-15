@@ -52,7 +52,7 @@ export const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "company.directorName",
     header: ({ column }) => {
-      return <Button variant="ghost">Tên Giám Đốc</Button>;
+      return <Button variant="ghost">Người Đại Diện</Button>;
     },
   },
 

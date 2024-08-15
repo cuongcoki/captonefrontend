@@ -84,7 +84,7 @@ export const columns: ColumnDef<Shipment>[] = [
               <div className="max-w-sm mx-auto">
                 <div className="mb-2 text-start">
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Tên giám đốc
+                    Người đại diện
                   </label>
                   <input
                     type="email"
@@ -173,7 +173,7 @@ export const columns: ColumnDef<Shipment>[] = [
               <div className="max-w-sm mx-auto">
                 <div className="mb-2 text-start">
                   <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    Tên giám đốc
+                    Người đại diện
                   </label>
                   <input
                     type="email"
@@ -357,11 +357,13 @@ export const columns: ColumnDef<Shipment>[] = [
     id: "actions",
     cell: ({ row }) => (
       <>
-        {row.original.isAccepted === false ? (
-          <DataTableRowActions row={row} />
-        ) : (
-          ""
-        )}
+        {
+          row.original.isAccepted === false ? (
+            <DataTableRowActions row={row} />
+          ) : (
+            ""
+          )
+        }
       </>
     ),
   },
