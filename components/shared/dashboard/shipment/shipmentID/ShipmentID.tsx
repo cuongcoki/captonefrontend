@@ -275,12 +275,12 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                 <span>x</span>
                                 <span>{item?.quantity}</span>
                               </span>
-                              <div className="flex gap-2">
+                              <div className="flex gap-2 text-xs">
                                 <span className="text-muted-foreground flex justify-between items-center">
                                   {item?.product ? "Sản phẩm: " : "Vật liệu: "}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
-                                  {item.material && (`${formatCurrency(item?.materialPrice)} đ`)}
+                                  { (`${formatCurrency(item?.materialPrice)} đ`)}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
                                   {item.product && (`${item?.phase?.name}`)}

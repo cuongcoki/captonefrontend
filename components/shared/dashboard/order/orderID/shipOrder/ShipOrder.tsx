@@ -62,6 +62,7 @@ import ImageIconShipOrder from "./ImageIconShipOrder";
 import Link from "next/link";
 import TitleComponent from "@/components/shared/common/Title";
 import { OrderStore } from "../../order-store";
+import ShipOrderID from "./ShipOrderID";
 
 const OrderStatus = [
   {
@@ -255,8 +256,8 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
 
 
   return (
-    <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-6 ">
-      <Card className="sm:col-span-1 md:col-span-10 lg:col-span-7 shadow-sm overflow-auto">
+    <div className="">
+      <Card className="shadow-sm overflow-auto">
         <CardHeader>
           <div className="flex justify-between items-center">
             <TitleComponent
@@ -275,6 +276,8 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                   Ngày giao
                 </TableHead>
                 <TableHead >Loại đơn</TableHead>
+                <TableHead >
+                </TableHead>
                 <TableHead >
                   Trạng thái
                 </TableHead>
@@ -302,6 +305,11 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                   </TableCell>
                   <TableCell >
                     {item.deliveryMethodDescription}
+                  </TableCell>
+                  <TableCell>
+                    <span className="flex justify-center ">
+                      <ShipOrderID item={item} />
+                    </span>
                   </TableCell>
                   <TableCell >
                     {
@@ -422,7 +430,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
         </CardContent>
       </Card>
 
-      <Card className="sm:col-span-1 md:col-span-10 lg:col-span-3 shadow-sm">
+      {/* <Card className="sm:col-span-1 md:col-span-10 lg:col-span-3 shadow-sm">
         <CardHeader className="flex flex-row items-start bg-muted/50">
           <div className="grid gap-0.5">
             <CardTitle className="group flex items-center gap-2 text-lg">
@@ -464,7 +472,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
             </ul>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 };
