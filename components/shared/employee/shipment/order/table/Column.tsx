@@ -149,7 +149,7 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
   {
     accessorKey: "status",
     header: ({ column }) => {
-      return <Button variant="ghost">Trạng Thái</Button>;
+      return <Button variant="ghost">Trạng thái</Button>;
     },
     cell: ({ row }) => {
       const StatusCheck = [

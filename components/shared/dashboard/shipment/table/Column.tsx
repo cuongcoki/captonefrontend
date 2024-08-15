@@ -53,7 +53,7 @@ export type Shipment = {
   id: string;
   statusDescription: string;
   status: number;
-  isAccepted: boolean
+  isAccepted: boolean;
 };
 const limitLength = (text: any, maxLength: any) => {
   if (text.length > maxLength) {
@@ -236,8 +236,8 @@ export const columns: ColumnDef<Shipment>[] = [
     cell: ({ row }) => {
       function formatDate(isoString: string) {
         const date = new Date(isoString);
-        const day = String(date.getUTCDate()).padStart(2, '0');
-        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        const month = String(date.getUTCMonth() + 1).padStart(2, "0");
         const year = date.getUTCFullYear();
 
         return `${day}/${month}/${year}`;
@@ -260,25 +260,25 @@ export const columns: ColumnDef<Shipment>[] = [
       );
     },
     cell: ({ row }) => {
-
-
-      return <>
-        {
-          row.original.isAccepted === false ? (
-            <span>
+      return (
+        <>
+          {row.original.isAccepted === false ? (
+            <span className="flex justify-center">
               <ChangeStatusShipment shipmentID={row.original} />
             </span>
           ) : row.original.status !== 2 && row.original.status !== 3 ? (
-            <span>
+            <span className="flex justify-center">
               <ChangeStatusShipment shipmentID={row.original} />
               {/* {limitLength(row.original.statusDescription, 30)} */}
             </span>
           ) : (
-            <span>{row.original.statusDescription}</span>
-          )
-        }
-      </>
-    }
+            <span className="flex justify-center">
+              {row.original.statusDescription}
+            </span>
+          )}
+        </>
+      );
+    },
   },
 
   {
@@ -309,39 +309,53 @@ export const columns: ColumnDef<Shipment>[] = [
 
       return (
         <>
-          {
-            row.original.isAccepted === false ? (
-              <span>
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button className="bg-yellow-500 hover:bg-yellow-500/80">Xác nhận</Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Bạn có hoàn toàn chắc chắn không?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Bạn sẽ không thể chỉnh sửa hay bất kỳ thao tác gì cho đơn hàng này nữa, bạn chắc chắn chứ
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
-                      <AlertDialogAction onClick={handleAcceptShipment}>Xác nhận</AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </span>
-            ) : (
-              <span>{row.original.isAccepted === true ? "Đã xác nhận đơn hàng" : "Chưa xác nhận đơn hàng"}</span>
-            )
-          }
+          {row.original.isAccepted === false ? (
+            <span>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    disabled={
+                      row.original.status !== 2 && row.original.status !== 3
+                    }
+                    className="bg-yellow-500 hover:bg-yellow-500/80"
+                  >
+                    Xác nhận
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Bạn có hoàn toàn chắc chắn không?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Bạn sẽ không thể chỉnh sửa hay bất kỳ thao tác gì cho đơn
+                      hàng này nữa, bạn chắc chắn chứ
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleAcceptShipment}>
+                      Xác nhận
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </span>
+          ) : (
+            <span>
+              {row.original.isAccepted === true
+                ? "Đã xác nhận đơn hàng"
+                : "Chưa xác nhận đơn hàng"}
+            </span>
+          )}
         </>
-      )
+      );
     },
   },
 
   {
     id: "actions",
-    cell: ({ row }) =>
+    cell: ({ row }) => (
       <>
         {
           row.original.isAccepted === false ? (
@@ -351,6 +365,6 @@ export const columns: ColumnDef<Shipment>[] = [
           )
         }
       </>
-    ,
+    ),
   },
 ];

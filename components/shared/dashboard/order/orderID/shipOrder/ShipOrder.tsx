@@ -16,12 +16,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 import { Button } from "@/components/ui/button";
 
 import { Label } from "@/components/ui/label";
-
 
 import {
   Table,
@@ -54,7 +53,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 // ** import Components
-import { PenLine, } from "lucide-react";
+import { PenLine } from "lucide-react";
 import { FormShipOrder } from "./form/FormShipOrder";
 import { shipOrderApi } from "@/apis/shipOrder.api";
 import { FormUpdateShipOrder } from "./form/FormUpdateShipOrder";
@@ -63,6 +62,7 @@ import Link from "next/link";
 import TitleComponent from "@/components/shared/common/Title";
 import { OrderStore } from "../../order-store";
 import ShipOrderID from "./ShipOrderID";
+import ShipOrderChangeStatus from "@/components/shared/dashboard/order/orderID/shipOrder/ship-order-change-status";
 
 const OrderStatus = [
   {
@@ -72,12 +72,12 @@ const OrderStatus = [
   },
   {
     id: 1,
-    des: "Đang thực hiện",
+    des: "Đang được giao",
     name: "PROCESSING",
   },
   {
     id: 2,
-    des: "Đã hoàn thành",
+    des: "Đã giao thành công",
     name: "PROCESSING",
   },
   {
@@ -174,7 +174,7 @@ interface ShipOrderDetailResponse {
   quantity: number;
 }
 
-interface ShipOrder {
+export interface ShipOrder {
   shipOrderId: string;
   shipperId: string;
   shipperName: string;
@@ -212,6 +212,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
     };
     shipOrderApi.updateStatus(formattedData, id).then(({ data }) => {
       toast.success(data.message);
+      ForceRender();
     });
   };
 
@@ -223,8 +224,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
         .then(({ data }) => {
           setData(data.data);
         })
-        .catch((error) => {
-        })
+        .catch((error) => {})
         .finally(() => {
           setLoading(false);
         });
@@ -239,21 +239,22 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
   };
 
   function formatDate(inputDate: string): string {
-    if (!inputDate) return '';
-    const [year, month, day] = inputDate.split('T')[0].split('-');
+    if (!inputDate) return "";
+    const [year, month, day] = inputDate.split("T")[0].split("-");
     return `${day}/${month}/${year}`;
   }
 
   const handleAcceptOrder = (shipOrderId: string) => {
-    shipOrderApi.isAcceptedShipOrder(shipOrderId)
+    shipOrderApi
+      .isAcceptedShipOrder(shipOrderId)
       .then(({ data }) => {
-        ForceRender()
-        toast.success(data.message)
-      }).catch(error => {
-        toast.error(error.response.data.message)
+        ForceRender();
+        toast.success(data.message);
       })
-  }
-
+      .catch((error) => {
+        toast.error(error.response.data.message);
+      });
+  };
 
   return (
     <div className="">
@@ -272,19 +273,13 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
             <TableHeader>
               <TableRow>
                 <TableHead>Nhân viên vận chuyển</TableHead>
-                <TableHead >
-                  Ngày giao
-                </TableHead>
-                <TableHead >Loại đơn</TableHead>
+                <TableHead>Ngày giao</TableHead>
+                <TableHead>Loại đơn</TableHead>
                 <TableHead >
                 </TableHead>
-                <TableHead >
-                  Trạng thái
-                </TableHead>
-                <TableHead >
-                </TableHead>
-                <TableHead >
-                </TableHead>
+                <TableHead>Trạng thái</TableHead>
+                <TableHead></TableHead>
+                <TableHead></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -300,121 +295,117 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                       {item.shipperId}
                     </div>
                   </TableCell>
-                  <TableCell >
-                    {formatDate(item.shipDate)}
-                  </TableCell>
-                  <TableCell >
-                    {item.deliveryMethodDescription}
-                  </TableCell>
+                  <TableCell>{formatDate(item.shipDate)}</TableCell>
+                  <TableCell>{item.deliveryMethodDescription}</TableCell>
                   <TableCell>
                     <span className="flex justify-center ">
                       <ShipOrderID item={item} />
                     </span>
                   </TableCell>
-                  <TableCell >
-                    {
-                      item.isAccepted === false ? (
-                        <Dialog>
-                          <DialogTrigger asChild>
-                            <Button variant="outline">
-                              {" "}
-                              {item.statusDescription}
-                            </Button>
-                          </DialogTrigger>
-                          <DialogContent className="sm:max-w-[425px]">
-                            <DialogHeader>
-                              <DialogTitle>Đổi trạng thái đơn hàng</DialogTitle>
-                            </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                              <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                  htmlFor="Trạng thái"
-                                  className="text-right"
-                                >
-                                  Trạng thái
-                                </Label>
-                                <Select
-                                  defaultValue={String(item.status)}
-                                  onValueChange={(value) =>
-                                    handleSelectChange(
-                                      Number(value),
-                                      item.shipOrderId
-                                    )
-                                  }
-                                >
-                                  <SelectTrigger className="w-[200px]">
-                                    <SelectValue
-                                      placeholder="Hãy chọn loại đơn"
-                                      defaultValue={item.status}
-                                    />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    {OrderStatus.map((status) => (
-                                      <SelectItem
-                                        key={status.id}
-                                        value={String(status.id)}
-                                      >
-                                        {status.des}
-                                      </SelectItem>
-                                    ))}
-                                  </SelectContent>
-                                </Select>
-                              </div>
-                            </div>
-                            <DialogFooter>
-                              <Button
-                                type="submit"
-                                onClick={() =>
-                                  handleSubmitOrderStatus(item.shipOrderId)
-                                }
-                              >
-                                Lưu thay đổi
-                              </Button>
-                            </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
-                      ) : (
-                        <span>{item.statusDescription}</span>
-                      )
-                    }
+                  <TableCell>
+                    {item.isAccepted === false ? (
+                      <ShipOrderChangeStatus
+                        item={item}
+                        handleSubmitOrderStatus={handleSubmitOrderStatus}
+                      >
+                        <div className="grid gap-4 py-4">
+                          <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="Trạng thái" className="text-right">
+                              Trạng thái
+                            </Label>
+                            <Select
+                              defaultValue={String(item.status)}
+                              onValueChange={(value) =>
+                                handleSelectChange(
+                                  Number(value),
+                                  item.shipOrderId
+                                )
+                              }
+                            >
+                              <SelectTrigger className="w-[200px]">
+                                <SelectValue
+                                  placeholder="Hãy chọn loại đơn"
+                                  defaultValue={item.status}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {OrderStatus.map((status) => (
+                                  <SelectItem
+                                    key={status.id}
+                                    value={String(status.id)}
+                                  >
+                                    {status.des}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </ShipOrderChangeStatus>
+                    ) : (
+                      <span>{item.statusDescription}</span>
+                    )}
                   </TableCell>
                   <TableCell>
-                    {
-                      item.isAccepted === false ? (
-                        <span>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button className="bg-yellow-500 hover:bg-yellow-500/80">Xác nhận</Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Bạn có hoàn toàn chắc chắn không?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Bạn sẽ không thể chỉnh sửa hay bất kỳ thao tác gì cho đơn hàng này nữa, bạn chắc chắn chứ
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
-                                <AlertDialogAction onClick={() => handleAcceptOrder(item.shipOrderId)}>Xác nhận</AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </span>
-                      ) : (
-                        <span>{item.isAccepted === true ? "Đã xác nhận đơn hàng" : "Chưa xác nhận đơn hàng"}</span>
-                      )
-                    }
+                    {item.isAccepted === false ? (
+                      <span>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button className="bg-yellow-500 hover:bg-yellow-500/80">
+                              Xác nhận
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Bạn có hoàn toàn chắc chắn không?
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Bạn sẽ không thể chỉnh sửa hay bất kỳ thao tác
+                                gì cho đơn hàng này nữa, bạn chắc chắn chứ
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() =>
+                                  handleAcceptOrder(item.shipOrderId)
+                                }
+                              >
+                                Xác nhận
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </span>
+                    ) : (
+                      <span>
+                        {item.isAccepted === true
+                          ? "Đã xác nhận đơn hàng"
+                          : "Chưa xác nhận đơn hàng"}
+                      </span>
+                    )}
                   </TableCell>
-                  <TableCell >
-                    {item.status === 2 || item.status === 3 || checkStatus === false ? (
+                  <TableCell>
+                    {item.status === 2 ||
+                    item.status === 3 ||
+                    checkStatus === false ? (
                       <>
-                        {
-                          item.isAccepted === false ? (
-                            <Button className="rounded p-2 hover:bg-gray text-black bg-gay" onClick={() => { toast.error("Hãy chuyển sang trạng thái đang đợi giao để chỉnh sửa") }}> <PenLine /></Button>
-                          ) : (
-                            ""
-                          )
-                        }
+                        {item.isAccepted === false ? (
+                          <Button
+                            className="rounded p-2 hover:bg-gray text-black bg-gay"
+                            onClick={() => {
+                              toast.error(
+                                "Hãy chuyển sang trạng thái đang đợi giao để chỉnh sửa"
+                              );
+                            }}
+                          >
+                            {" "}
+                            <PenLine />
+                          </Button>
+                        ) : (
+                          ""
+                        )}
                       </>
                     ) : (
                       <FormUpdateShipOrder
@@ -437,7 +428,9 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
               Giao hàng
             </CardTitle>
             {data[indexItemShipOrder] && (
-              <CardDescription>{`Ngày ${formatDate(data[indexItemShipOrder]?.shipDate)}`}</CardDescription>
+              <CardDescription>{`Ngày ${formatDate(
+                data[indexItemShipOrder]?.shipDate
+              )}`}</CardDescription>
             )}
           </div>
         </CardHeader>

@@ -1500,7 +1500,7 @@ export default function CreateShipment() {
                                         </span>
                                       </div>
 
-                                          <div className="flex flex-col w-full text-sm my-1">
+ <div className="flex flex-col w-full text-sm my-1">
                                         <div className="flex gap-2">
                                           <span className="font-medium">Tên:</span>
                                           <span className="font-light">
