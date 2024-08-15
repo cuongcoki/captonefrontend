@@ -17,7 +17,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useState } from "react";
 
 // ** import Components
-import { Mail,  Phone, Truck, X } from "lucide-react";
+import { Mail, Phone, Truck, X } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { shipmentApi } from "@/apis/shipment.api";
 import ImageIconShipment from "./ImageIconShipment";
@@ -191,8 +191,8 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 z-50 bg-black/30 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 overflow-y-auto max-h-screen grid place-items-center">
             <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[600px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
-            <Dialog.Title className="hidden visible"></Dialog.Title>
-            <Dialog.DialogDescription className="hidden visible"></Dialog.DialogDescription>
+              <Dialog.Title className="hidden visible"></Dialog.Title>
+              <Dialog.DialogDescription className="hidden visible"></Dialog.DialogDescription>
               <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">
@@ -237,7 +237,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                     </CardHeader>
                     <CardContent className="p-6 text-sm">
                       <div className="grid gap-3">
-                        <div className="font-semibold">Vận chuyển chi tiết</div>
+                        <div className="font-semibold">Danh sách hàng vận chuyển</div>
                         <ul className="grid gap-3">
                           {data?.details.map((item, index) => (
                             <li
@@ -298,7 +298,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                       <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-3">
                           <div className="font-semibold">
-                            Thông tin nhận viên vận chuyển
+                            Thông tin nhân viên vận chuyển
                           </div>
                           <address className="grid gap-0.5 not-italic text-muted-foreground">
                             <Link
@@ -324,7 +324,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                         <dl className="grid gap-1">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
-                              Tên chủ tịch
+                              Tên giám đốc
                             </dt>
                             <dd>{data?.from.directorName}</dd>
                           </div>
@@ -361,7 +361,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                         <dl className="grid gap-1">
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                             <dt className="text-muted-foreground">
-                              Tên chủ tịch
+                              Tên giám đốc
                             </dt>
                             <dd>{data?.to.directorName}</dd>
                           </div>
@@ -393,7 +393,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                     </CardContent>
                     <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
                       <div className="text-xs text-muted-foreground">
-                        Công ty may che dan tiến huy
+                        Công ty mây tre đan Tiến Huy
                       </div>
                     </CardFooter>
                   </Card>
