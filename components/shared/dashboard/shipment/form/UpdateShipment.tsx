@@ -918,7 +918,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                             <FormLabel className="text-primary-backgroudPrimary ">Công ty gửi *</FormLabel>
                                                             <Card className="w-full mt-2">
                                                                 <CardContent className="mt-5">
-                                                                    <Select value={String(companyType)} onValueChange={(value) => handleStatusChange(parseInt(value))}>
+                                                                   <Select value={String(companyType)} onValueChange={(value) => handleStatusChange(parseInt(value))}>
                                                                         <SelectTrigger className="mb-2"> <SelectValue placeholder="Chọn kiểu công ty" /></SelectTrigger>
                                                                         <SelectContent>
                                                                             {
@@ -1302,7 +1302,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                 </span>
                                                                             </div>
 
-                                                                            <div className="flex flex-col w-full text-sm my-1">
+                                                                           <div className="flex flex-col w-full text-sm my-1">
                                                                                 <div className="flex gap-2">
                                                                                     <span className="font-medium">Tên:</span>
                                                                                     <span className="font-light">

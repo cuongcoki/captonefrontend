@@ -183,7 +183,7 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
                                         </CardHeader>
                                         <CardContent className="p-6 text-sm">
                                             <div className="grid gap-3">
-                                                <div className="font-semibold">Vận chuyển chi tiết</div>
+                                                <div className="font-semibold">Danh sách hàng vận chuyển</div>
                                                 <ul className="grid gap-3">
                                                     {data?.shipOrderDetailResponses.map((item, index) => (
                                                         <li
@@ -235,7 +235,7 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="grid gap-3">
                                                     <div className="font-semibold">
-                                                        Thông tin nhận viên vận chuyển
+                                                        Thông tin nhân viên vận chuyển
                                                     </div>
                                                     <address className="grid gap-0.5 not-italic text-muted-foreground">
                                                         <Link
@@ -257,7 +257,7 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
                                                 <dl className="grid gap-1">
                                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                                                         <dt className="text-muted-foreground">
-                                                            Tên chủ tịch
+                                                            Tên giám đốc
                                                         </dt>
                                                         <dd>{data?.companyResponse.directorName}</dd>
                                                     </div>
@@ -301,7 +301,7 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
                                         </CardContent>
                                         <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
                                             <div className="text-xs text-muted-foreground">
-                                                Công ty may che dan tiến huy
+                                                Công ty mây tre đan Tiến Huy
                                             </div>
                                         </CardFooter>
                                     </Card>
