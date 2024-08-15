@@ -112,6 +112,25 @@ interface ShipmentIDProps {
   shipmentIDDes: string;
 }
 
+const ProductPhaseType = [
+  {
+    id: 0,
+    des: "bình thường",
+  },
+  {
+    id: 1,
+    des: "lỗi bên cơ sở",
+  },
+  {
+    id: 2,
+    des: "lỗi bên hợp tác",
+  },
+  {
+    id: 3,
+    des: "lỗi không sửa đc nữa",
+  },
+];
+
 export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
   //state
   const [loading, setLoading] = useState<boolean>(false);
@@ -187,6 +206,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
+
                 <div className="grid  p-4 overflow-y-auto  gap-4">
                   <Card
                     className="overflow-hidden"
@@ -237,16 +257,14 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                         />{" "}
                                       </Link>
                                     </span>
-                                    <span>{item?.product?.name}</span>
-                                    <span>{item?.product?.code}</span>
+                                    <span>{item?.product?.code}-{item?.product?.name}</span>
                                   </>
                                 ) : item?.material ? (
                                   <>
                                     <span className="w-[50px] h-[50px] shadow-md rounded-md">
                                       <ImageIconShipmentMa dataImage={item?.material?.image} />
                                     </span>
-                                    <span>{item?.material?.name}</span>
-                                    <span>{item?.material?.unit}</span>
+                                    <span>{item?.material?.name}/{item?.material?.unit}</span>
                                   </>
                                 ) : null}
                                 <span>x</span>
@@ -266,7 +284,9 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                   {item.product && (`- ${item?.phase?.description}`)}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
-                                  {item.product && (`- ${item?.productPhaseTypeDescription}`)}
+                                  {item.product && (
+                                    `- Sản phẩm ${ProductPhaseType.find(phase => phase.id === item.productPhaseType)?.des || "Không có"}`
+                                  )}
                                 </span>
 
                               </div>

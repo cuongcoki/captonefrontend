@@ -262,16 +262,14 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                         />{" "}
                                       </Link>
                                     </span>
-                                    <span>{item?.product?.code}</span>
-                                    <span>{item?.product?.name}</span>
+                                    <span>{item?.product?.code}-{item?.product?.name}</span>
                                   </>
                                 ) : item?.material ? (
                                   <>
                                     <span className="w-[50px] h-[50px] shadow-md rounded-md">
                                       <ImageIconShipmentMa dataImage={item?.material?.image} />
                                     </span>
-                                    <span>{item?.material?.name}</span>
-                                    <span>{item?.material?.unit}</span>
+                                    <span>{item?.material?.name}/{item?.material?.unit}</span>
                                   </>
                                 ) : null}
                                 <span>x</span>

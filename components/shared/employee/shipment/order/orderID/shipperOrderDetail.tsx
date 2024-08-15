@@ -129,6 +129,8 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
         }
         return text;
     };
+
+    console.log("data", data)
     return (
         <>
             <Dialog.Root open={open} onOpenChange={handleOnDialog}>
@@ -192,23 +194,16 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
                                                                 {item?.product ? (
                                                                     <>
                                                                         <span className="w-[50px] h-[50px] shadow-md rounded-md">
-                                                                            <Link
-                                                                                href={`/dashboard/products/product/${item?.product?.id}`}
-                                                                            >
-                                                                                {" "}
-                                                                                <Image alt="ảnh sản phẩm" src={item.product.image} width={900} height={900} className="w-full h-full object-cover rounded-md " />
-                                                                            </Link>
+                                                                            <Image alt="ảnh sản phẩm" src={item.product.image} width={900} height={900} className="w-full h-full object-cover rounded-md " />
                                                                         </span>
-                                                                        <span>{item?.product?.name}</span>
-                                                                        <span>{item?.product?.code}</span>
+                                                                        <span>{item?.product?.code}-{item?.product?.name}</span>
                                                                     </>
                                                                 ) : item?.set ? (
                                                                     <>
                                                                         <span className="w-[50px] h-[50px] shadow-md rounded-md">
-                                                                            {/* <ImageIconShipmentMa dataImage={item?.material?.image} /> */}
+                                                                            <Image alt="ảnh sản phẩm" src={item?.set?.imageUrl} width={900} height={900} className="w-full h-full object-cover rounded-md " />
                                                                         </span>
-                                                                        <span>{item?.set?.name}</span>
-                                                                        <span>{item?.set?.unit}</span>
+                                                                        <span>{item?.set?.name}/{item?.set?.unit}</span>
                                                                     </>
                                                                 ) : null}
                                                                 <span>x</span>
