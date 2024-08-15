@@ -1297,35 +1297,53 @@ export default function CreateShipment() {
                                   onChange={(e) => setSearchTermM(e.target.value)}
                                   className="md:w-[300px] w-full mb-3"
                                 />
-                                <div className=" w-full grid grid-cols-3 sm:grid-cols-8 gap-4 h-[150px]  md:min-h-[100px] overflow-y-auto ">
+                                <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                   {dataM.map((item) => (
-                                    <div
-                                      className="group relative w-[80px] h-[80px] shadow-md rounded-md"
-                                      key={item.id}
-                                    >
-                                      <ImageIconMaterial dataImage={item} />
-                                      <Check
-                                        className={`${shipmentDetailRequests.some(
-                                          (item1) => item1.itemId === item.id
-                                        )
-                                          ? "absolute top-0 right-0 bg-primary text-white"
-                                          : "hidden"
-                                          }`}
-                                      />
-                                      <span
-                                        className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                        onClick={() =>
-                                          handleAddProducts(
-                                            item,
-                                            item?.image,
-                                            item?.id,
-                                            materialType
+                                    <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
+                                      <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
+                                        <ImageIconMaterial dataImage={item} />
+                                        <Check
+                                          className={`${shipmentDetailRequests.some(
+                                            (item1) => item1.itemId === item.id
                                           )
-                                        }
-                                      >
-                                        <Plus className="text-white" />
-                                      </span>
-                                    </div>
+                                            ? "absolute top-0 right-0 bg-primary text-white"
+                                            : "hidden"
+                                            }`}
+                                        />
+                                        <span
+                                          className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                          onClick={() =>
+                                            handleAddProducts(
+                                              item,
+                                              item?.image,
+                                              item?.id,
+                                              materialType
+                                            )
+                                          }
+                                        >
+                                          <Plus className="text-white" />
+                                        </span>
+                                      </div>
+
+                                      <div className="flex flex-col w-full text-sm my-1">
+                                        <div className="flex gap-2">
+                                          <span className="font-medium">Tên:</span>
+                                          <span className="font-light">{item.name}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                          <span className="font-medium">Mô tả:</span>
+                                          <span className="font-light">{item.description}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                          <span className="font-medium">Số lượng/một đơn vị:</span>
+                                          <span className="font-light">{item.quantityPerUnit}</span>
+                                        </div>
+                                        <div className="flex gap-2">
+                                          <span className="font-medium">Sẵn có:</span>
+                                          <span className="font-light text-primary">{item.quantityInStock}</span>
+                                        </div>
+                                      </div>
+                                    </Card>
                                   ))}
                                 </div>
                               </CardContent>
