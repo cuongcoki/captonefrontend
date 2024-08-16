@@ -255,19 +255,21 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   </TooltipContent>
                 </Tooltip>
               ) : (
-                <div key={index}>
+                <div
+                  key={index}
+                  className={cn(
+                    checkActiveLink(link)
+                      ? "bg-[#22c55e] text-primary-foreground hover:bg-primary-backgroudPrimary /90"
+                      : "hover:bg-accent hover:text-accent-foreground",
+                    "rounded-md"
+                  )}
+                >
                   <Link
                     href={link.href}
                     className={cn(
-                      buttonVariants({
-                        variant: checkActiveLink(link)
-                          ? "colorCompany"
-                          : "ghost",
-                        size: "sm",
-                      }),
+                      "h-9 px-3 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
                       link.variant === "colorCompany" &&
-                        "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                      "justify-start"
+                        "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
                     )}
                   >
                     <link.icon className="mr-2 h-5 w-5" />
