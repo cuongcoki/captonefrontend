@@ -1,8 +1,6 @@
 "use client";
 
-import {
-  ColumnDef,
-} from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 
 import {
   Table,
@@ -32,12 +30,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = React.createContext<ContexType>({
-  forceUpdate: () => { },
+  forceUpdate: () => {},
 });
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -66,6 +64,22 @@ export function DataTableForMaterial<TData, TValue>({
   const router = useRouter();
   const [images, setImages] = React.useState<Map<string, string>>(new Map());
   const [loading, setLoading] = React.useState<boolean>(false);
+  const formatCurrency = (value: any): string => {
+    if (!value) return "";
+    let valueString = value.toString();
+    // Remove all non-numeric characters, including dots
+    valueString = valueString.replace(/\D/g, "");
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+    if (valueString === "") return "0";
+    // Reverse the string to handle grouping from the end
+    let reversed = valueString.split("").reverse().join("");
+    // Add dots every 3 characters
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+    // Reverse back to original order
+    let formatted = formattedReversed.split("").reverse().join("");
+    return formatted;
+  };
 
   useEffect(() => {
     const getImages = async (data: materialType[]) => {
@@ -81,13 +95,11 @@ export function DataTableForMaterial<TData, TValue>({
                   return newImages;
                 });
               })
-              .catch((error) => {
-              });
+              .catch((error) => {});
           }
         });
       } catch (error) {
       } finally {
-
       }
     };
 
@@ -146,7 +158,7 @@ export function DataTableForMaterial<TData, TValue>({
                 </TableHead>
                 <TableHead className="text-center">Đơn vị tính</TableHead>
                 <TableHead className="text-center">Miêu tả</TableHead>
-                <TableHead className="text-center">Số lượng</TableHead>
+                <TableHead className="text-center">Tồn kho</TableHead>
                 <TableHead className="text-center">Chỉnh sửa</TableHead>
               </TableRow>
             </TableHeader>
@@ -158,7 +170,7 @@ export function DataTableForMaterial<TData, TValue>({
                       <TableCell>
                         <div className="flex justify-center items-center space-x-2 max-w-[200px]">
                           <Dialog>
-                            <DialogTrigger >
+                            <DialogTrigger>
                               <div className="transition duration-300 ease-in-out hover:opacity-70 hover:bg-primary hover:shadow-md hover:shadow-primary/50 flex justify-center items-center space-x-2 w-[50px] h-[50px] rounded-lg shadow-md ">
                                 <Image
                                   className="w-full h-full rounded-lg object-cover"
@@ -195,14 +207,14 @@ export function DataTableForMaterial<TData, TValue>({
                       </TableCell>
                       <TableCell className="text-center">{row.name}</TableCell>
                       <TableCell className="text-center">
-                        {row.quantityPerUnit}
+                        {formatCurrency(row.quantityPerUnit)}
                       </TableCell>
                       <TableCell className="text-center">{row.unit}</TableCell>
                       <TableCell className="text-center">
                         {row.description}
                       </TableCell>
                       <TableCell className="text-center">
-                        {row.quantityInStock}
+                        {formatCurrency(row.quantityInStock)}
                       </TableCell>
                       <TableCell className="text-center">
                         <UpdateMaterial id={row.id}>
@@ -236,7 +248,8 @@ export function DataTableForMaterial<TData, TValue>({
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <span>
-            Trang {data.length > 0 ? pageIndex : 0} Của {data.length > 0 ? totalPages : 0}
+            Trang {data.length > 0 ? pageIndex : 0} Của{" "}
+            {data.length > 0 ? totalPages : 0}
           </span>
           <Button
             variant="outline"

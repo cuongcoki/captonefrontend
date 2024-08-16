@@ -294,7 +294,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                   {item?.product ? "Sản phẩm: " : "Vật liệu: "}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
-                                  { (`${formatCurrency(item?.materialPrice)} đ`)}
+                                  {`${formatCurrency(item?.materialPrice)} đ`}
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
                                   {item.product && `${item?.phase?.name}`}
@@ -325,12 +325,12 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                           </div>
                           <address className="grid gap-0.5 not-italic text-muted-foreground">
                             <Link
-                              href={`/profile/${data?.shipper.id}`}
+                              href={`/dashboard/user/${data?.shipper.id}`}
                               className="hover:underline"
                             >
                               <span>
-                                {data?.shipper.lastName}{" "}
-                                {data?.shipper.firstName} -{" "}
+                                {data?.shipper.firstName}{" "}
+                                {data?.shipper.lastName} -{" "}
                                 {data?.shipper.companyName}
                               </span>
                             </Link>
