@@ -272,9 +272,13 @@ export function Nav({ links, isCollapsed }: NavProps) {
                       : "hover:bg-accent hover:text-accent-foreground",
                     "rounded-md"
                   )}
-                  onClick={(event) =>
-                    toggleDropdown(link.href1, link.hrefCon, event)
-                  }
+                  onClick={(event) => {
+                    if (link.hrefCon && link.hrefCon?.length > 0) {
+                      toggleDropdown(link.href1, link.hrefCon, event);
+                    } else {
+                      closeDropdown("");
+                    }
+                  }}
                 >
                   <Link
                     href={
