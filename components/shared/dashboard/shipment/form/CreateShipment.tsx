@@ -423,21 +423,23 @@ export default function CreateShipment() {
           newData.map(async (item: any) => {
             if (item.image) {
               try {
-                const { data } = await filesApi.getFile(item.image);
+                const response = await filesApi.getFile(item.image.trim() === "" ? "%20" : item.image.trim());
                 return {
                   ...item,
-                  image: data.data,
+                  image: response?.data?.data || "", // Nếu không có dữ liệu thì trả về chuỗi rỗng
                 };
               } catch (error) {
+                console.error(`Failed to fetch image for item: ${item.id}`, error);
                 return {
                   ...item,
-                  image: "",
+                  image: "", // Xử lý lỗi và trả về chuỗi rỗng nếu xảy ra lỗi
                 };
               }
             }
-            return item;
+            return item; // Nếu không có image, trả về item ban đầu
           })
         );
+
 
         setDataM(updatedData);
         setCurrentPageM(response.data.data.currentPage);
@@ -1299,12 +1301,12 @@ export default function CreateShipment() {
 
                                       <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                         {dataP && dataP.length > 0 ? (
-                                          dataP.map((item) => (
-                                            <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
+                                          dataP.map((itemP) => (
+                                            <Card className="h-[90px] flex gap-2 shadow-md group relative" key={itemP.id+ itemP.phaseId}>
                                               <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
-                                                <ImageIconShipmentForm dataImage={item} />
+                                                <ImageIconShipmentForm dataImage={itemP} />
                                                 <Check
-                                                  className={`${shipmentDetailRequests.some((item1) => item1.itemId === item.id)
+                                                  className={`${shipmentDetailRequests.some((item1) => item1.itemId === itemP.id)
                                                     ? "absolute top-0 right-0 bg-primary text-white"
                                                     : "hidden"
                                                     }`}
@@ -1313,12 +1315,12 @@ export default function CreateShipment() {
                                                   className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                                   onClick={() => {
                                                     handleAddProducts(
-                                                      item,
-                                                      item.imageUrl ? item.imageUrl : "",
-                                                      item?.id,
+                                                      itemP,
+                                                      itemP.imageUrl ? itemP.imageUrl : "",
+                                                      itemP?.id,
                                                       productType,
-                                                      item?.phaseId,
-                                                      item.price,
+                                                      itemP?.phaseId,
+                                                      itemP.price,
                                                     );
                                                   }}
                                                 >
@@ -1330,7 +1332,7 @@ export default function CreateShipment() {
                                                   <span className="font-medium">Mã:</span>
                                                   <span className="font-light">
                                                     <HoverComponent Num={10}>
-                                                      {item.code}
+                                                      {itemP.code}
                                                     </HoverComponent>
                                                   </span>
                                                 </div>
@@ -1338,7 +1340,7 @@ export default function CreateShipment() {
                                                   <span className="font-medium">Tên:</span>
                                                   <span className="font-light">
                                                     <HoverComponent Num={10}>
-                                                      {item.name}
+                                                      {itemP.name}
                                                     </HoverComponent>
                                                   </span>
                                                 </div>
@@ -1346,14 +1348,14 @@ export default function CreateShipment() {
                                                   <span className="font-medium">Kích thước:</span>
                                                   <span className="font-light">
                                                     <HoverComponent Num={10}>
-                                                      {item.size}
+                                                      {itemP.size}
                                                     </HoverComponent>
                                                   </span>
                                                 </div>
                                                 <div className="flex gap-2">
                                                   <span className="font-medium">Giá thành:</span>
                                                   <span className="font-light text-primary">
-                                                    <HoverComponent Num={15}>{formatCurrency(item.price)}</HoverComponent> .đ
+                                                    <HoverComponent Num={15}>{formatCurrency(itemP.price)}</HoverComponent> .đ
                                                   </span>
                                                 </div>
                                               </div>
@@ -1500,7 +1502,7 @@ export default function CreateShipment() {
                                         </span>
                                       </div>
 
- <div className="flex flex-col w-full text-sm my-1">
+                                      <div className="flex flex-col w-full text-sm my-1">
                                         <div className="flex gap-2">
                                           <span className="font-medium">Tên:</span>
                                           <span className="font-light">

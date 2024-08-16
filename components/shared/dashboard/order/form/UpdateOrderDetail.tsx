@@ -79,6 +79,7 @@ import { phaseApi } from "@/apis/phase.api";
 import { Company } from "@/types/shipment.type";
 import HoverComponent from "@/components/shared/common/hover-card";
 import ImageDisplayDialogSet from "./imageDisplayDialogSet";
+import { formatCurrency, limitLength } from "@/lib/utils";
 
 const enumCompany = [
   {
@@ -176,8 +177,8 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   const [pageIndex, setPageIndex] = useState<number>(1);
   const [pageSizeS, setPageSizeS] = useState<number>(100);
 
-  console.log("searchResults", searchResultsSet)
-  console.log("searchResults", searchResults)
+  // console.log("searchResults", searchResultsSet)
+  // console.log("searchResults", searchResults)
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
@@ -197,7 +198,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     handleSearch();
   }, [searchTerm]);
 
-  console.log("dataP", searchResults)
+  // console.log("dataP", searchResults)
 
 
   // console.log("companyId", companyId)
@@ -216,12 +217,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   }, [debouncedSearchTerm, searchTerm]);
 
   //  ========================================================= các hàm để thêm sản phẩm  và số lượng vào bộ sản phẩm  =========================================================
-  const limitLength = (text: any, maxLength: any) => {
-    if (text.length > maxLength) {
-      return `${text.slice(0, maxLength)}...`;
-    }
-    return text;
-  };
+ 
   const [getDetailsPro, setGetDetailsPro] = useState<any[]>([]);
   const [productsRequest, setProductsRequest] = useState<
     {
@@ -429,17 +425,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   };
 
   const { pending } = useFormStatus();
-  const formatCurrency = (value: any): string => {
-    if (!value) return "";
-    let valueString = value.toString();
-    valueString = valueString.replace(/\D/g, "");
-    valueString = valueString.replace(/^0+/, "");
-    if (valueString === "") return "0";
-    let reversed = valueString.split("").reverse().join("");
-    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    let formatted = formattedReversed.split("").reverse().join("");
-    return formatted;
-  };
+
 
   const productCheck = 0;
   const setCheck = 1;

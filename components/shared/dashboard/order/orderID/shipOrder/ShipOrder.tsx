@@ -165,7 +165,7 @@ interface Set {
   size: string;
   description: string;
   isInProcessing: boolean;
-  imageResponses: ImageResponse[];
+  imageUrl:string;
 }
 
 interface ShipOrderDetailResponse {

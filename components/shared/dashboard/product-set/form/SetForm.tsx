@@ -56,6 +56,7 @@ import { NoImage } from "@/constants/images";
 import { MyContext } from "../table/sets/RenderTable";
 import { Label } from "@/components/ui/label";
 import TitleComponent from "@/components/shared/common/Title";
+import { generateRandomString } from "@/lib/utils";
 
 export const SetForm = () => {
   // state
@@ -85,16 +86,7 @@ export const SetForm = () => {
   });
 
   // ** các hàm để sử lý đăng ảnh
-  const generateRandomString = (length: number = 5) => {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
+ 
   // ** Xử lý khi người dùng tải lên hình ảnh mới
   const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -165,7 +157,7 @@ export const SetForm = () => {
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
-  console.log("searchResults", searchResults)
+  // console.log("searchResults", searchResults)
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);

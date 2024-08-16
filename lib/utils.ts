@@ -64,3 +64,35 @@ export function formatDate(inputDate: string): string {
 
   return `${day}/${month}/${year}`;
 }
+
+
+export const limitLength = (text: any, maxLength: any) => {
+  if (text.length > maxLength) {
+    return `${text.slice(0, maxLength)}...`;
+  }
+  return text;
+};
+
+
+export const formatCurrency = (value: any): string => {
+  if (!value) return "";
+  let valueString = value.toString();
+  valueString = valueString.replace(/\D/g, "");
+  valueString = valueString.replace(/^0+/, "");
+  if (valueString === "") return "0";
+  let reversed = valueString.split("").reverse().join("");
+  let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+  let formatted = formattedReversed.split("").reverse().join("");
+  return formatted;
+};
+
+export const generateRandomString = (length: number = 5) => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};

@@ -82,6 +82,7 @@ const OrderStatus = [
     },
 ];
 
+
 interface ShipOrderDetailRequest {
     itemId: string,
     quantity: number,
@@ -177,7 +178,7 @@ interface Set {
     size: string;
     description: string;
     isInProcessing: boolean;
-    imageResponses: imageResponses[];
+    imageUrl:string;
 }
 
 interface ShipOrderDetailResponse {
@@ -256,7 +257,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         ]);
     };
 
-    console.log("productDetail",productDetail)
+    console.log("productDetail", productDetail)
 
     // Hàm xóa sản phẩm
     const handleDeleteProducts = (itemId: string) => {
@@ -289,36 +290,49 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         },
     });
     const { reset } = form;
+    console.log("shipOrderId", shipOrderId)
     // ** callData
     useEffect(() => {
         const fetchImages = async () => {
             if (shipOrderId && shipOrderId.shipOrderDetailResponses) {
-                const details = await Promise.all(
-                    shipOrderId.shipOrderDetailResponses.map(async (item) => {
-                        const imgResponses = item.product
-                            ? item.product.imageResponses
-                            : item.set?.imageResponses || [];
+                try {
+                    const details = await Promise.all(
+                        shipOrderId.shipOrderDetailResponses.map(async (item) => {
+                            let imgResponses:any = [];
 
-                        const imgProducts = await Promise.all(
-                            imgResponses.map(async (img) => {
-                                try {
-                                    const response = await filesApi.getFile(img.imageUrl);
-                                    return response.data.data;
-                                } catch (error) {
-                                    return null;
-                                }
-                            })
-                        );
+                            if (item.product?.imageResponses) {
+                                // Trường hợp sản phẩm có mảng ảnh
+                                imgResponses = item.product.imageResponses;
+                            } else if (typeof item.set?.imageUrl === 'string') {
+                                // Trường hợp set có một URL ảnh là chuỗi
+                                imgResponses = [{ imageUrl: item.set.imageUrl }];
+                            }
 
-                        return {
-                            itemId: item.product?.id ?? item.set?.id ?? "",
-                            imgProducts,
-                            itemKind: item.product ? 0 : 1,
-                        };
-                    })
-                );
-                setProductDetail(details);
+                            const imgProducts = await Promise.all(
+                                imgResponses.map(async (img: any) => {
+                                    try {
+                                        const response = await filesApi.getFile(img.imageUrl);
+                                        return response.data.data;
+                                    } catch (error) {
+                                        console.error("Error fetching image:", error);
+                                        return null;
+                                    }
+                                })
+                            );
+
+                            return {
+                                itemId: item.product?.id || item.set?.id || "",
+                                imgProducts,
+                                itemKind: item.product ? 0 : 1,
+                            };
+                        })
+                    );
+                    setProductDetail(details);
+                } catch (error) {
+                    console.error("Error processing ship order details:", error);
+                }
             }
+
         };
 
         if (orderId) {
@@ -457,6 +471,8 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         let formatted = numberValue.toLocaleString("vi-VN");
         return formatted;
     };
+
+    console.log("productDetail", productDetail)
     return (
         <>
             {

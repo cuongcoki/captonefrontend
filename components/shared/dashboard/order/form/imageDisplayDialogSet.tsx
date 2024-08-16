@@ -8,21 +8,17 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 
-
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Package } from "lucide-react";
-
 
 type ImageResponse = {
     id: string;
     imageUrl: string;
     isBluePrint: boolean;
     isMainImage: boolean;
-  };
-  
-  type Product = {
+};
+
+type Product = {
     id: string;
     name: string;
     code: string;
@@ -31,29 +27,27 @@ type ImageResponse = {
     description: string;
     isInProcessing: boolean;
     imageResponses: ImageResponse[];
-  };
-  
-  type SetProduct = {
+};
+
+type SetProduct = {
     setId: string;
     productId: string;
     quantity: number;
     product: Product;
-  };
-  
-  type ProductSet = {
+};
+
+type ProductSet = {
     id: string;
     code: string;
     name: string;
     imageUrl: string;
     description: string;
     setProducts: SetProduct[];
-  };
+};
 interface ImageDisplayProps {
     images: ProductSet;
     checkProduct: any;
 }
-
-
 
 const ImageDisplayDialogSet: React.FC<ImageDisplayProps> = ({ images, checkProduct }) => {
     const handleGotoPID = () => {
@@ -80,7 +74,7 @@ const ImageDisplayDialogSet: React.FC<ImageDisplayProps> = ({ images, checkProdu
                     <div className="grid gap-4 ">
                         <div className="grid gap-2">
                             <div className="flex flex-col w-full text-sm">
-                               Gồm có {numberOfProducts} sản phẩm
+                                Gồm có {numberOfProducts} sản phẩm
                             </div>
                             <div className="flex  justify-end">
                                 <span className="cursor-pointer flex items-center px-2 py-1 rounded-md text-white hover:bg-primary/90 bg-primary" onClick={handleGotoPID}>

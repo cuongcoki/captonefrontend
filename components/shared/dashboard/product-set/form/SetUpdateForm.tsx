@@ -54,6 +54,7 @@ import { ProductSetStore } from "@/components/shared/dashboard/product-set/produ
 import { Label } from "@/components/ui/label";
 import TitleComponent from "@/components/shared/common/Title";
 import { MyContext } from "../table/sets/RenderTable";
+import { generateRandomString, limitLength } from "@/lib/utils";
 
 interface ImageResponse {
   id: string;
@@ -107,17 +108,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   const [imageUrls, setImageUrls] = useState<File | null>(null);
 
   // ** các hàm để sử lý đăng ảnh
-
-  const generateRandomString = (length: number = 5) => {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
+ 
   // ** Xử lý khi người dùng tải lên 1 hình ảnh mới
   const handleUploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -366,7 +357,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   };
 
   // ** hàm xóa khỏi danh sách sản phẩm
-
   const [removeProductIds, setRemoveProductIds] = useState<string[]>([]);
 
   const handleDeleteProducts = (productID: string) => {
@@ -468,12 +458,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       });
   };
 
-  const limitLength = (text: any, maxLength: any) => {
-    if (text.length > maxLength) {
-      return `${text.slice(0, maxLength)}...`;
-    }
-    return text;
-  };
   const { pending } = useFormStatus();
 
   const handleClearForm = () => {

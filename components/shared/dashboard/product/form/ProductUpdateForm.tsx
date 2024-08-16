@@ -59,6 +59,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
+import { formatCurrency, generateRandomString, limitLength } from "@/lib/utils";
 
 interface ProductData {
   code: string;
@@ -78,6 +79,7 @@ interface ProductData {
   size: string;
   productPhaseSalaries: productPhaseSalaries[];
 }
+
 interface productPhaseSalaries {
   phaseDescription: string;
   phaseId: string;
@@ -99,10 +101,10 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const [imageRequests, setImageRequests] = useState<any[]>([]);
   const [imageRequestsUpdate, setImageRequestsUpdate] = useState<any[]>([]);
-  console.log("imageRequests",imageRequests)
-  console.log("imageRequestsUpdate",imageRequestsUpdate)
-  console.log("updatedProduct",updatedProduct)
-  console.log("productId",productId)
+  // console.log("imageRequests",imageRequests)
+  // console.log("imageRequestsUpdate",imageRequestsUpdate)
+  // console.log("updatedProduct",updatedProduct)
+  // console.log("productId",productId)
   useEffect(() => {
     const fetchUpdatedProduct = async () => {
       if (productId) {
@@ -153,22 +155,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
 
   const [imageAddRequests, setImageAddRequests] = useState<any[]>([]);
 
-  const generateRandomString = (length: number = 5) => {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
-  const limitLength = (text: any, maxLength: any) => {
-    if (text.length > maxLength) {
-      return `${text.slice(0, maxLength)}...`;
-    }
-    return text;
-  };
   // Handle uploading new photos
   const handleUploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -276,7 +262,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
       });
     }
   };
-
 
   // Handle toggling blue image flag for an image
   const handleToggleBluePrint = (imageUrl: string, id: string, index: any) => {
@@ -472,18 +457,6 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   };
 
   useEffect(() => { }, [removeImageIds]);
-
-  const formatCurrency = (value: any): string => {
-    if (!value) return "";
-    let valueString = value.toString();
-    valueString = valueString.replace(/\D/g, "");
-    valueString = valueString.replace(/^0+/, "");
-    if (valueString === "") return "0";
-    let reversed = valueString.split("").reverse().join("");
-    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    let formatted = formattedReversed.split("").reverse().join("");
-    return formatted;
-  };
 
   const parseCurrency = (value: any) => {
     return value.replace(/,/g, "");
