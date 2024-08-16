@@ -6,6 +6,7 @@ import {
   Check,
   ChevronDown,
   CircleX,
+  Minus,
   PenLine,
   Plus,
   Search,
@@ -13,7 +14,7 @@ import {
 } from "lucide-react";
 
 // ** import REACT
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OrderDetailRequestSchema } from "@/schema/order";
@@ -48,6 +49,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -63,10 +73,20 @@ import useDebounce from "./useDebounce";
 import { orderApi } from "@/apis/order.api";
 import { OrderStore } from "../order-store";
 import TitleComponent from "@/components/shared/common/Title";
+import { shipmentApi } from "@/apis/shipment.api";
+import { phaseApi } from "@/apis/phase.api";
+import { Company } from "@/types/shipment.type";
 import HoverComponent from "@/components/shared/common/hover-card";
 import ImageDisplayDialogSet from "./imageDisplayDialogSet";
 import { formatCurrency, limitLength } from "@/lib/utils";
 
+const enumCompany = [
+  {
+    description: "Nhà xưởng",
+    id: 0,
+    value: "0",
+  },
+];
 interface OrderID {
   orderId?: any;
 }
@@ -114,14 +134,50 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   const debouncedSearchTermSet = useDebounce(searchTermSet, 500);
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
+  const handleSearchSet = () => {
+    setApi
+      .searchSets(searchTermSet)
+      .then(({ data }) => {
+        const dataSearch = data.data;
+        return Promise.all(
+          dataSearch.map((image: any) => {
+            return filesApi
+              .getFile(image.imageUrl)
+              .then(({ data }) => {
+                return {
+                  ...image,
+                  imageUrl: data.data,
+                };
+              })
+              .catch((error) => {
+                return {
+                  ...image,
+                  imageUrl: "NoImage",
+                };
+              });
+          })
+        );
+      })
+      .then((updatedImages) => {
+        setSearchResultsSet(updatedImages);
+      })
+      .catch((error) => {
+        setSearchResultsSet([]);
+      })
+      .finally(() => {});
+  };
+
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
-  const pageIndex = useRef(1);
-  const pageSizeS = useRef(100);
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [pageSizeS, setPageSizeS] = useState<number>(100);
+
+  // console.log("searchResults", searchResultsSet)
+  // console.log("searchResults", searchResults)
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
       productApi
-        .searchProductForSet(searchTerm, pageIndex.current, pageSizeS.current)
+        .searchProductForSet(searchTerm, pageIndex, pageSizeS)
         .then(({ data }) => {
           setSearchResults(data.data.data);
         })
@@ -134,45 +190,24 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     };
 
     handleSearch();
-  }, [searchTerm]);
+  }, [searchTerm, pageIndex, pageSizeS]);
+
+  // console.log("dataP", searchResults)
+
+  // console.log("companyId", companyId)
+  // console.log("pahsseId", phaseId)
+  // console.log("searchResults", searchResults)
 
   useEffect(() => {
-    const handleSearchSet = () => {
-      setApi
-        .searchSets(searchTermSet)
-        .then(({ data }) => {
-          const dataSearch = data.data;
-          return Promise.all(
-            dataSearch.map((image: any) => {
-              return filesApi
-                .getFile(image.imageUrl)
-                .then(({ data }) => {
-                  return {
-                    ...image,
-                    imageUrl: data.data,
-                  };
-                })
-                .catch((error) => {
-                  return {
-                    ...image,
-                    imageUrl: "NoImage",
-                  };
-                });
-            })
-          );
-        })
-        .then((updatedImages) => {
-          setSearchResultsSet(updatedImages);
-        })
-        .catch((error) => {
-          setSearchResultsSet([]);
-        })
-        .finally(() => {});
-    };
     if (debouncedSearchTermSet) {
       handleSearchSet();
     }
   }, [debouncedSearchTermSet, searchTermSet]);
+
+  useEffect(() => {
+    if (debouncedSearchTerm) {
+    }
+  }, [debouncedSearchTerm, searchTerm]);
 
   //  ========================================================= các hàm để thêm sản phẩm  và số lượng vào bộ sản phẩm  =========================================================
 
@@ -519,11 +554,11 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                           <CardHeader className="font-semibold text-xl">
                             <span>Thông tin sản phẩm</span>
                           </CardHeader>
-                          <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                          <div className=" w-full grid grid-cols-1 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                             {searchResults !== null ? (
                               searchResults.map((product) => (
                                 <Card
-                                  className="flex gap-2 shadow-md group relative"
+                                  className="h-[90px] flex gap-2 shadow-md group relative"
                                   key={product.id}
                                 >
                                   <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">

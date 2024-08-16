@@ -25,7 +25,7 @@ export const CheckPermissionEnter = (dataPer: any) => {
         // window.location.href = "/sign-in";
       }
     }
-    if (user.roleId === dataPer) {
+    if (user?.roleId === dataPer) {
       // console.log("User has permission to enter.");
     } else {
       console.log("User does not have permission to enter.");

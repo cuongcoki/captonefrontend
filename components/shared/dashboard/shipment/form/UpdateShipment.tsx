@@ -320,7 +320,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-
+  console.log("dataSID");
   const handleStatusChange = (value: number) => {
     setCompanyType(value);
   };
@@ -856,6 +856,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
       .then(({ data }) => {
         ForceRender();
         form.reset();
+        setFetchTrigger((prev) => prev + 1);
         setShipmentDetailRequests([]);
         setOpen(false);
         if (data.isSuccess) {
@@ -1047,7 +1048,10 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                               />
                                             </SelectTrigger>
                                           </FormControl>
-                                          <SelectContent>
+                                          <SelectContent
+                                            className="md:w-[350px] w-[300px]"
+                                            align="center"
+                                          >
                                             {company.map((item) => (
                                               <SelectItem
                                                 key={item.id}
@@ -1138,7 +1142,10 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                               />
                                             </SelectTrigger>
                                           </FormControl>
-                                          <SelectContent>
+                                          <SelectContent
+                                            className="md:w-[350px] w-[300px]"
+                                            align="center"
+                                          >
                                             {company1.map((item) => (
                                               <SelectItem
                                                 key={item.id}
@@ -1287,17 +1294,12 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                       mode="single"
                                       selected={
                                         field.value
-                                          ? new Date(
-                                              new Date(field.value).setDate(
-                                                new Date(
-                                                  field.value
-                                                ).getDate() - 1
-                                              )
-                                            )
+                                          ? new Date(field.value.split("T")[0])
                                           : undefined
                                       }
                                       onSelect={(date: any) => {
                                         if (date) {
+                                          // date.setDate(date.getDate() - 1);
                                           // Đảm bảo giờ là 00:00:00 để tránh vấn đề múi giờ
                                           date.setHours(0, 0, 0, 0);
                                           const utcDate = new Date(
@@ -1399,7 +1401,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                       </Select>
                                     </div>
 
-                                    <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                    <div className=" w-full grid grid-cols-1 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                       {dataP && dataP.length > 0 ? (
                                         dataP.map((itemP) => (
                                           <Card
@@ -1505,7 +1507,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                       />
                                     </div>
 
-                                    <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                    <div className=" w-full grid grid-cols-1 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                       {dataPF && dataPF.length > 0 ? (
                                         dataPF.map((itemPF) => (
                                           <Card
@@ -1629,7 +1631,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                   }
                                   className="md:w-[300px] w-full mb-3"
                                 />
-                                <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                <div className=" w-full grid grid-cols-1 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                   {dataM.map((itemM) => (
                                     <Card
                                       className="h-[90px]  flex gap-2 shadow-md group relative"

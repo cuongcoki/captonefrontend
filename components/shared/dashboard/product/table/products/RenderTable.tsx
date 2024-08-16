@@ -76,6 +76,8 @@ export default function RenderTableProduct() {
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
+        setCurrentPage(1);
+        setTotalPages(1);
         setData([]);
       } finally {
         setLoading(false);
@@ -140,6 +142,7 @@ export default function RenderTableProduct() {
       <div className="overflow-x-auto">
         <DataTable columns={columns} data={data} />
         <DataTablePagination
+          data={data}
           currentPage={currentPage}
           totalPages={totalPages}
           setCurrentPage={setCurrentPage}

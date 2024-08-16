@@ -191,7 +191,7 @@ export default function CreateOrder() {
     };
 
     handleSearch();
-  }, [searchTerm]);
+  }, [searchTerm, pageIndex, pageSizeS]);
 
   useEffect(() => {
     const handleSearchSet = () => {
@@ -724,7 +724,7 @@ export default function CreateOrder() {
                                   <CardHeader className="font-semibold text-xl">
                                     <span>Thông tin sản phẩm</span>
                                   </CardHeader>
-                                  <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                  <div className=" w-full grid grid-cols-1 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                     {searchResults !== null ? (
                                       searchResults.map((product) => (
                                         <Card
