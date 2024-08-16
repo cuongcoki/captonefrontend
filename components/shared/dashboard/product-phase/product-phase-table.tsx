@@ -122,6 +122,7 @@ export default function ProductPhaseTable({
       }
     };
     fetchData();
+    console.log("PRODUCT PHASE RERENDER");
   }, [router, params, pathname, setTableData, setCompanyData, force]);
 
   const formatCurrency = (value: any): string => {

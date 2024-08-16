@@ -998,7 +998,7 @@ export default function CreateShipment() {
                                               />
                                             </SelectTrigger>
                                           </FormControl>
-                                          <SelectContent>
+                                          <SelectContent className="md:w-[350px] w-[300px]"  align="center">
                                             {company.map((item) => (
                                               <SelectItem
                                                 key={item.id}
@@ -1078,7 +1078,7 @@ export default function CreateShipment() {
                                               />
                                             </SelectTrigger>
                                           </FormControl>
-                                          <SelectContent>
+                                          <SelectContent className="md:w-[350px] w-[300px]"  align="center">
                                             {company1.map((item) => (
                                               <SelectItem
                                                 key={item.id}
@@ -1299,7 +1299,7 @@ export default function CreateShipment() {
                                         </Select>
                                       </div>
 
-                                      <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                      <div className=" w-full grid grid-cols-1 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                         {dataP && dataP.length > 0 ? (
                                           dataP.map((itemP) => (
                                             <Card className="h-[90px] flex gap-2 shadow-md group relative" key={itemP.id+ itemP.phaseId}>
@@ -1379,7 +1379,7 @@ export default function CreateShipment() {
 
                                       </div>
 
-                                      <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                      <div className=" w-full grid grid-cols-1 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                         {dataPF && dataPF.length > 0 ? (
                                           dataPF.map((item) => (
                                             <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
@@ -1474,7 +1474,7 @@ export default function CreateShipment() {
                                   onChange={(e) => setSearchTermM(e.target.value)}
                                   className="md:w-[300px] w-full mb-3"
                                 />
-                                <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                <div className=" w-full grid grid-cols-1 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                   {dataM.map((item) => (
                                     <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
                                       <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">

@@ -60,7 +60,7 @@ export default function RenderTableProduct() {
                   console.error("Error getting file:", error);
                   return {
                     ...image,
-                    imageUrl: "", 
+                    imageUrl: "",
                   };
                 }
               })
@@ -76,6 +76,8 @@ export default function RenderTableProduct() {
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
+        setCurrentPage(1);
+        setTotalPages(1);
         setData([]);
       } finally {
         setLoading(false);
@@ -88,12 +90,12 @@ export default function RenderTableProduct() {
   const handleIsInProcessingChange = (value: string) => {
     setIsInProcessingString(value);
     setIsInProcessing(value === "true");
-    updatePathname(); 
+    updatePathname();
   };
 
   const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    updatePathname(); 
+    updatePathname();
   };
 
   const updatePathname = () => {
@@ -140,6 +142,7 @@ export default function RenderTableProduct() {
       <div className="overflow-x-auto">
         <DataTable columns={columns} data={data} />
         <DataTablePagination
+          data={data}
           currentPage={currentPage}
           totalPages={totalPages}
           setCurrentPage={setCurrentPage}

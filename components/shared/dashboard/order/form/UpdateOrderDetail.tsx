@@ -196,7 +196,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     };
 
     handleSearch();
-  }, [searchTerm]);
+  }, [searchTerm,pageIndex,pageSizeS]);
 
   // console.log("dataP", searchResults)
 
@@ -553,10 +553,10 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                           <CardHeader className="font-semibold text-xl">
                             <span>Thông tin sản phẩm</span>
                           </CardHeader>
-                          <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                          <div className=" w-full grid grid-cols-1 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                             {searchResults !== null ? (
                               searchResults.map((product) => (
-                                <Card className="flex gap-2 shadow-md group relative" key={product.id} >
+                                <Card className="h-[90px] flex gap-2 shadow-md group relative" key={product.id} >
                                   <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
 
                                     <ImageDisplayDialog

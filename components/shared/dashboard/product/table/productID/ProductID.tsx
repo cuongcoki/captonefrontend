@@ -5,12 +5,7 @@ import { useEffect, useState } from "react";
 
 // ** import UI
 import { Label } from "@/components/ui/label";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import {
   Table,
@@ -76,8 +71,7 @@ export default function ProductIDPage() {
           const userData = res.data.data;
           setProductId(userData);
         })
-        .catch((error) => {
-        })
+        .catch((error) => {})
         .finally(() => {
           setLoading(false);
         });
@@ -175,10 +169,11 @@ export default function ProductIDPage() {
                     <div className="">Trạng Thái:</div>
                     <div className="">
                       <span
-                        className={`w-[40%] px-2 py-2 rounded-full ${productId?.isInProcessing
-                          ? "bg-primary text-white"
-                          : "bg-yellow-200 text-black"
-                          }`}
+                        className={`w-[40%] px-2 py-2 rounded-full ${
+                          productId?.isInProcessing
+                            ? "bg-primary text-white"
+                            : "bg-yellow-200 text-black"
+                        }`}
                       >
                         {productId?.isInProcessing
                           ? "Đang xử lý"
@@ -200,23 +195,30 @@ export default function ProductIDPage() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent >
+              <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="hidden sm:table-cell">Tên</TableHead>
+                      <TableHead className="hidden sm:table-cell">
+                        Tên
+                      </TableHead>
                       <TableHead>Mô tả</TableHead>
                       <TableHead>Giá tiền</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {productId?.productPhaseSalaries
-                      ?.sort(
-                        (a: any, b: any) =>
-                          b.salaryPerProduct - a.salaryPerProduct
-                      )
+                      ?.sort((a: any, b: any) => {
+                        if (a.phaseName < b.phaseName) {
+                          return -1;
+                        }
+                        if (a.phaseName > b.phaseName) {
+                          return 1;
+                        }
+                        return 0;
+                      })
                       .map((item: any) => (
-                        <TableRow key={item.phaseId} >
+                        <TableRow key={item.phaseId}>
                           <TableCell className="hidden sm:block">
                             <div className="py-2 rounded-md">
                               {item?.phaseName}

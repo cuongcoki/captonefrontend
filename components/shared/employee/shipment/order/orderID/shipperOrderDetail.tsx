@@ -108,7 +108,7 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({ ShipOrderID }) =>
         };
 
         fetchDataShipperShipOrderId();
-    }, [data]);
+    }, [data,ShipOrderID]);
 
     // các hàm hiển thị sao cho oke
     function formatDate(isoString: string) {

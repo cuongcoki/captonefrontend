@@ -57,7 +57,7 @@ export default function UpdateAttendanceEm({
   slotProp: string;
   warehouseProp: string;
 }): JSX.Element {
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const userData = JSON.parse(localStorage?.getItem("userData") || "{}");
 
   const colorSlaryByProduct = "bg-white";
   function formatDate(dateStr: String) {
@@ -79,12 +79,10 @@ export default function UpdateAttendanceEm({
   const ForceRender = () => {
     setForce(force + 1);
   };
-  const CheckUser = useAuth();
+  // const CheckUser = useAuth();
   const [date, setDate] = useState<string>(formatDate(dateProp));
   const [slot, setSlot] = useState<string>(slotProp);
-  const [warehouse, setWarehouse] = useState<string>(
-    String(CheckUser.user?.companyId)
-  );
+  const [warehouse, setWarehouse] = useState<string>(userData.companyId);
   const [users, setUsers] = useState<User[]>(user);
   const [isCreated, setIsCreated] = useState(false);
   const pathname = usePathname();
@@ -363,7 +361,7 @@ export default function UpdateAttendanceEm({
   return (
     <div>
       <HeaderComponent
-        title={`Điểm danh nhân viên - ${CheckUser.user?.companyName}`}
+        title={`Điểm danh nhân viên - ${userData.companyName}`}
         description={`Điểm danh nhân viên ngày ${dateProp} - ${
           comboboxData.find((item) => item.value === slotProp)?.label
         }.`}

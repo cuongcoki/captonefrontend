@@ -87,7 +87,6 @@ export const ChangeStatusShipment: React.FC<ShipmentIDProps> = ({
     // if (shipmentID.status === 1) {
     //     return toast.error("Đơn hàng đang trong quá trình vận chuyển ,thay đổi trạng thái sẽ dẫn đến tình trạng nhầm lẫn của của nhận viên vận chuyển")
     // }
-    console.log("handleSubmitOrderStatus");
     const requestBody = {
       shipmentId: shipmentID.id,
       status: valueStatus,

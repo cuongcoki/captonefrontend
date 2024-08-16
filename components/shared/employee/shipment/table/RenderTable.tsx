@@ -20,7 +20,7 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => { },
+  forceUpdate: () => {},
 });
 
 const enumStatus = [
@@ -32,13 +32,13 @@ const enumStatus = [
   },
   {
     statusName: "INPROGRESS",
-    description: "Đang thực hiện",
+    description: "Đang được giao",
     id: 1,
     value: "1",
   },
   {
     statusName: "COMPLETED",
-    description: "Đã hoàn thành",
+    description: "Đã giao thành công",
     id: 2,
     value: "2",
   },
@@ -77,10 +77,9 @@ export default function RenderTableShipment() {
         console.log("DATA SHIPMENT", response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
-        
       } catch (error: any) {
         // toast.error(error.response.data.message)
-        setData([])
+        setData([]);
         console.error("Error fetching order data:", error);
       } finally {
         setLoading(false);

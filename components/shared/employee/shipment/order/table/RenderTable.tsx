@@ -24,31 +24,31 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => { },
+  forceUpdate: () => {},
 });
 
 const enumStatus = [
   {
     statusName: "SIGNED",
-    description: "Đã nhận đơn hàng",
+    description: "Đang đợi giao",
     id: 0,
     value: "0",
   },
   {
     statusName: "INPROGRESS",
-    description: "Đang thực hiện",
+    description: "Đang được giao",
     id: 1,
     value: "1",
   },
   {
     statusName: "COMPLETED",
-    description: "Đã hoàn thành",
+    description: "Đã giao thành công",
     id: 2,
     value: "2",
   },
   {
     statusName: "CANCELLED",
-    description: "Đã hủy đơn hàng",
+    description: "Đã hủy ",
     id: 3,
     value: "3",
   },
@@ -97,7 +97,7 @@ export default function RenderTableOrderShipment() {
           currentPage,
           pageSize,
           status,
-          shipDate ? formatDate(shipDate) : null,
+          shipDate ? formatDate(shipDate) : null
         );
         setData(response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
@@ -108,10 +108,8 @@ export default function RenderTableOrderShipment() {
       }
     };
 
-
-
     fetchDataOrder();
-  }, [currentPage, pageSize, companyName, status, force]);
+  }, [currentPage, pageSize, companyName, status, force,shipDate]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
@@ -130,7 +128,6 @@ export default function RenderTableOrderShipment() {
     setCurrentPage(1);
   };
 
-
   const formatDate = (date: Date | null) => {
     if (!date) return "";
     const day = date.getDate().toString().padStart(2, "0");
@@ -146,7 +143,6 @@ export default function RenderTableOrderShipment() {
           <MyContext.Provider value={{ forceUpdate }}>
             <div className="grid gird-col-span-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col xl:flex-row items-start sm:items-center gap-4">
-
                 <Select
                   value={status || ""}
                   onValueChange={(value) => handleStatusChange(value)}
@@ -171,12 +167,10 @@ export default function RenderTableOrderShipment() {
                   className="w-full"
                   onDayClick={handleStartDateChange}
                 />
-
               </div>
             </div>
           </MyContext.Provider>
         </div>
-
       </div>
 
       <MyContext.Provider value={{ forceUpdate }}>

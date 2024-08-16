@@ -48,17 +48,12 @@ const ImageDisplayDialog: React.FC<ImageDisplayProps> = ({ images, checkProduct 
                     </div>
                     <Separator className="opacity-60" />
                     <div className="grid gap-4 ">
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <h4 className="font-medium leading-none">Thông tin sản phẩm</h4>
-                            </div>
-                        </div>
-                        <Separator className="opacity-60" />
                         <div className="grid gap-2">
                             <div className="flex flex-col w-full text-sm">
                                 <span className="font-light ">Mô tả:</span>
                                 <span className="font-light text-primary">{images.description}</span>
                             </div>
+                            <Separator className="opacity-60" />
                             <div className="flex items-center justify-between">
 
                                 <span className="cursor-pointer flex items-center px-2 py-1 rounded-md text-white hover:bg-primary/90 bg-primary" onClick={handleGotoPID}>

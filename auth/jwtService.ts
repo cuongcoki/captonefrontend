@@ -1,11 +1,12 @@
 // ** Axios import
 import axios from "axios";
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from "next/navigation";
 // ** Config import
 import jwtConfig from "@/configs/auth";
 import { authService } from "./authService";
 import { setupCache } from "axios-cache-interceptor";
 import toast from "react-hot-toast";
+var count = 0;
 const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
@@ -39,8 +40,12 @@ axiosClient.interceptors.response.use(
     if (error.response) {
       // const { code } = error
       const config = error.config;
-      if (error.response.status === 401) {
-        toast.error(error.response.data.message)
+      if (error?.response?.status === 401) {
+        if (count > 0) {
+          return;
+        }
+        count++;
+        toast.error("Hết phiên đăng nhập, vui lòng đăng nhập lại");
         return authService
           .refreshToken()
           .then((rs) => {
@@ -56,7 +61,7 @@ axiosClient.interceptors.response.use(
             } else {
               console.log("loi2");
               authService.removeLocalStorageWhenLogout();
-              if (window.location.pathname !== '/sign-in') {
+              if (window.location.pathname !== "/sign-in") {
                 window.location.href = jwtConfig.loginEndpoint;
               }
             }
@@ -64,15 +69,17 @@ axiosClient.interceptors.response.use(
           .catch((err) => {
             console.log("loi1");
             console.log(err);
-            toast.error(err.response.data.message)
+            // toast.error(err.response.data.message);
             authService.removeLocalStorageWhenLogout();
             const currentPath = window.location.pathname;
 
             // Kiểm tra nếu người dùng không ở trang /forgot-password hoặc /sign-in
-            if (currentPath !== '/forgot-password' && currentPath !== '/sign-in') {
+            if (
+              currentPath !== "/forgot-password" &&
+              currentPath !== "/sign-in"
+            ) {
               window.location.href = jwtConfig.loginEndpoint;
             }
-           
           });
       }
 

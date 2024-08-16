@@ -239,7 +239,8 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
     // ** các hàm sử lý logic
     const [shipOrderDetailRequests, setShipOrderDetailRequests] = useState<ShipOrderDetailRequest[]>([]);
     const [productDetail, setProductDetail] = useState<any[]>([]);
-
+    console.log("productDetail",productDetail)
+    console.log("shipOrderDetailRequests",shipOrderDetailRequests)
     // Hàm thêm sản phẩm
     const handleAddProducts = (item: any, imgProducts: string, itemId: string, itemKind: number) => {
         const itemExists = shipOrderDetailRequests.some((item) => item.itemId === itemId);
@@ -321,8 +322,9 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                             );
 
                             return {
+                                item: item.product === null ? item.set : item.product,
                                 itemId: item.product?.id || item.set?.id || "",
-                                imgProducts,
+                                imgProducts:imgProducts[0],
                                 itemKind: item.product ? 0 : 1,
                             };
                         })
@@ -622,7 +624,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                                             <PopoverContent className="w-auto p-0" align="start">
                                                                 <Calendar
                                                                     mode="single"
-                                                                    selected={field.value ? new Date(new Date(field.value).setDate(new Date(field.value).getDate() - 1)) : undefined}
+                                                                    selected={field.value ? new Date(field.value.split('T')[0]) : undefined} 
                                                                     onSelect={(date: any) => {
                                                                         if (date) {
                                                                             // Đảm bảo giờ là 00:00:00 để tránh vấn đề múi giờ
@@ -745,8 +747,8 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                                         <TableHeader>
                                                             <TableRow>
                                                                 <TableHead className="w-[100px]">Ảnh</TableHead>
-                                                                {/* <TableHead >Mã</TableHead>
-                                                                <TableHead >Tên</TableHead> */}
+                                                                <TableHead >Mã</TableHead>
+                                                                <TableHead >Tên</TableHead>
                                                                 <TableHead>Số lượng</TableHead>
                                                                 <TableHead>Sản phẩm</TableHead>
                                                             </TableRow>
@@ -757,19 +759,19 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                                                     <TableRow key={proDetail.itemId}>
                                                                         <TableCell className="font-medium">
                                                                             <div className="w-[50px] h-[50px] rounded-md shadow-md">
-                                                                                <Image src={proDetail.imgProducts[0]} width={900} height={900} alt="ảnh sản phẩm" className="w-ful h-ful object-contain" />
+                                                                                <Image src={proDetail.imgProducts} width={900} height={900} alt="ảnh sản phẩm" className="w-ful h-ful object-contain" />
                                                                             </div>
-                                                                        </TableCell>
-                                                                        {/* <TableCell className="font-medium">
-                                                                            {proDetail.itemKind === 0
-                                                                                ? `${proDetail?.item?.productCode}`
-                                                                                : `${proDetail?.item?.setCode}`}
                                                                         </TableCell>
                                                                         <TableCell className="font-medium">
                                                                             {proDetail.itemKind === 0
-                                                                                ? `${proDetail?.item?.productName}`
-                                                                                : `${proDetail?.item?.setName}`}
-                                                                        </TableCell> */}
+                                                                                ? `${proDetail?.item?.productCode || proDetail?.item?.code}`
+                                                                                : `${proDetail?.item?.setCode || proDetail?.item?.code}`}
+                                                                        </TableCell>
+                                                                        <TableCell className="font-medium">
+                                                                            {proDetail.itemKind === 0
+                                                                                ? `${proDetail?.item?.productName || proDetail?.item?.name}`
+                                                                                : `${proDetail?.item?.setName || proDetail?.item?.name}`}
+                                                                        </TableCell>
                                                                         <TableCell>
                                                                             <input
                                                                                 type="number"

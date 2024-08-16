@@ -6,14 +6,20 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useRouter } from 'next/navigation';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
-
 
 export function DataTable<TData, TValue>({
   columns,
@@ -30,8 +36,8 @@ export function DataTable<TData, TValue>({
   const router = useRouter();
   const handleGotoDetail = (id: string) => {
     router.push(`/dashboard/order/${id}`);
-    console.log('id', id)
-  }
+    console.log("id", id);
+  };
 
   return (
     <div className="rounded-md border">
@@ -40,10 +46,16 @@ export function DataTable<TData, TValue>({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id} className="py-1 text-inherit text-center">
+                <TableHead
+                  key={header.id}
+                  className="py-1 text-inherit text-center"
+                >
                   {header.isPlaceholder
                     ? null
-                    : flexRender(header.column.columnDef.header, header.getContext())}
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                 </TableHead>
               ))}
             </TableRow>
@@ -53,18 +65,18 @@ export function DataTable<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
               >
-
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-3 text-center cursor-pointer" >
+                  <TableCell
+                    key={cell.id}
+                    className="py-3 text-center cursor-pointer"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
-
               </TableRow>
             ))
           ) : (

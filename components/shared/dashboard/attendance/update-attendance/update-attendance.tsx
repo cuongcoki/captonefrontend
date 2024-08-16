@@ -223,7 +223,7 @@ export default function UpdateAttendance({
           setTableData(attendanceData);
         })
         .catch((error) => {
-          if (404 === error.response.data.status) {
+          if (404 === error?.response?.data?.status) {
             const attendanceData = userD?.map((item): AttendanceDetailType => {
               return {
                 userID: item.id,
@@ -341,7 +341,7 @@ export default function UpdateAttendance({
           setIsCreated(true);
         })
         .catch((error) => {
-          if (error.response.data.error) {
+          if (error?.response?.data?.error) {
             for (const key in error.response.data.error) {
               toast.error(error.response.data.error[key][0]);
             }
@@ -362,7 +362,7 @@ export default function UpdateAttendance({
           toast.success(data.message);
         })
         .catch((error) => {
-          if (error.response.data.error) {
+          if (error?.response?.data?.error) {
             for (const key in error.response.data.error) {
               toast.error(error.response.data.error[key][0]);
             }

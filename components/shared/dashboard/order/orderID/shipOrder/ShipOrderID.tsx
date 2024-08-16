@@ -81,8 +81,8 @@ export default function ShipOrderID({ item }: ShipOrderIDProps) {
         filesApi.getFile(String(item?.set?.imageUrl)).then((res) => {
             setImageSet(res.data.data);
         });
-      }, [imageSet]);
-      console.log("imageSet",imageSet)
+    }, [imageSet, item?.set?.imageUrl]);
+    console.log("imageSet", imageSet)
     return (
         <>
             <Dialog.Root open={open} onOpenChange={handleOnDialog}>
@@ -183,7 +183,7 @@ export default function ShipOrderID({ item }: ShipOrderIDProps) {
                                                         >
                                                             <span>
                                                                 {item?.shipperId}
-                                                             
+
                                                             </span>
                                                         </Link>
                                                         <span>{item?.shipperName}</span>
