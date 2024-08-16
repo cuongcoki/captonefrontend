@@ -109,7 +109,7 @@ export default function RenderTableOrderShipment() {
     };
 
     fetchDataOrder();
-  }, [currentPage, pageSize, companyName, status, force]);
+  }, [currentPage, pageSize, companyName, status, force,shipDate]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);

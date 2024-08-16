@@ -262,7 +262,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
 
   useEffect(() => {
     handleSearch();
-  }, [searchTerm]);
+  }, [searchTerm,handleSearch]);
 
   // ** các hàm để thêm sản phẩm và số lượng vào bộ sản phẩm
 
@@ -477,7 +477,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
 
   useEffect(() => {
     setCheckImageChange(imageRequests)
-  }, [])
+  }, [imageRequests])
 
   const handleOffDialog = () => {
     //add product

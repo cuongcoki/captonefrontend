@@ -86,11 +86,19 @@ export const SetForm = () => {
   });
 
   // ** các hàm để sử lý đăng ảnh
- 
+
   // ** Xử lý khi người dùng tải lên hình ảnh mới
   const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
+
+      // Kiểm tra kích cỡ ảnh
+      const maxSize = 800 * 1024; // 800KB
+      if (file.size > maxSize) {
+        toast.error("Kích cỡ ảnh vượt quá 800KB. Vui lòng chọn ảnh khác.");
+        return;
+      }
+
       const newImageRequest = URL.createObjectURL(file);
       setImageRequests(newImageRequest);
       const extension = file.name.substring(file.name.lastIndexOf("."));
@@ -162,7 +170,7 @@ export const SetForm = () => {
     const handleSearch = () => {
       setLoading(true);
       productApi
-        .searchProductForSet(searchTerm,1,100)
+        .searchProductForSet(searchTerm, 1, 100)
         .then(({ data }) => {
           setSearchResults(data.data.data);
         })

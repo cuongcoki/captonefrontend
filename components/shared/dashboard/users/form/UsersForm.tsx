@@ -68,7 +68,7 @@ import { userApi } from "@/apis/user.api";
 // ** import Component
 import { UsersSchema } from "@/schema";
 import ImageDisplayAvatar from "./ImageDisplay";
-import { cn } from "@/lib/utils";
+import { cn, generateRandomString } from "@/lib/utils";
 import { companyApi } from "@/apis/company.api";
 
 // ** import Type
@@ -132,21 +132,19 @@ export const UsersForm = () => {
   };
 
   // ** các hàm để sử lý đăng ảnh
-  const generateRandomString = (length: number = 5) => {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
 
   // ** Xử lý khi người dùng tải lên hình ảnh mới
   const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
+
+      // Kiểm tra kích cỡ ảnh
+      const maxSize = 800 * 1024; // 800KB
+      if (file.size > maxSize) {
+        toast.error("Kích cỡ ảnh vượt quá 800KB. Vui lòng chọn ảnh khác.");
+        return;
+      }
+
       const newImageRequest = URL.createObjectURL(file);
       setImageRequests(newImageRequest);
       const extension = file.name.substring(file.name.lastIndexOf("."));

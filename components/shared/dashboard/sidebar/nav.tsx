@@ -144,7 +144,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
     filesApi.getFile(String(user.user?.avatar)).then((res) => {
       setAvatar(res.data.data);
     });
-  }, [avatar]);
+  }, [avatar,user.user?.avatar]);
 
   const formatDate = (dateString: any) => {
     try {
