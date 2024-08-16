@@ -183,7 +183,7 @@ export default function UpdateAttendance({
         console.log("Get Image", res.data.data);
         return res.data.data;
       } catch (error: any) {
-        console.log("Error get image: ", error.response.data);
+        console.log("Error get image: ", error?.response?.data);
       }
     };
     const setOfUser = new Set<string>();

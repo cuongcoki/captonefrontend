@@ -33,13 +33,13 @@ const enumStatus = [
   },
   {
     statusName: "INPROGRESS",
-    description: "Đang thực hiện",
+    description: "Đang được giao",
     id: 1,
     value: "1",
   },
   {
     statusName: "COMPLETED",
-    description: "Đã hoàn thành",
+    description: "Đã giao thành công",
     id: 2,
     value: "2",
   },

@@ -17,12 +17,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
-
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -85,7 +84,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Calendar } from "@/components/ui/calendar";
 import toast from "react-hot-toast";
-
 
 import ImageIconShipmentForm from "./ImageIconShipmentForm";
 import ImageIconMaterial from "./ImageIconMaterial";
@@ -284,7 +282,7 @@ export default function CreateShipment() {
     ShipmentDetailRequest[]
   >([]);
   const [productDetail, setProductDetail] = useState<any[]>([]);
-  console.log("shipmentDetailRequests", shipmentDetailRequests)
+  console.log("shipmentDetailRequests", shipmentDetailRequests);
   // Hàm thêm sản phẩm
   const handleAddProducts = (
     item: any,
@@ -292,11 +290,13 @@ export default function CreateShipment() {
     itemId: string,
     itemKind: number,
     phaseId?: any,
-    price?: any,
+    price?: any
   ) => {
-
-    if (itemKind === 1 && shipmentDetailRequests.some((item) => item.itemId === itemId)) {
-      return toast.error("Nguyên vật liệu này đã được thêm")
+    if (
+      itemKind === 1 &&
+      shipmentDetailRequests.some((item) => item.itemId === itemId)
+    ) {
+      return toast.error("Nguyên vật liệu này đã được thêm");
     }
 
     setShipmentDetailRequests((prev: any) => [
@@ -342,7 +342,7 @@ export default function CreateShipment() {
     name: keyof ShipmentDetailRequest,
     value: any,
     index: number,
-    kindOfShip?: number,
+    kindOfShip?: number
   ) => {
     setShipmentDetailRequests((prev) =>
       prev.map((item, i) => {
@@ -359,7 +359,6 @@ export default function CreateShipment() {
     setShipmentDetailRequests([]);
     setProductDetail([]);
   };
-
 
   const handleOnDialog = () => {
     setOpen(true);
@@ -387,13 +386,18 @@ export default function CreateShipment() {
   const [pageSizePF, setPageSizePF] = useState<number>(40);
   const [companyIdPF, setCompanyIdPF] = useState<string | undefined>();
   const [dataPF, setDataPF] = useState<DataProduct[]>([]);
-  console.log("companyIdPF", companyIdPF)
+  console.log("companyIdPF", companyIdPF);
   //call data product phase
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
       productPhaseApi
-        .searchProductPhaseShip(searchTermPF, companyIdPF, currentPagePF, pageSizePF)
+        .searchProductPhaseShip(
+          searchTermPF,
+          companyIdPF,
+          currentPagePF,
+          pageSizePF
+        )
         .then(({ data }) => {
           setDataPF(data.data.data);
         })
@@ -423,13 +427,18 @@ export default function CreateShipment() {
           newData.map(async (item: any) => {
             if (item.image) {
               try {
-                const response = await filesApi.getFile(item.image.trim() === "" ? "%20" : item.image.trim());
+                const response = await filesApi.getFile(
+                  item.image.trim() === "" ? "%20" : item.image.trim()
+                );
                 return {
                   ...item,
                   image: response?.data?.data || "", // Nếu không có dữ liệu thì trả về chuỗi rỗng
                 };
               } catch (error) {
-                console.error(`Failed to fetch image for item: ${item.id}`, error);
+                console.error(
+                  `Failed to fetch image for item: ${item.id}`,
+                  error
+                );
                 return {
                   ...item,
                   image: "", // Xử lý lỗi và trả về chuỗi rỗng nếu xảy ra lỗi
@@ -439,7 +448,6 @@ export default function CreateShipment() {
             return item; // Nếu không có image, trả về item ban đầu
           })
         );
-
 
         setDataM(updatedData);
         setCurrentPageM(response.data.data.currentPage);
@@ -559,7 +567,7 @@ export default function CreateShipment() {
   // }, [currentPageP, pageSizeP, searchTerm, isInProcessing]);
   const handleSelectChange = (value: string) => {
     if (companyType === 2) {
-      setCompanyIdPF(value)
+      setCompanyIdPF(value);
     }
     // Cập nhật giá trị form từ dropdown
     setCompanyId(value);
@@ -587,10 +595,9 @@ export default function CreateShipment() {
     handleSearch();
   }, [searchTerm, phaseId, companyId, currentPageP, pageSizeP]);
 
-  console.log("companyId", companyId)
-  console.log("pahsseId", phaseId)
-  console.log("dataP", dataP)
-
+  console.log("companyId", companyId);
+  console.log("pahsseId", phaseId);
+  console.log("dataP", dataP);
 
   // ** form
   const form = useForm({
@@ -633,9 +640,14 @@ export default function CreateShipment() {
     };
 
     // Sử dụng hàm để gộp và tóm tắt các yêu cầu
-    const updatedShipmentDetailRequests = groupAndSummarizeRequests(shipmentDetailRequests);
+    const updatedShipmentDetailRequests = groupAndSummarizeRequests(
+      shipmentDetailRequests
+    );
 
-    console.log("Updated shipmentDetailRequests", updatedShipmentDetailRequests);
+    console.log(
+      "Updated shipmentDetailRequests",
+      updatedShipmentDetailRequests
+    );
 
     let hasError = false;
 
@@ -643,8 +655,9 @@ export default function CreateShipment() {
       if (!request.itemId) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -668,8 +681,9 @@ export default function CreateShipment() {
       } else if (!request.phaseId && request.kindOfShip === 0) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -697,8 +711,9 @@ export default function CreateShipment() {
       } else if (request.quantity <= 0) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -730,8 +745,9 @@ export default function CreateShipment() {
         // Sửa điều kiện ở đây
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -759,8 +775,9 @@ export default function CreateShipment() {
       } else if (request.materialPrice <= 0 && request.kindOfShip === 1) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -794,7 +811,7 @@ export default function CreateShipment() {
     const originalDate = data.shipDate;
     const date = new Date(originalDate);
     date.setUTCHours(23, 59, 59, 0);
-    const formattedShipDate = date.toISOString().replace('.000', '');
+    const formattedShipDate = date.toISOString().replace(".000", "");
 
     // Gọi hàm kiểm tra
     const requestBody = {
@@ -804,7 +821,7 @@ export default function CreateShipment() {
       shipDate: formattedShipDate,
       shipmentDetailRequests: updatedShipmentDetailRequests,
     };
-    console.log("requestBody", requestBody)
+    console.log("requestBody", requestBody);
     setLoading(true);
     shipmentApi
       .createShipment(requestBody)
@@ -863,20 +880,20 @@ export default function CreateShipment() {
   };
 
   const handleClearForm = () => {
-    setOpen(false)
-    setOpenAlert(false)
+    setOpen(false);
+    setOpenAlert(false);
     setFetchTrigger((prev) => prev + 1);
     form.reset();
     setShipmentDetailRequests([]);
     setProductDetail([]);
     setCompanyId(undefined);
     setPhaseId(undefined);
-
-  }
+  };
 
   const handleOffDialog = () => {
     // Kiểm tra xem mảng có rỗng hay không
-    const isDetailsProEmpty = Array.isArray(productDetail) && productDetail.length === 0;
+    const isDetailsProEmpty =
+      Array.isArray(productDetail) && productDetail.length === 0;
 
     // Kiểm tra giá trị cụ thể của form
     const isFromIdIdEmpty = form.getValues().fromId === "";
@@ -885,36 +902,47 @@ export default function CreateShipment() {
     const isToIdEmpty = form.getValues().toId === "";
 
     // Nếu tất cả các trường trong form đều trống hoặc không có giá trị và các mảng rỗng
-    if (isDetailsProEmpty && isFromIdIdEmpty && isShipDateEmpty && isShipperIdEmpty && isToIdEmpty) {
+    if (
+      isDetailsProEmpty &&
+      isFromIdIdEmpty &&
+      isShipDateEmpty &&
+      isShipperIdEmpty &&
+      isToIdEmpty
+    ) {
       setOpen(false);
     } else {
       setOpenAlert(true);
     }
   };
 
-  console.log("companyType", companyType)
+  console.log("companyType", companyType);
   const { pending } = useFormStatus();
   return (
     <>
-      {
-        openAlert && (
-          <AlertDialog open={openAlert} >
-            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-      }
+      {openAlert && (
+        <AlertDialog open={openAlert}>
+          <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Bạn có chắc chắn muốn tắt biểu mẫu này không ??
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
+                những dữ liệu mà bạn đã nhập
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleOffDialogA}>
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearForm}>
+                Tiếp tục
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
         <Dialog.Trigger className="rounded p-2 hover:bg-[#2bff7e] bg-[#24d369] ">
           <Plus />
@@ -987,14 +1015,12 @@ export default function CreateShipment() {
                                             handleSelectChange(value);
                                           }}
                                           defaultValue={field.value}
-
                                         >
                                           <FormControl>
                                             <SelectTrigger className="h-32">
                                               <SelectValue
                                                 placeholder="Hãy chọn công ty"
                                                 defaultValue={field.value}
-
                                               />
                                             </SelectTrigger>
                                           </FormControl>
@@ -1007,7 +1033,13 @@ export default function CreateShipment() {
                                               >
                                                 <div className="flex flex-col items-start  ">
                                                   <span>
-                                                    {`${limitLength(item.name, 30)} - ${limitLength(item.address, 30)}`}
+                                                    {`${limitLength(
+                                                      item.name,
+                                                      30
+                                                    )} - ${limitLength(
+                                                      item.address,
+                                                      30
+                                                    )}`}
                                                   </span>
                                                   <span className="text-sm text-gray-500">
                                                     <div className="flex flex-col items-start">
@@ -1015,7 +1047,13 @@ export default function CreateShipment() {
                                                         {item.directorName}
                                                       </span>
                                                       <span className="text-sm text-gray-500">
-                                                        {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
+                                                        {`${
+                                                          item.directorPhone
+                                                        } - ${
+                                                          !item.email
+                                                            ? "Không có"
+                                                            : item.email
+                                                        }`}
                                                       </span>
                                                     </div>
                                                   </span>
@@ -1074,7 +1112,6 @@ export default function CreateShipment() {
                                               <SelectValue
                                                 placeholder="Hãy chọn công ty"
                                                 defaultValue={field.value}
-
                                               />
                                             </SelectTrigger>
                                           </FormControl>
@@ -1087,7 +1124,13 @@ export default function CreateShipment() {
                                               >
                                                 <div className="flex flex-col items-start  ">
                                                   <span>
-                                                    {`${limitLength(item.name, 30)} - ${limitLength(item.address, 30)}`}
+                                                    {`${limitLength(
+                                                      item.name,
+                                                      30
+                                                    )} - ${limitLength(
+                                                      item.address,
+                                                      30
+                                                    )}`}
                                                   </span>
                                                   <span className="text-sm text-gray-500">
                                                     <div className="flex flex-col items-start">
@@ -1095,7 +1138,13 @@ export default function CreateShipment() {
                                                         {item.directorName}
                                                       </span>
                                                       <span className="text-sm text-gray-500">
-                                                        {`${item.directorPhone} - ${!item.email ? "Không có" : item.email}`}
+                                                        {`${
+                                                          item.directorPhone
+                                                        } - ${
+                                                          !item.email
+                                                            ? "Không có"
+                                                            : item.email
+                                                        }`}
                                                       </span>
                                                     </div>
                                                   </span>
@@ -1112,7 +1161,6 @@ export default function CreateShipment() {
                               </Card>
                             </div>
                           </div>
-
                         </CardContent>
                       </Card>
 
@@ -1191,7 +1239,8 @@ export default function CreateShipment() {
                                         variant={"outline"}
                                         className={cn(
                                           "w-full md:w-[240px] pl-3 text-left font-normal row-span-4",
-                                          !field.value && "text-muted-foreground"
+                                          !field.value &&
+                                            "text-muted-foreground"
                                         )}
                                       >
                                         {field.value ? (
@@ -1220,7 +1269,11 @@ export default function CreateShipment() {
                                       onSelect={(date: any) => {
                                         if (date) {
                                           const formattedDate = new Date(
-                                            Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+                                            Date.UTC(
+                                              date.getFullYear(),
+                                              date.getMonth(),
+                                              date.getDate()
+                                            )
                                           ).toISOString();
                                           field.onChange(formattedDate);
                                         }
@@ -1239,15 +1292,22 @@ export default function CreateShipment() {
                       <div className="w-full">
                         <Tabs defaultValue="account">
                           <TabsList className="grid w-[200px] grid-cols-2">
-                            <TabsTrigger value="account" className="data-[state=active]:shadow-lg">Sản phẩm</TabsTrigger>
-                            {
-                              companyType === 0 && companyType1 !== 0 ? (
-                                <TabsTrigger value="password" className="data-[state=active]:shadow-lg">Vật liệu</TabsTrigger>
-                              ) : (
-                                ""
-                              )
-                            }
-
+                            <TabsTrigger
+                              value="account"
+                              className="data-[state=active]:shadow-lg"
+                            >
+                              Sản phẩm
+                            </TabsTrigger>
+                            {companyType === 0 && companyType1 !== 0 ? (
+                              <TabsTrigger
+                                value="password"
+                                className="data-[state=active]:shadow-lg"
+                              >
+                                Vật liệu
+                              </TabsTrigger>
+                            ) : (
+                              ""
+                            )}
                           </TabsList>
                           <TabsContent value="account">
                             <Card>
@@ -1258,202 +1318,258 @@ export default function CreateShipment() {
                                 />
                               </CardHeader>
                               <CardContent className="space-y-2">
+                                {companyType === 0 ? (
+                                  <>
+                                    <div className="flex items-center mb-3 gap-3">
+                                      <Input
+                                        disabled={phaseId === undefined}
+                                        placeholder="Tìm kiếm sản phẩm..."
+                                        value={searchTerm}
+                                        onChange={(e) =>
+                                          setSearchTerm(e.target.value)
+                                        }
+                                        className="md:w-[300px] w-full "
+                                      />
 
-                                {
-                                  companyType === 0 ? (
-                                    <>
-                                      <div className="flex items-center mb-3 gap-3">
-                                        <Input
-                                          disabled={phaseId === undefined}
-                                          placeholder="Tìm kiếm sản phẩm..."
-                                          value={searchTerm}
-                                          onChange={(e) => setSearchTerm(e.target.value)}
-                                          className="md:w-[300px] w-full "
-                                        />
+                                      <Select
+                                        disabled={companyId === undefined}
+                                        defaultValue={phaseId}
+                                        onValueChange={(value) =>
+                                          setPhaseId(value)
+                                        }
+                                      >
+                                        <SelectTrigger className="w-[250px]">
+                                          <SelectValue placeholder="Giai đoạn sản phẩm" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          <SelectGroup>
+                                            {dataPh
+                                              .filter(
+                                                (item) =>
+                                                  item.id ===
+                                                    "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
+                                                  item.id ===
+                                                    "4d2113f9-2009-4c37-82b1-195ecbb9c706"
+                                              )
+                                              .map((item) => (
+                                                <SelectItem
+                                                  key={item.id}
+                                                  value={item.id}
+                                                >
+                                                  {item.name}-{item.description}
+                                                </SelectItem>
+                                              ))}
+                                          </SelectGroup>
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
 
-                                        <Select
-                                          disabled={companyId === undefined}
-                                          defaultValue={phaseId}
-                                          onValueChange={(value) => setPhaseId(value)}
-                                        >
-                                          <SelectTrigger className="w-[250px]">
-                                            <SelectValue placeholder="Giai đoạn sản phẩm" />
-                                          </SelectTrigger>
-                                          <SelectContent>
-                                            <SelectGroup>
-                                              {dataPh
-                                                .filter(item =>
-                                                  item.id === "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
-                                                  item.id === "4d2113f9-2009-4c37-82b1-195ecbb9c706"
-                                                )
-                                                .map(item => (
-                                                  <SelectItem
-                                                    key={item.id}
-                                                    value={item.id}
-                                                  >
-                                                    {item.name}-{item.description}
-                                                  </SelectItem>
-                                                ))}
-                                            </SelectGroup>
-                                          </SelectContent>
-                                        </Select>
-                                      </div>
-
-                                      <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
-                                        {dataP && dataP.length > 0 ? (
-                                          dataP.map((itemP) => (
-                                            <Card className="h-[90px] flex gap-2 shadow-md group relative" key={itemP.id+ itemP.phaseId}>
-                                              <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
-                                                <ImageIconShipmentForm dataImage={itemP} />
-                                                <Check
-                                                  className={`${shipmentDetailRequests.some((item1) => item1.itemId === itemP.id)
+                                    <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                      {dataP && dataP.length > 0 ? (
+                                        dataP.map((itemP) => (
+                                          <Card
+                                            className="h-[90px] flex gap-2 shadow-md group relative"
+                                            key={itemP.id + itemP.phaseId}
+                                          >
+                                            <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
+                                              <ImageIconShipmentForm
+                                                dataImage={itemP}
+                                              />
+                                              <Check
+                                                className={`${
+                                                  shipmentDetailRequests.some(
+                                                    (item1) =>
+                                                      item1.itemId === itemP.id
+                                                  )
                                                     ? "absolute top-0 right-0 bg-primary text-white"
                                                     : "hidden"
-                                                    }`}
-                                                />
-                                                <span
-                                                  className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                                  onClick={() => {
-                                                    handleAddProducts(
-                                                      itemP,
-                                                      itemP.imageUrl ? itemP.imageUrl : "",
-                                                      itemP?.id,
-                                                      productType,
-                                                      itemP?.phaseId,
-                                                      itemP.price,
-                                                    );
-                                                  }}
-                                                >
-                                                  <Plus className="text-white" />
+                                                }`}
+                                              />
+                                              <span
+                                                className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                onClick={() => {
+                                                  handleAddProducts(
+                                                    itemP,
+                                                    itemP.imageUrl
+                                                      ? itemP.imageUrl
+                                                      : "",
+                                                    itemP?.id,
+                                                    productType,
+                                                    itemP?.phaseId,
+                                                    itemP.price
+                                                  );
+                                                }}
+                                              >
+                                                <Plus className="text-white" />
+                                              </span>
+                                            </div>
+                                            <div className="flex flex-col w-full text-sm my-1">
+                                              <div className="flex gap-2">
+                                                <span className="font-medium">
+                                                  Mã:
+                                                </span>
+                                                <span className="font-light">
+                                                  <HoverComponent Num={10}>
+                                                    {itemP.code}
+                                                  </HoverComponent>
                                                 </span>
                                               </div>
-                                              <div className="flex flex-col w-full text-sm my-1">
-                                                <div className="flex gap-2">
-                                                  <span className="font-medium">Mã:</span>
-                                                  <span className="font-light">
-                                                    <HoverComponent Num={10}>
-                                                      {itemP.code}
-                                                    </HoverComponent>
-                                                  </span>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                  <span className="font-medium">Tên:</span>
-                                                  <span className="font-light">
-                                                    <HoverComponent Num={10}>
-                                                      {itemP.name}
-                                                    </HoverComponent>
-                                                  </span>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                  <span className="font-medium">Kích thước:</span>
-                                                  <span className="font-light">
-                                                    <HoverComponent Num={10}>
-                                                      {itemP.size}
-                                                    </HoverComponent>
-                                                  </span>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                  <span className="font-medium">Giá thành:</span>
-                                                  <span className="font-light text-primary">
-                                                    <HoverComponent Num={15}>{formatCurrency(itemP.price)}</HoverComponent> .đ
-                                                  </span>
-                                                </div>
+                                              <div className="flex gap-2">
+                                                <span className="font-medium">
+                                                  Tên:
+                                                </span>
+                                                <span className="font-light">
+                                                  <HoverComponent Num={10}>
+                                                    {itemP.name}
+                                                  </HoverComponent>
+                                                </span>
                                               </div>
-                                            </Card>
-                                          ))
-                                        ) : (
-                                          <div className="text-center text-gray-500">Không có kết quả.</div>
-                                        )}
+                                              <div className="flex gap-2">
+                                                <span className="font-medium">
+                                                  Kích thước:
+                                                </span>
+                                                <span className="font-light">
+                                                  <HoverComponent Num={10}>
+                                                    {itemP.size}
+                                                  </HoverComponent>
+                                                </span>
+                                              </div>
+                                              <div className="flex gap-2">
+                                                <span className="font-medium">
+                                                  Giá thành:
+                                                </span>
+                                                <span className="font-light text-primary">
+                                                  <HoverComponent Num={15}>
+                                                    {formatCurrency(
+                                                      itemP.price
+                                                    )}
+                                                  </HoverComponent>{" "}
+                                                  .đ
+                                                </span>
+                                              </div>
+                                            </div>
+                                          </Card>
+                                        ))
+                                      ) : (
+                                        <div className="text-center text-gray-500">
+                                          Không có kết quả.
+                                        </div>
+                                      )}
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    <div className="flex items-center mb-3 gap-3">
+                                      <Input
+                                        placeholder="Tìm kiếm sản phẩm..."
+                                        value={searchTermPF}
+                                        onChange={(e) =>
+                                          setSearchTermPF(e.target.value)
+                                        }
+                                        className="md:w-[300px] w-full "
+                                      />
+                                    </div>
 
-                                      </div>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <div className="flex items-center mb-3 gap-3">
-                                        <Input
-                                          placeholder="Tìm kiếm sản phẩm..."
-                                          value={searchTermPF}
-                                          onChange={(e) => setSearchTermPF(e.target.value)}
-                                          className="md:w-[300px] w-full "
-                                        />
-
-                                      </div>
-
-                                      <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
-                                        {dataPF && dataPF.length > 0 ? (
-                                          dataPF.map((item) => (
-                                            <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
-                                              <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
-                                                <ImageIconShipmentFormPF dataImage={item} />
-                                                <Check
-                                                  className={`${shipmentDetailRequests.some((item1) => item1.itemId === item.id)
+                                    <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
+                                      {dataPF && dataPF.length > 0 ? (
+                                        dataPF.map((item) => (
+                                          <Card
+                                            className="h-[90px]  flex gap-2 shadow-md group relative"
+                                            key={item.id}
+                                          >
+                                            <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
+                                              <ImageIconShipmentFormPF
+                                                dataImage={item}
+                                              />
+                                              <Check
+                                                className={`${
+                                                  shipmentDetailRequests.some(
+                                                    (item1) =>
+                                                      item1.itemId === item.id
+                                                  )
                                                     ? "absolute top-0 right-0 bg-primary text-white"
                                                     : "hidden"
-                                                    }`}
-                                                />
-                                                <span
-                                                  className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                                  onClick={() => {
-                                                    handleAddProducts(
-                                                      item,
-                                                      item.image ? item.image : "",
-                                                      item?.id,
-                                                      productType,
-                                                      "",
-                                                      item.price,
-                                                    );
-                                                  }}
-                                                >
-                                                  <Plus className="text-white" />
+                                                }`}
+                                              />
+                                              <span
+                                                className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                onClick={() => {
+                                                  handleAddProducts(
+                                                    item,
+                                                    item.image
+                                                      ? item.image
+                                                      : "",
+                                                    item?.id,
+                                                    productType,
+                                                    "",
+                                                    item.price
+                                                  );
+                                                }}
+                                              >
+                                                <Plus className="text-white" />
+                                              </span>
+                                            </div>
+                                            <div className="flex flex-col w-full text-sm my-1">
+                                              <div className="flex gap-2">
+                                                <span className="font-medium">
+                                                  Mã:
+                                                </span>
+                                                <span className="font-light">
+                                                  <HoverComponent Num={10}>
+                                                    {item.code}
+                                                  </HoverComponent>
                                                 </span>
                                               </div>
-                                              <div className="flex flex-col w-full text-sm my-1">
-                                                <div className="flex gap-2">
-                                                  <span className="font-medium">Mã:</span>
-                                                  <span className="font-light">
-                                                    <HoverComponent Num={10}>
-                                                      {item.code}
-                                                    </HoverComponent>
-                                                  </span>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                  <span className="font-medium">Tên:</span>
-                                                  <span className="font-light">
-                                                    <HoverComponent Num={10}>
-                                                      {item.name}
-                                                    </HoverComponent>
-                                                  </span>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                  <span className="font-medium">Số lượng có sẵn:</span>
-                                                  <span className="font-light">
-                                                    <HoverComponent Num={10}>
-                                                      {item.totalAvailableQuantity}
-                                                    </HoverComponent>
-                                                  </span>
-                                                </div>
-                                                <div className="flex gap-2">
-                                                  <span className="font-medium">Giá thành:</span>
-                                                  <span className="font-light text-primary">
-                                                    <HoverComponent Num={15}>{formatCurrency(item.price)}</HoverComponent> .đ
-                                                  </span>
-                                                </div>
+                                              <div className="flex gap-2">
+                                                <span className="font-medium">
+                                                  Tên:
+                                                </span>
+                                                <span className="font-light">
+                                                  <HoverComponent Num={10}>
+                                                    {item.name}
+                                                  </HoverComponent>
+                                                </span>
                                               </div>
-                                            </Card>
-                                          ))
-                                        ) : (
-                                          <div className="text-center text-gray-500">Không có kết quả.</div>
-                                        )}
-
-                                      </div>
-                                    </>
-                                  )
-                                }
-
-
+                                              <div className="flex gap-2">
+                                                <span className="font-medium">
+                                                  Số lượng có sẵn:
+                                                </span>
+                                                <span className="font-light">
+                                                  <HoverComponent Num={10}>
+                                                    {
+                                                      item.totalAvailableQuantity
+                                                    }
+                                                  </HoverComponent>
+                                                </span>
+                                              </div>
+                                              <div className="flex gap-2">
+                                                <span className="font-medium">
+                                                  Giá thành:
+                                                </span>
+                                                <span className="font-light text-primary">
+                                                  <HoverComponent Num={15}>
+                                                    {formatCurrency(item.price)}
+                                                  </HoverComponent>{" "}
+                                                  .đ
+                                                </span>
+                                              </div>
+                                            </div>
+                                          </Card>
+                                        ))
+                                      ) : (
+                                        <div className="text-center text-gray-500">
+                                          Không có kết quả.
+                                        </div>
+                                      )}
+                                    </div>
+                                  </>
+                                )}
                               </CardContent>
                               <CardFooter className="flex justify-end">
-                                <span onClick={handleClear} className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5">
+                                <span
+                                  onClick={handleClear}
+                                  className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5"
+                                >
                                   Bỏ chọn tất cả
                                 </span>
                               </CardFooter>
@@ -1471,21 +1587,28 @@ export default function CreateShipment() {
                                 <Input
                                   placeholder="Tìm kiếm nguyên vật liệu..."
                                   value={searchTermM}
-                                  onChange={(e) => setSearchTermM(e.target.value)}
+                                  onChange={(e) =>
+                                    setSearchTermM(e.target.value)
+                                  }
                                   className="md:w-[300px] w-full mb-3"
                                 />
                                 <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                   {dataM.map((item) => (
-                                    <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
+                                    <Card
+                                      className="h-[90px]  flex gap-2 shadow-md group relative"
+                                      key={item.id}
+                                    >
                                       <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
                                         <ImageIconMaterial dataImage={item} />
                                         <Check
-                                          className={`${shipmentDetailRequests.some(
-                                            (item1) => item1.itemId === item.id
-                                          )
-                                            ? "absolute top-0 right-0 bg-primary text-white"
-                                            : "hidden"
-                                            }`}
+                                          className={`${
+                                            shipmentDetailRequests.some(
+                                              (item1) =>
+                                                item1.itemId === item.id
+                                            )
+                                              ? "absolute top-0 right-0 bg-primary text-white"
+                                              : "hidden"
+                                          }`}
                                         />
                                         <span
                                           className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
@@ -1504,7 +1627,9 @@ export default function CreateShipment() {
 
                                       <div className="flex flex-col w-full text-sm my-1">
                                         <div className="flex gap-2">
-                                          <span className="font-medium">Tên:</span>
+                                          <span className="font-medium">
+                                            Tên:
+                                          </span>
                                           <span className="font-light">
                                             <HoverComponent Num={10}>
                                               {item.name}
@@ -1512,7 +1637,9 @@ export default function CreateShipment() {
                                           </span>
                                         </div>
                                         <div className="flex gap-2">
-                                          <span className="font-medium">Mô tả:</span>
+                                          <span className="font-medium">
+                                            Mô tả:
+                                          </span>
                                           <span className="font-light">
                                             <HoverComponent Num={10}>
                                               {item.description}
@@ -1520,7 +1647,9 @@ export default function CreateShipment() {
                                           </span>
                                         </div>
                                         <div className="flex gap-2">
-                                          <span className="font-medium">Số lượng/một đơn vị:</span>
+                                          <span className="font-medium">
+                                            Số lượng/một đơn vị:
+                                          </span>
                                           <span className="font-light">
                                             <HoverComponent Num={10}>
                                               {item.quantityPerUnit}
@@ -1528,7 +1657,9 @@ export default function CreateShipment() {
                                           </span>
                                         </div>
                                         <div className="flex gap-2">
-                                          <span className="font-medium">Sẵn có:</span>
+                                          <span className="font-medium">
+                                            Sẵn có:
+                                          </span>
                                           <span className="font-light text-primary">
                                             <HoverComponent Num={10}>
                                               {item.quantityInStock}
@@ -1541,7 +1672,10 @@ export default function CreateShipment() {
                                 </div>
                               </CardContent>
                               <CardFooter className="flex justify-end">
-                                <span onClick={handleClear} className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5">
+                                <span
+                                  onClick={handleClear}
+                                  className="text-sm rounded-md bg-primary hover:bg-primary/90 cursor-pointer text-white px-3.5 py-2.5"
+                                >
                                   Bỏ chọn tất cả
                                 </span>
                               </CardFooter>
@@ -1559,10 +1693,12 @@ export default function CreateShipment() {
                                 description="Danh sách sản phẩm - nguyên vật liệu trong vận chuyển."
                               />
                             </CardHeader>
-                            <Table >
+                            <Table>
                               <TableHeader>
                                 <TableRow>
-                                  <TableHead className="w-[100px]">Hình ảnh</TableHead>
+                                  <TableHead className="w-[100px]">
+                                    Hình ảnh
+                                  </TableHead>
                                   <TableHead>Tên mặt hàng</TableHead>
                                   <TableHead>Giai đoạn</TableHead>
                                   <TableHead>Số lượng</TableHead>
@@ -1572,7 +1708,7 @@ export default function CreateShipment() {
                                   <TableHead></TableHead>
                                 </TableRow>
                               </TableHeader>
-                              <TableBody >
+                              <TableBody>
                                 {productDetail.map((proDetail, index) => (
                                   <TableRow key={proDetail.itemId}>
                                     <TableCell className="font-medium">
@@ -1611,11 +1747,14 @@ export default function CreateShipment() {
                                             <SelectContent>
                                               <SelectGroup>
                                                 {dataPh
-                                                  .filter(item =>
-                                                    item.id === "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
-                                                    item.id === "4d2113f9-2009-4c37-82b1-195ecbb9c706"
+                                                  .filter(
+                                                    (item) =>
+                                                      item.id ===
+                                                        "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
+                                                      item.id ===
+                                                        "4d2113f9-2009-4c37-82b1-195ecbb9c706"
                                                   )
-                                                  .map(item => (
+                                                  .map((item) => (
                                                     <SelectItem
                                                       key={item.id}
                                                       value={item.id}
@@ -1628,8 +1767,10 @@ export default function CreateShipment() {
                                           </Select>
                                         ) : (
                                           <span className="w-[100px] block">
-                                            {dataPh.find((item) => item.id === proDetail.phaseId)?.name ||
-                                              "Giai đoạn sản phẩm"}
+                                            {dataPh.find(
+                                              (item) =>
+                                                item.id === proDetail.phaseId
+                                            )?.name || "Giai đoạn sản phẩm"}
                                           </span>
                                         )
                                       ) : (
@@ -1638,56 +1779,56 @@ export default function CreateShipment() {
                                     </TableCell>
 
                                     <TableCell>
-                                      {
-                                        proDetail.kindOfShip === 0 ? (
-                                          <Input
-                                            min={0}
-                                            type="number"
-                                            name="quantity"
-                                            value={
-                                              shipmentDetailRequests.find(
-                                                (item, i) =>
-                                                  item.itemId === proDetail.itemId &&
-                                                  i === index
-                                              )?.quantity || 0
-                                            }
-                                            onChange={(e) =>
-                                              handleChange(
-                                                proDetail.itemId,
-                                                "quantity",
-                                                parseInt(e.target.value),
-                                                index,
-                                                proDetail.kindOfShip
-                                              )
-                                            }
-                                            className="w-20 text-center outline-none"
-                                          />
-                                        ) : (
-                                          <Input
-                                            min={0}
-                                            step={0.01}
-                                            type="number"
-                                            name="quantity"
-                                            value={
-                                              shipmentDetailRequests.find(
-                                                (item, i) =>
-                                                  item.itemId === proDetail.itemId &&
-                                                  i === index
-                                              )?.quantity || 0
-                                            }
-                                            onChange={(e) =>
-                                              handleChange(
-                                                proDetail.itemId,
-                                                "quantity",
-                                                parseFloat(e.target.value),
-                                                index,
-                                                proDetail.kindOfShip
-                                              )
-                                            }
-                                            className="w-20 text-center outline-none"
-                                          />
-                                        )
-                                      }
+                                      {proDetail.kindOfShip === 0 ? (
+                                        <Input
+                                          min={0}
+                                          type="number"
+                                          name="quantity"
+                                          value={
+                                            shipmentDetailRequests.find(
+                                              (item, i) =>
+                                                item.itemId ===
+                                                  proDetail.itemId &&
+                                                i === index
+                                            )?.quantity || 0
+                                          }
+                                          onChange={(e) =>
+                                            handleChange(
+                                              proDetail.itemId,
+                                              "quantity",
+                                              parseInt(e.target.value),
+                                              index,
+                                              proDetail.kindOfShip
+                                            )
+                                          }
+                                          className="w-20 text-center outline-none"
+                                        />
+                                      ) : (
+                                        <Input
+                                          min={0}
+                                          step={0.01}
+                                          type="number"
+                                          name="quantity"
+                                          value={
+                                            shipmentDetailRequests.find(
+                                              (item, i) =>
+                                                item.itemId ===
+                                                  proDetail.itemId &&
+                                                i === index
+                                            )?.quantity || 0
+                                          }
+                                          onChange={(e) =>
+                                            handleChange(
+                                              proDetail.itemId,
+                                              "quantity",
+                                              parseFloat(e.target.value),
+                                              index,
+                                              proDetail.kindOfShip
+                                            )
+                                          }
+                                          className="w-20 text-center outline-none"
+                                        />
+                                      )}
                                     </TableCell>
                                     {/* <TableCell>
                                       {proDetail.kindOfShip === 0
@@ -1739,7 +1880,8 @@ export default function CreateShipment() {
                                           value={formatCurrency(
                                             shipmentDetailRequests.find(
                                               (item, i) =>
-                                                item.itemId === proDetail.itemId &&
+                                                item.itemId ===
+                                                  proDetail.itemId &&
                                                 i === index
                                             )?.materialPrice || 0
                                           )}
@@ -1755,7 +1897,9 @@ export default function CreateShipment() {
                                           className="w-[150px] text-left outline-none"
                                         />
                                       ) : (
-                                        <span className="font-light text-primary">{formatCurrency(proDetail.price)} .đ</span>
+                                        <span className="font-light text-primary">
+                                          {formatCurrency(proDetail.price)} .đ
+                                        </span>
                                       )}
                                     </TableCell>
                                     <TableCell>

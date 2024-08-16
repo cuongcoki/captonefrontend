@@ -13,6 +13,7 @@ import UserBanButton from "@/components/shared/dashboard/users/table/users/user-
 import { Employee } from "@/components/shared/dashboard/users/table/users/Column";
 import { UpdateUser } from "../../form/UsersUpdateForm";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -25,7 +26,7 @@ export function DataTableRowActions<TData>({
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-
+  const router = useRouter();
 
   return (
     <DropdownMenu modal={false} onOpenChange={toggleDropdown} open={isOpen}>
@@ -47,6 +48,13 @@ export function DataTableRowActions<TData>({
           </Button>
         </UpdateUser>
         <UserBanButton setIsOpen={setIsOpen} user={row.original as Employee} />
+        <Button
+          variant="outline"
+          className="border-none w-full flex items-center justify-start "
+          onClick={() => router.push(`/dashboard/user/${row._valuesCache.id}`)}
+        >
+          Chi tiết
+        </Button>
       </DropdownMenuContent>
     </DropdownMenu>
   );
