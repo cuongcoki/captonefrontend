@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
 } from "@/components/ui/card";
+
 import {
   Table,
   TableBody,
@@ -17,6 +18,7 @@ import {
 import { useState } from "react";
 
 import { IconImage } from "./IconImage";
+import { limitLength } from "@/lib/utils";
 
 interface ImageResponse {
   id: string;
@@ -56,12 +58,7 @@ export default function SetProduct({ setProduct }: SetProductProps) {
   const handleOpenDialog = async (pro: SetProduct) => {
     window.location.href = `/dashboard/products/product/${pro.productId}`;
   };
-  const limitLength = (text: any, maxLength: any) => {
-    if (text.length > maxLength) {
-      return `${text.slice(0, maxLength)}...`;
-    }
-    return text;
-  };
+  
   return (
     <Card x-chunk="dashboard-07-chunk-1" className="h-max">
       <CardHeader>

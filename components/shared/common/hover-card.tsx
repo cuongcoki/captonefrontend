@@ -13,7 +13,7 @@ export default function HoverComponent({ children,Num }: { children: any,Num:any
     return (
         <HoverCard>
             <HoverCardTrigger>{limitLength(String(children), Num)}</HoverCardTrigger>
-            <HoverCardContent>
+            <HoverCardContent className="w-full">
                 {children}
             </HoverCardContent>
         </HoverCard>

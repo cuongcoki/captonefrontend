@@ -41,6 +41,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { ProductStore } from "@/components/shared/dashboard/product/product-store";
+import { formatCurrency, generateRandomString, limitLength } from "@/lib/utils";
 
 const initialImageRequests = [
   {
@@ -88,16 +89,6 @@ export const ProductForm = () => {
     }[]
   >([]);
 
-  const generateRandomString = (length: number = 5) => {
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let result = "";
-    const charactersLength = characters.length;
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  };
 
   const handleUploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -109,12 +100,6 @@ export const ProductForm = () => {
       (total, req: any) => total + req.file.size,
       0
     );
-    const limitLength = (text: any, maxLength: any) => {
-      if (text.length > maxLength) {
-        return `${text.slice(0, maxLength)}...`;
-      }
-      return text;
-    };
 
     const newImageRequests = files
       .filter((file) => {
@@ -273,17 +258,6 @@ export const ProductForm = () => {
     }
   };
 
-  const formatCurrency = (value: any): string => {
-    if (!value) return "";
-    let valueString = value.toString();
-    valueString = valueString.replace(/\D/g, "");
-    valueString = valueString.replace(/^0+/, "");
-    if (valueString === "") return "0";
-    let reversed = valueString.split("").reverse().join("");
-    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    let formatted = formattedReversed.split("").reverse().join("");
-    return formatted;
-  };
 
   const parseCurrency = (value: any) => {
     return value.replace(/,/g, "");

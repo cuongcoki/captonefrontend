@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
+import { limitLength } from "@/lib/utils";
 
 export type Order = {
   id: string;
@@ -18,12 +19,6 @@ export type Order = {
   status: string;
   startOrder: string;
   endOrder: string;
-};
-const limitLength = (text: any, maxLength: any) => {
-  if (text.length > maxLength) {
-    return `${text.slice(0, maxLength)}...`;
-  }
-  return text;
 };
 
 const formatDate = (date: string) => {

@@ -72,30 +72,6 @@ import { OrderStore } from "../order-store";
 import { shipOrderApi } from "@/apis/shipOrder.api";
 import TitleComponent from "@/components/shared/common/Title";
 
-interface OrderId {
-  orderId?: orderIds;
-}
-interface orderIds {
-  id: string;
-  companyId: any;
-  company: {
-    id: string;
-    name: string;
-    address: string;
-    directorName: string;
-    directorPhone: string;
-    email: string;
-    companyEnum: string;
-    companyType: number;
-    companyTypeDescription: string;
-  };
-  status: any;
-  statusType: any;
-  statusDescription: string;
-  startOrder: any;
-  endOrder: any;
-  vat: any;
-}
 
 // Define Status Enum
 const OrderStatus = [
@@ -120,6 +96,31 @@ const OrderStatus = [
     name: "CANCELED",
   },
 ];
+
+interface OrderId {
+  orderId?: orderIds;
+}
+interface orderIds {
+  id: string;
+  companyId: any;
+  company: {
+    id: string;
+    name: string;
+    address: string;
+    directorName: string;
+    directorPhone: string;
+    email: string;
+    companyEnum: string;
+    companyType: number;
+    companyTypeDescription: string;
+  };
+  status: any;
+  statusType: any;
+  statusDescription: string;
+  startOrder: any;
+  endOrder: any;
+  vat: any;
+}
 
 // Define Company Type
 type Company = {

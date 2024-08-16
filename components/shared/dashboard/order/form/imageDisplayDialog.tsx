@@ -11,7 +11,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Package } from "lucide-react";
 
-
 interface dataProduct {
     code: string;
     description: string;
@@ -26,7 +25,6 @@ interface ImageDisplayProps {
     images: dataProduct;
     checkProduct: any;
 }
-
 
 const ImageDisplayDialog: React.FC<ImageDisplayProps> = ({ images, checkProduct }) => {
     const handleGotoPID = () => {

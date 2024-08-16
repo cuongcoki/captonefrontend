@@ -58,6 +58,29 @@ interface NavProps {
   }[];
 }
 
+export const Role = [
+  {
+    value: 1,
+    label: "Quản lý hệ thống",
+  },
+  {
+    value: 2,
+    label: "Quản lý cơ sở",
+  },
+  {
+    value: 3,
+    label: "Quản lý số lượng",
+  },
+  {
+    value: 4,
+    label: "Nhân viên vận chuyển",
+  },
+  {
+    value: 5,
+    label: "Nhân viên",
+  },
+];
+
 export function Nav({ links, isCollapsed }: NavProps) {
 
   // ** state
@@ -335,7 +358,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   </Avatar>
                   <div className="space-y-1">
                     <h2 className="text-md font-semibold"><HoverComponent Num={10}>{user.user?.lastName}{user.user?.firstName}</HoverComponent></h2>
-                    <h2 className="text-md font-semibold">{formatDate(user.user?.dob)}</h2>
+                    <h2 className="text-xs font-semibold text-primary"><HoverComponent Num={10}>{Role.find((role) => role.value === user?.user?.roleId)?.label}</HoverComponent></h2>
                   </div>
                 </div>
                 <div className="px-2">

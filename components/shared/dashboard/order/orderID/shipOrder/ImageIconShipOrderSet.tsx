@@ -1,4 +1,5 @@
 import { filesApi } from "@/apis/files.api";
+import { NoImage } from "@/constants/images";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -26,9 +27,10 @@ export default function ImageIconShipOrderSet({ dataImage }: ImageIconShipOrderP
     return (
     <> 
          {linkImages ? (
-               <Image src={linkImages} className="w-full h-full object-cover "  width={900} height={900} alt="ảnh sản phẩm" />
+               <Image src={linkImages === "Image_not_found" || !linkImages ? NoImage : linkImages} className="w-full h-full object-cover" width={900} height={900} alt="ảnh sản phẩm" />
+
             ) : (
-                <Image src={linkImages} className="w-full h-full object-cover" width={900} height={900} alt="ảnh sản phẩm" />
+                <Image src={ NoImage } className="w-full h-full object-cover" width={900} height={900} alt="ảnh sản phẩm" />
             )}
     </>
     );
