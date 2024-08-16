@@ -61,7 +61,7 @@ export default function UpdateAttendance({
   warehouseProp: string;
 }): JSX.Element {
   const userData = JSON.parse(localStorage?.getItem("userData") || "{}");
-  const CheckUser = useAuth();
+  // const CheckUser = useAuth();
   const colorSlaryByProduct = "bg-white";
   function formatDate(dateStr: String) {
     const [day, month, year] = dateStr.split("/");
@@ -404,7 +404,7 @@ export default function UpdateAttendance({
   return (
     <div>
       <HeaderComponent
-        title={`Điểm danh nhân viên - ${CheckUser.user?.companyName}`}
+        title={`Điểm danh nhân viên - ${userData.companyName}`}
         description={`Điểm danh nhân viên ngày ${dateProp} - ${
           comboboxData.find((item) => item.value === slotProp)?.label
         }.`}
