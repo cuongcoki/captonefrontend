@@ -11,12 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useParams, usePathname } from "next/navigation";
 
-import {
-  Settings,
-  LogOut,
-  SunIcon,
-  MoonIcon,
-} from "lucide-react";
+import { Settings, LogOut, SunIcon, MoonIcon } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -82,7 +77,6 @@ export const Role = [
 ];
 
 export function Nav({ links, isCollapsed }: NavProps) {
-
   // ** state
   const [loading, setLoading] = useState<boolean>(false);
   const [avatar, setAvatar] = useState<string>("");
@@ -92,7 +86,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
   const router = useRouter();
   const user = useAuth();
   const params = useParams<{ id: string }>();
-  useEffect(() => { }, [params]);
+  useEffect(() => {}, [params]);
   const { setTheme } = useTheme();
 
   // console.log("user", user?.user)
@@ -138,14 +132,13 @@ export function Nav({ links, isCollapsed }: NavProps) {
       pathname.includes(`${link.href1}/${params.id}`)
     );
   };
-  useEffect(() => { }, [checkActiveLink]);
+  useEffect(() => {}, [checkActiveLink]);
 
   const userRoleId = user.user?.roleId;
 
   const checkAccess = (checkRoll: { id: number }[]) => {
-    return checkRoll.some(item => item.id === userRoleId);
+    return checkRoll.some((item) => item.id === userRoleId);
   };
-
 
   useEffect(() => {
     filesApi.getFile(String(user.user?.avatar)).then((res) => {
@@ -176,7 +169,8 @@ export function Nav({ links, isCollapsed }: NavProps) {
         toast.success(data.message);
       })
       .catch((error) => {
-        toast.error(error.message);
+        // toast.error(error.message);
+        router.push("/sign-in");
       })
       .finally(() => {
         setLoading(false);
@@ -184,7 +178,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
   };
 
   return (
-    <TooltipProvider >
+    <TooltipProvider>
       <div className="flex flex-col justify-between h-screen overflow-y-auto">
         {/* logo */}
         <div className="py-3">
@@ -208,7 +202,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
           )}
         </div>
         {/* data sidebar */}
-        <div data-collapsed={isCollapsed} className="group flex flex-col justify-between gap-4 py-2 data-[collapsed=true]:py-2 w-full h-full">
+        <div
+          data-collapsed={isCollapsed}
+          className="group flex flex-col justify-between gap-4 py-2 data-[collapsed=true]:py-2 w-full h-full"
+        >
           <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
             {links.map((link, index) => {
               if (!checkAccess(link.checkRoll)) {
@@ -222,19 +219,24 @@ export function Nav({ links, isCollapsed }: NavProps) {
                       href={link.href}
                       className={cn(
                         buttonVariants({
-                          variant: checkActiveLink(link) ? "colorCompany" : "ghost",
+                          variant: checkActiveLink(link)
+                            ? "colorCompany"
+                            : "ghost",
                           size: "icon",
                         }),
                         "h-9 w-9",
                         link.variant === "colorCompany" &&
-                        "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                          "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                       )}
                     >
                       <link.icon className="h-4 w-4" />
                       <span className="sr-only">{link.title}</span>
                     </Link>
                   </TooltipTrigger>
-                  <TooltipContent side="right" className="flex items-center gap-4">
+                  <TooltipContent
+                    side="right"
+                    className="flex items-center gap-4"
+                  >
                     {link.hrefCon ? (
                       <ul
                         role="menu"
@@ -244,12 +246,16 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         {link.hrefCon.map((linkCon, index) => (
                           <li
                             key={index}
-                            className={`${pathname === linkCon.href
-                              ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
-                              : "text-gray-700"
-                              } p-1 text-sm hover:bg-gray-100`}
+                            className={`${
+                              pathname === linkCon.href
+                                ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
+                                : "text-gray-700"
+                            } p-1 text-sm hover:bg-gray-100`}
                           >
-                            <Link href={linkCon.href} className="flex items-center gap-2">
+                            <Link
+                              href={linkCon.href}
+                              className="flex items-center gap-2"
+                            >
                               {linkCon.title}
                             </Link>
                           </li>
@@ -266,11 +272,13 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     href={link.href}
                     className={cn(
                       buttonVariants({
-                        variant: checkActiveLink(link) ? "colorCompany" : "ghost",
+                        variant: checkActiveLink(link)
+                          ? "colorCompany"
+                          : "ghost",
                         size: "sm",
                       }),
                       link.variant === "colorCompany" &&
-                      "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
+                        "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                       "justify-start"
                     )}
                   >
@@ -299,10 +307,11 @@ export function Nav({ links, isCollapsed }: NavProps) {
                           <li key={item.id}>
                             <Link
                               href={item.href}
-                              className={`${pathname === item.href
-                                ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
-                                : "text-gray-700"
-                                } block px-4 py-2 text-sm hover:bg-gray-100`}
+                              className={`${
+                                pathname === item.href
+                                  ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
+                                  : "text-gray-700"
+                              } block px-4 py-2 text-sm hover:bg-gray-100`}
                               onClick={() => closeDropdown("")}
                             >
                               {item.title}
@@ -319,84 +328,106 @@ export function Nav({ links, isCollapsed }: NavProps) {
         </div>
         {/* data bottombar */}
         <div>
-          {
-            isCollapsed ? (
-              <div className="mb-3 ml-2.5 w-[30px]">
-                <Command className="ml-2.5 focus:ring-2 focus:ring-blue-500">
+          {isCollapsed ? (
+            <div className="mb-3 ml-2.5 w-[30px]">
+              <Command className="ml-2.5 focus:ring-2 focus:ring-blue-500">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Settings />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    <DropdownMenuLabel>
+                      <Button>
+                        <Link href={`/profile/${user.user?.id}`}>
+                          Trang cá nhân
+                        </Link>
+                      </Button>
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem onClick={handleLogout}>
+                      <Button onClick={handleLogout}>
+                        <LogOut className="mr-1" /> đăng xuất
+                      </Button>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <ModeToggle />
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </Command>
+            </div>
+          ) : (
+            <CardDescription className="m-1 mb-3  w-[170px] bg-white border shadow-md rounded-lg overflow-hidden transition-all ease-in-out duration-300 hover:shadow-xl">
+              <div className="flex flex-row items-start gap-4 p-2">
+                <Avatar>
+                  <Link
+                    href={`/profile/${user.user?.id}`}
+                    className="flex items-center gap-2"
+                  >
+                    <AvatarImage
+                      src={String(avatar === "" ? NoImage : avatar)}
+                      alt="Channel Logo"
+                    />
+                    <AvatarFallback>
+                      {user.user?.firstName.charAt(0)}
+                    </AvatarFallback>
+                  </Link>
+                </Avatar>
+                <div className="space-y-1">
+                  <h2 className="text-md font-semibold">
+                    <HoverComponent Num={10}>
+                      {user.user?.lastName}
+                      {user.user?.firstName}
+                    </HoverComponent>
+                  </h2>
+                  <h2 className="text-xs font-semibold text-primary">
+                    <HoverComponent Num={10}>
+                      {
+                        Role.find((role) => role.value === user?.user?.roleId)
+                          ?.label
+                      }
+                    </HoverComponent>
+                  </h2>
+                </div>
+              </div>
+              <div className="px-2"></div>
+              <div className="p-2 flex flex-col gap-2">
+                <Badge
+                  variant="secondary"
+                  className="text-xs cursor-pointer hover:bg-gray-200/80 py-2"
+                  onClick={handleLogout}
+                >
+                  <div className="w-full flex items-center gap-2 ml-2">
+                    <LogOut className="h-[1.2rem] w-[1.2rem]" /> Đăng xuất
+                  </div>
+                </Badge>
+                <Badge
+                  variant="secondary"
+                  className="text-xs cursor-pointer hover:bg-gray-200/80 py-2 "
+                >
                   <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <Settings />
+                    <DropdownMenuTrigger asChild>
+                      <div className="w-full flex items-center gap-2  ml-2">
+                        <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                        <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                        Chế độ
+                      </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start">
-                      <DropdownMenuLabel>
-                        <Button>
-                          <Link href={`/profile/${user.user?.id}`}>
-                            Trang cá nhân
-                          </Link>
-                        </Button>
-                      </DropdownMenuLabel>
-                      <DropdownMenuItem onClick={handleLogout}>
-                        <Button onClick={handleLogout}>
-                          <LogOut className="mr-1" /> đăng xuất
-                        </Button>
+                      <DropdownMenuItem onClick={() => setTheme("light")}>
+                        Sáng
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <ModeToggle />
+                      <DropdownMenuItem onClick={() => setTheme("dark")}>
+                        Tối
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setTheme("system")}>
+                        Hệ thống
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </Command>
+                </Badge>
               </div>
-            ) : (
-              <CardDescription className="m-1 mb-3  w-[170px] bg-white border shadow-md rounded-lg overflow-hidden transition-all ease-in-out duration-300 hover:shadow-xl">
-                <div className="flex flex-row items-start gap-4 p-2">
-                  <Avatar>
-                    <Link href={`/profile/${user.user?.id}`} className="flex items-center gap-2">
-                      <AvatarImage src={String(avatar === "" ? NoImage : avatar)} alt="Channel Logo" />
-                      <AvatarFallback>{user.user?.firstName.charAt(0)}</AvatarFallback>
-                    </Link>
-                  </Avatar>
-                  <div className="space-y-1">
-                    <h2 className="text-md font-semibold"><HoverComponent Num={10}>{user.user?.lastName}{user.user?.firstName}</HoverComponent></h2>
-                    <h2 className="text-xs font-semibold text-primary"><HoverComponent Num={10}>{Role.find((role) => role.value === user?.user?.roleId)?.label}</HoverComponent></h2>
-                  </div>
-                </div>
-                <div className="px-2">
-
-                </div>
-                <div className="p-2 flex flex-col gap-2">
-                  <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 py-2" onClick={handleLogout}>
-                    <div className="w-full flex items-center gap-2 ml-2">
-                      <LogOut className="h-[1.2rem] w-[1.2rem]" /> Đăng xuất
-                    </div>
-                  </Badge>
-                  <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 py-2 ">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <div className="w-full flex items-center gap-2  ml-2">
-                          <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                          <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                          Chế độ
-                        </div>
-
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start">
-                        <DropdownMenuItem onClick={() => setTheme("light")}>
-                          Sáng
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("dark")}>
-                          Tối
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => setTheme("system")}>
-                          Hệ thống
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </Badge>
-                </div>
-              </CardDescription>
-            )
-          }
+            </CardDescription>
+          )}
         </div>
       </div>
     </TooltipProvider>
