@@ -6,6 +6,8 @@ import {
 } from "@/types/product-phase.type";
 import axiosClient from "@/auth/jwtService";
 import { endPointConstant } from "@/constants/endpoint";
+import { cache } from "react";
+import { updateCache } from "axios-cache-interceptor";
 const createCacheId = (base: string, params: Record<string, any>): string => {
   const query = new URLSearchParams(params).toString();
   return `${base}?${query}`;
@@ -19,24 +21,11 @@ export const productPhaseApi = {
       `${endPointConstant.BASE_URL}/productphase`,
       {
         params: requestParams,
-        id: cacheId,
+        cache: false,
       }
     );
   },
-  // changePhase: (requestBody: ChangePhaseBody) => {
-  //   return axiosClient.put(
-  //     `${endPointConstant.BASE_URL}/productphase/changePhase`,
-  //     requestBody,
-  //     {
-  //       cache: {
-  //         update: () => {
-  //           listCacheId.forEach((id) => axiosClient.storage.remove(id));
-  //           listCacheId.clear();
-  //         },
-  //       },
-  //     }
-  //   );
-  // },
+
   changeQuantityType: (requestBody: ChangeQuantityTypeBody) => {
     return axiosClient.put(
       `${endPointConstant.BASE_URL}/productphase/changeQuantityType`,
@@ -52,7 +41,12 @@ export const productPhaseApi = {
     );
   },
 
-  searchProductPhaseShip: (searchTerm?: string, companyId?: string, pageIndex: number = 1, pageSize: number = 10) =>
+  searchProductPhaseShip: (
+    searchTerm?: string,
+    companyId?: string,
+    pageIndex: number = 1,
+    pageSize: number = 10
+  ) =>
     axiosClient.get(
       `${endPointConstant.BASE_URL}/productphase/search?Search=${searchTerm}&CompanyId=${companyId}&PageIndex=${pageIndex}&PageSize=${pageSize}`
     ),
