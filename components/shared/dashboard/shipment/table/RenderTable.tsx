@@ -62,7 +62,7 @@ export default function RenderTableShipment() {
   const router = useRouter();
   const pathname = usePathname();
   const { force } = ShipmentStore();
-  console.log("data", data);
+  // console.log("data", data);
   useEffect(() => {
     const fetchDataShipment = async () => {
       setLoading(true);
@@ -75,7 +75,7 @@ export default function RenderTableShipment() {
         );
         const responseData = response.data.data.data;
         setData(responseData);
-        console.log("response", response.data);
+        // console.log("response", response.data);
         if (responseData.length === 0) {
           setTotalPages(1);
           setCurrentPage(1);
@@ -97,7 +97,7 @@ export default function RenderTableShipment() {
     };
 
     fetchDataShipment();
-    console.log("RENDER GET SHIPMENT DATA");
+    // console.log("RENDER GET SHIPMENT DATA");
   }, [currentPage, pageSize, searchTerm, data, status, force]);
 
   const handleStatusChange = (value: string | null) => {

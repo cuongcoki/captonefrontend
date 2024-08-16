@@ -48,12 +48,12 @@ const OrderStatus = [
   },
   {
     id: 1,
-    des: "Đang thực hiện",
+    des: "Đang được giao",
     name: "PROCESSING",
   },
   {
     id: 2,
-    des: "Đã hoàn thành",
+    des: "Đã giao thành công",
     name: "PROCESSING",
   },
   {

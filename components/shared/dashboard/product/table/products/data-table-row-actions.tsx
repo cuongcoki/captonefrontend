@@ -28,10 +28,10 @@ export function DataTableRowActions<TData extends { id: string }>({
       try {
         const res = await productApi.getProductId(row.original.id);
         const userData = res.data.data;
-  
+
         if (userData) {
           const updatedData = await Promise.all(
-            userData.imageResponses.map(async (image:any) => {
+            userData.imageResponses.map(async (image: any) => {
               try {
                 const { data } = await filesApi.getFile(image.imageUrl);
                 return {
@@ -46,9 +46,12 @@ export function DataTableRowActions<TData extends { id: string }>({
               }
             })
           );
-  
+
           // Cập nhật lại thông tin sản phẩm với dữ liệu đã được cập nhật
-          const updatedProductData = { ...userData, imageResponses: updatedData };
+          const updatedProductData = {
+            ...userData,
+            imageResponses: updatedData,
+          };
           setProductId(updatedProductData);
         }
       } catch (error) {
@@ -57,10 +60,10 @@ export function DataTableRowActions<TData extends { id: string }>({
         // Bạn có thể thêm setLoading(false) ở đây nếu có sử dụng loading state
       }
     };
-  
+
     fetchDataProductId();
-  }, [row.original.id,force]);
-  
+  }, [row.original.id, force]);
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -74,12 +77,12 @@ export function DataTableRowActions<TData extends { id: string }>({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <ProductUpdateForm productId={productId}>
-          <div className="w-full hover:bg-gray-200 dark:hover:bg-black/90 relative flex cursor-default select-none justify-center items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+          <div className="w-full hover:bg-gray-200 dark:hover:bg-black/90 relative flex cursor-default select-none justify-start items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
             Chỉnh sửa
           </div>
         </ProductUpdateForm>
         <Link
-          className="w-full hover:bg-gray-200 dark:hover:bg-black/90 relative flex cursor-default select-none items-center justify-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+          className="w-full hover:bg-gray-200 dark:hover:bg-black/90 relative flex cursor-default select-none items-center justify-start rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
           href={`/dashboard/products/product/${row.original.id}`}
         >
           Chi tiết

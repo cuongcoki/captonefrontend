@@ -125,8 +125,8 @@ export default function RenderTableProduct() {
                 <SelectValue placeholder="Trạng thái" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="true">Đang xử lý</SelectItem>
-                <SelectItem value="false">Chưa xử lý</SelectItem>
+                <SelectItem value="true">Đang sản xuất</SelectItem>
+                <SelectItem value="false">Ngừng sản xuất</SelectItem>
               </SelectContent>
             </Select>
           </div>
