@@ -6,5 +6,5 @@ export default {
   onTokenExpiration: "refreshToken", // logout | refreshToken
   expires: "expires",
   userData: "userData",
-  tokenType: "Bearer"
-}
+  tokenType: "Bearer",
+};

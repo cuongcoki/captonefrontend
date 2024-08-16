@@ -237,7 +237,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
   const [productDetail, setProductDetail] = useState<any[]>([]);
   // ** state ShipmentID
   const [dataSID, setDataSID] = useState<shipmentID>();
-  // console.log("dataSID", dataSID)
   // Hàm thêm sản phẩm
   const handleAddProducts = (
     item: any,
@@ -372,9 +371,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
         setLoading(false);
       }
     };
-    console.log("dataSID", dataSID);
-    console.log("companyType", companyType);
-    console.log("companyType1", companyType1);
+
     if (shipmentIDDes) {
       setCompanyIdPF(dataSID?.from.id);
       setCompanyType(dataSID?.from.companyType);
@@ -466,7 +463,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
 
     fetchDataMaterial();
   }, [currentPageM, pageSizeM, searchTermM]);
-  console.log(">>>>>>>>>mate", dataM);
   // call data phase
   useEffect(() => {
     const fetchDataPhase = () => {
@@ -491,7 +487,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
       shipmentApi
         .getAllCompanyByType(setCompanyType1, 1, 20)
         .then(({ data }) => {
-          // console.log("========", data.data)
           setCompany1(data.data.data);
         })
         .catch((error) => {});
@@ -585,11 +580,11 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
   const [pageSizePF, setPageSizePF] = useState<number>(40);
   const [companyIdPF, setCompanyIdPF] = useState<string | undefined>();
   const [dataPF, setDataPF] = useState<DataProduct[]>([]);
-  console.log("companyIdPF", companyIdPF);
   //call data product phase
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
+      if (companyIdPF === undefined || companyIdPF === undefined) return;
       productPhaseApi
         .searchProductPhaseShip(
           searchTermPF,
@@ -631,6 +626,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
+      if (phaseId === undefined || companyId === undefined) return;
       productApi
         .searchProduct(searchTerm, phaseId, companyId, currentPageP, pageSizeP)
         .then(({ data }) => {
@@ -648,10 +644,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
 
     handleSearch();
   }, [searchTerm, phaseId, companyId, currentPageP, pageSizeP]);
-
-  // console.log("companyId", companyId)
-  // console.log("pahsseId", phaseId)
-  // console.log("dataP", dataP)
 
   // call gủi form
   const onSubmit = (data: z.infer<typeof ShipmentSchema>) => {
@@ -685,11 +677,6 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
     // Sử dụng hàm để gộp và tóm tắt các yêu cầu
     const updatedShipmentDetailRequests = groupAndSummarizeRequests(
       shipmentDetailRequests
-    );
-
-    console.log(
-      "Updated shipmentDetailRequests",
-      updatedShipmentDetailRequests
     );
 
     let hasError = false;

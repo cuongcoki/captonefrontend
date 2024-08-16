@@ -132,7 +132,6 @@ export function Nav({ links, isCollapsed }: NavProps) {
       pathname.includes(`${link.href1}/${params.id}`)
     );
   };
-  useEffect(() => {}, [checkActiveLink]);
 
   const userRoleId = user.user?.roleId;
 
@@ -144,18 +143,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
     filesApi.getFile(String(user.user?.avatar)).then((res) => {
       setAvatar(res.data.data);
     });
-  }, [avatar]);
-
-  const formatDate = (dateString: any) => {
-    try {
-      const [year, month, day] = dateString.split("-");
-      const formattedDay = day.padStart(2, "0");
-      const formattedMonth = month.padStart(2, "0");
-      return `${formattedDay}/${formattedMonth}/${year}`;
-    } catch (error) {
-      return dateString;
-    }
-  };
+  }, [avatar, user.user?.avatar]);
 
   const handleLogout = () => {
     setLoading(true);

@@ -282,7 +282,6 @@ export default function CreateShipment() {
     ShipmentDetailRequest[]
   >([]);
   const [productDetail, setProductDetail] = useState<any[]>([]);
-  console.log("shipmentDetailRequests", shipmentDetailRequests);
   // Hàm thêm sản phẩm
   const handleAddProducts = (
     item: any,
@@ -386,11 +385,11 @@ export default function CreateShipment() {
   const [pageSizePF, setPageSizePF] = useState<number>(40);
   const [companyIdPF, setCompanyIdPF] = useState<string | undefined>();
   const [dataPF, setDataPF] = useState<DataProduct[]>([]);
-  console.log("companyIdPF", companyIdPF);
   //call data product phase
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
+      if (companyIdPF === undefined || companyIdPF === undefined) return;
       productPhaseApi
         .searchProductPhaseShip(
           searchTermPF,
@@ -579,6 +578,7 @@ export default function CreateShipment() {
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
+      if (phaseId === undefined || companyId === undefined) return;
       productApi
         .searchProduct(searchTerm, phaseId, companyId, currentPageP, pageSizeP)
         .then(({ data }) => {
@@ -594,10 +594,6 @@ export default function CreateShipment() {
 
     handleSearch();
   }, [searchTerm, phaseId, companyId, currentPageP, pageSizeP]);
-
-  console.log("companyId", companyId);
-  console.log("pahsseId", phaseId);
-  console.log("dataP", dataP);
 
   // ** form
   const form = useForm({
@@ -642,11 +638,6 @@ export default function CreateShipment() {
     // Sử dụng hàm để gộp và tóm tắt các yêu cầu
     const updatedShipmentDetailRequests = groupAndSummarizeRequests(
       shipmentDetailRequests
-    );
-
-    console.log(
-      "Updated shipmentDetailRequests",
-      updatedShipmentDetailRequests
     );
 
     let hasError = false;
@@ -826,7 +817,6 @@ export default function CreateShipment() {
     shipmentApi
       .createShipment(requestBody)
       .then(({ data }) => {
-        console.log("data", data);
         ForceRender();
         setOpen(false);
         form.reset();
@@ -915,7 +905,6 @@ export default function CreateShipment() {
     }
   };
 
-  console.log("companyType", companyType);
   const { pending } = useFormStatus();
   return (
     <>

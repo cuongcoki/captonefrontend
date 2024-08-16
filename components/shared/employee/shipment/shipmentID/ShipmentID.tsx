@@ -158,7 +158,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
     };
 
     fetchDataOrderId();
-  }, [data]);
+  }, [data, shipmentIDDes]);
 
   // các hàm hiển thị sao cho oke
   function formatDate(isoString: string) {

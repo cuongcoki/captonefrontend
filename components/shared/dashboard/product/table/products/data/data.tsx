@@ -1,10 +1,10 @@
 export const IsInProcessing = [
   {
     value: true,
-    label: "Đang xử lý",
+    label: "Đang sản xuất",
   },
   {
     value: false,
-    label: "Chưa xử lý",
+    label: "Ngừng sản xuất",
   },
 ];

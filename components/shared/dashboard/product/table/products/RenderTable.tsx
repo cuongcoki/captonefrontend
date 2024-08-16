@@ -60,7 +60,7 @@ export default function RenderTableProduct() {
                   console.error("Error getting file:", error);
                   return {
                     ...image,
-                    imageUrl: "", 
+                    imageUrl: "",
                   };
                 }
               })
@@ -88,12 +88,12 @@ export default function RenderTableProduct() {
   const handleIsInProcessingChange = (value: string) => {
     setIsInProcessingString(value);
     setIsInProcessing(value === "true");
-    updatePathname(); 
+    updatePathname();
   };
 
   const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    updatePathname(); 
+    updatePathname();
   };
 
   const updatePathname = () => {
@@ -123,8 +123,8 @@ export default function RenderTableProduct() {
                 <SelectValue placeholder="Trạng thái" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="true">Đang xử lý</SelectItem>
-                <SelectItem value="false">Chưa xử lý</SelectItem>
+                <SelectItem value="true">Đang sản xuất</SelectItem>
+                <SelectItem value="false">Ngừng sản xuất</SelectItem>
               </SelectContent>
             </Select>
           </div>
