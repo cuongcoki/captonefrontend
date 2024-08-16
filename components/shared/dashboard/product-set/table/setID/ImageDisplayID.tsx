@@ -14,7 +14,6 @@ import Image from "next/image"
 
 interface ImageDisplayProps {
     images: { imageUrl: string; isBluePrint: boolean; isMainImage: boolean }[];
-
 }
 
 const ImageDisplayID: React.FC<ImageDisplayProps> = ({

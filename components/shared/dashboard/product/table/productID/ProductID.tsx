@@ -32,6 +32,7 @@ import { ProductStore } from "@/components/shared/dashboard/product/product-stor
 import HeaderComponent from "@/components/shared/common/header";
 import TitleComponent from "@/components/shared/common/Title";
 import { ProductUpdateForm } from "../../form/ProductUpdateForm";
+import { formatCurrency } from "@/lib/utils";
 
 export interface ProductData {
   code: string;
@@ -51,6 +52,7 @@ export interface ProductData {
   size: string;
   productPhaseSalaries: productPhaseSalaries[];
 }
+
 interface productPhaseSalaries {
   phaseDescription: string;
   phaseId: string;
@@ -59,25 +61,11 @@ interface productPhaseSalaries {
 }
 
 export default function ProductIDPage() {
-  const [open, setOpen] = useState<boolean>(false);
-
   //state
   const [loading, setLoading] = useState<boolean>(false);
   const params = useParams<{ id: string }>();
   const [productId, setProductId] = useState<any>([]);
   const { force } = ProductStore();
-
-  const formatCurrency = (value: any): string => {
-    if (!value) return "";
-    let valueString = value.toString();
-    valueString = valueString.replace(/\D/g, "");
-    valueString = valueString.replace(/^0+/, "");
-    if (valueString === "") return "0";
-    let reversed = valueString.split("").reverse().join("");
-    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    let formatted = formattedReversed.split("").reverse().join("");
-    return formatted;
-  };
 
   useEffect(() => {
     const fetchDataProductId = () => {

@@ -409,21 +409,23 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                     newData.map(async (item: any) => {
                         if (item.image) {
                             try {
-                                const { data } = await filesApi.getFile(item.image);
+                                const response = await filesApi.getFile(item.image.trim() === "" ? "%20" : item.image.trim());
                                 return {
                                     ...item,
-                                    image: data.data,
+                                    image: response?.data?.data || "", // Nếu không có dữ liệu thì trả về chuỗi rỗng
                                 };
                             } catch (error) {
+                                console.error(`Failed to fetch image for item: ${item.id}`, error);
                                 return {
                                     ...item,
-                                    image: "",
+                                    image: "", // Xử lý lỗi và trả về chuỗi rỗng nếu xảy ra lỗi
                                 };
                             }
                         }
-                        return item;
+                        return item; // Nếu không có image, trả về item ban đầu
                     })
                 );
+
 
                 setDataM(updatedData);
                 setCurrentPageM(response.data.data.currentPage);
@@ -437,7 +439,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
 
         fetchDataMaterial();
     }, [currentPageM, pageSizeM, searchTermM]);
-
+    console.log(">>>>>>>>>mate", dataM)
     // call data phase
     useEffect(() => {
         const fetchDataPhase = () => {
@@ -1233,12 +1235,12 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
 
                                                                             <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                                                                 {dataP && dataP.length > 0 ? (
-                                                                                    dataP.map((item) => (
-                                                                                        <Card className="h-[90px] flex gap-2 shadow-md group relative" key={item.id}>
+                                                                                    dataP.map((itemP) => (
+                                                                                        <Card className="h-[90px] flex gap-2 shadow-md group relative" key={itemP.id+ itemP.phaseId}>
                                                                                             <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
-                                                                                                <ImageIconShipmentForm dataImage={item} />
+                                                                                                <ImageIconShipmentForm dataImage={itemP} />
                                                                                                 <Check
-                                                                                                    className={`${shipmentDetailRequests.some((item1) => item1.itemId === item.id)
+                                                                                                    className={`${shipmentDetailRequests.some((item1) => item1.itemId === itemP.id)
                                                                                                         ? "absolute top-0 right-0 bg-primary text-white"
                                                                                                         : "hidden"
                                                                                                         }`}
@@ -1247,12 +1249,12 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                                     className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                                                                                     onClick={() => {
                                                                                                         handleAddProducts(
-                                                                                                            item,
-                                                                                                            item.imageUrl ? item.imageUrl : "",
-                                                                                                            item?.id,
+                                                                                                            itemP,
+                                                                                                            itemP.imageUrl ? itemP.imageUrl : "",
+                                                                                                            itemP?.id,
                                                                                                             productType,
-                                                                                                            item?.phaseId,
-                                                                                                            item.price,
+                                                                                                            itemP?.phaseId,
+                                                                                                            itemP.price,
                                                                                                         );
                                                                                                     }}
                                                                                                 >
@@ -1264,7 +1266,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                                     <span className="font-medium">Mã:</span>
                                                                                                     <span className="font-light">
                                                                                                         <HoverComponent Num={10}>
-                                                                                                            {item.code}
+                                                                                                            {itemP.code}
                                                                                                         </HoverComponent>
                                                                                                     </span>
                                                                                                 </div>
@@ -1272,7 +1274,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                                     <span className="font-medium">Tên:</span>
                                                                                                     <span className="font-light">
                                                                                                         <HoverComponent Num={10}>
-                                                                                                            {item.name}
+                                                                                                            {itemP.name}
                                                                                                         </HoverComponent>
                                                                                                     </span>
                                                                                                 </div>
@@ -1280,14 +1282,14 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                                     <span className="font-medium">Kích thước:</span>
                                                                                                     <span className="font-light">
                                                                                                         <HoverComponent Num={10}>
-                                                                                                            {item.size}
+                                                                                                            {itemP.size}
                                                                                                         </HoverComponent>
                                                                                                     </span>
                                                                                                 </div>
                                                                                                 <div className="flex gap-2">
                                                                                                     <span className="font-medium">Giá thành:</span>
                                                                                                     <span className="font-light text-primary">
-                                                                                                        <HoverComponent Num={15}>{formatCurrency(item.price)}</HoverComponent> .đ
+                                                                                                        <HoverComponent Num={15}>{formatCurrency(itemP.price)}</HoverComponent> .đ
                                                                                                     </span>
                                                                                                 </div>
                                                                                             </div>
@@ -1313,12 +1315,12 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
 
                                                                             <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                                                                                 {dataPF && dataPF.length > 0 ? (
-                                                                                    dataPF.map((item) => (
-                                                                                        <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
+                                                                                    dataPF.map((itemPF) => (
+                                                                                        <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={itemPF.id}>
                                                                                             <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
-                                                                                                <ImageIconShipmentFormPF dataImage={item} />
+                                                                                                <ImageIconShipmentFormPF dataImage={itemPF} />
                                                                                                 <Check
-                                                                                                    className={`${shipmentDetailRequests.some((item1) => item1.itemId === item.id)
+                                                                                                    className={`${shipmentDetailRequests.some((item1) => item1.itemId === itemPF.id)
                                                                                                         ? "absolute top-0 right-0 bg-primary text-white"
                                                                                                         : "hidden"
                                                                                                         }`}
@@ -1327,12 +1329,12 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                                     className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                                                                                     onClick={() => {
                                                                                                         handleAddProducts(
-                                                                                                            item,
-                                                                                                            item.image ? item.image : "",
-                                                                                                            item?.id,
+                                                                                                            itemPF,
+                                                                                                            itemPF.image ? itemPF.image : "",
+                                                                                                            itemPF?.id,
                                                                                                             productType,
                                                                                                             "",
-                                                                                                            item.price,
+                                                                                                            itemPF.price,
                                                                                                         );
                                                                                                     }}
                                                                                                 >
@@ -1344,7 +1346,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                                     <span className="font-medium">Mã:</span>
                                                                                                     <span className="font-light">
                                                                                                         <HoverComponent Num={10}>
-                                                                                                            {item.code}
+                                                                                                            {itemPF.code}
                                                                                                         </HoverComponent>
                                                                                                     </span>
                                                                                                 </div>
@@ -1352,7 +1354,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                                     <span className="font-medium">Tên:</span>
                                                                                                     <span className="font-light">
                                                                                                         <HoverComponent Num={10}>
-                                                                                                            {item.name}
+                                                                                                            {itemPF.name}
                                                                                                         </HoverComponent>
                                                                                                     </span>
                                                                                                 </div>
@@ -1360,14 +1362,14 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                                     <span className="font-medium">Số lượng có sẵn:</span>
                                                                                                     <span className="font-light">
                                                                                                         <HoverComponent Num={10}>
-                                                                                                            {item.totalAvailableQuantity}
+                                                                                                            {itemPF.totalAvailableQuantity}
                                                                                                         </HoverComponent>
                                                                                                     </span>
                                                                                                 </div>
                                                                                                 <div className="flex gap-2">
                                                                                                     <span className="font-medium">Giá thành:</span>
                                                                                                     <span className="font-light text-primary">
-                                                                                                        <HoverComponent Num={15}>{formatCurrency(item.price)}</HoverComponent> .đ
+                                                                                                        <HoverComponent Num={15}>{formatCurrency(itemPF.price)}</HoverComponent> .đ
                                                                                                     </span>
                                                                                                 </div>
                                                                                             </div>
@@ -1406,13 +1408,13 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                     className="md:w-[300px] w-full mb-3"
                                                                 />
                                                                 <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
-                                                                    {dataM.map((item) => (
-                                                                        <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={item.id}>
+                                                                    {dataM.map((itemM) => (
+                                                                        <Card className="h-[90px]  flex gap-2 shadow-md group relative" key={itemM.id}>
                                                                             <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
-                                                                                <ImageIconMaterial dataImage={item} />
+                                                                                <ImageIconMaterial dataImage={itemM} />
                                                                                 <Check
                                                                                     className={`${shipmentDetailRequests.some(
-                                                                                        (item1) => item1.itemId === item.id
+                                                                                        (item1) => item1.itemId === itemM.id
                                                                                     )
                                                                                         ? "absolute top-0 right-0 bg-primary text-white"
                                                                                         : "hidden"
@@ -1422,9 +1424,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                     className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
                                                                                     onClick={() =>
                                                                                         handleAddProducts(
-                                                                                            item,
-                                                                                            item?.image,
-                                                                                            item?.id,
+                                                                                            itemM,
+                                                                                            itemM?.image,
+                                                                                            itemM?.id,
                                                                                             materialType
                                                                                         )
                                                                                     }
@@ -1438,7 +1440,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                     <span className="font-medium">Tên:</span>
                                                                                     <span className="font-light">
                                                                                         <HoverComponent Num={10}>
-                                                                                            {item.name}
+                                                                                            {itemM.name}
                                                                                         </HoverComponent>
                                                                                     </span>
                                                                                 </div>
@@ -1446,7 +1448,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                     <span className="font-medium">Mô tả:</span>
                                                                                     <span className="font-light">
                                                                                         <HoverComponent Num={10}>
-                                                                                            {item.description}
+                                                                                            {itemM.description}
                                                                                         </HoverComponent>
                                                                                     </span>
                                                                                 </div>
@@ -1454,7 +1456,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                     <span className="font-medium">Số lượng/một đơn vị:</span>
                                                                                     <span className="font-light">
                                                                                         <HoverComponent Num={10}>
-                                                                                            {item.quantityPerUnit}
+                                                                                            {itemM.quantityPerUnit}
                                                                                         </HoverComponent>
                                                                                     </span>
                                                                                 </div>
@@ -1462,7 +1464,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => 
                                                                                     <span className="font-medium">Sẵn có:</span>
                                                                                     <span className="font-light text-primary">
                                                                                         <HoverComponent Num={10}>
-                                                                                            {item.quantityInStock}
+                                                                                            {itemM.quantityInStock}
                                                                                         </HoverComponent>
                                                                                     </span>
                                                                                 </div>

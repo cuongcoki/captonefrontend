@@ -35,6 +35,7 @@ import TitleComponent from "@/components/shared/common/Title";
 import HeaderComponent from "@/components/shared/common/header";
 import { OrderStore } from "../order-store";
 import HoverComponent from "@/components/shared/common/hover-card";
+import { formatCurrency } from "@/lib/utils";
 
 interface OrderId {
   orderId?: string;
@@ -56,6 +57,7 @@ interface productOrderResponses {
   shippedQuantiy: number;
   note: number;
 }
+
 interface setOrderResponses {
   setId: string;
   setName: string;
@@ -68,6 +70,7 @@ interface setOrderResponses {
   shippedQuantiy: number;
   note: number;
 }
+
 interface productResponses {
   id: string;
   name: string;
@@ -78,6 +81,7 @@ interface productResponses {
   isInProcessing: boolean;
   imageResponses: imageResponses[];
 }
+
 interface imageResponses {
   id: string;
   imageUrl: string;
@@ -156,18 +160,6 @@ export default function OrderIdPage({ orderId }: OrderId) {
   useEffect(() => {
     setCheckStatus(data?.status);
   }, [data?.status]);
-
-  const formatCurrency = (value: any): string => {
-    if (!value) return "";
-    let valueString = value.toString();
-    valueString = valueString.replace(/\D/g, "");
-    valueString = valueString.replace(/^0+/, "");
-    if (valueString === "") return "0";
-    let reversed = valueString.split("").reverse().join("");
-    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    let formatted = formattedReversed.split("").reverse().join("");
-    return formatted;
-  };
 
   const formatDate = (date: string) => {
     const data = date?.split("-");

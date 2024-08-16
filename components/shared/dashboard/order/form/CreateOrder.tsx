@@ -77,7 +77,7 @@ import { ChevronDown, Minus, Search } from "lucide-react";
 
 // ** import TYPE & SCHEMA
 import { OrderSchema } from "@/schema/order";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency, limitLength } from "@/lib/utils";
 import { orderApi } from "@/apis/order.api";
 import toast from "react-hot-toast";
 import { companyApi } from "@/apis/company.api";
@@ -102,7 +102,6 @@ const enumCompany = [
     id: 0,
     value: "0"
   },
-
 
 ];
 // Define Company Type
@@ -223,12 +222,11 @@ export default function CreateOrder() {
       .finally(() => { });
   };
 
-  // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
   const [pageIndex, setPageIndex] = useState<number>(1);
   const [pageSizeS, setPageSizeS] = useState<number>(100);
 
-  console.log("searchResults", searchResultsSet)
-  console.log("searchResults", searchResults)
+  // console.log("searchResults", searchResultsSet)
+  // console.log("searchResults", searchResults)
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
@@ -248,7 +246,7 @@ export default function CreateOrder() {
     handleSearch();
   }, [searchTerm]);
 
-  console.log("dataP", searchResults)
+  // console.log("dataP", searchResults)
 
   useEffect(() => {
 
@@ -263,12 +261,7 @@ export default function CreateOrder() {
   }, [debouncedSearchTerm, searchTerm]);
 
   // ========================================================= các hàm để thêm sản phẩm và số lượng vào bộ sản phẩm =========================================================
-  const limitLength = (text: any, maxLength: any) => {
-    if (text.length > maxLength) {
-      return `${text.slice(0, maxLength)}...`;
-    }
-    return text;
-  };
+ 
   const [getDetailsPro, setGetDetailsPro] = useState<any[]>([]);
   const [productsRequest, setProductsRequest] = useState<
     {
@@ -410,18 +403,6 @@ export default function CreateOrder() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const formatCurrency = (value: any): string => {
-    if (!value) return "";
-    let valueString = value.toString();
-    valueString = valueString.replace(/\D/g, "");
-    valueString = valueString.replace(/^0+/, "");
-    if (valueString === "") return "0";
-    let reversed = valueString.split("").reverse().join("");
-    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-    let formatted = formattedReversed.split("").reverse().join("");
-    return formatted;
   };
 
   const productCheck = 0;
