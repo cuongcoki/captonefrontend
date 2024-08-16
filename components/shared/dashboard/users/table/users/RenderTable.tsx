@@ -50,8 +50,7 @@ export default function RenderTableUsers({ searchParams }: Props) {
           .then(({ data }) => {
             setRoles(data.data);
           })
-          .catch((error) => {
-          })
+          .catch((error) => {})
           .finally(() => {
             setLoading(false);
           });
@@ -75,6 +74,8 @@ export default function RenderTableUsers({ searchParams }: Props) {
           error?.response.data.status === 400
         ) {
           setData([]);
+          setCurrentPage(1);
+          setTotalPages(1);
         }
       } finally {
         setLoading(false);
@@ -122,8 +123,7 @@ export default function RenderTableUsers({ searchParams }: Props) {
         </>
       </MyContext.Provider>
 
-      <div className="w-full bg-white py-3 md:hidden">
-      </div>
+      <div className="w-full bg-white py-3 md:hidden"></div>
     </div>
   );
 }
