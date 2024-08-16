@@ -1,8 +1,8 @@
 // ** Axios client import
-import axiosClient from '../auth/jwtService'
+import axiosClient from "../auth/jwtService";
 
 // ** Constants import
-import { endPointConstant } from '@/constants/endpoint'
+import { endPointConstant } from "@/constants/endpoint";
 
 export type CompanyRequest = {
   name: string;
@@ -14,12 +14,11 @@ export type CompanyRequest = {
 };
 
 export type OrderType = {
-  companyId: string,
-  status: number,
-  startOrder: string,
-  endOrder: string,
-  vat: number
-
+  companyId: string;
+  status: number;
+  startOrder: string;
+  endOrder: string;
+  vat: number;
 };
 
 interface OrderSearchParams {
@@ -31,24 +30,24 @@ interface OrderSearchParams {
   CompanyName?: string;
 }
 
-interface updateOrder{
-  orderId:string | undefined,
-  companyId:string,
-  status:number,
-  vat:number,
-  startOrder:string,
-  endOrder:string
+interface updateOrder {
+  orderId: string | undefined;
+  companyId: string;
+  status: number;
+  vat: number;
+  startOrder: string;
+  endOrder: string;
 }
-interface updateOrderDetails{
-  orderId:string,
-  orderDetailRequests:orderDetailRequests[]
+interface updateOrderDetails {
+  orderId: string;
+  orderDetailRequests: orderDetailRequests[];
 }
-interface orderDetailRequests{
-  productIdOrSetId:string,
-  quantity:number,
-  unitPrice:number,
-  note:string,
-  isProductId:boolean
+interface orderDetailRequests {
+  productIdOrSetId: string;
+  quantity: number;
+  unitPrice: number;
+  note: string;
+  isProductId: boolean;
 }
 
 const createCacheId = (base: string, params: Record<string, any>): string => {
@@ -59,7 +58,7 @@ const createCacheId = (base: string, params: Record<string, any>): string => {
 const orderCacheIds: Set<string> = new Set();
 const ordersCacheIds: Map<string, string> = new Map();
 
-const orderDetailsCacheIds:  Set<string> = new Set();
+export const orderDetailsCacheIds: Set<string> = new Set();
 
 export const orderApi = {
   searchOrder: (
@@ -70,7 +69,14 @@ export const orderApi = {
     EndOrder?: string | null,
     CompanyName?: string
   ) => {
-    const requestBody = { PageIndex, PageSize, Status, StartOrder,EndOrder ,CompanyName};
+    const requestBody = {
+      PageIndex,
+      PageSize,
+      Status,
+      StartOrder,
+      EndOrder,
+      CompanyName,
+    };
     const cacheId = createCacheId("search-order", requestBody);
     orderCacheIds.add(cacheId);
 
@@ -82,26 +88,29 @@ export const orderApi = {
     return axiosClient.get(url, { id: cacheId });
   },
 
-  getOrderId: (id:any) => {
+  getOrderId: (id: any) => {
     const cacheId = `get-order-${id}`;
     ordersCacheIds.set(id, cacheId);
-    return axiosClient.get(`${endPointConstant.BASE_URL}/orders/${id}`, { id: cacheId });
+    return axiosClient.get(`${endPointConstant.BASE_URL}/orders/${id}`, {
+      id: cacheId,
+    });
   },
 
-  updateOrder: (data:updateOrder) => axiosClient.put(`${endPointConstant.BASE_URL}/orders`, data, {
-    cache: {
-      update: () => {
-        orderCacheIds.forEach((id) => axiosClient.storage.remove(id));
-        orderCacheIds.clear();
+  updateOrder: (data: updateOrder) =>
+    axiosClient.put(`${endPointConstant.BASE_URL}/orders`, data, {
+      cache: {
+        update: () => {
+          orderCacheIds.forEach((id) => axiosClient.storage.remove(id));
+          orderCacheIds.clear();
 
-        const orderCacheId = ordersCacheIds.get(String(data.orderId));
-        if (orderCacheId) {
-          axiosClient.storage.remove(orderCacheId);
-          ordersCacheIds.delete(String(data.orderId));
-        }
+          const orderCacheId = ordersCacheIds.get(String(data.orderId));
+          if (orderCacheId) {
+            axiosClient.storage.remove(orderCacheId);
+            ordersCacheIds.delete(String(data.orderId));
+          }
+        },
       },
-    },
-  }),
+    }),
 
   createOrder: (data: OrderType) =>
     axiosClient.post(`${endPointConstant.BASE_URL}/orders`, data, {
@@ -113,7 +122,8 @@ export const orderApi = {
       },
     }),
 
-    createOrderId: (data:updateOrderDetails) => axiosClient.post(`${endPointConstant.BASE_URL}/orderDetails`, data, {
+  createOrderId: (data: updateOrderDetails) =>
+    axiosClient.post(`${endPointConstant.BASE_URL}/orderDetails`, data, {
       cache: {
         update: () => {
           orderDetailsCacheIds.forEach((id) => axiosClient.storage.remove(id));
@@ -123,18 +133,19 @@ export const orderApi = {
     }),
 
   getAllCompanis: (PageIndex?: any, PageSize?: any, searchTerm?: string) =>
-    axiosClient.get(`${endPointConstant.BASE_URL}/companies?&PageIndex=${PageIndex}&PageSize=${PageSize}&searchTerm=${searchTerm}`),
-
+    axiosClient.get(
+      `${endPointConstant.BASE_URL}/companies?&PageIndex=${PageIndex}&PageSize=${PageSize}&searchTerm=${searchTerm}`
+    ),
 
   createCompany: (data: CompanyRequest) =>
     axiosClient.post(`${endPointConstant.BASE_URL}/companies`, data),
 
-
-  getOrderDetailsId: (orderId:any) => {
+  getOrderDetailsId: (orderId: any) => {
     const cacheId = `get-order-details-${orderId}`;
     orderDetailsCacheIds.add(cacheId);
-    return axiosClient.get(`${endPointConstant.BASE_URL}/orderDetails/order/${orderId}`, { id: cacheId });
+    return axiosClient.get(
+      `${endPointConstant.BASE_URL}/orderDetails/order/${orderId}`,
+      { id: cacheId }
+    );
   },
-
-}
-
+};
