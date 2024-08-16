@@ -1,7 +1,5 @@
 "use client";
 
-
-
 import {
   Table,
   TableBody,
@@ -101,11 +99,25 @@ export function DataTableForMaterialHistory<TData, TValue>({
         );
         setListMaterial(listMaterial);
       })
-      .catch((err) => {
-      });
+      .catch((err) => {});
     setListMaterial;
   }, [setListMaterial]);
-
+  const formatCurrency = (value: any): string => {
+    if (!value) return "";
+    let valueString = value.toString();
+    // Remove all non-numeric characters, including dots
+    valueString = valueString.replace(/\D/g, "");
+    // Remove leading zeros
+    valueString = valueString.replace(/^0+/, "");
+    if (valueString === "") return "0";
+    // Reverse the string to handle grouping from the end
+    let reversed = valueString.split("").reverse().join("");
+    // Add dots every 3 characters
+    let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
+    // Reverse back to original order
+    let formatted = formattedReversed.split("").reverse().join("");
+    return formatted;
+  };
   useEffect(() => {
     const getImages = async (data: materialHistoryType[]) => {
       try {
@@ -120,8 +132,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
                   return newImages;
                 });
               })
-              .catch((error) => {
-              });
+              .catch((error) => {});
           }
         });
       } catch (error) {
@@ -251,11 +262,11 @@ export function DataTableForMaterialHistory<TData, TValue>({
             <TableHeader>
               <TableRow>
                 <TableHead className="text-center">Ảnh minh họa</TableHead>
-                <TableHead className="text-center">Tên nguyên vật liệu</TableHead>
-                <TableHead className="text-center">Số lượng</TableHead>
                 <TableHead className="text-center">
-                  Giá / Đơn vị
+                  Tên nguyên vật liệu
                 </TableHead>
+                <TableHead className="text-center">Số lượng</TableHead>
+                <TableHead className="text-center">Giá / Đơn vị</TableHead>
                 <TableHead className="text-center">Ngày nhập</TableHead>
                 <TableHead className="text-center">Ghi chú</TableHead>
                 <TableHead className="text-center">Hành Động</TableHead>
@@ -308,9 +319,11 @@ export function DataTableForMaterialHistory<TData, TValue>({
                         {row.materialName}
                       </TableCell>
                       <TableCell className="text-center">
-                        {row.quantity}
+                        {formatCurrency(row.quantity)}
                       </TableCell>
-                      <TableCell className="text-center">{row.price}</TableCell>
+                      <TableCell className="text-center">
+                        {formatCurrency(row.price)}
+                      </TableCell>
                       <TableCell className="text-center">
                         {convertDateFormatToDMY(row.importDate)}
                       </TableCell>
