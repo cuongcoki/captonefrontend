@@ -122,6 +122,7 @@ export function DataTableForMaterial<TData, TValue>({
           `${pathname}?searchTerm=${searchTerm || ""}&pageIndex=${pageIndex}`
         );
       } catch (error) {
+        setData([])
       } finally {
         setLoading(false);
       }

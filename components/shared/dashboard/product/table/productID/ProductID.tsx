@@ -28,6 +28,7 @@ import HeaderComponent from "@/components/shared/common/header";
 import TitleComponent from "@/components/shared/common/Title";
 import { ProductUpdateForm } from "../../form/ProductUpdateForm";
 import { formatCurrency } from "@/lib/utils";
+import { filesApi } from "@/apis/files.api";
 
 export interface ProductData {
   code: string;
@@ -68,18 +69,40 @@ export default function ProductIDPage() {
       productApi
         .getProductId(params.id)
         .then((res) => {
-          const userData = res.data.data;
-          setProductId(userData);
+          const userData = res.data.data as ProductData;
+
+          // Lấy và cập nhật imageUrl cho từng hình ảnh
+          return Promise.all(
+            userData.imageResponses.map((image) => {
+              return filesApi
+                .getFile(image.imageUrl)
+                .then(({ data }) => ({
+                  ...image,
+                  imageUrl: data.data,
+                }))
+                .catch((error) => ({
+                  ...image,
+                  imageUrl: "", // Xử lý trường hợp lỗi
+                }));
+            })
+          ).then((updatedImageResponses) => {
+            // Cập nhật lại productId với imageResponses đã được xử lý
+            setProductId({
+              ...userData,
+              imageResponses: updatedImageResponses,
+            });
+          });
         })
-        .catch((error) => {})
+        .catch((error) => {
+          console.error("Error fetching product data:", error);
+        })
         .finally(() => {
           setLoading(false);
         });
     };
 
     fetchDataProductId();
-  }, [params.id, force, productId]);
-
+  }, [params.id, force]);
   // const limitLength = (text: any, maxLength: any) => {
   //   if (text.length > maxLength) {
   //     return `${text.slice(0, maxLength)}...`;
@@ -169,11 +192,10 @@ export default function ProductIDPage() {
                     <div className="">Trạng Thái:</div>
                     <div className="">
                       <span
-                        className={`w-[40%] px-2 py-2 rounded-full ${
-                          productId?.isInProcessing
-                            ? "bg-primary text-white"
-                            : "bg-yellow-200 text-black"
-                        }`}
+                        className={`w-[40%] px-2 py-2 rounded-full ${productId?.isInProcessing
+                          ? "bg-primary text-white"
+                          : "bg-yellow-200 text-black"
+                          }`}
                       >
                         {productId?.isInProcessing
                           ? "Đang xử lý"

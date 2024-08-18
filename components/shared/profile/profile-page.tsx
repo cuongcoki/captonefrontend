@@ -190,7 +190,7 @@ export default function ProfilePage() {
 
 
   console.log("user?.user?.id", user?.user?.id)
-  console.log("userId?.id", userId?.id)
+  console.log("userId?.id", userId)
   return (
     <>
       {user?.user?.id === userId?.id ? (
