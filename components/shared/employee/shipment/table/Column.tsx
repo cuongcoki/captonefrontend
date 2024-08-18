@@ -115,7 +115,7 @@ export const columns: ColumnDef<Shipment>[] = [
           <HoverCard>
             <HoverCardTrigger>
               {" "}
-              {limitLength(row.original.from.companyTypeDescription, 30)}
+              {limitLength(row.original.from.name, 30)}
             </HoverCardTrigger>
             <HoverCardContent>
               <div className="max-w-sm mx-auto">
@@ -204,7 +204,7 @@ export const columns: ColumnDef<Shipment>[] = [
           <HoverCard>
             <HoverCardTrigger>
               {" "}
-              {limitLength(row.original.to.companyTypeDescription, 30)}
+              {limitLength(row.original.to.name, 30)}
             </HoverCardTrigger>
             <HoverCardContent>
               <div className="max-w-sm mx-auto">

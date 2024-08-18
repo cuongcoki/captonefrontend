@@ -69,7 +69,7 @@ export const AddMaterialSchema = z.object({
         return !isNaN(parsedValue) && parsedValue > 0;
       },
       {
-        message: "Số lượng phải lớn hơn 0",
+        message: "Số lượng phải lớn hơn hoặc bằng 0",
       }
     ),
   image: z.string().nullable(),

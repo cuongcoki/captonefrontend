@@ -19,44 +19,44 @@ interface ImageDisplayProps {
 const ImageDisplayID: React.FC<ImageDisplayProps> = ({ images }) => {
   const [updatedImages, setUpdatedImages] = React.useState(images);
   const [loading, setLoading] = React.useState(true);
-  React.useEffect(() => {
-    const updateImageUrls = async (images: any[]) => {
-      return await Promise.all(
-        images.map(async (image: any) => {
-          try {
-            const { data } = await filesApi.getFile(image.imageUrl);
-            return {
-              ...image,
-              imageUrl: data.data,
-            };
-          } catch (error) {
-            return {
-              ...image,
-              imageUrl: "", 
-            };
-          }
-        })
-      );
-    };
+  // React.useEffect(() => {
+  //   const updateImageUrls = async (images: any[]) => {
+  //     return await Promise.all(
+  //       images.map(async (image: any) => {
+  //         try {
+  //           const { data } = await filesApi.getFile(image.imageUrl);
+  //           return {
+  //             ...image,
+  //             imageUrl: data.data,
+  //           };
+  //         } catch (error) {
+  //           return {
+  //             ...image,
+  //             imageUrl: "", 
+  //           };
+  //         }
+  //       })
+  //     );
+  //   };
 
-    const fetchUpdatedImages = async () => {
-      try {
-        const newImages = await updateImageUrls(images);
-        setUpdatedImages(newImages);
-      } catch (error) {
-      } finally {
-        setLoading(false); 
-      }
-    };
+  //   const fetchUpdatedImages = async () => {
+  //     try {
+  //       const newImages = await updateImageUrls(images);
+  //       setUpdatedImages(newImages);
+  //     } catch (error) {
+  //     } finally {
+  //       setLoading(false); 
+  //     }
+  //   };
 
-    fetchUpdatedImages();
-  }, [images]);
+  //   fetchUpdatedImages();
+  // }, [images]);
   return (
     <div className="flex items-center justify-center w-full h-full">
-      {updatedImages && updatedImages.length > 0 ? (
+      {images && images.length > 0 ? (
         <Carousel className="flex flex-col w-full max-w-sm h-full">
           <CarouselContent>
-            {updatedImages.map((image, index) => (
+            {images.map((image, index) => (
               <CarouselItem
                 className="w-full h-full flex items-center justify-center"
                 key={index}

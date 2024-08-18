@@ -90,21 +90,23 @@ export default function RenderTableProduct() {
   const handleIsInProcessingChange = (value: string) => {
     setIsInProcessingString(value);
     setIsInProcessing(value === "true");
-    updatePathname();
   };
 
   const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    updatePathname();
   };
 
-  const updatePathname = () => {
-    const params = new URLSearchParams();
-    if (searchTerm) params.set("searchTerm", searchTerm);
-    params.set("isInProcessing", isInProcessing.toString());
-    params.set("page", "1");
-    router.push(`${pathname}?${params.toString()}`, { scroll: false });
-  };
+  useEffect(() => {
+    const updatePathname = () => {
+      const params = new URLSearchParams();
+      if (searchTerm) params.set("searchTerm", searchTerm);
+      params.set("isInProcessing", isInProcessing.toString());
+      params.set("page", "1");
+      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+  
+    updatePathname();
+  }, [isInProcessing, searchTerm, pathname, router]);
 
   return (
     <div className="">

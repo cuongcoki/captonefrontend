@@ -285,7 +285,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
             <TableBody>
               {data.map((item, index) => (
                 <TableRow
-                  className="bg-accent cursor-pointer"
+                  className={`bg-accent cursor-pointer ${item.isAccepted === false ? "shadow-md scale-100 bg-gray-50" :""}`}
                   key={index}
                   onClick={() => handleIndex(index)}
                 >

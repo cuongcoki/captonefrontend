@@ -130,18 +130,18 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
       isMainImage: image.isMainImage,
     })) || [];
 
-
+  console.log("productId", productId)
+  const phase1 = productId?.productPhaseSalaries.find(p => p.phaseId === '42ccc305-85c7-4a4a-92c0-bc41669afe25');
+  const phase2 = productId?.productPhaseSalaries.find(p => p.phaseId === '4d2113f9-2009-4c37-82b1-195ecbb9c706');
+  const phase3 = productId?.productPhaseSalaries.find(p => p.phaseId === '0f54b781-8286-42d2-9dce-b19b22b43700');
   const form = useForm({
     resolver: zodResolver(ProductUpdateSchema),
     defaultValues: {
       id: productId?.id || "",
       code: productId?.code || "",
-      priceFinished:
-        productId?.productPhaseSalaries[0].salaryPerProduct.toString() || "",
-      pricePhase2:
-        productId?.productPhaseSalaries[2].salaryPerProduct.toString() || "",
-      pricePhase1:
-        productId?.productPhaseSalaries[1].salaryPerProduct.toString() || "",
+      priceFinished: phase3?.salaryPerProduct.toString() || "",
+      pricePhase2: phase2?.salaryPerProduct.toString() || "",
+      pricePhase1: phase1?.salaryPerProduct.toString() || "",
       size: productId?.size || "",
       description: productId?.description || "",
       name: productId?.name || "",
@@ -154,7 +154,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   const [nameImage, setNameImage] = useState<string[]>([]);
 
   const [imageAddRequests, setImageAddRequests] = useState<any[]>([]);
-
+  console.log("imageAddRequests",imageAddRequests)
   // Handle uploading new photos
   const handleUploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -477,14 +477,15 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   const handleClearForm = () => {
     setOpen(false)
     setOpenAlert(false)
+    setImageAddRequests([])
     setFetchTrigger((prev) => prev + 1);
   }
 
   const { formState } = form;
   const handleOffDialog = () => {
+    const isDetailsOmage = Array.isArray(imageAddRequests) && imageAddRequests.length === 0;
 
-
-    if (!formState.isDirty) {
+    if (!formState.isDirty && isDetailsOmage) {
       setOpen(false);
       setFetchTrigger((prev) => prev + 1);
     } else {
