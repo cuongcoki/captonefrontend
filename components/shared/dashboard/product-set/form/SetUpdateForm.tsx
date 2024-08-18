@@ -262,7 +262,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
 
   useEffect(() => {
     handleSearch();
-  }, [searchTerm,handleSearch]);
+  }, [searchTerm]);
 
   // ** các hàm để thêm sản phẩm và số lượng vào bộ sản phẩm
 
@@ -499,9 +499,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
       return Array.isArray(arr) && arr.length === 0;
     };
 
-
     const checkImage = checkImageChange === imageRequests;
-
+    console.log("checkImage",checkImage)
+    console.log(checkImageChange)
+    console.log(imageRequests)
     const isRemoveEmpty = isArrayEmptyRemove(removeProductIds);
    
     if (isAddEmpty && !formState.isDirty && isUpdateEmpty && isRemoveEmpty && !checkImage) {

@@ -12,7 +12,7 @@ type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => {},
+  forceUpdate: () => { },
 });
 
 export default function RenderTableProduct() {
@@ -45,7 +45,7 @@ export default function RenderTableProduct() {
             } catch (error) {
               return {
                 ...item,
-                imageUrl: "", 
+                imageUrl: "",
               };
             }
           })
@@ -88,6 +88,7 @@ export default function RenderTableProduct() {
         <>
           <DataTableSet columns={columns} data={data} />
           <DataTablePagination
+            data={data}
             currentPage={currentPage}
             totalPages={totalPages}
             setCurrentPage={setCurrentPage}

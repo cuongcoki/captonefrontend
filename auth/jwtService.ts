@@ -35,12 +35,15 @@ axiosClient.interceptors.response.use(
     return response;
   },
   async (error) => {
-    // toast.error(error.response.data.message)
+   
     console.log(error);
     if (error.response) {
       // const { code } = error
       const config = error.config;
       if (error?.response?.status === 401) {
+        if(!localStorage.getItem("accessToken")){
+          return  toast.error(error.response.data.message)
+        }
         if (count > 0) {
           return;
         }

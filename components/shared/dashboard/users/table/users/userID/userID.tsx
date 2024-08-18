@@ -89,7 +89,6 @@ export default function UserIDPage() {
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
-  const [lastDay, setLastDay] = useState<string>("");
   const router = useRouter();
   const [isAlertChangeStatus, setIsAlertChangeStatus] =
     useState<boolean>(false);
@@ -102,17 +101,6 @@ export default function UserIDPage() {
   const { forceForUserDetail } = UserStore();
   // ** hooks
   const user = useAuth();
-  useEffect(() => {
-    salaryApi
-      .getPaidSalaries({
-        PageIndex: 1,
-        PageSize: 1,
-        UserId: params.id,
-      })
-      .then((res) => {
-        setLastDay(res.data.data.data[0]?.createdAt);
-      });
-  }, [params.id]);
 
   // ** call API
   useEffect(() => {
@@ -292,24 +280,12 @@ export default function UserIDPage() {
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();
-
-    // Remove all non-numeric characters, including dots
     valueString = valueString.replace(/\D/g, "");
-
-    // Remove leading zeros
     valueString = valueString.replace(/^0+/, "");
-
     if (valueString === "") return "0";
-
-    // Reverse the string to handle grouping from the end
     let reversed = valueString.split("").reverse().join("");
-
-    // Add dots every 3 characters
     let formattedReversed = reversed.match(/.{1,3}/g)?.join(".") || "";
-
-    // Reverse back to original order
     let formatted = formattedReversed.split("").reverse().join("");
-
     return formatted;
   };
 
@@ -649,7 +625,7 @@ export default function UserIDPage() {
                   <div className="font-extralight text-[0.8rem]">
                     Ngày nhận lương gần nhất
                   </div>
-                  <div>{lastDay ? formatDate(lastDay) : "Không có"}</div>
+                  <div>{userId?.lastPaidSalaryDate !== "0001-01-01" ? formatDate(userId?.lastPaidSalaryDate) : "Không có"}</div>
                 </div>
               </div>
             </CardContent>

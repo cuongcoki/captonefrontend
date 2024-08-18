@@ -168,17 +168,18 @@ export default function SideNavbar({ }: Props) {
                 checkRoll: [{ id: 1 }],
               },
 
-              {
-                title: "Điểm danh",
-                href: "/branchadmin/attendance/update-attendance",
-                icon: CalendarSearch,
-                variant: "ghost",
-                checkRoll: [{ id: 2 }],
-              },
+
               {
                 title: "Nhân Viên",
                 href: "/branchadmin/user",
                 icon: UserRound,
+                variant: "ghost",
+                checkRoll: [{ id: 2 }],
+              },
+              {
+                title: "Điểm danh",
+                href: "/branchadmin/attendance/update-attendance",
+                icon: CalendarSearch,
                 variant: "ghost",
                 checkRoll: [{ id: 2 }],
               },
