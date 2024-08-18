@@ -43,7 +43,6 @@ import TitleComponent from "../common/Title";
 import LoadingPage from "../loading/loading-page";
 import { UserStore } from "../dashboard/users/user-store";
 
-
 export default function ProfilePage() {
   // ** state
   const [loading, setLoading] = useState<boolean>(false);
@@ -53,22 +52,22 @@ export default function ProfilePage() {
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
-  const [lastDay, setLastDay] = useState<string>("");
+  // const [lastDay, setLastDay] = useState<string>("");
   const router = useRouter();
   const { forceForUserDetail } = UserStore();
   // ** hooks
   const user = useAuth();
-  useEffect(() => {
-    salaryApi
-      .getPaidSalaries({
-        PageIndex: 1,
-        PageSize: 1,
-        UserId: params.id,
-      })
-      .then((res) => {
-        setLastDay(res.data.data.data[0]?.createdAt);
-      });
-  }, [params.id]);
+  // useEffect(() => {
+  //   salaryApi
+  //     .getPaidSalaries({
+  //       PageIndex: 1,
+  //       PageSize: 1,
+  //       UserId: params.id,
+  //     })
+  //     .then((res) => {
+  //       setLastDay(res.data.data.data[0]?.createdAt);
+  //     });
+  // }, [params.id]);
 
   // ** call API
   useEffect(() => {
@@ -83,15 +82,13 @@ export default function ProfilePage() {
           });
           setUserId(userData);
         })
-        .catch((error) => {
-        })
+        .catch((error) => {})
         .finally(() => {
           setLoading(false);
         });
     };
     fetchDataGetMe();
-  }, [params.id, userId?.id,forceForUserDetail]);
-
+  }, [params.id, userId?.id, forceForUserDetail]);
 
   function validatePassword(password: string) {
     // Kiểm tra độ dài tối thiểu
@@ -188,9 +185,8 @@ export default function ProfilePage() {
     return formatted;
   };
 
-
-  console.log("user?.user?.id", user?.user?.id)
-  console.log("userId?.id", userId?.id)
+  console.log("user?.user?.id", user?.user?.id);
+  console.log("userId?.id", userId?.id);
   return (
     <>
       {user?.user?.id === userId?.id ? (
@@ -227,10 +223,8 @@ export default function ProfilePage() {
                       {userId?.id === "" ? "Chưa cập nhật" : userId?.id}
                     </div>
                   </div>
-
                 </div>
               </div>
-
 
               <div className="absolute right-2 top-2 hover:cursor-pointer">
                 {userId.roleId === 1 && (
@@ -298,7 +292,8 @@ export default function ProfilePage() {
                           </div>
                           <div>
                             {formatCurrency(
-                              userId?.salaryHistoryResponse?.salaryByDayResponses.salary
+                              userId?.salaryHistoryResponse
+                                ?.salaryByDayResponses.salary
                             )}{" "}
                             <span className="text-gray-400">VND/Ngày</span>
                           </div>
@@ -310,8 +305,8 @@ export default function ProfilePage() {
                           </div>
                           <div>
                             {formatCurrency(
-                              userId?.salaryHistoryResponse?.salaryByOverTimeResponses
-                                .salary
+                              userId?.salaryHistoryResponse
+                                ?.salaryByOverTimeResponses.salary
                             )}{" "}
                             <span className="text-gray-400">VND/giờ</span>
                           </div>
@@ -334,7 +329,11 @@ export default function ProfilePage() {
                           <div className="font-extralight text-[0.8rem]">
                             Ngày nhận lương gần nhất
                           </div>
-                          <div>{lastDay ? formatDate(lastDay) : "Không có"}</div>
+                          <div>
+                            {userId
+                              ? formatDate(userId.lastPaidSalaryDate)
+                              : "Không có"}
+                          </div>
                         </div>
                       </div>
                     </CardContent>
@@ -349,14 +348,21 @@ export default function ProfilePage() {
                     </CardHeader>
                     <CardContent className="grid grid-cols-2 gap-y-8">
                       <div>
-                        <div className="font-extralight text-[0.8rem]">Cơ sở</div>
+                        <div className="font-extralight text-[0.8rem]">
+                          Cơ sở
+                        </div>
                         <div>{userId.companyName}</div>
                       </div>
 
                       <div>
-                        <div className="font-extralight text-[0.8rem]">Vai trò</div>
+                        <div className="font-extralight text-[0.8rem]">
+                          Vai trò
+                        </div>
                         <div>
-                          {Role.find((role) => role.value === userId.roleId)?.label}
+                          {
+                            Role.find((role) => role.value === userId.roleId)
+                              ?.label
+                          }
                         </div>
                       </div>
                     </CardContent>
