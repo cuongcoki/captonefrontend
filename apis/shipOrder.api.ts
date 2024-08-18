@@ -1,4 +1,5 @@
 // ** Axios client import
+import { orderDetailsCacheIds } from "@/apis/order.api";
 import axiosClient from "../auth/jwtService";
 
 // ** Constants import
@@ -139,6 +140,10 @@ export const shipOrderApi = {
               axiosClient.storage.remove(cacheId)
             );
             shipOrdersCacheIds.clear();
+            orderDetailsCacheIds.forEach((cacheId) =>
+              axiosClient.storage.remove(cacheId)
+            );
+            orderDetailsCacheIds.clear();
           },
         },
       }

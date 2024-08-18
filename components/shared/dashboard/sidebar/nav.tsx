@@ -132,7 +132,6 @@ export function Nav({ links, isCollapsed }: NavProps) {
       pathname.includes(`${link.href1}/${params.id}`)
     );
   };
-  useEffect(() => {}, [checkActiveLink]);
 
   const userRoleId = user.user?.roleId;
 
@@ -144,18 +143,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
     filesApi.getFile(String(user.user?.avatar)).then((res) => {
       setAvatar(res.data.data);
     });
-  }, [avatar,user.user?.avatar]);
-
-  const formatDate = (dateString: any) => {
-    try {
-      const [year, month, day] = dateString.split("-");
-      const formattedDay = day.padStart(2, "0");
-      const formattedMonth = month.padStart(2, "0");
-      return `${formattedDay}/${formattedMonth}/${year}`;
-    } catch (error) {
-      return dateString;
-    }
-  };
+  }, [avatar, user.user?.avatar]);
 
   const handleLogout = () => {
     setLoading(true);
@@ -216,7 +204,11 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 <Tooltip key={index} delayDuration={0}>
                   <TooltipTrigger asChild>
                     <Link
-                      href={link.href}
+                      href={
+                        link.hrefCon && link.hrefCon?.length > 0
+                          ? "#"
+                          : link.href
+                      }
                       className={cn(
                         buttonVariants({
                           variant: checkActiveLink(link)
@@ -228,6 +220,11 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         link.variant === "colorCompany" &&
                           "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                       )}
+                      onClick={(event) => {
+                        if (link.hrefCon && link.hrefCon?.length > 0) {
+                          event.preventDefault();
+                        }
+                      }}
                     >
                       <link.icon className="h-4 w-4" />
                       <span className="sr-only">{link.title}</span>
@@ -267,29 +264,35 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   </TooltipContent>
                 </Tooltip>
               ) : (
-                <div key={index}>
+                <div
+                  key={index}
+                  className={cn(
+                    checkActiveLink(link)
+                      ? "bg-[#22c55e] text-primary-foreground hover:bg-primary-backgroudPrimary /90"
+                      : "hover:bg-accent hover:text-accent-foreground",
+                    "rounded-md"
+                  )}
+                  onClick={(event) => {
+                    if (link.hrefCon && link.hrefCon?.length > 0) {
+                      toggleDropdown(link.href1, link.hrefCon, event);
+                    } else {
+                      closeDropdown("");
+                    }
+                  }}
+                >
                   <Link
-                    href={link.href}
+                    href={
+                      link.hrefCon && link.hrefCon?.length > 0 ? "#" : link.href
+                    }
                     className={cn(
-                      buttonVariants({
-                        variant: checkActiveLink(link)
-                          ? "colorCompany"
-                          : "ghost",
-                        size: "sm",
-                      }),
+                      "w-full h-9 px-3 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
                       link.variant === "colorCompany" &&
-                        "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                      "justify-start"
+                        "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
                     )}
                   >
                     <link.icon className="mr-2 h-5 w-5" />
                     {link.href1 ? (
-                      <span
-                        className="flex justify-between w-full"
-                        onClick={(event) =>
-                          toggleDropdown(link.href1, link.hrefCon, event)
-                        }
-                      >
+                      <span className="flex justify-between w-full">
                         {link.title}
                       </span>
                     ) : (
@@ -303,7 +306,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         aria-orientation="vertical"
                         aria-labelledby="options-menu"
                       >
-                        {getNameLink.map((item) => (
+                        {getNameLink?.map((item) => (
                           <li key={item.id}>
                             <Link
                               href={item.href}

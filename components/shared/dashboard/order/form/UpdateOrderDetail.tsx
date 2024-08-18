@@ -29,7 +29,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 import * as Dialog from "@radix-ui/react-dialog";
 
@@ -41,7 +41,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 
 import {
   DropdownMenu,
@@ -85,10 +84,8 @@ const enumCompany = [
   {
     description: "Nhà xưởng",
     id: 0,
-    value: "0"
+    value: "0",
   },
-
-
 ];
 interface OrderID {
   orderId?: any;
@@ -101,14 +98,12 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   const { ForceRender } = OrderStore();
   const [openAlert, setOpenAlert] = useState<boolean>(false);
 
-
   const handleOnDialog = () => {
     setOpen(true);
   };
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-
 
   const [loading, setLoading] = useState<boolean>(false);
   const [checkProducts, setCheckProducts] = useState<boolean>(false);
@@ -167,11 +162,10 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         setSearchResultsSet(updatedImages);
       })
       .catch((error) => {
-        setSearchResultsSet([])
+        setSearchResultsSet([]);
       })
-      .finally(() => { });
+      .finally(() => {});
   };
-
 
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
   const [pageIndex, setPageIndex] = useState<number>(1);
@@ -196,10 +190,9 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     };
 
     handleSearch();
-  }, [searchTerm,pageIndex,pageSizeS]);
+  }, [searchTerm, pageIndex, pageSizeS]);
 
   // console.log("dataP", searchResults)
-
 
   // console.log("companyId", companyId)
   // console.log("pahsseId", phaseId)
@@ -217,7 +210,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   }, [debouncedSearchTerm, searchTerm]);
 
   //  ========================================================= các hàm để thêm sản phẩm  và số lượng vào bộ sản phẩm  =========================================================
- 
+
   const [getDetailsPro, setGetDetailsPro] = useState<any[]>([]);
   const [productsRequest, setProductsRequest] = useState<
     {
@@ -282,7 +275,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
 
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any) => {
-
     // Kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
     const existingDetailProUpdate = getDetailsProUpdate.some(
       (item) => item.productId === product.id
@@ -347,7 +339,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       (product) => product.productIdOrSetId !== productId
     );
     setProductsRequest(updatedProductsRequest);
-
   };
 
   const handleChange = (productId: string, name: string, value: any) => {
@@ -371,7 +362,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   // ========================================================= Xử lý khi người dùng gửi form =========================================================
 
   const handleSubmit = async () => {
-
     const productsRequestTrimmed = productsRequest.map((product) => {
       if (product.unitPrice < 0 && product.unitPrice === null) {
         toast.error(`Đơn giá phải lớn hơn 0 cho sản phẩm`);
@@ -408,7 +398,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       console.error("Đã xảy ra lỗi:", error);
       if (error.response && error.response.data && error.response.data.error) {
         const keys = error.response.data.error;
-        if (typeof keys === 'string') {
+        if (typeof keys === "string") {
           toast.error(keys);
         } else {
           for (const key in keys) {
@@ -421,41 +411,46 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
     } finally {
       setLoading(false);
     }
-    
   };
 
   const { pending } = useFormStatus();
-
 
   const productCheck = 0;
   const setCheck = 1;
 
   const handleClearForm = () => {
-    setOpen(false)
-    setOpenAlert(false)
+    setOpen(false);
+    setOpenAlert(false);
     setFetchTrigger((prev) => prev + 1);
     form.reset();
     setProductsRequest([]);
     setGetDetailsPro([]);
     setSearchTerm("");
-    setSearchTermSet("")
+    setSearchTermSet("");
     setSearchResults([]);
     setSearchResultsSet([]);
-  }
+  };
 
-  const [initialProductsRequest, setInitialProductsRequest] = useState<any[]>([]);
+  const [initialProductsRequest, setInitialProductsRequest] = useState<any[]>(
+    []
+  );
   useEffect(() => {
-    setInitialProductsRequest(productsRequest)
-  }, [])
+    setInitialProductsRequest(productsRequest);
+  }, []);
 
   const handleOffDialog = () => {
     const currentFormValues = productsRequest;
-    setInitialProductsRequest(productsRequest)
-    const isFormChanged = JSON.stringify(initialProductsRequest) === JSON.stringify(currentFormValues);
+    setInitialProductsRequest(productsRequest);
+    const isFormChanged =
+      JSON.stringify(initialProductsRequest) ===
+      JSON.stringify(currentFormValues);
     if (isFormChanged) {
       setOpen(false);
       setFetchTrigger((prev) => prev + 1);
-    } else if (Array.isArray(initialProductsRequest) && initialProductsRequest.length === 0) {
+    } else if (
+      Array.isArray(initialProductsRequest) &&
+      initialProductsRequest.length === 0
+    ) {
       setOpen(false);
       setFetchTrigger((prev) => prev + 1);
     } else {
@@ -464,25 +459,30 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
   };
   return (
     <>
-      {
-        openAlert && (
-          <AlertDialog open={openAlert} >
-            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-      }
+      {openAlert && (
+        <AlertDialog open={openAlert}>
+          <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Bạn có chắc chắn muốn tắt biểu mẫu này không ??
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
+                những dữ liệu mà bạn đã nhập
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleOffDialogA}>
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearForm}>
+                Tiếp tục
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
         <Dialog.Trigger>
           <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
@@ -499,12 +499,16 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                   <h2 className="text-2xl text-white">
                     Chỉnh Sửa Mặt Hàng Của Đơn Hàng
                   </h2>
-                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleOffDialog}
+                  >
                     <X className="w-4 h-4" />
                   </Button>
                 </div>
                 <div className="p-4  h-[800px] overflow-auto">
-                  <Card >
+                  <Card>
                     <CardHeader>
                       <TitleComponent
                         title="Danh sách mặt hàng"
@@ -535,7 +539,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                               onChange={(e) => setSearchTerm(e.target.value)}
                               className="border-none w-full"
                             />
-
                           ) : (
                             <Input
                               placeholder="Tìm kiếm bộ sản phẩm..."
@@ -545,10 +548,8 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                             />
                           )}
                         </div>
-
                       </div>
                       {!checkProducts ? (
-
                         <Card className="my-4">
                           <CardHeader className="font-semibold text-xl">
                             <span>Thông tin sản phẩm</span>
@@ -556,29 +557,32 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                           <div className=" w-full grid grid-cols-1 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                             {searchResults !== null ? (
                               searchResults.map((product) => (
-                                <Card className="h-[90px] flex gap-2 shadow-md group relative" key={product.id} >
+                                <Card
+                                  className="h-[90px] flex gap-2 shadow-md group relative"
+                                  key={product.id}
+                                >
                                   <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
-
                                     <ImageDisplayDialog
                                       images={product}
                                       checkProduct={productCheck}
                                     />
 
                                     <Check
-                                      className={`w-5 h-5 ${productsRequest.some(
-                                        (item1) => item1.productIdOrSetId === product.id
-                                      )
-                                        ? "absolute top-0 right-0 bg-primary text-white"
-                                        : "hidden"
-                                        }`}
+                                      className={`w-5 h-5 ${
+                                        productsRequest.some(
+                                          (item1) =>
+                                            item1.productIdOrSetId ===
+                                            product.id
+                                        )
+                                          ? "absolute top-0 right-0 bg-primary text-white"
+                                          : "hidden"
+                                      }`}
                                     />
                                   </div>
 
                                   <span
                                     className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                    onClick={() =>
-                                      handleAddProducts(product)
-                                    }
+                                    onClick={() => handleAddProducts(product)}
                                   >
                                     <Plus className="text-white" />
                                   </span>
@@ -601,7 +605,9 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                       </span>
                                     </div>
                                     <div className="flex gap-2">
-                                      <span className="font-medium">Kích thước:</span>
+                                      <span className="font-medium">
+                                        Kích thước:
+                                      </span>
                                       <span className="font-light">
                                         <HoverComponent Num={10}>
                                           {product.size}
@@ -609,8 +615,15 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                       </span>
                                     </div>
                                     <div className="flex gap-2">
-                                      <span className="font-medium">Giá thành:</span>
-                                      <span className="font-light text-primary"><HoverComponent Num={10}>{formatCurrency(product.price)}</HoverComponent> .đ</span>
+                                      <span className="font-medium">
+                                        Giá thành:
+                                      </span>
+                                      <span className="font-light text-primary">
+                                        <HoverComponent Num={10}>
+                                          {formatCurrency(product.price)}
+                                        </HoverComponent>{" "}
+                                        .đ
+                                      </span>
                                     </div>
                                   </div>
                                 </Card>
@@ -623,7 +636,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                           </div>
                         </Card>
                       ) : (
-
                         <Card className="my-4">
                           <CardHeader className="font-semibold text-xl">
                             <span>Thông tin bộ sản phẩm</span>
@@ -631,27 +643,31 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                           <div className=" w-full grid grid-cols-3 md:grid-cols-3 gap-4 h-[150px]  md:min-h-[180px] overflow-y-auto ">
                             {searchResultsSet !== null ? (
                               searchResultsSet.map((product) => (
-                                <Card className=" h-[90px] flex gap-2 shadow-md group relative" key={product.id} >
+                                <Card
+                                  className=" h-[90px] flex gap-2 shadow-md group relative"
+                                  key={product.id}
+                                >
                                   <div className="group relative w-[100px] max-h-[90px] shadow-md rounded-md">
                                     <ImageDisplayDialogSet
                                       images={product}
                                       checkProduct={setCheck}
                                     />
                                     <Check
-                                      className={`w-5 h-5 ${productsRequest.some(
-                                        (item1) => item1.productIdOrSetId === product.id
-                                      )
-                                        ? "absolute top-0 right-0 bg-primary text-white"
-                                        : "hidden"
-                                        }`}
+                                      className={`w-5 h-5 ${
+                                        productsRequest.some(
+                                          (item1) =>
+                                            item1.productIdOrSetId ===
+                                            product.id
+                                        )
+                                          ? "absolute top-0 right-0 bg-primary text-white"
+                                          : "hidden"
+                                      }`}
                                     />
                                   </div>
 
                                   <span
                                     className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
-                                    onClick={() =>
-                                      handleAddProducts(product)
-                                    }
+                                    onClick={() => handleAddProducts(product)}
                                   >
                                     <Plus className="text-white" />
                                   </span>
@@ -673,7 +689,6 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                         </HoverComponent>
                                       </span>
                                     </div>
-
                                   </div>
                                 </Card>
                               ))
@@ -695,7 +710,8 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                             <Table className="overflow-x-auto md:w-full w-[800px]">
                               <TableHeader>
                                 <TableRow>
-                                  <TableHead className="w-[100px]">Mặt hàng
+                                  <TableHead className="w-[100px]">
+                                    Mặt hàng
                                   </TableHead>
                                   <TableHead>Loại hàng</TableHead>
                                   <TableHead>Số lượng</TableHead>
@@ -705,7 +721,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                 </TableRow>
                               </TableHeader>
 
-                              <TableBody >
+                              <TableBody>
                                 {getDetailsPro.map((product, index) => (
                                   <TableRow key={index}>
                                     <TableCell className="font-medium w-[20%]">
@@ -716,29 +732,38 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                           width={900}
                                           height={900}
                                           src={
-                                            product?.imageUrl && product.imageUrl !== "Image_not_found"
+                                            product?.imageUrl &&
+                                            product.imageUrl !==
+                                              "Image_not_found"
                                               ? product.imageUrl
-                                              : product?.image === "Image_not_found"
-                                                ? NoImage
-                                                : product?.image
+                                              : product?.image ===
+                                                "Image_not_found"
+                                              ? NoImage
+                                              : product?.image
                                           }
                                         />
 
                                         <div className="font-medium dark:text-white">
                                           <div className="text-sm text-gray-500 dark:text-gray-400">
-                                            {limitLength(product.code, 10)} - {limitLength(product.name, 15)}
+                                            {limitLength(product.code, 10)} -{" "}
+                                            {limitLength(product.name, 15)}
                                           </div>
                                         </div>
                                       </div>
                                     </TableCell>
-                                    <TableCell>{product.isProductId === true ? "Sản phẩm" : "Bộ sản phẩm"}</TableCell>
+                                    <TableCell>
+                                      {product.isProductId === true
+                                        ? "Sản phẩm"
+                                        : "Bộ sản phẩm"}
+                                    </TableCell>
                                     <TableCell className="font-medium">
                                       <Input
                                         name="quantity"
                                         value={formatCurrency(
                                           productsRequest.find(
                                             (item) =>
-                                              item.productIdOrSetId === product.id
+                                              item.productIdOrSetId ===
+                                              product.id
                                           )?.quantity
                                         )}
                                         onChange={(e) =>
@@ -761,7 +786,8 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                         value={formatCurrency(
                                           productsRequest.find(
                                             (item) =>
-                                              item.productIdOrSetId === product.id
+                                              item.productIdOrSetId ===
+                                              product.id
                                           )?.unitPrice || 0
                                         )}
                                         onChange={(e) =>

@@ -13,9 +13,9 @@ export default function HeaderComponent({
     <>
       <BreadcrumbComponent />
       <CardTitle>
-        <h2 className="text-2xl font-semibol text-[#22c55e] text-left w-full tracking-tight">
+        <div className="text-2xl font-semibol text-[#22c55e] text-left w-full tracking-tight">
           {title}
-        </h2>
+        </div>
         <span className="text-xs font-normal leading-snug text-muted-foreground">
           {description}
         </span>
