@@ -419,7 +419,7 @@ export const SetForm = () => {
                     <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
-                <div className="grid gap-4 p-4 overflow-y-auto h-[700px]">
+                <div className="grid gap-4 p-4 overflow-y-auto h-[700px] dark:bg-black">
                   <div className="gap-4 w-full lg:gap-8">
                     <Form {...form}>
                       <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">

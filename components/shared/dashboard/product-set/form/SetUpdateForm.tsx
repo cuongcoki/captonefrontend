@@ -435,6 +435,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         setGetDetailsProUpdate([]);
         setUpdateProducts([]);
         setRemoveProductIds([]);
+        setFetchTrigger((prev) => prev + 1);
         setOpen(false);
         // form.reset();
       })
@@ -467,8 +468,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   const [checkImageChange, setCheckImageChange] = useState<any>();
 
   useEffect(() => {
-    setCheckImageChange(imageRequests);
-  }, [imageRequests]);
+    setCheckImageChange(imageRequests)
+  }, [])
 
   const handleOffDialog = () => {
     //add product
@@ -491,18 +492,10 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     };
 
     const checkImage = checkImageChange === imageRequests;
-    console.log("checkImage", checkImage);
-    console.log(checkImageChange);
-    console.log(imageRequests);
+  
     const isRemoveEmpty = isArrayEmptyRemove(removeProductIds);
-
-    if (
-      isAddEmpty &&
-      !formState.isDirty &&
-      isUpdateEmpty &&
-      isRemoveEmpty &&
-      !checkImage
-    ) {
+   
+    if (isAddEmpty && !formState.isDirty && isUpdateEmpty && isRemoveEmpty && checkImage) {
       setOpen(false);
       setFetchTrigger((prev) => prev + 1);
     } else {
@@ -510,6 +503,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     }
   };
 
+  
   return (
     <>
       {openAlert && (
@@ -558,7 +552,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                     <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
-                <div className="grid gap-4 p-4 overflow-y-auto h-[750px] dark:bg-card">
+                <div className="grid gap-4 p-4 overflow-y-auto h-[750px] dark:bg-black">
+
                   <Form {...form}>
                     <form
                       onSubmit={form.handleSubmit(onSubmit)}

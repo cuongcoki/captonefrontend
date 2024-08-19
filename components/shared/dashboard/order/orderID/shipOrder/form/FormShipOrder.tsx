@@ -477,7 +477,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                   </Button>
                 </div>
 
-                <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4">
+                <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4 dark:bg-card">
                   <Form {...form}>
                     <form
                       onSubmit={form.handleSubmit(onSubmit)}
@@ -496,7 +496,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                               defaultValue={field.value}
                             >
                               <FormControl>
-                                <SelectTrigger className="h-16">
+                                <SelectTrigger className="h-16 dark:text-white">
                                   <SelectValue
                                     placeholder="Hãy chọn nhân viên"
                                     defaultValue={field.value}
@@ -550,7 +550,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                               defaultValue={String(field.value)}
                             >
                               <FormControl>
-                                <SelectTrigger>
+                                <SelectTrigger className="dark:text-white">
                                   <SelectValue
                                     placeholder="Hãy chọn loại đơn"
                                     defaultValue={String(field.value)}
@@ -587,7 +587,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                                   <Button
                                     variant={"outline"}
                                     className={cn(
-                                      "w-[240px] pl-3 text-left font-normal",
+                                      "w-[240px] dark:text-white pl-3 text-left font-normal",
                                       !field.value && "text-muted-foreground"
                                     )}
                                   >

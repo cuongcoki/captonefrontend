@@ -43,6 +43,9 @@ const createCacheId = (base: string, params: Record<string, any>): string => {
 const shipmentCacheIds: Set<string> = new Set();
 const shipmentsCacheIds: Map<string, string> = new Map();
 
+const shipmentShipperCacheIds: Set<string> = new Set();
+const shipmentShippersCacheIds: Map<string, string> = new Map();
+
 export const shipmentApi = {
   getShipments: (
     PageIndex?: number,
@@ -151,7 +154,8 @@ export const shipmentApi = {
         },
       }
     ),
-
+    // const shipmentShipperCacheIds: Set<string> = new Set();
+    // const shipmentShippersCacheIds: Map<string, string> = new Map();
   changeStatusByShipper: (id: string, data: updateStatusShipment) =>
     axiosClient.patch(
       `${endPointConstant.BASE_URL}/shipments/${id}/shipper/change-status`,
@@ -159,15 +163,15 @@ export const shipmentApi = {
       {
         cache: {
           update: () => {
-            shipmentCacheIds.forEach((id) => {
+            shipmentShipperCacheIds.forEach((id) => {
               axiosClient.storage.remove(id);
             });
-            shipmentCacheIds.clear();
+            shipmentShipperCacheIds.clear();
 
-            const shipmentCacheId = shipmentsCacheIds.get(id);
-            if (shipmentCacheId) {
-              axiosClient.storage.remove(shipmentCacheId);
-              shipmentsCacheIds.delete(id);
+            const shipmentShipperCacheId = shipmentShippersCacheIds.get(id);
+            if (shipmentShipperCacheId) {
+              axiosClient.storage.remove(shipmentShipperCacheId);
+              shipmentShippersCacheIds.delete(id);
             }
           },
         },
@@ -181,8 +185,8 @@ export const shipmentApi = {
     SearchTerm?: string
   ) => {
     const requestBody = { PageIndex, PageSize, Status, SearchTerm };
-    const cacheId = createCacheId("get-shipments", requestBody);
-    shipmentCacheIds.add(cacheId);
+    const cacheId = createCacheId("get-shipments-shipper", requestBody);
+    shipmentShipperCacheIds.add(cacheId);
 
     let url = `${endPointConstant.BASE_URL}/shipments/get-by-shipper?`;
     if (PageIndex !== undefined) url += `PageIndex=${PageIndex}&`;
