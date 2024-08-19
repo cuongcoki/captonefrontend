@@ -71,7 +71,7 @@ export function DataTableForAttendanceForm<TData, TValue>({
       createAttendances: tableData,
     };
 
-    console.log("createAttendanceSlotBody", createAttendanceSlotBody);
+    // console.log("createAttendanceSlotBody", createAttendanceSlotBody);
 
   };
 

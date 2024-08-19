@@ -56,12 +56,12 @@ export default function ChangeStatusShipOrderEm({ status }: PropStatus) {
         setValueStatus(value);
     };
     const handleSubmitOrderStatus = (id: string) => {
-        console.log("id", id);
+        // console.log("id", id);
         const formattedData = {
             shipOrderId: id,
             status: valueStatus,
         };
-        console.log("formattedData", formattedData);
+        // console.log("formattedData", formattedData);
         shipOrderApi.updateStatus(formattedData, id).then(({ data }) => {
             forceUpdate();
             toast.success(data.message);

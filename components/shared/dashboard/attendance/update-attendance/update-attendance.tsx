@@ -335,7 +335,7 @@ export default function UpdateAttendance({
       attendanceApi
         .createAttendance(DataBody as CreateAttendanceBody)
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           updateEmployeeProduct();
           toast.success(data.message);
           setIsCreated(true);
@@ -356,7 +356,7 @@ export default function UpdateAttendance({
       attendanceApi
         .updateAttendance(DataBody as UpdateAttendanceBody)
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           updateEmployeeProduct();
 
           toast.success(data.message);
@@ -382,7 +382,7 @@ export default function UpdateAttendance({
     return formattedDate;
   }
   useEffect(() => {
-    console.log("TABLE DATA", tableData);
+    // console.log("TABLE DATA", tableData);
   }, [tableData]);
   return (
     <div>

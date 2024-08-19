@@ -135,7 +135,7 @@ export default function UpdateMaterialForm({ id }: { id: string }) {
         }
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
   }, [id, form]);
 

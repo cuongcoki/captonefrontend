@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function Page({ searchParams }: Props) {
-  console.log("searchParams", searchParams.pageIndex);
+  // console.log("searchParams", searchParams.pageIndex);
   return (
     <div className="h-max">
       <HeaderComponent

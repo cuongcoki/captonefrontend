@@ -395,7 +395,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
         toast.success("Cập nhật sản phẩm thành công");
       }
     } catch (error: any) {
-      console.error("Đã xảy ra lỗi:", error);
+      // console.error("Đã xảy ra lỗi:", error);
       if (error.response && error.response.data && error.response.data.error) {
         const keys = error.response.data.error;
         if (typeof keys === "string") {

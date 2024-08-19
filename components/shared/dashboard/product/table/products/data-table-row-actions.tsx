@@ -55,7 +55,7 @@ export function DataTableRowActions<TData extends { id: string }>({
           setProductId(updatedProductData);
         }
       } catch (error) {
-        console.error("Error fetching product by ID:", error);
+        // console.error("Error fetching product by ID:", error);
       } finally {
         // Bạn có thể thêm setLoading(false) ở đây nếu có sử dụng loading state
       }

@@ -320,7 +320,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-  console.log("dataSID");
+  // console.log("dataSID");
   const handleStatusChange = (value: number) => {
     setCompanyType(value);
   };
@@ -437,10 +437,10 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                   image: response?.data?.data || "", // Nếu không có dữ liệu thì trả về chuỗi rỗng
                 };
               } catch (error) {
-                console.error(
-                  `Failed to fetch image for item: ${item.id}`,
-                  error
-                );
+                // console.error(
+                //   `Failed to fetch image for item: ${item.id}`,
+                //   error
+                // );
                 return {
                   ...item,
                   image: "", // Xử lý lỗi và trả về chuỗi rỗng nếu xảy ra lỗi
@@ -844,7 +844,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
       shipDate: formattedShipDate,
       shipmentDetailRequests: updatedShipmentDetailRequests,
     };
-    console.log("requestBody", requestBody);
+    // console.log("requestBody", requestBody);
     setLoading(true);
     shipmentApi
       .updateShipment(requestBody, shipmentIDDes)

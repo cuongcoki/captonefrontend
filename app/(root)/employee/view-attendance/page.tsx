@@ -65,11 +65,11 @@ export default function Page({ searchParams }: Props) {
         );
       })
       .catch((error) => {
-        console.log("Error", error);
+        // console.log("Error", error);
       });
   }, [year, month]);
   useEffect(() => {
-    console.log("Attendance Data", attendanceData);
+    // console.log("Attendance Data", attendanceData);
     const attendanceDict: { [key: string]: AttendanceDateData } =
       attendanceData?.reduce((acc: any, entry: any) => {
         acc[entry.date] = entry;
@@ -168,7 +168,7 @@ export default function Page({ searchParams }: Props) {
   }, [router, pathName, year, month]);
 
   useEffect(() => {
-    console.log("Calender Data", calenderData);
+    // console.log("Calender Data", calenderData);
   }, [calenderData]);
   const handleIncreaseMonth = () => {
     if (month === 12) {

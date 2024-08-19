@@ -289,7 +289,7 @@ export const columns: ColumnDef<Shipment>[] = [
     cell: ({ row }) => {
       const { ForceRender } = ShipmentStore();
       const handleAcceptShipment = () => {
-        console.log(row.original.id);
+        // console.log(row.original.id);
         shipmentApi
           .isAcceptedShipment(row.original.id, true)
           .then(({ data }) => {

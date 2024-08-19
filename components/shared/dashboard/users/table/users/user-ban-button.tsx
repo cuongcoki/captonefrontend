@@ -31,7 +31,7 @@ export default function UserBanButton({ user, setIsOpen }: Props) {
         if (setIsOpen) {
           setIsOpen(false);
         }
-        console.log("changeUserStatus", data);
+        // console.log("changeUserStatus", data);
         forceUpdate();
       })
       .catch((error) => {

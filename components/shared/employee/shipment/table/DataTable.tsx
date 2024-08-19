@@ -31,7 +31,7 @@ export function DataTable<TData , TValue>({
   const router = useRouter();
   const handleGotoDetail = (id: string) => {
     router.push(`/dashboard/order/${id}`);
-    console.log('id',id)
+    // console.log('id',id)
   }
 
   return (

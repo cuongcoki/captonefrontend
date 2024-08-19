@@ -216,7 +216,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
                     pageIndex: 1,
                   };
                 });
-                console.log(format(event, "dd/MM/yyyy"));
+                // console.log(format(event, "dd/MM/yyyy"));
               }}
             />
             <DatePicker
@@ -245,7 +245,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
                     pageIndex: 1,
                   };
                 });
-                console.log(format(event, "dd/MM/yyyy"));
+                // console.log(format(event, "dd/MM/yyyy"));
               }}
             />
           </div>

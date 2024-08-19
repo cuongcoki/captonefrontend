@@ -42,7 +42,7 @@ export default function ShipOrderID({ item }: ShipOrderIDProps) {
 
     }, [item])
 
-    console.log("item", item)
+    // console.log("item", item)
 
     // các hàm hiển thị sao cho oke
     function formatDate(isoString: string) {
@@ -82,7 +82,7 @@ export default function ShipOrderID({ item }: ShipOrderIDProps) {
             setImageSet(res.data.data);
         });
     }, [imageSet, item?.set?.imageUrl]);
-    console.log("imageSet", imageSet)
+    // console.log("imageSet", imageSet)
     return (
         <>
             <Dialog.Root open={open} onOpenChange={handleOnDialog}>

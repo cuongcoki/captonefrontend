@@ -25,11 +25,11 @@ export const filesApi = {
             },
             cache: {
                 update: () => {
-                    console.log("Clearing cacheIds:", cacheIds); // Log before clearing
+                    // console.log("Clearing cacheIds:", cacheIds); // Log before clearing
                     // Remove all cache IDs
                     cacheIds.forEach((id) => axiosClient.storage.remove(id));
                     cacheIds.clear(); // Clear the set after removing
-                    console.log("cacheIds after clearing:", cacheIds); // Log after clearing
+                    // console.log("cacheIds after clearing:", cacheIds); // Log after clearing
                 },
             },
         });
@@ -42,11 +42,11 @@ export const filesApi = {
             },
             cache: {
                 update: () => {
-                    console.log("Clearing cacheIds:", cacheIds); // Log before clearing
+                    // console.log("Clearing cacheIds:", cacheIds); // Log before clearing
                     // Remove all cache IDs
                     cacheIds.forEach((id) => axiosClient.storage.remove(id));
                     cacheIds.clear(); // Clear the set after removing
-                    console.log("cacheIds after clearing:", cacheIds); // Log after clearing
+                    // console.log("cacheIds after clearing:", cacheIds); // Log after clearing
                 },
             },
         });

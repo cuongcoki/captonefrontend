@@ -23,7 +23,7 @@ export const materiaHistoryApi = {
   searchMaterialHistory: (requestBody: SearchMaterialHistoryBody) => {
     const cacheId = createCacheId("search-material-history", requestBody);
     cacheIds.add(cacheId); // Lưu cache ID
-    console.log("Added cacheId:", cacheId); // Log cache ID khi thêm
+    // console.log("Added cacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<SearchResponse<materialHistoryType[]>>(
       `${endPointConstant.BASE_URL}/material-history`,
       {
@@ -50,7 +50,7 @@ export const materiaHistoryApi = {
   getMaterialHistory: (id: string) => {
     const cacheId = `get-material-history-${id}`;
     materialHistoryCacheIds.set(id, cacheId); // Lưu cache ID với ID của material history
-    console.log("Added materialHistoryCacheId:", cacheId); // Log cache ID khi thêm
+    // console.log("Added materialHistoryCacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<SuccessResponse<materialHistoryType>>(
       `${endPointConstant.BASE_URL}/material-history/${id}`,
       {
@@ -77,10 +77,10 @@ export const materiaHistoryApi = {
             if (materialHistoryCacheId) {
               axiosClient.storage.remove(materialHistoryCacheId);
               materialHistoryCacheIds.delete(requestBody.id);
-              console.log(
-                "Removed materialHistoryCacheId:",
-                materialHistoryCacheId
-              ); // Log cache ID sau khi xóa
+              // console.log(
+              //   "Removed materialHistoryCacheId:",
+              //   materialHistoryCacheId
+              // ); // Log cache ID sau khi xóa
             }
           },
         },
@@ -103,10 +103,10 @@ export const materiaHistoryApi = {
             if (materialHistoryCacheId) {
               axiosClient.storage.remove(materialHistoryCacheId);
               materialHistoryCacheIds.delete(id);
-              console.log(
-                "Removed materialHistoryCacheId:",
-                materialHistoryCacheId
-              ); // Log cache ID sau khi xóa
+              // console.log(
+              //   "Removed materialHistoryCacheId:",
+              //   materialHistoryCacheId
+              // ); // Log cache ID sau khi xóa
             }
           },
         },

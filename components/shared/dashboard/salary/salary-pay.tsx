@@ -40,7 +40,7 @@ export default function SalaryPay({ id }: { id: string }) {
         note: "",
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         forceRender();
         setSalaryAvailiable(salaryAvailiable - Number(salary));
         toast.success("Trả lương thành công");
@@ -97,7 +97,7 @@ export default function SalaryPay({ id }: { id: string }) {
             value={formatCurrency(salary)}
             onChange={(e) => {
               if (e.target.value !== "") {
-                console.log("Input change");
+                // console.log("Input change");
                 error.current.hidden = true;
               }
               setSalary(e.target.value.replace(/\./g, ""));
