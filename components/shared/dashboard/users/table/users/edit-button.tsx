@@ -61,7 +61,7 @@ export default function UserEditButton({ user }: Props) {
         }, 2000);
       })
       .catch((error) => {
-        console.log("UpdateError", error);
+        // console.log("UpdateError", error);
       });
   };
 

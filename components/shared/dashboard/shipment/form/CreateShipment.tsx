@@ -434,10 +434,10 @@ export default function CreateShipment() {
                   image: response?.data?.data || "", // Nếu không có dữ liệu thì trả về chuỗi rỗng
                 };
               } catch (error) {
-                console.error(
-                  `Failed to fetch image for item: ${item.id}`,
-                  error
-                );
+                // console.error(
+                //   `Failed to fetch image for item: ${item.id}`,
+                //   error
+                // );
                 return {
                   ...item,
                   image: "", // Xử lý lỗi và trả về chuỗi rỗng nếu xảy ra lỗi
@@ -612,7 +612,7 @@ export default function CreateShipment() {
     }
 
     if (shipmentDetailRequests.length === 0) {
-      console.error("Không tìm thấy yêu cầu chi tiết lô hàng");
+      // console.error("Không tìm thấy yêu cầu chi tiết lô hàng");
       return;
     }
 
@@ -807,7 +807,7 @@ export default function CreateShipment() {
       shipDate: formattedShipDate,
       shipmentDetailRequests: updatedShipmentDetailRequests,
     };
-    console.log("requestBody", requestBody);
+    // console.log("requestBody", requestBody);
     setLoading(true);
     shipmentApi
       .createShipment(requestBody)

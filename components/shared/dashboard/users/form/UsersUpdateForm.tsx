@@ -275,7 +275,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           setRoles(data.data);
         })
         .catch((error) => {
-          console.error("Error fetching roles data:", error);
+          // console.error("Error fetching roles data:", error);
         })
         .finally(() => {
           setLoading(false);
@@ -388,7 +388,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
         companyId: data.companyId,
         roleId: data.roleId,
       };
-      console.log("formattedData", formattedData)
+      // console.log("formattedData", formattedData)
       // Đợi cho ảnh được tải lên trước
       await handlePostImage();
 

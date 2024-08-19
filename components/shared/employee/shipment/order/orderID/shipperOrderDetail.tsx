@@ -127,7 +127,6 @@ export const ShipperOrderDetail: React.FC<ShipOrderProps> = ({
     return text;
   };
 
-  console.log("data", data);
   return (
     <>
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>

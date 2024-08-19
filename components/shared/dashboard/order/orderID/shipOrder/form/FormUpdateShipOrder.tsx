@@ -239,8 +239,8 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
     // ** các hàm sử lý logic
     const [shipOrderDetailRequests, setShipOrderDetailRequests] = useState<ShipOrderDetailRequest[]>([]);
     const [productDetail, setProductDetail] = useState<any[]>([]);
-    console.log("productDetail",productDetail)
-    console.log("shipOrderDetailRequests",shipOrderDetailRequests)
+    // console.log("productDetail",productDetail)
+    // console.log("shipOrderDetailRequests",shipOrderDetailRequests)
     // Hàm thêm sản phẩm
     const handleAddProducts = (item: any, imgProducts: string, itemId: string, itemKind: number) => {
         const itemExists = shipOrderDetailRequests.some((item) => item.itemId === itemId);
@@ -258,7 +258,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         ]);
     };
 
-    console.log("productDetail", productDetail)
+    // console.log("productDetail", productDetail)
 
     // Hàm xóa sản phẩm
     const handleDeleteProducts = (itemId: string) => {
@@ -291,7 +291,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         },
     });
     const { reset } = form;
-    console.log("shipOrderId", shipOrderId)
+    // console.log("shipOrderId", shipOrderId)
     // ** callData
     useEffect(() => {
         const fetchImages = async () => {
@@ -315,7 +315,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                         const response = await filesApi.getFile(img.imageUrl);
                                         return response.data.data;
                                     } catch (error) {
-                                        console.error("Error fetching image:", error);
+                                        // console.error("Error fetching image:", error);
                                         return null;
                                     }
                                 })
@@ -331,7 +331,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                     );
                     setProductDetail(details);
                 } catch (error) {
-                    console.error("Error processing ship order details:", error);
+                    // console.error("Error processing ship order details:", error);
                 }
             }
 
@@ -474,7 +474,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
         return formatted;
     };
 
-    console.log("productDetail", productDetail)
+    // console.log("productDetail", productDetail)
     return (
         <>
             {

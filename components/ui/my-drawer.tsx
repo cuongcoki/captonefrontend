@@ -38,7 +38,7 @@ export function MyDrawer() {
     authApi
       .logout(id)
       .then(({ data }) => {
-        console.log("dataLogout", data);
+        // console.log("dataLogout", data);
         user.logout();
         router.push("/sign-in");
         toast.success(data.message);

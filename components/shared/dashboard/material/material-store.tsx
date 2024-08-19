@@ -24,7 +24,7 @@ export const useMaterialStore = create<MaterialStore>((set) => ({
   setPageIndex: (pageIndex: number) => set({ pageIndex }),
   setSearchTerm: (searchTerm: string) => set({ searchTerm }),
   getData: (searchTerm: string, pageIndex: number) => {
-    console.log("getData", searchTerm, pageIndex);
+    // console.log("getData", searchTerm, pageIndex);
     try {
       materialApi
         .searchMaterial({
@@ -40,7 +40,7 @@ export const useMaterialStore = create<MaterialStore>((set) => ({
           }));
         });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   },
 }));

@@ -35,7 +35,7 @@ export default function SalaryPayEm({ id }: { id: string }) {
         note: "",
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         forceRender();
         setSalaryAvailiable(
           salaryAvailiable - Number(salary.replace(/\./, ""))
@@ -89,7 +89,7 @@ export default function SalaryPayEm({ id }: { id: string }) {
             value={formatCurrency(salary)}
             onChange={(e) => {
               if (e.target.value !== "") {
-                console.log("Input change");
+                // console.log("Input change");
                 error.current.hidden = true;
               }
               setSalary(e.target.value);

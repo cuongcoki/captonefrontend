@@ -66,6 +66,8 @@ export default function CompanyUpdate({
       },
     };
 
+    // console.log("updateData",updateData)
+
     companyApi
       .updateCompany(updateData)
       .then(() => {

@@ -72,7 +72,7 @@ export default function CountProduct({
           timestamp: timestamp,
         })
         .then(({ data }) => {
-          console.log("Search Data: ", data);
+          // console.log("Search Data: ", data);
           const setProduct = new Set<string>();
           userDataRef.current.products.forEach((product) => {
             setProduct.add(product.productID);
@@ -100,10 +100,10 @@ export default function CountProduct({
     const getImage = async (name: string) => {
       try {
         const res = await filesApi.getFile(name);
-        console.log("Get Image", res.data.data);
+        // console.log("Get Image", res.data.data);
         return res.data.data;
       } catch (error: any) {
-        console.log("Error get image: ", error.response.data);
+        // console.log("Error get image: ", error.response.data);
       }
     };
     const imageP = await getImage(product.imageResponses[0]?.imageUrl || "");
@@ -176,12 +176,12 @@ export default function CountProduct({
 
   useEffect(() => {
     if (!dialogIsOpen && isUpdate) {
-      console.log("Update Table Data");
+      // console.log("Update Table Data");
       const data = userData;
       data.products = data.products.filter(
         (product) => product.quantity !== "0"
       );
-      console.log("Data Product Update: ", data);
+      // console.log("Data Product Update: ", data);
       setTableDataIndex(index, data);
       setIsUpdate(false);
     }

@@ -50,13 +50,13 @@ export default function FormSignIn() {
       .then(({ data }) => {
         const { user, accessToken, refreshToken } = data.data;
         auth.login(user, rememberMe, accessToken, refreshToken);
-        console.log(data);
+        // console.log(data);
         toast.success(data.message);
         router.push(`/profile/${data.data.user.id}`);
       })
       .catch((error) => {
         const errors = error.response.data.message
-        console.log(error.data)
+        // console.log(error.data)
         toast.error(errors)
 
       })

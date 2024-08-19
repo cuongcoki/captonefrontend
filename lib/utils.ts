@@ -28,13 +28,13 @@ export const CheckPermissionEnter = (dataPer: any) => {
     if (user?.roleId === dataPer) {
       // console.log("User has permission to enter.");
     } else {
-      console.log("User does not have permission to enter.");
+      // console.log("User does not have permission to enter.");
       window.location.href = "/not-found";
     }
   } else {
-    console.warn(
-      "CheckPermissionEnter: storage or window object not available"
-    );
+    // console.warn(
+    //   "CheckPermissionEnter: storage or window object not available"
+    // );
   }
 };
 

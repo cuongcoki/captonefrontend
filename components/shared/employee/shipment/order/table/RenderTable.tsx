@@ -17,14 +17,14 @@ import { ProductSearchParams } from "@/types/product.type";
 import { orderApi } from "@/apis/order.api";
 import DatePicker from "@/components/shared/common/datapicker/date-picker";
 import toast from "react-hot-toast";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { companyApi } from "@/apis/company.api";
 import { shipOrderApi } from "@/apis/shipOrder.api";
 type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => {},
+  forceUpdate: () => { },
 });
 
 const enumStatus = [
@@ -77,7 +77,7 @@ export default function RenderTableOrderShipment() {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [status, setStatus] = useState<string | null>("0");
-  const [shipDate, setShipDate] = useState<Date | null>(null);
+  const [shipDate, setShipDate] = useState<any | null>(null);
   const [companyName, setCompanyName] = useState<string>("");
 
   const router = useRouter();
@@ -88,21 +88,25 @@ export default function RenderTableOrderShipment() {
   type Props = {
     searchParams: ProductSearchParams;
   };
-
   useEffect(() => {
     const fetchDataOrder = async () => {
+      const originalDate = shipDate;
+      const date = new Date(originalDate);
+      date.setUTCHours(23, 59, 59, 0);
+      const formattedShipDate = date.toISOString().replace(".000", "");
       setLoading(true);
       try {
         const response = await shipOrderApi.shipOrderByShipper(
           currentPage,
           pageSize,
           status,
-          shipDate ? formatDate(shipDate) : null
+          shipDate === null ? shipDate : formattedShipDate
         );
         setData(response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error) {
+        setData([])
       } finally {
         setLoading(false);
       }
@@ -124,16 +128,27 @@ export default function RenderTableOrderShipment() {
   };
 
   const handleStartDateChange = (date: Date | null) => {
-    setShipDate(date);
+    // console.log(date)
+    // console.log(shipDate)
+   
+    if (date) {
+      // Tạo đối tượng Date với thời gian thiết lập là 23:59:59 (UTC)
+      const formattedDate = new Date(
+        Date.UTC(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          // 23, 59, 59, 0 // Thiết lập giờ, phút, giây và mili giây
+        )
+      ).toISOString();
+      if(formattedDate === shipDate){
+        return setShipDate(null)
+      }
+      setShipDate(formattedDate); // Sử dụng định dạng ISO với đuôi T23:59:59Z
+    } else {
+      setShipDate(null);
+    }
     setCurrentPage(1);
-  };
-
-  const formatDate = (date: Date | null) => {
-    if (!date) return "";
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
   };
 
   return (
@@ -161,9 +176,11 @@ export default function RenderTableOrderShipment() {
               </div>
               <div className="grid grid-cols-2 gap-x-4 ">
                 <DatePicker
-                  selected={shipDate}
+                  selected={
+                    shipDate ? parseISO(shipDate) : undefined
+                  }
                   name="from"
-                  title={shipDate ? formatDate(shipDate) : "Từ ngày"}
+                  title="Hãy chọn ngày"
                   className="w-full"
                   onDayClick={handleStartDateChange}
                 />

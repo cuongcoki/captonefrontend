@@ -49,7 +49,7 @@ export default function FillterByDate() {
                       title="Từ ngày"
                       className="w-full"
                       onDayClick={(event: any) => {
-                        console.log(format(event, "dd/MM/yyyy"));
+                        // console.log(format(event, "dd/MM/yyyy"));
                       }}
                     />
                   </FormControl>

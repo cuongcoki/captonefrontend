@@ -29,14 +29,14 @@ export const productPhaseStore = create<ProductPhaseStore>((set, get) => ({
   changeQuantityType: (index, from, to, quantity) => {
     const { tableData } = get();
     if (index < 0 || index >= tableData.length) {
-      console.error("Invalid index");
+      // console.error("Invalid index");
       return;
     }
     const fromKey = ProductPhaseQuantityType[from];
     const toKey = ProductPhaseQuantityType[to];
 
     if (!fromKey || !toKey) {
-      console.error("Invalid quantity type");
+      // console.error("Invalid quantity type");
       return;
     }
 

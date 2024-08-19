@@ -74,13 +74,13 @@ export default function RenderTableShipment() {
           searchTerm
         );
         setData(response.data.data.data);
-        console.log("DATA SHIPMENT", response.data.data.data);
+        // console.log("DATA SHIPMENT", response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error: any) {
         // toast.error(error.response.data.message)
         setData([]);
-        console.error("Error fetching order data:", error);
+        // console.error("Error fetching order data:", error);
       } finally {
         setLoading(false);
       }

@@ -62,7 +62,7 @@ export default function ProductPhaseTable({
         setPhaseData(res.data.data);
       })
       .catch((e) => {
-        console.log(e);
+        // console.log(e);
       });
   }, [setPhaseData]);
 
@@ -81,7 +81,7 @@ export default function ProductPhaseTable({
           CompanyIDSetRef.current.add(item.id);
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     };
 
@@ -110,7 +110,7 @@ export default function ProductPhaseTable({
           SearchPhase: params.SearchPhase,
           SearchProduct: params.SearchProduct,
         });
-        console.log("TABLE DATA", res.data.data.data);
+        // console.log("TABLE DATA", res.data.data.data);
         setTableData(res.data.data.data);
         setTotal(res.data.data.totalPages);
 
@@ -118,11 +118,11 @@ export default function ProductPhaseTable({
           `${pathname}?PageIndex=${params.PageIndex}&SearchCompany=${params.SearchCompany}&SearchPhase=${params.SearchPhase}&SearchProduct=${params.SearchProduct}`
         );
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     };
     fetchData();
-    console.log("PRODUCT PHASE RERENDER");
+    // console.log("PRODUCT PHASE RERENDER");
   }, [router, params, pathname, setTableData, setCompanyData, force]);
 
   const formatCurrency = (value: any): string => {

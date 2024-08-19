@@ -235,7 +235,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
   const [indexItemShipOrder, setIndexItemShipOrder] = useState<number>(0);
   const handleIndex = (index: number) => {
     setIndexItemShipOrder(index);
-    console.log(index);
+    // console.log(index);
   };
 
   function formatDate(inputDate: string): string {

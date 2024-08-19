@@ -94,7 +94,7 @@ export default function ProductIDPage() {
           });
         })
         .catch((error) => {
-          console.error("Error fetching product data:", error);
+          // console.error("Error fetching product data:", error);
         })
         .finally(() => {
           setLoading(false);

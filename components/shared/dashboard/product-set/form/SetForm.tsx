@@ -317,19 +317,17 @@ export const SetForm = () => {
           imageUrl: nameImage,
           setProductsRequest: productsRequest,
         };
-        console.log("requestBody", requestBody);
+        // console.log("requestBody", requestBody);
         const response = await setApi.createSet(requestBody);
         if (response.data.isSuccess) {
           toast.success(response.data.message);
-          setTimeout(() => {
-            forceUpdate();
-            setOpen(false);
-            form.reset();
-            setProductsRequest([])
-            setGetDetailsPro([]);
-            setUpdateProducts([])
-            setImageRequests(null)
-          }, 2000);
+          forceUpdate();
+          setOpen(false);
+          form.reset();
+          setProductsRequest([])
+          setGetDetailsPro([]);
+          setUpdateProducts([])
+          setImageRequests(null)
         } else {
           toast.error(response.data.message);
         }
@@ -659,13 +657,20 @@ export const SetForm = () => {
                             </div>
                           </CardContent>
                         </Card>
-                        <Button
-                          type="submit"
-                          className="w-full bg-primary hover:bg-primary/90 my-3"
-                          disabled={pending}
-                        >
-                          {loading ? "Đang xử lý..." : "Thêm bộ sản phẩm"}
-                        </Button>
+                        {
+                          !loading ? (
+                            <Button
+                              type="submit"
+                              className="w-full bg-primary hover:bg-primary/90 my-3"
+                              disabled={loading}
+                            >
+                              {loading ? "Đang xử lý..." : "Thêm bộ sản phẩm"}
+                            </Button>
+                          ) : (
+                            <span className="opacity-65 w-full text-white bg-primary/90 text-center text-sm rounded-md py-2">{loading ? "Đang xử lý..." : "Thêm bộ sản phẩm"}</span>
+
+                          )
+                        }
                       </form>
                     </Form>
                   </div>
