@@ -8,7 +8,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MÂY TRE ĐAN TIẾN HUY",
+  title: "Mây Tre Đan Tiến Huy",
   description: "MÂY TRE ĐAN TIẾN HUY - NÉT ĐẸP TỪ BÀN TAY VIỆT",
 };
 
