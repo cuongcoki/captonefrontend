@@ -968,7 +968,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
             <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[1000px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
               <Dialog.Title className="visible hidden"></Dialog.Title>
               <Dialog.Description className="visible hidden"></Dialog.Description>
-              <div className="bg-slate-100 flex flex-col overflow-y-auto space-y-4 rounded-md">
+              <div className="bg-slate-100 flex flex-col overflow-y-auto  rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">
                     Chỉnh Sửa Đơn Vận Chuyển
@@ -978,10 +978,10 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                     size="icon"
                     onClick={handleOffDialog}
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
-                <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4">
+                <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4 dark:bg-black">
                   <Form {...form}>
                     <form
                       onSubmit={form.handleSubmit(onSubmit)}

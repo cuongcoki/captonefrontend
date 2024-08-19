@@ -96,3 +96,11 @@ export const generateRandomString = (length: number = 5) => {
   }
   return result;
 };
+
+export function formatDateShort(inputDate:string) {
+  if (!inputDate) {
+    return inputDate; // Trả về giá trị ban đầu nếu null hoặc rỗng
+  }
+  const [year, month, day] = inputDate.split('-');
+  return `${day}/${month}/${year}`;
+}

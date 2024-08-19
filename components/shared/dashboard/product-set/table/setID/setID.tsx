@@ -46,7 +46,7 @@ export default function SetIDPage() {
     };
 
     fetchDataProductId();
-  }, [params.id, force]);
+  }, [params.id, force, setProduct]);
 
 
 

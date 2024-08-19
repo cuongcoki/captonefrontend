@@ -86,7 +86,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
   const router = useRouter();
   const user = useAuth();
   const params = useParams<{ id: string }>();
-  useEffect(() => {}, [params]);
+  useEffect(() => { }, [params]);
   const { setTheme } = useTheme();
 
   // console.log("user", user?.user)
@@ -218,7 +218,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         }),
                         "h-9 w-9",
                         link.variant === "colorCompany" &&
-                          "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                        "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                       )}
                       onClick={(event) => {
                         if (link.hrefCon && link.hrefCon?.length > 0) {
@@ -243,11 +243,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         {link.hrefCon.map((linkCon, index) => (
                           <li
                             key={index}
-                            className={`${
-                              pathname === linkCon.href
+                            className={`${pathname === linkCon.href
                                 ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
                                 : "text-gray-700"
-                            } p-1 text-sm hover:bg-gray-100`}
+                              } p-1 text-sm hover:bg-gray-100`}
                           >
                             <Link
                               href={linkCon.href}
@@ -287,7 +286,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     className={cn(
                       "w-full h-9 px-3 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
                       link.variant === "colorCompany" &&
-                        "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
+                      "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
                     )}
                   >
                     <link.icon className="mr-2 h-5 w-5" />
@@ -300,7 +299,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     )}
                   </Link>
                   {link.href1 === checkLink && isOpen && (
-                    <div className="right-0 mt-2 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                    <div className="right-0 mt-2 rounded-lg shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
                       <ul
                         role="menu"
                         aria-orientation="vertical"
@@ -310,11 +309,10 @@ export function Nav({ links, isCollapsed }: NavProps) {
                           <li key={item.id}>
                             <Link
                               href={item.href}
-                              className={`${
-                                pathname === item.href
-                                  ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
-                                  : "text-gray-700"
-                              } block px-4 py-2 text-sm hover:bg-gray-100`}
+                              className={`${pathname === item.href
+                                  ? "bg-primary dark:bg-primary/90 hover:bg-primary/90 text-white dark:text-white"
+                                  : "text-gray-700 dark:text-gray-300"
+                                } block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700`}
                               onClick={() => closeDropdown("")}
                             >
                               {item.title}
@@ -324,6 +322,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                       </ul>
                     </div>
                   )}
+
                 </div>
               );
             })}
@@ -359,7 +358,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
               </Command>
             </div>
           ) : (
-            <CardDescription className="m-1 mb-3  w-[170px] bg-white border shadow-md rounded-lg overflow-hidden transition-all ease-in-out duration-300 hover:shadow-xl">
+            <CardDescription className="m-1 mb-3  w-[170px]  border shadow-md rounded-lg overflow-hidden transition-all ease-in-out duration-300 hover:shadow-xl">
               <div className="flex flex-row items-start gap-4 p-2">
                 <Avatar>
                   <Link

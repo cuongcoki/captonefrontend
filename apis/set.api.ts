@@ -46,22 +46,25 @@ export const setApi = {
             },
         }),
 
-    updateSet: (data: SetUpdateType, setId: string) =>
-        axiosClient.put(`${endPointConstant.BASE_URL}/sets/${setId}`, data, {
-            cache: {
-                update: () => {
-                    setCacheIds.forEach((id) => {
-                        axiosClient.storage.remove(id);
-                    });
-                    setCacheIds.clear();
-                    const setCacheId = setsCacheIds.get(setId);
-                    if (setCacheId) {
-                        axiosClient.storage.remove(setCacheId);
-                        setsCacheIds.delete(setId);
-                    }
+        updateSet: (data: SetUpdateType, setId: string) =>
+            axiosClient.put(`${endPointConstant.BASE_URL}/sets/${setId}`, data, {
+                cache: {
+                    update: () => {
+                        // Remove all general cache entries
+                        setCacheIds.forEach((id) => {
+                            axiosClient.storage.remove(id);
+                        });
+                        setCacheIds.clear();
+    
+                        // Remove specific cache entry related to the updated set
+                        const setCacheId = setsCacheIds.get(setId);
+                        if (setCacheId) {
+                            axiosClient.storage.remove(setCacheId);
+                            setsCacheIds.delete(setId);
+                        }
+                    },
                 },
-            },
-        }),
+            }),
 
     searchSets: (searchTerm?: string) =>
         axiosClient.get(`${endPointConstant.BASE_URL}/sets/search`, {
