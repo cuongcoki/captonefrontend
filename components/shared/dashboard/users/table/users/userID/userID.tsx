@@ -112,13 +112,13 @@ export default function UserIDPage() {
           const userData = res.data.data;
           filesApi.getFile(userData.avatar).then((res) => {
             setAvatar(res.data.data);
-            console.log("avatar", res.data.data);
+            // console.log("avatar", res.data.data);
           });
-          console.log("userData", userData);
+          // console.log("userData", userData);
           setUserId(userData);
         })
         .catch((error) => {
-          console.error("Error fetching user data:", error);
+          // console.error("Error fetching user data:", error);
         })
         .finally(() => {
           setLoading(false);
@@ -163,7 +163,7 @@ export default function UserIDPage() {
     authApi
       .logout(id)
       .then(({ data }) => {
-        console.log("dataLogout", data);
+        // console.log("dataLogout", data);
         user.logout();
         router.push("/sign-in");
         // toast.success(data.message);
@@ -202,7 +202,7 @@ export default function UserIDPage() {
         handleLogout();
       })
       .catch((error) => {
-        console.error("Error changing password:", error);
+        // console.error("Error changing password:", error);
         toast.error("Đổi mật khẩu thất bại");
       });
   };
@@ -211,7 +211,7 @@ export default function UserIDPage() {
     userApi
       .changeUserStatus(userId.id, !userId.isActive)
       .then((res) => {
-        console.log("res", res);
+        // console.log("res", res);
         toast.success("Thay đổi trạng thái thành công");
         setUserId({
           ...userId,
@@ -219,7 +219,7 @@ export default function UserIDPage() {
         });
       })
       .catch((error) => {
-        console.error("Error changing user status:", error);
+        // console.error("Error changing user status:", error);
         if (error.response.data.error) {
           for (const key in error.response.data.error) {
             toast.error(error.response.data.error[key][0]);
@@ -265,7 +265,7 @@ export default function UserIDPage() {
         ForceRender();
       })
       .catch((e) => {
-        console.error("Error changing user role:", e);
+        // console.error("Error changing user role:", e);
         toast.error("Thay đổi vai trò thất bại");
       });
   };
@@ -276,7 +276,7 @@ export default function UserIDPage() {
     return `${data[2]}/${data[1]}/${data[0]}`;
   };
 
-  console.log(user.user);
+  // console.log(user.user);
   const formatCurrency = (value: any): string => {
     if (!value) return "";
     let valueString = value.toString();

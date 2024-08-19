@@ -240,7 +240,7 @@ export const UsersForm = () => {
           }
         })
         .catch((err) => {
-          console.log(err.response);
+          // console.log(err.response);
           if (err.response && err.response.data && err.response.data.error) {
             if (err.response.data.error) {
               for (const key in err.response.data.error) {
@@ -255,7 +255,7 @@ export const UsersForm = () => {
         })
         .finally(() => {
           setLoading(false);
-          console.log(data);
+          // console.log(data);
         });
     });
   };

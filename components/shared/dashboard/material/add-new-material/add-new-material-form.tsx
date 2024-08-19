@@ -61,7 +61,7 @@ export default function AddNewMeterialForm() {
     try {
       const response = await filesApi.postFiles(formData); 
     } catch (error) {
-      console.error("Error uploading files:", error);
+      // console.error("Error uploading files:", error);
     } finally {
       // setLoading(false);
     }

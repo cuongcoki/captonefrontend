@@ -88,10 +88,10 @@ export function DataTableForAttendanceEm<TData, TValue>({
       .then(({ data }) => {
         setData(data.data.data as TData[]);
         setTotalPages(data.data.totalPages);
-        console.log("Attendance Data: ", data.data.data);
+        // console.log("Attendance Data: ", data.data.data);
       })
       .catch((error) => {
-        console.log("Error: ", error);
+        // console.log("Error: ", error);
       })
       .finally(() => {
         router.push(`${pathname}?PageIndex=${serachData.PageIndex}`);
@@ -111,7 +111,7 @@ export function DataTableForAttendanceEm<TData, TValue>({
         setListUser(data.data.data);
       })
       .catch((error) => {
-        console.log("Error: ", error);
+        // console.log("Error: ", error);
       });
   }, [setListUser]);
 

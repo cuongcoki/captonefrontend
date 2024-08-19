@@ -69,10 +69,10 @@ export default function SalaryHistoryReceivedEm({ id }: { id: string }) {
       .then((res) => {
         setSalaryHistory(res.data.data.data);
         setTotalPage(res.data.data.totalPages);
-        console.log("Lich Su nhan luong", res.data.data.data);
+        // console.log("Lich Su nhan luong", res.data.data.data);
       })
       .catch((e) => {
-        console.log({ e });
+        // console.log({ e });
       });
   }, [id, force, index]);
 

@@ -46,7 +46,7 @@ export default function SetIDPage() {
     };
 
     fetchDataProductId();
-    console.log("RELOAD");
+    // console.log("RELOAD");
   }, [params.id, force]);
 
   return (

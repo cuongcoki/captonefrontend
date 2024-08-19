@@ -70,7 +70,7 @@ const AuthProvider = ({ children }: Props) => {
             JSON.parse(window.localStorage.getItem(authConfig.userData) || "{}")
           );
         } catch (error) {
-          console.error("Failed to refresh token", error);
+          // console.error("Failed to refresh token", error);
           handleLogout();
         }
       } else {
@@ -116,7 +116,7 @@ const AuthProvider = ({ children }: Props) => {
               );
             })
             .catch((error) => {
-              console.error("Failed to refresh token", error);
+              // console.error("Failed to refresh token", error);
               handleLogout();
             });
         }

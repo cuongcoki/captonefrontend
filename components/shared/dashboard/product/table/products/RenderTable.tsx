@@ -57,7 +57,7 @@ export default function RenderTableProduct() {
                     imageUrl: data.data,
                   };
                 } catch (error) {
-                  console.error("Error getting file:", error);
+                  // console.error("Error getting file:", error);
                   return {
                     ...image,
                     imageUrl: "",

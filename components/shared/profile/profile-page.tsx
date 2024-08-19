@@ -156,7 +156,7 @@ export default function ProfilePage() {
         handleLogout();
       })
       .catch((error) => {
-        console.error("Error changing password:", error);
+        // console.error("Error changing password:", error);
         if (error.response.data.error) {
           for (const key in error.response.data.error) {
             toast.error(error.response.data.error[key][0]);
@@ -186,8 +186,8 @@ export default function ProfilePage() {
   };
 
 
-  console.log("user?.user?.id", user?.user?.id)
-  console.log("userId?.id", userId)
+  // console.log("user?.user?.id", user?.user?.id)
+  // console.log("userId?.id", userId)
   return (
     <>
       {user?.user?.id === userId?.id ? (

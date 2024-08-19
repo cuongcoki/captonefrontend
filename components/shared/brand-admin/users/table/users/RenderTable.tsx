@@ -52,7 +52,6 @@ export default function RenderTableUsers() {
   }, [user]);
 
 
-  console.log("datadatadata", data);
 
   return (
     <div className="">

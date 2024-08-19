@@ -34,10 +34,10 @@ export const materialSchema = z.object({
     .refine(
       (value) => {
         const parsedValue = parseFloat(value);
-        return !isNaN(parsedValue) && parsedValue > 0;
+        return !isNaN(parsedValue) && parsedValue >= 0;
       },
       {
-        message: "Số lượng từng đơn vị phải lớn hơn 0",
+        message: "Số lượng từng đơn vị phải hoặc bằng 0",
       }
     ),
   quantityInStock: z
@@ -46,10 +46,10 @@ export const materialSchema = z.object({
     .refine(
       (value) => {
         const parsedValue = parseFloat(value);
-        return !isNaN(parsedValue) && parsedValue > 0;
+        return !isNaN(parsedValue) && parsedValue >= 0;
       },
       {
-        message: "Số lượng trong kho phải lớn hơn 0",
+        message: "Số lượng trong kho phải hoặc bằng 0",
       }
     ),
 });

@@ -270,7 +270,7 @@ export default function UpdateAttendanceEm({
     attendanceApi
       .updateEmployeeProduct(updateEmployeeProductData)
       .then(({ data }) => {
-        console.log(data);
+        // console.log(data);
         // ForceRender();
         // toast.success(data.message);
       });
@@ -316,7 +316,7 @@ export default function UpdateAttendanceEm({
       attendanceApi
         .createAttendance(DataBody as CreateAttendanceBody)
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           updateEmployeeProduct();
           toast.success(data.message);
           setIsCreated(true);
@@ -335,7 +335,7 @@ export default function UpdateAttendanceEm({
       attendanceApi
         .updateAttendance(DataBody as UpdateAttendanceBody)
         .then(({ data }) => {
-          console.log(data);
+          // console.log(data);
           toast.success(data.message);
           updateEmployeeProduct();
         })

@@ -46,7 +46,7 @@ export function DataTableToolbar<TData>({
   const [selectSearch, setSelectSearch] = useState(dataSearch[0]);
 
   const handleTakeData = (data: any) => {
-    console.log("Dataaa", data);
+    // console.log("Dataaa", data);
     setSelectSearch(data);
   };
   return (

@@ -901,13 +901,20 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         </Card>
                       </div>
                       <Card>
-                        <Button
-                          type="submit"
-                          className="w-full bg-primary hover:bg-primary/90"
-                          disabled={pending}
-                        >
-                          {pending ? "Đang xử lý..." : "Chỉnh sửa thông tin bộ"}
-                        </Button>
+                      {
+                          !loading ? (
+                            <Button
+                              type="submit"
+                              className="w-full bg-primary hover:bg-primary/90 my-3"
+                              disabled={loading}
+                            >
+                              {loading ? "Đang xử lý..." : "Chỉnh sửa thông tin bộ"}
+                            </Button>
+                          ) : (
+                            <span className="opacity-65 w-full text-white bg-primary/90 text-center text-sm rounded-md py-2">{loading ? "Đang xử lý..." : "Chỉnh sửa thông tin bộ"}</span>
+
+                          )
+                        }
                       </Card>
                     </form>
                   </Form>

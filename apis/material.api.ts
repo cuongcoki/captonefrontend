@@ -21,7 +21,7 @@ export const materialApi = {
   searchMaterial: (requestBody: searchMaterial) => {
     const cacheId = createCacheId("search-material", requestBody);
     cacheIds.add(cacheId); // Lưu cache ID
-    console.log("Added cacheId:", cacheId); // Log cache ID khi thêm
+    // console.log("Added cacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<SearchResponse<materialType[]>>(
       `${endPointConstant.BASE_URL}/material`,
       {
@@ -38,11 +38,11 @@ export const materialApi = {
       {
         cache: {
           update: () => {
-            console.log("Clearing cacheIds:", cacheIds); // Log trước khi xóa
+            // console.log("Clearing cacheIds:", cacheIds); // Log trước khi xóa
             // Xóa tất cả cache ID của searchMaterial
             cacheIds.forEach((id) => axiosClient.storage.remove(id));
             cacheIds.clear(); // Xóa danh sách cache ID sau khi xóa
-            console.log("cacheIds after clearing:", cacheIds); // Log sau khi xóa
+            // console.log("cacheIds after clearing:", cacheIds); // Log sau khi xóa
           },
         },
       }
@@ -52,7 +52,7 @@ export const materialApi = {
   getMaterial: (id: string) => {
     const cacheId = `get-material-${id}`;
     materialCacheIds.set(id, cacheId); // Lưu cache ID với ID của material
-    console.log("Added materialCacheId:", cacheId); // Log cache ID khi thêm
+    // console.log("Added materialCacheId:", cacheId); // Log cache ID khi thêm
     return axiosClient.get<SuccessResponse<materialType>>(
       `${endPointConstant.BASE_URL}/material/${id}`,
       {
@@ -78,7 +78,7 @@ export const materialApi = {
             if (materialCacheId) {
               axiosClient.storage.remove(materialCacheId);
               materialCacheIds.delete(requestBody.id);
-              console.log("Removed materialCacheId:", materialCacheId); // Log cache ID sau khi xóa
+              // console.log("Removed materialCacheId:", materialCacheId); // Log cache ID sau khi xóa
             }
           },
         },

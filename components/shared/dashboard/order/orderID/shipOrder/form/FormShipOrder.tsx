@@ -303,7 +303,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
         setCurrentPage(res.data.data.currentPage);
         setTotalPages(res.data.data.totalPages);
       } catch (error: any) {
-        console.error("Error fetching user data:");
+        // console.error("Error fetching user data:");
         if (error?.response.data.status === 400) {
           setDataEm([]);
         }
@@ -399,7 +399,7 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
     // Kiểm tra xem mảng có rỗng hay không
     const shipOrderDetailRequests =
       Array.isArray(productDetail) && productDetail.length === 0;
-    console.log(form.getValues());
+    // console.log(form.getValues());
     // Kiểm tra giá trị cụ thể của form
     const shipDateEmpty = form.getValues().shipDate === "";
     const isShipperIdEmpty = form.getValues().shipperId === "";
@@ -425,9 +425,9 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
     return formatted;
   };
 
-  console.log("productOrderResponses", order.productOrderResponses);
-  console.log("setOrderResponses", order.setOrderResponses);
-  console.log("productDetail", productDetail);
+  // console.log("productOrderResponses", order.productOrderResponses);
+  // console.log("setOrderResponses", order.setOrderResponses);
+  // console.log("productDetail", productDetail);
   return (
     <>
       {openAlert && (

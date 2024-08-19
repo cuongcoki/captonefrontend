@@ -130,7 +130,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
       isMainImage: image.isMainImage,
     })) || [];
 
-  console.log("productId", productId)
+  // console.log("productId", productId)
   const phase1 = productId?.productPhaseSalaries.find(p => p.phaseId === '42ccc305-85c7-4a4a-92c0-bc41669afe25');
   const phase2 = productId?.productPhaseSalaries.find(p => p.phaseId === '4d2113f9-2009-4c37-82b1-195ecbb9c706');
   const phase3 = productId?.productPhaseSalaries.find(p => p.phaseId === '0f54b781-8286-42d2-9dce-b19b22b43700');
@@ -154,7 +154,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   const [nameImage, setNameImage] = useState<string[]>([]);
 
   const [imageAddRequests, setImageAddRequests] = useState<any[]>([]);
-  console.log("imageAddRequests",imageAddRequests)
+  // console.log("imageAddRequests",imageAddRequests)
   // Handle uploading new photos
   const handleUploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -377,9 +377,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     });
     try {
       const response = await filesApi.postFiles(formData);
-      console.log("Upload successful:", response.data);
+      // console.log("Upload successful:", response.data);
     } catch (error) {
-      console.error("Error uploading files:", error);
+      // console.error("Error uploading files:", error);
     } finally {
       setLoading(false);
     }
@@ -392,7 +392,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     var ImaNull = null;
     setLoading(true);
     setIsSubmitting(true);
-    console.log(imageAddRequests);
+    // console.log(imageAddRequests);
     try {
       await handlePostImage();
 
