@@ -514,7 +514,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                 </div>
 
 
-                                <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4">
+                                <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4 dark:bg-card">
 
                                     <Form {...form}>
                                         <form
@@ -531,7 +531,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                                         <FormLabel className="text-primary-backgroudPrimary">Nhân viên vận chuyển *</FormLabel>
                                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                             <FormControl>
-                                                                <SelectTrigger className="h-16">
+                                                                <SelectTrigger className="h-16 ">
                                                                     <SelectValue placeholder="Hãy chọn nhân viên" defaultValue={field.value} />
                                                                 </SelectTrigger>
                                                             </FormControl>
@@ -570,7 +570,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                                             defaultValue={String(field.value)}
                                                         >
                                                             <FormControl>
-                                                                <SelectTrigger>
+                                                                <SelectTrigger className="dark:text-white">
                                                                     <SelectValue
                                                                         placeholder="Hãy chọn loại đơn"
                                                                         defaultValue={String(field.value)}
@@ -604,7 +604,7 @@ export const FormUpdateShipOrder: React.FC<FormUpdateShipOrderProps> = ({ shipOr
                                                                     <Button
                                                                         variant={"outline"}
                                                                         className={cn(
-                                                                            "w-[240px] pl-3 text-left font-normal",
+                                                                            "w-[240px] dark:text-white pl-3 text-left font-normal",
                                                                             !field.value && "text-muted-foreground"
                                                                         )}
                                                                     >

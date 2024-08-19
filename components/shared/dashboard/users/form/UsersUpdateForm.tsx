@@ -477,10 +477,10 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                     size="icon"
                     onClick={handleOffDialog}
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
-                <div className="grid gap-4 p-4 overflow-y-auto h-[600px]">
+                <div className="grid gap-4 p-4 overflow-y-auto h-[600px] dark:bg-black">
                   <Form {...form}>
                     {/* <Toaster /> */}
                     <form

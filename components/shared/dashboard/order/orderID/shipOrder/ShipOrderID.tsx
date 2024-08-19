@@ -98,11 +98,11 @@ export default function ShipOrderID({ item }: ShipOrderIDProps) {
                                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md ">
                                     <h2 className="text-2xl text-white">Thông Tin Đơn Vận Chuyển</h2>
                                     <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                                        <X className="w-4 h-4" />
+                                        <X className="w-4 h-4 dark:text-white" />
                                     </Button>
                                 </div>
 
-                                <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4">
+                                <div className="grid  p-4 overflow-y-auto max-h-[750px] gap-4 dark:bg-card">
                                     <Card
                                         className="overflow-hidden"
                                         x-chunk="dashboard-05-chunk-4"

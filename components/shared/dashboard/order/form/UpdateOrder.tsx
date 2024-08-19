@@ -321,16 +321,16 @@ export default function UpdateOrder({ orderId }: OrderId) {
             <Dialog.Content className=" w-full fixed z-50 left-1/2 top-1/2 max-w-[700px] max-h-[90%] -translate-x-1/2 -translate-y-1/2 rounded-md bg-white text-gray-900 shadow">
               <Dialog.Title className="visible hidden"></Dialog.Title>
               <Dialog.Description className="visible hidden"></Dialog.Description>
-              <div className="flex flex-col space-y-4 rounded-md bg-white">
+              <div className="flex flex-col  rounded-md bg-white">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">
                     Chỉnh Sửa Thông Tin Đơn Hàng
                   </h2>
                   <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                    <X className="w-4 h-4" />
+                    <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
-                <div className=" p-4 overflow-y-auto">
+                <div className=" p-4 overflow-y-auto dark:bg-black">
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
                       <Card>
