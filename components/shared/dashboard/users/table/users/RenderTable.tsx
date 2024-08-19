@@ -123,7 +123,7 @@ export default function RenderTableUsers({ searchParams }: Props) {
         </>
       </MyContext.Provider>
 
-      <div className="w-full bg-white py-3 md:hidden"></div>
+      {/* <div className="w-full dark:bg-black bg-white py-3 md:hidden"></div> */}
     </div>
   );
 }
