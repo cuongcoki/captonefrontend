@@ -99,7 +99,7 @@ export function MyDrawer() {
   // ** hooks
   const user = useAuth();
   const router = useRouter();
-  const { setTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
 
   const handleLogout = () => {
     setLoading(true);
@@ -123,6 +123,10 @@ export function MyDrawer() {
   };
 
   const matchedPdf = enumpdf.find(pdf => pdf.id === user.user?.roleId);
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
 
   return (
     <Drawer>
@@ -157,25 +161,10 @@ export function MyDrawer() {
             </Button>
 
             <Badge variant="secondary" className="absolute top-0 left-0 mx-5 text-xs cursor-pointer hover:bg-gray-200 border p-2 shadow-md ">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <div className="w-full flex items-center ">
-                    <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                    <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start">
-                  <DropdownMenuItem onClick={() => setTheme("light")}>
-                    Sáng
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("dark")}>
-                    Tối
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("system")}>
-                    Hệ thống
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="relative cursor-pointer" onClick={toggleTheme}>
+                <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <MoonIcon className="absolute top-0 h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+              </div>
             </Badge>
 
             <Badge variant="secondary" className="absolute top-0 right-0 mx-5 text-xs cursor-pointer hover:bg-gray-200 border p-2 shadow-md ">

@@ -116,7 +116,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
   const user = useAuth();
   const params = useParams<{ id: string }>();
   useEffect(() => { }, [params]);
-  const { setTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
 
   // console.log("user", user?.user)
   const [isOpen, setIsOpen] = useState(false);
@@ -195,6 +195,11 @@ export function Nav({ links, isCollapsed }: NavProps) {
   };
 
   const matchedPdf = enumpdf.find(pdf => pdf.id === user.user?.roleId);
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
 
   return (
     <TooltipProvider>
@@ -460,52 +465,6 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2" onClick={handleLogout}>
-                        <div className="">
-                          <LogOut className="h-[1.2rem] w-[1.2rem]" />
-                        </div>
-                      </Badge>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Đăng xuất</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <div className="relative">
-                              <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                              <MoonIcon className="absolute top-0 h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                            </div>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="start">
-                            <DropdownMenuItem onClick={() => setTheme("light")}>
-                              Sáng
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTheme("dark")}>
-                              Tối
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTheme("system")}>
-                              Hệ thống
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </Badge>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Chế độ sáng, tối</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
                       <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2">
                         {matchedPdf ? (
                           <a href={matchedPdf.href} target="_blank" rel="noopener noreferrer" className="">
@@ -520,6 +479,37 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Xem hướng dẫn</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2">
+                        <div className="relative cursor-pointer" onClick={toggleTheme}>
+                          <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                          <MoonIcon className="absolute top-0 h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                        </div>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Chế độ sáng, tối</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2" onClick={handleLogout}>
+                        <div className="">
+                          <LogOut className="h-[1.2rem] w-[1.2rem]" />
+                        </div>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Đăng xuất</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
