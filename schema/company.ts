@@ -7,8 +7,8 @@ export const companyAddSchema = z.object({
     .string()
     .min(1, "Người đại diện không được để trống")
     .regex(
-      /^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêễìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴÝỶỸửữựỳỵỷỹ\s]+$/,
-      "Người đại diện chỉ được chứa ký tự chữ cái và khoảng trắng"
+      /^[a-zA-ZÀ-ỹ\s]+$/,
+      "Tên người đại diện chỉ được chứa ký tự chữ cái và khoảng trắng"
     ),
 
   directorPhone: z
