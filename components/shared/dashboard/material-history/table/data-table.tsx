@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/dialog";
 import AddNewMeterialHistoryForm from "@/components/shared/dashboard/material-history/add-new-material-history/add-new-material-history-form";
 import UpdateMaterialHistoryForm from "@/components/shared/dashboard/material-history/update-material-history/update-material-history-form";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 type MaterialHistoryContextType = {
   ForceRender: () => void;
 };
@@ -56,6 +57,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
   const [data, setData] = React.useState<materialHistoryType[]>([]);
   const [searchParams, setSearchParams] =
     React.useState<materialHistoryProp>(searchParamsProp);
+  const searchParamsDebounce = useDebounce(searchParams, 400);
   const [totalPage, setTotalPage] = React.useState<number>(0);
   const [force, setForce] = React.useState<number>(1);
   const ForceRender = () => {
@@ -146,19 +148,21 @@ export function DataTableForMaterialHistory<TData, TValue>({
       setIsLoading(true);
       try {
         const res = await materiaHistoryApi.searchMaterialHistory({
-          SearchTerms: searchParams.searchTerm || "",
-          PageIndex: searchParams.pageIndex || 1,
+          SearchTerms: searchParamsDebounce.searchTerm || "",
+          PageIndex: searchParamsDebounce.pageIndex || 1,
           PageSize: 10,
-          StartDateImport: searchParams.from || "",
-          EndDateImport: searchParams.to || "",
+          StartDateImport: searchParamsDebounce.from || "",
+          EndDateImport: searchParamsDebounce.to || "",
         });
         await getImages(res.data.data.data);
         setTotalPage(res.data.data.totalPages);
         setData(res.data.data.data);
         router.push(
-          `${pathname}?searchTerm=${searchParams.searchTerm || ""}&from=${
-            searchParams.from || ""
-          }&to=${searchParams.to || ""}&pageIndex=${searchParams.pageIndex}`
+          `${pathname}?searchTerm=${
+            searchParamsDebounce.searchTerm || ""
+          }&from=${searchParamsDebounce.from || ""}&to=${
+            searchParamsDebounce.to || ""
+          }&pageIndex=${searchParamsDebounce.pageIndex}`
         );
       } catch (error: any) {
         if (error.response?.status === 400) {
@@ -169,7 +173,7 @@ export function DataTableForMaterialHistory<TData, TValue>({
       }
     };
     searchMaterialHistory();
-  }, [searchParams, router, pathname, force]);
+  }, [searchParamsDebounce, router, pathname, force]);
 
   return (
     <div>

@@ -24,6 +24,7 @@ import HeaderComponent from "@/components/shared/common/header";
 import { salaryApi } from "@/apis/salary.api";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 
 const dataNow = new Date();
 const yearNow = dataNow.getFullYear();
@@ -46,6 +47,7 @@ const listMonth = [
 export default function SalaryTable({ searchParams }: SearchSalaryParams) {
   const { tableData, setTableData } = salaryStore();
   const [params, setParams] = useState(searchParams);
+  const paramsDebounce = useDebounce(params, 400);
   const pathname = usePathname();
   const router = useRouter();
   const [totalPage, setTotalPage] = useState(0);
@@ -70,10 +72,10 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
     const fetchGetSalarys = async () => {
       try {
         const { data } = await salaryApi.getSalaries({
-          searchUser: params.searchUser,
-          month: Number(params.month),
-          year: Number(params.year),
-          PageIndex: Number(params.pageIndex),
+          searchUser: paramsDebounce.searchUser,
+          month: Number(paramsDebounce.month),
+          year: Number(paramsDebounce.year),
+          PageIndex: Number(paramsDebounce.pageIndex),
           PageSize: 10,
         });
         setTotalPage(data.data.totalPages);
@@ -81,12 +83,12 @@ export default function SalaryTable({ searchParams }: SearchSalaryParams) {
       } catch (error) {
       } finally {
         router.push(
-          `${pathname}?searchUser=${params.searchUser}&year=${params.year}&month=${params.month}&pageIndex=${params.pageIndex}`
+          `${pathname}?searchUser=${paramsDebounce.searchUser}&year=${paramsDebounce.year}&month=${paramsDebounce.month}&pageIndex=${paramsDebounce.pageIndex}`
         );
       }
     };
     fetchGetSalarys();
-  }, [params, pathname, router, setTableData]);
+  }, [paramsDebounce, pathname, router, setTableData]);
 
   return (
     <div className="p-2 ">

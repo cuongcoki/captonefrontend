@@ -8,7 +8,7 @@ type Props = {
 export default function UsersPage({ searchParams }: Props) {
   return (
     <div className="!mb-15">
-        <RenderTableUsers searchParams={searchParams} />
+      <RenderTableUsers searchParams={searchParams} />
     </div>
   );
 }
