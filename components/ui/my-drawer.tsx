@@ -12,15 +12,11 @@ import {
 } from "@/components/ui/drawer";
 
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 
 import {
   DropdownMenu,
@@ -183,42 +179,24 @@ export function MyDrawer() {
             </Badge>
 
             <Badge variant="secondary" className="absolute top-0 right-0 mx-5 text-xs cursor-pointer hover:bg-gray-200 border p-2 shadow-md ">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <div className="w-full flex items-center ">
-                    <CircleHelp className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Xem hướng dẫn</DialogTitle>
-                    <DialogDescription>
-                      Chọn tệp ở dưới, bạn sẽ sang 1 trang khác để xem hướng dẫn
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex items-center space-x-2">
-                    <div className="grid flex-1 gap-2 justify-center">
-                      <div className=" flex justify-center items-center w-full gap-2">
-                        <ArrowRight />
-                        {matchedPdf ? (
-                          <a href={matchedPdf.href} target="_blank" rel="noopener noreferrer" className="bg-primary w-full text-white p-2 ">
-                            {matchedPdf.title}
-                          </a>
-                        ) : (
-                          <p>Không có bản PDF nào cho vai trò này.</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <DialogFooter className="sm:justify-start">
-                    <DialogClose asChild>
-                      <Button type="button" variant="secondary">
-                        Đóng
-                      </Button>
-                    </DialogClose>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    {matchedPdf ? (
+                      <a href={matchedPdf.href} target="_blank" rel="noopener noreferrer" className="">
+                        <CircleHelp className="h-[1.2rem] w-[1.2rem]" />
+                      </a>
+                    ) : (
+                      <a href="#" target="_blank" rel="noopener noreferrer" className="">
+                        <CircleHelp className="h-[1.2rem] w-[1.2rem]" />
+                      </a>
+                    )}
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Xem hướng dẫn</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </Badge>
           </DrawerFooter>
         </div>

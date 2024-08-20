@@ -293,6 +293,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
         const existingIndex = prevSaveUpdateImage.findIndex(
           (item) => item.id === id
         );
+        const getFileNameFromUrl = (url:string) => {
+          return url.substring(url.lastIndexOf('/') + 1, url.indexOf('?'));
+        };
         if (existingIndex !== -1) {
           const updatedSaveUpdateImage = [...prevSaveUpdateImage];
           updatedSaveUpdateImage[existingIndex] = {
@@ -305,7 +308,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
             ...prevSaveUpdateImage,
             {
               id: updatedImage.id,
-              imageUrl: updatedImage.imageUrl,
+              imageUrl: getFileNameFromUrl(updatedImage.imageUrl),
               isBluePrint: !updatedImage.isBluePrint,
               isMainImage: updatedImage.isMainImage,
             },
@@ -345,6 +348,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
         const existingIndex = prevSaveUpdateImage.findIndex(
           (item) => item.id === id
         );
+        const getFileNameFromUrl = (url:string) => {
+          return url.substring(url.lastIndexOf('/') + 1, url.indexOf('?'));
+        };
         if (existingIndex !== -1) {
           // Update existing entry
           const updatedSaveUpdateImage = [...prevSaveUpdateImage];
@@ -359,7 +365,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
             ...prevSaveUpdateImage,
             {
               id: updatedImage.id,
-              imageUrl: updatedImage.imageUrl,
+              imageUrl: getFileNameFromUrl(updatedImage.imageUrl),
               isBluePrint: updatedImage.isBluePrint,
               isMainImage: !updatedImage.isMainImage,
             },
@@ -384,7 +390,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
       setLoading(false);
     }
   };
-
+  console.log(imageAddRequests);
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Handle form submission
   const onSubmit = async (formData: z.infer<typeof ProductUpdateSchema>) => {
@@ -415,12 +421,15 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
         })),
         removeImageIds: removeImageIds ? removeImageIds : ImaNull,
       };
+      console.log("requestBody", requestBody)
 
       try {
         const response = await productApi.updateProduct(
           requestBody,
           formData.id
         );
+        setFetchTrigger((prev) => prev + 1)
+        setImageAddRequests([])
         ForceRender();
         setOpen(false)
         toast.success(response.data.message);

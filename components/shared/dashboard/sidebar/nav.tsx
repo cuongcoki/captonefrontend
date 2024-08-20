@@ -21,17 +21,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-
 import { Command } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 
@@ -466,83 +455,75 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 </div>
               </div>
               <div className="px-2"></div>
-              <div className="p-2 flex flex-col gap-2">
-                <Badge
-                  variant="secondary"
-                  className="text-xs cursor-pointer hover:bg-gray-200/80 py-2"
-                  onClick={handleLogout}
-                >
-                  <div className="w-full flex items-center gap-2 ml-2">
-                    <LogOut className="h-[1.2rem] w-[1.2rem]" /> Đăng xuất
-                  </div>
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="text-xs cursor-pointer hover:bg-gray-200/80 py-2 "
-                >
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <div className="w-full flex items-center gap-2  ml-2">
-                        <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                        <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                        Chế độ
-                      </div>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
-                      <DropdownMenuItem onClick={() => setTheme("light")}>
-                        Sáng
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTheme("dark")}>
-                        Tối
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setTheme("system")}>
-                        Hệ thống
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="text-xs cursor-pointer hover:bg-gray-200/80 py-2"
+              <div className="p-2 flex justify-between items-center gap-2">
 
-                >
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <div className="w-full flex items-center gap-2 ml-2">
-                        <CircleHelp className="h-[1.2rem] w-[1.2rem]" /> Hướng dẫn
-                      </div>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
-                      <DialogHeader>
-                        <DialogTitle>Xem hướng dẫn</DialogTitle>
-                        <DialogDescription>
-                          Chọn tệp ở dưới, bạn sẽ sang 1 trang khác để xem hướng dẫn
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="flex items-center space-x-2">
-                        <div className="grid flex-1 gap-2 justify-center">
-                          <div className=" flex justify-center items-center w-full gap-2">
-                            <ArrowRight />
-                            {matchedPdf ? (
-                              <a href={matchedPdf.href} target="_blank" rel="noopener noreferrer" className="bg-primary w-full text-white p-2 ">
-                                {matchedPdf.title}
-                              </a>
-                            ) : (
-                              <p>Không có bản PDF nào cho vai trò này.</p>
-                            )}
-                          </div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2" onClick={handleLogout}>
+                        <div className="">
+                          <LogOut className="h-[1.2rem] w-[1.2rem]" />
                         </div>
-                      </div>
-                      <DialogFooter className="sm:justify-start">
-                        <DialogClose asChild>
-                          <Button type="button" variant="secondary">
-                            Đóng
-                          </Button>
-                        </DialogClose>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                </Badge>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Đăng xuất</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <div className="relative">
+                              <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                              <MoonIcon className="absolute top-0 h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                            </div>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start">
+                            <DropdownMenuItem onClick={() => setTheme("light")}>
+                              Sáng
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme("dark")}>
+                              Tối
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => setTheme("system")}>
+                              Hệ thống
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Chế độ sáng, tối</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2">
+                        {matchedPdf ? (
+                          <a href={matchedPdf.href} target="_blank" rel="noopener noreferrer" className="">
+                            <CircleHelp className="h-[1.2rem] w-[1.2rem]" />
+                          </a>
+                        ) : (
+                          <a href="#" target="_blank" rel="noopener noreferrer" className="">
+                            <CircleHelp className="h-[1.2rem] w-[1.2rem]" />
+                          </a>
+                        )}
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Xem hướng dẫn</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
               </div>
             </CardDescription>
           )}
