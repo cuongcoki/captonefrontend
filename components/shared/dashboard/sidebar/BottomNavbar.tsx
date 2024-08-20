@@ -37,7 +37,7 @@ export default function BottomNavbar({ }: Props) {
     setIsClient(true);
   }, []);
   return (
-    <div className="relative min-w-[80px] border-r  px-3 ">
+    <div className="relative min-w-[80px] px-3 ">
       {isClient ? (
         <div>
           {!mobileWidth && (

@@ -678,10 +678,10 @@ export default function CreateOrder() {
                             <CardContent>
                               <div className="flex flex-col  items-center my-4">
                                 <div className="flex items-center border w-full rounded-lg px-2 ">
-                                  <Search className="mr-1 h-4 w-4 shrink-0 opacity-50" />
+                                  <Search className="mr-1 h-5 w-5 shrink-0 opacity-50" />
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                      <ChevronDown className="mr-2 h-4 w-4 text-primary-backgroudPrimary" />
+                                      <ChevronDown className="transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-primary hover:text-white duration-300 h-5 w-5 text-primary-backgroudPrimary cursor-pointer" />
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="start">
                                       <DropdownMenuItem
