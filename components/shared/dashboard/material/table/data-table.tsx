@@ -31,6 +31,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 type ContexType = {
   forceUpdate: () => void;
 };
@@ -57,6 +58,7 @@ export function DataTableForMaterial<TData, TValue>({
   const [searchTerm, setSearchTerm] = React.useState<string>(
     searchTermProp || ""
   );
+  const searchTermDebounce = useDebounce(searchTerm, 400);
   const [force, setForce] = React.useState<number>(1);
   const forceUpdate = () => setForce((prev) => prev + 1);
 
@@ -122,14 +124,14 @@ export function DataTableForMaterial<TData, TValue>({
           `${pathname}?searchTerm=${searchTerm || ""}&pageIndex=${pageIndex}`
         );
       } catch (error) {
-        setData([])
+        setData([]);
       } finally {
         setLoading(false);
       }
     };
 
-    searchMaterial(searchTerm);
-  }, [searchTerm, pathname, router, pageIndex, force]);
+    searchMaterial(searchTermDebounce);
+  }, [searchTermDebounce, pathname, router, pageIndex, force]);
 
   return (
     <div className="p-2">

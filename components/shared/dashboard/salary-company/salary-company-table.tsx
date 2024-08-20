@@ -23,6 +23,7 @@ import { SearchSalaryCompanyParams } from "@/types/salary-company.type";
 import { salaryCompanyApi } from "@/apis/salary_company.api";
 import { salaryCompanyStore } from "@/components/shared/dashboard/salary-company/salary-store";
 import { Card } from "@/components/ui/card";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 
 const dataNow = new Date();
 const YearNow = dataNow.getFullYear();
@@ -49,6 +50,7 @@ export default function SalaryCompanyTable({
 }) {
   const { tableData, setTableData } = salaryCompanyStore();
   const [params, setParams] = useState(searchParams);
+  const paramsDebounce = useDebounce(params, 400);
   const pathname = usePathname();
   const router = useRouter();
   const [totalPage, setTotalPage] = useState(0);
@@ -73,10 +75,10 @@ export default function SalaryCompanyTable({
     const fetchGetSalarys = async () => {
       try {
         const { data } = await salaryCompanyApi.searchSalaryCompany({
-          Month: params.Month,
-          Year: params.Year,
-          SearchCompany: params.SearchCompany,
-          PageIndex: params.PageIndex,
+          Month: paramsDebounce.Month,
+          Year: paramsDebounce.Year,
+          SearchCompany: paramsDebounce.SearchCompany,
+          PageIndex: paramsDebounce.PageIndex,
           PageSize: 10,
         });
         setTotalPage(data.data.totalPages);
@@ -84,12 +86,12 @@ export default function SalaryCompanyTable({
       } catch (error) {
       } finally {
         router.push(
-          `${pathname}?SearchCompany=${params.SearchCompany}&Year=${params.Year}&Month=${params.Month}&PageIndex=${params.PageIndex}`
+          `${pathname}?SearchCompany=${paramsDebounce.SearchCompany}&Year=${paramsDebounce.Year}&Month=${paramsDebounce.Month}&PageIndex=${paramsDebounce.PageIndex}`
         );
       }
     };
     fetchGetSalarys();
-  }, [params, pathname, router, setTableData]);
+  }, [paramsDebounce, pathname, router, setTableData]);
 
   return (
     <div className="p-2 ">
