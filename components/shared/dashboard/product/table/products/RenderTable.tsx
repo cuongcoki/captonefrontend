@@ -18,11 +18,13 @@ import { ProductForm } from "../../form/ProductForm";
 import { ProductSearchParams } from "@/types/product.type";
 import { filesApi } from "@/apis/files.api";
 import { ProductStore } from "@/components/shared/dashboard/product/product-store";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 
 export default function RenderTableProduct() {
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const searchTermDebounce = useDebounce(searchTerm, 400);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [isInProcessing, setIsInProcessing] = useState<boolean>(true);
@@ -42,7 +44,7 @@ export default function RenderTableProduct() {
           isInProcessing,
           currentPage,
           pageSize,
-          searchTerm
+          searchTermDebounce
         );
         const newData = response.data.data.data;
 
@@ -85,7 +87,7 @@ export default function RenderTableProduct() {
     };
 
     fetchDataProduct();
-  }, [currentPage, pageSize, searchTerm, isInProcessing, force]);
+  }, [currentPage, pageSize, searchTermDebounce, isInProcessing, force]);
 
   const handleIsInProcessingChange = (value: string) => {
     setIsInProcessingString(value);
@@ -99,14 +101,14 @@ export default function RenderTableProduct() {
   useEffect(() => {
     const updatePathname = () => {
       const params = new URLSearchParams();
-      if (searchTerm) params.set("searchTerm", searchTerm);
+      if (searchTermDebounce) params.set("searchTerm", searchTermDebounce);
       params.set("isInProcessing", isInProcessing.toString());
       params.set("page", "1");
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
     };
-  
+
     updatePathname();
-  }, [isInProcessing, searchTerm, pathname, router]);
+  }, [isInProcessing, searchTermDebounce, pathname, router]);
 
   return (
     <div className="">

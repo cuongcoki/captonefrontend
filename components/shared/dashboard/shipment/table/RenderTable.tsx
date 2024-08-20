@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { shipmentApi } from "@/apis/shipment.api";
 import CreateShipment from "../form/CreateShipment";
 import { ShipmentStore } from "../shipment-store";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 type ContexType = {
   forceUpdate: () => void;
 };
@@ -59,6 +60,7 @@ export default function RenderTableShipment() {
   const [pageSize, setPageSize] = useState<number>(10);
   const [status, setStatus] = useState<string | null>("0");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const searchTermDebounce = useDebounce(searchTerm, 400);
   const router = useRouter();
   const pathname = usePathname();
   const { force } = ShipmentStore();
@@ -71,7 +73,7 @@ export default function RenderTableShipment() {
           currentPage,
           pageSize,
           status,
-          searchTerm
+          searchTermDebounce
         );
         const responseData = response.data.data.data;
         setData(responseData);
@@ -98,7 +100,7 @@ export default function RenderTableShipment() {
 
     fetchDataShipment();
     // console.log("RENDER GET SHIPMENT DATA");
-  }, [currentPage, pageSize, searchTerm, data, status, force]);
+  }, [currentPage, pageSize, searchTermDebounce, data, status, force]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
@@ -107,7 +109,7 @@ export default function RenderTableShipment() {
   useEffect(() => {
     const updatePathname = () => {
       const params = new URLSearchParams();
-      if (searchTerm) params.set("searchTerm", searchTerm);
+      if (searchTermDebounce) params.set("searchTerm", searchTermDebounce);
       if (status) params.set("status", status);
       params.set("page", "1");
       router.push(`${pathname}?${params.toString()}`, { scroll: false });
@@ -116,7 +118,7 @@ export default function RenderTableShipment() {
     if (status !== null) {
       updatePathname();
     }
-  }, [status, searchTerm, pathname, router]);
+  }, [status, searchTermDebounce, pathname, router]);
 
   return (
     <div className="">

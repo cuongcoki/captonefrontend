@@ -16,6 +16,7 @@ import {
 import toast from "react-hot-toast";
 import { shipmentApi } from "@/apis/shipment.api";
 import { ShipmentStore } from "../shipment-store";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 type ContexType = {
   forceUpdate: () => void;
 };
@@ -59,6 +60,7 @@ export default function RenderTableShipment() {
   const [pageSize, setPageSize] = useState<number>(10);
   const [status, setStatus] = useState<string | null>("0");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const searchTermDebounce = useDebounce(searchTerm, 400);
   const router = useRouter();
   const pathname = usePathname();
   const { force } = ShipmentStore();
@@ -71,7 +73,7 @@ export default function RenderTableShipment() {
           currentPage,
           pageSize,
           status,
-          searchTerm
+          searchTermDebounce
         );
         setData(response.data.data.data);
         // console.log("DATA SHIPMENT", response.data.data.data);
@@ -87,7 +89,7 @@ export default function RenderTableShipment() {
     };
 
     fetchDataShipment();
-  }, [currentPage, pageSize, searchTerm, status, force]);
+  }, [currentPage, pageSize, searchTermDebounce, status, force]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
