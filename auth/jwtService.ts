@@ -35,14 +35,13 @@ axiosClient.interceptors.response.use(
     return response;
   },
   async (error) => {
-   
-    console.log(error);
-    if (error.response) {
+    // console.log(error);
+    if (error?.response) {
       // const { code } = error
       const config = error.config;
       if (error?.response?.status === 401) {
-        if(!localStorage.getItem("accessToken")){
-          return  toast.error(error.response.data.message)
+        if (!localStorage.getItem("accessToken")) {
+          return toast.error(error.response.data.message);
         }
         if (count > 0) {
           return;
@@ -70,8 +69,8 @@ axiosClient.interceptors.response.use(
             }
           })
           .catch((err) => {
-            console.log("loi1");
-            console.log(err);
+            // console.log("loi1");
+            // console.log(err);
             // toast.error(err.response.data.message);
             authService.removeLocalStorageWhenLogout();
             const currentPath = window.location.pathname;
