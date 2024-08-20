@@ -19,11 +19,12 @@ import DatePicker from "@/components/shared/common/datapicker/date-picker";
 import toast from "react-hot-toast";
 import { companyApi } from "@/apis/company.api";
 import { OrderStore } from "../order-store";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 type ContexType = {
   forceUpdate: () => void;
 };
 export const MyContext = createContext<ContexType>({
-  forceUpdate: () => { },
+  forceUpdate: () => {},
 });
 
 const enumStatus = [
@@ -79,12 +80,11 @@ export default function RenderTableOrder() {
   const [startOrder, setStartOrder] = useState<Date | null>(null);
   const [endOrder, setEndOrder] = useState<Date | null>(null);
   const [companyName, setCompanyName] = useState<string>("");
+  const companyNameDebounce = useDebounce(companyName, 400);
   const [company, setCompany] = useState<Company[]>([]);
   const { force } = OrderStore();
   const router = useRouter();
   const pathname = usePathname();
-
- 
 
   useEffect(() => {
     const fetchDataOrder = async () => {
@@ -96,13 +96,13 @@ export default function RenderTableOrder() {
           status,
           startOrder ? formatDate(startOrder) : null,
           endOrder ? formatDate(endOrder) : null,
-          companyName
+          companyNameDebounce
         );
         setData(response.data.data.data);
         setCurrentPage(response.data.data.currentPage);
         setTotalPages(response.data.data.totalPages);
       } catch (error: any) {
-        setData([])
+        setData([]);
       } finally {
         setLoading(false);
       }
@@ -116,7 +116,15 @@ export default function RenderTableOrder() {
 
     fetchDataCompany();
     fetchDataOrder();
-  }, [currentPage, pageSize, companyName, startOrder, endOrder, status, force]);
+  }, [
+    currentPage,
+    pageSize,
+    companyNameDebounce,
+    startOrder,
+    endOrder,
+    status,
+    force,
+  ]);
 
   const handleStatusChange = (value: string | null) => {
     setStatus(value);
@@ -139,34 +147,33 @@ export default function RenderTableOrder() {
 
   const handleStartDateChange = (date: Date | null) => {
     if (!date) return;
-  
+
     const formatdathi = formatDate(date);
     const formattedStartOrder = startOrder ? formatDate(startOrder) : null;
-  
+
     // So sánh chuỗi đã được định dạng
     if (formattedStartOrder && formatdathi === formattedStartOrder) {
-      return  setStartOrder(null);
+      return setStartOrder(null);
     }
-  
+
     if (date && endOrder && date.getTime() > endOrder.getTime()) {
       toast.error("Ngày bắt đầu không được lớn hơn ngày kết thúc");
       return;
     }
-  
+
     setStartOrder(date);
     setCurrentPage(1);
   };
-  
 
   const handleEndDateChange = (date: Date | null) => {
     if (!date) return;
-  
+
     const formatdathi = formatDate(date);
     const formattedStartOrder = endOrder ? formatDate(endOrder) : null;
-  
+
     // So sánh chuỗi đã được định dạng
     if (formattedStartOrder && formatdathi === formattedStartOrder) {
-      return  setEndOrder(null);
+      return setEndOrder(null);
     }
     if (startOrder && date && startOrder > date) {
       toast.error("Ngày kết thúc không được nhỏ hơn ngày bất đầu");
