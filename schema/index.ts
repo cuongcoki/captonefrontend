@@ -227,12 +227,13 @@ export type UserUpdateFormType = z.infer<typeof UserUpdateSchema>;
 export const ForgetPasswordSchema = z.object({
   id: z.string().refine(
     (id) => {
-      const idPattern = /^(\d{9}|\d{12})$/;
+      const idPattern = /^(\d{9}|\d{12}|\d{10})$/;
       return idPattern.test(id);
     },
-    { message: "CCCD/CMND phải đúng 9 hoặc 12 chữ số" }
+    { message: "CCCD/CMND 9 hoặc 12 số, Số điện thoại 10 số" }
   ),
 });
+
 
 export type ForgetPasswordFormType = z.infer<typeof ForgetPasswordSchema>;
 

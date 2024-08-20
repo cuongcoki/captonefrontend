@@ -374,6 +374,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
       });
     }
   };
+  console.log("removeImageIds",removeImageIds)
 
   const handlePostImage = async () => {
     setLoading(true);
