@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LucideIcon } from "lucide-react";
+import { ArrowRight, CircleHelp, LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -20,6 +20,18 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
 import { Command } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 
@@ -39,6 +51,34 @@ import { useTheme } from "next-themes";
 import { authApi } from "@/apis/auth.api";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+
+export const enumpdf = [
+  {
+    id: 1,
+    href: "/pdf/Quản Lý Hệ Thống (Admin) .pdf",
+    title: "Quản lý hệ thống (MAIN_ADMIN)"
+  },
+  {
+    id: 2,
+    href: "/pdf/Quản Lý Cơ Sở (Factory manager) .pdf",
+    title: "Quản lý cơ sở (BRANCH_ADMIN)"
+  },
+  {
+    id: 3,
+    href: "/pdf/Quản Lý Số Lượng (Quality Assurance).pdf",
+    title: "Quản lý số lượng (COUNTER)"
+  },
+  {
+    id: 4,
+    href: "/pdf/Nhân Viên Vận Chuyển (Logistic) .pdf",
+    title: "Nhân viên vận chuyển (DRIVER)"
+  },
+  {
+    id: 5,
+    href: "/pdf/Nhân Viên (Employee).pdf",
+    title: "Nhân viên thường (USER)"
+  },
+];
 
 interface NavProps {
   isCollapsed: boolean;
@@ -165,6 +205,8 @@ export function Nav({ links, isCollapsed }: NavProps) {
       });
   };
 
+  const matchedPdf = enumpdf.find(pdf => pdf.id === user.user?.roleId);
+
   return (
     <TooltipProvider>
       <div className="flex flex-col justify-between h-screen overflow-y-auto">
@@ -244,8 +286,8 @@ export function Nav({ links, isCollapsed }: NavProps) {
                           <li
                             key={index}
                             className={`${pathname === linkCon.href
-                                ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
-                                : "text-gray-700"
+                              ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
+                              : "text-gray-700"
                               } p-1 text-sm hover:bg-gray-100`}
                           >
                             <Link
@@ -310,8 +352,8 @@ export function Nav({ links, isCollapsed }: NavProps) {
                             <Link
                               href={item.href}
                               className={`${pathname === item.href
-                                  ? "bg-primary dark:bg-primary/90 hover:bg-primary/90 text-white dark:text-white"
-                                  : "text-gray-700 dark:text-gray-300"
+                                ? "bg-primary dark:bg-primary/90 hover:bg-primary/90 text-white dark:text-white"
+                                : "text-gray-700 dark:text-gray-300"
                                 } block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700`}
                               onClick={() => closeDropdown("")}
                             >
@@ -339,19 +381,51 @@ export function Nav({ links, isCollapsed }: NavProps) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start">
                     <DropdownMenuLabel>
-                      <Button>
+                      <Button className="w-full">
                         <Link href={`/profile/${user.user?.id}`}>
                           Trang cá nhân
                         </Link>
                       </Button>
                     </DropdownMenuLabel>
                     <DropdownMenuItem onClick={handleLogout}>
-                      <Button onClick={handleLogout}>
-                        <LogOut className="mr-1" /> đăng xuất
+                      <Button onClick={handleLogout} className="w-full">
+                        <LogOut className="mr-1" /> Đăng xuất
                       </Button>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <ModeToggle />
+                      {matchedPdf ? (
+                        <a href={matchedPdf.href} target="_blank" rel="noopener noreferrer" >
+                          <Button className="w-full">
+                            <CircleHelp className="mr-1" /> Hướng dẫn
+                          </Button>
+                        </a>
+                      ) : (
+                        <p>Không có bản PDF nào cho vai trò này.</p>
+                      )}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button className="w-full">
+                            <div className="w-full flex items-center gap-2  ml-2">
+                              <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                              <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                              Chế độ
+                            </div>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start">
+                          <DropdownMenuItem onClick={() => setTheme("light")}>
+                            Sáng
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setTheme("dark")}>
+                            Tối
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => setTheme("system")}>
+                            Hệ thống
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -426,6 +500,48 @@ export function Nav({ links, isCollapsed }: NavProps) {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                </Badge>
+                <Badge
+                  variant="secondary"
+                  className="text-xs cursor-pointer hover:bg-gray-200/80 py-2"
+
+                >
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div className="w-full flex items-center gap-2 ml-2">
+                        <CircleHelp className="h-[1.2rem] w-[1.2rem]" /> Hướng dẫn
+                      </div>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Xem hướng dẫn</DialogTitle>
+                        <DialogDescription>
+                          Chọn tệp ở dưới, bạn sẽ sang 1 trang khác để xem hướng dẫn
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="flex items-center space-x-2">
+                        <div className="grid flex-1 gap-2 justify-center">
+                          <div className=" flex justify-center items-center w-full gap-2">
+                            <ArrowRight />
+                            {matchedPdf ? (
+                              <a href={matchedPdf.href} target="_blank" rel="noopener noreferrer" className="bg-primary w-full text-white p-2 ">
+                                {matchedPdf.title}
+                              </a>
+                            ) : (
+                              <p>Không có bản PDF nào cho vai trò này.</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <DialogFooter className="sm:justify-start">
+                        <DialogClose asChild>
+                          <Button type="button" variant="secondary">
+                            Đóng
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </Badge>
               </div>
             </CardDescription>
