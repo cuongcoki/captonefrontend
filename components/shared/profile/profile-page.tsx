@@ -330,9 +330,7 @@ export default function ProfilePage() {
                             Ngày nhận lương gần nhất
                           </div>
                           <div>
-                            {userId
-                              ? formatDate(userId.lastPaidSalaryDate)
-                              : "Không có"}
+                          {userId?.lastPaidSalaryDate !== "0001-01-01" ? formatDate(userId?.lastPaidSalaryDate) : "Không có"}
                           </div>
                         </div>
                       </div>
