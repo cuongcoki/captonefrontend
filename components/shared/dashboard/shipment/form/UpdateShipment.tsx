@@ -488,7 +488,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
     };
     const fetchDataCompany1 = () => {
       shipmentApi
-        .getAllCompanyByType(setCompanyType1, 1, 20)
+        .getAllCompanyByType(companyType1, 1, 20)
         .then(({ data }) => {
           setCompany1(data.data.data);
         })
