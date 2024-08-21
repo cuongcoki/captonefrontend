@@ -45,27 +45,27 @@ export const enumpdf = [
   {
     id: 1,
     href: "/pdf/Quản Lý Hệ Thống (Admin) .pdf",
-    title: "Quản lý hệ thống (MAIN_ADMIN)"
+    title: "Quản lý hệ thống (MAIN_ADMIN)",
   },
   {
     id: 2,
     href: "/pdf/Quản Lý Cơ Sở (Factory manager) .pdf",
-    title: "Quản lý cơ sở (BRANCH_ADMIN)"
+    title: "Quản lý cơ sở (BRANCH_ADMIN)",
   },
   {
     id: 3,
     href: "/pdf/Quản Lý Số Lượng (Quality Assurance).pdf",
-    title: "Quản lý số lượng (COUNTER)"
+    title: "Quản lý số lượng (COUNTER)",
   },
   {
     id: 4,
     href: "/pdf/Nhân Viên Vận Chuyển (Logistic) .pdf",
-    title: "Nhân viên vận chuyển (DRIVER)"
+    title: "Nhân viên vận chuyển (DRIVER)",
   },
   {
     id: 5,
     href: "/pdf/Nhân Viên (Employee).pdf",
-    title: "Nhân viên thường (USER)"
+    title: "Nhân viên thường (USER)",
   },
 ];
 
@@ -115,7 +115,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
   const router = useRouter();
   const user = useAuth();
   const params = useParams<{ id: string }>();
-  useEffect(() => { }, [params]);
+  useEffect(() => {}, [params]);
   const { setTheme, theme } = useTheme();
 
   // console.log("user", user?.user)
@@ -170,7 +170,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
 
   useEffect(() => {
     filesApi.getFile(String(user.user?.avatar)).then((res) => {
-      setAvatar(res.data.data);
+      setAvatar(res?.data?.data);
     });
   }, [avatar, user.user?.avatar]);
 
@@ -194,12 +194,11 @@ export function Nav({ links, isCollapsed }: NavProps) {
       });
   };
 
-  const matchedPdf = enumpdf.find(pdf => pdf.id === user.user?.roleId);
+  const matchedPdf = enumpdf.find((pdf) => pdf.id === user.user?.roleId);
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
-
 
   return (
     <TooltipProvider>
@@ -254,7 +253,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         }),
                         "h-9 w-9",
                         link.variant === "colorCompany" &&
-                        "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
+                          "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                       )}
                       onClick={(event) => {
                         if (link.hrefCon && link.hrefCon?.length > 0) {
@@ -279,10 +278,11 @@ export function Nav({ links, isCollapsed }: NavProps) {
                         {link.hrefCon.map((linkCon, index) => (
                           <li
                             key={index}
-                            className={`${pathname === linkCon.href
-                              ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
-                              : "text-gray-700"
-                              } p-1 text-sm hover:bg-gray-100`}
+                            className={`${
+                              pathname === linkCon.href
+                                ? "bg-primary hover:bg-primary/90 text-white hover:text-white"
+                                : "text-gray-700"
+                            } p-1 text-sm hover:bg-gray-100`}
                           >
                             <Link
                               href={linkCon.href}
@@ -322,7 +322,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     className={cn(
                       "w-full h-9 px-3 inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
                       link.variant === "colorCompany" &&
-                      "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
+                        "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
                     )}
                   >
                     <link.icon className="mr-2 h-5 w-5" />
@@ -345,10 +345,11 @@ export function Nav({ links, isCollapsed }: NavProps) {
                           <li key={item.id}>
                             <Link
                               href={item.href}
-                              className={`${pathname === item.href
-                                ? "bg-primary dark:bg-primary/90 hover:bg-primary/90 text-white dark:text-white"
-                                : "text-gray-700 dark:text-gray-300"
-                                } block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700`}
+                              className={`${
+                                pathname === item.href
+                                  ? "bg-primary dark:bg-primary/90 hover:bg-primary/90 text-white dark:text-white"
+                                  : "text-gray-700 dark:text-gray-300"
+                              } block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700`}
                               onClick={() => closeDropdown("")}
                             >
                               {item.title}
@@ -358,7 +359,6 @@ export function Nav({ links, isCollapsed }: NavProps) {
                       </ul>
                     </div>
                   )}
-
                 </div>
               );
             })}
@@ -388,7 +388,11 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       {matchedPdf ? (
-                        <a href={matchedPdf.href} target="_blank" rel="noopener noreferrer" >
+                        <a
+                          href={matchedPdf.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           <Button className="w-full">
                             <CircleHelp className="mr-1" /> Hướng dẫn
                           </Button>
@@ -461,17 +465,29 @@ export function Nav({ links, isCollapsed }: NavProps) {
               </div>
               <div className="px-2"></div>
               <div className="p-2 flex justify-between items-center gap-2">
-
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2">
+                      <Badge
+                        variant="secondary"
+                        className="text-xs cursor-pointer hover:bg-gray-200/80 p-2"
+                      >
                         {matchedPdf ? (
-                          <a href={matchedPdf.href} target="_blank" rel="noopener noreferrer" className="">
+                          <a
+                            href={matchedPdf.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className=""
+                          >
                             <CircleHelp className="h-[1.2rem] w-[1.2rem]" />
                           </a>
                         ) : (
-                          <a href="#" target="_blank" rel="noopener noreferrer" className="">
+                          <a
+                            href="#"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className=""
+                          >
                             <CircleHelp className="h-[1.2rem] w-[1.2rem]" />
                           </a>
                         )}
@@ -486,8 +502,14 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2">
-                        <div className="relative cursor-pointer" onClick={toggleTheme}>
+                      <Badge
+                        variant="secondary"
+                        className="text-xs cursor-pointer hover:bg-gray-200/80 p-2"
+                      >
+                        <div
+                          className="relative cursor-pointer"
+                          onClick={toggleTheme}
+                        >
                           <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                           <MoonIcon className="absolute top-0 h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
                         </div>
@@ -502,7 +524,11 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Badge variant="secondary" className="text-xs cursor-pointer hover:bg-gray-200/80 p-2" onClick={handleLogout}>
+                      <Badge
+                        variant="secondary"
+                        className="text-xs cursor-pointer hover:bg-gray-200/80 p-2"
+                        onClick={handleLogout}
+                      >
                         <div className="">
                           <LogOut className="h-[1.2rem] w-[1.2rem]" />
                         </div>
@@ -513,7 +539,6 @@ export function Nav({ links, isCollapsed }: NavProps) {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-
               </div>
             </CardDescription>
           )}
