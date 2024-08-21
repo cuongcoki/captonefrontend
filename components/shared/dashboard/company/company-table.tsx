@@ -25,6 +25,7 @@ import {
 import { Button } from "@/components/ui/button";
 import HeaderComponent from "@/components/shared/common/header";
 import { Card } from "@/components/ui/card";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 type CompanyContextType = {
   ForceRender: () => void;
 };
@@ -35,6 +36,7 @@ export const CompanyContext = React.createContext<CompanyContextType>({
 export default function CompanyTable({ searchParams }: CompanyParams) {
   const { tableData, setTableData } = companyStore();
   const [params, setParams] = useState(searchParams);
+  const paramsDebounce = useDebounce(params, 300);
   const pathname = usePathname();
   const router = useRouter();
   const [forceUpdate, setForceUpdate] = useState(0);
@@ -57,13 +59,13 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
   useEffect(() => {
     companyApi
       .searchCompany({
-        Name: params.name,
+        Name: paramsDebounce.name,
         Address: "",
         PhoneNumber: "",
         Email: "",
         DirectorName: "",
-        CompanyType: params.companyType,
-        PageIndex: params.pageIndex,
+        CompanyType: paramsDebounce.companyType,
+        PageIndex: paramsDebounce.pageIndex,
         PageSize: 10,
       })
       .then(({ data }) => {
@@ -73,10 +75,10 @@ export default function CompanyTable({ searchParams }: CompanyParams) {
       .catch((error) => {})
       .finally(() => {
         router.push(
-          `${pathname}?name=${params.name}&companyType=${params.companyType}&pageIndex=${params.pageIndex}`
+          `${pathname}?name=${paramsDebounce.name}&companyType=${paramsDebounce.companyType}&pageIndex=${paramsDebounce.pageIndex}`
         );
       });
-  }, [params, pathname, router, forceUpdate, tableData, setTableData]);
+  }, [paramsDebounce, pathname, router, forceUpdate, tableData, setTableData]);
   return (
     <div>
       <HeaderComponent

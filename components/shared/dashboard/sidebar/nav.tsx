@@ -44,12 +44,12 @@ import toast from "react-hot-toast";
 export const enumpdf = [
   {
     id: 1,
-    href: "/pdf/Quản Lý Hệ Thống (Admin) .pdf",
+    href: "/pdf/Quản Lý Hệ Thống (Admin).pdf",
     title: "Quản lý hệ thống (MAIN_ADMIN)"
   },
   {
     id: 2,
-    href: "/pdf/Quản Lý Cơ Sở (Factory manager) .pdf",
+    href: "/pdf/Quản Lý Cơ Sở (Factory manager).pdf",
     title: "Quản lý cơ sở (BRANCH_ADMIN)"
   },
   {
@@ -59,7 +59,7 @@ export const enumpdf = [
   },
   {
     id: 4,
-    href: "/pdf/Nhân Viên Vận Chuyển (Logistic) .pdf",
+    href: "/pdf/Nhân Viên Vận Chuyển (Logistic).pdf",
     title: "Nhân viên vận chuyển (DRIVER)"
   },
   {

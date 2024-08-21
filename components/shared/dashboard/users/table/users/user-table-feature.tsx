@@ -1,5 +1,3 @@
-"use client";
-
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -9,8 +7,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserSearchParams } from "@/types/userTypes";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 
 type Props = {
   searchOptions: UserSearchParams;
@@ -37,6 +36,8 @@ export default function TableUserFeature({
     searchOptions.searchTearm ?? ""
   );
 
+  const debouncedSearchTerm = useDebounce(searchTearm, 300);
+
   const isActiveChange = (value: string) => {
     setIsActive(value);
     handleSearch("isActive", value)();
@@ -51,8 +52,6 @@ export default function TableUserFeature({
 
   const searchTearmChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchTearm(event.target.value);
-    handleSearch("searchTearm", event.target.value)();
-    setCurrentPageToOne();
   };
 
   const handleSearch = (name: string, term: string) => () => {
@@ -66,6 +65,12 @@ export default function TableUserFeature({
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
+  // Trigger search when debounced search term changes
+  useEffect(() => {
+    handleSearch("searchTearm", debouncedSearchTerm)();
+    setCurrentPageToOne();
+  }, [debouncedSearchTerm]);
+
   return (
     <div className="flex sm:items-start flex-col sm:flex-row gap-y-5 sm:gap-x-5 ">
       <Input
@@ -74,7 +79,7 @@ export default function TableUserFeature({
         onChange={searchTearmChange}
         className="max-w-sm shadow-sm"
       />
-      
+
       <Select value={roleId} onValueChange={(value) => roleIdChange(value)}>
         <SelectTrigger className="md:w-[280px] w-full">
           <SelectValue placeholder="Vai trò" />

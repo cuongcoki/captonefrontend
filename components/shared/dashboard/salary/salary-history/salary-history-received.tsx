@@ -67,7 +67,7 @@ export default function SalaryHistoryReceived({ id }: { id: string }) {
         // console.log("Lich Su nhan luong", res.data.data.data);
       })
       .catch((e) => {
-        console.log({ e });
+        // console.log({ e });
       });
   }, [id, force, index]);
 

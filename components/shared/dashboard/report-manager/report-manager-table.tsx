@@ -26,6 +26,7 @@ import { companyApi } from "@/apis/company.api";
 import { ReportManagerUpdate } from "@/components/shared/dashboard/report-manager/report-manager-update";
 import HeaderComponent from "@/components/shared/common/header";
 import { Card } from "@/components/ui/card";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 
 const ColorOfTypeStatus: { [key: number]: string } = {
   0: "text-gray-500",
@@ -43,6 +44,7 @@ export default function ReportManagerTable({
   searchParams,
 }: ReportManagerParams) {
   const [params, setParams] = React.useState(searchParams);
+  const paramsDebounce = useDebounce(params, 100);
   const [totalPage, setTotalPage] = React.useState(0);
   const { force, tableData, setTableData, companyData, setCompanyData } =
     ReportManagerStore();
@@ -69,7 +71,7 @@ export default function ReportManagerTable({
     setUserData(userData);
 
     let companyId =
-      userData?.roleId == "2" ? userData?.companyId : params.CompanyId;
+      userData?.roleId == "2" ? userData?.companyId : paramsDebounce.CompanyId;
 
     const fetchGetCompanies = async () => {
       try {
@@ -87,20 +89,20 @@ export default function ReportManagerTable({
     const fetchGetReports = async () => {
       try {
         const res = await reportApi.getReports({
-          UserId: params.UserId,
-          Status: params.Status,
+          UserId: paramsDebounce.UserId,
+          Status: paramsDebounce.Status,
           CompanyId: companyId,
           Description: "",
-          StartDate: params.StartDate,
-          EndDate: params.EndDate,
-          PageIndex: params.PageIndex,
+          StartDate: paramsDebounce.StartDate,
+          EndDate: paramsDebounce.EndDate,
+          PageIndex: paramsDebounce.PageIndex,
           PageSize: 5,
-          ReportType: params.ReportType,
+          ReportType: paramsDebounce.ReportType,
         });
 
         setTableData(res.data.data.data);
         setTotalPage(res.data.data.totalPages);
-        router.push(buildUrlParams(pathName, params));
+        router.push(buildUrlParams(pathName, paramsDebounce));
       } catch (e) {}
     };
 
@@ -116,7 +118,7 @@ export default function ReportManagerTable({
     };
     LoadTableData();
   }, [
-    params,
+    paramsDebounce,
     force,
     setTableData,
     router,

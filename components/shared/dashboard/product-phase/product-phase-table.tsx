@@ -33,6 +33,7 @@ import { Input } from "@/components/ui/input";
 import { attendanceApi } from "@/apis/attendance.api";
 import HeaderComponent from "@/components/shared/common/header";
 import ProductPhaseChangeQuantityType from "@/components/shared/dashboard/product-phase/product-phase-change-quantity-type";
+import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 
 export default function ProductPhaseTable({
   searchParams,
@@ -49,6 +50,7 @@ export default function ProductPhaseTable({
   } = productPhaseStore();
   const [params, setParams] =
     React.useState<SearchProductPhaseParams>(searchParams);
+  const paramsDebounce = useDebounce(params, 400);
   const [loading, setLoading] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const pathname = usePathname();
@@ -102,20 +104,20 @@ export default function ProductPhaseTable({
         await getThirdCompany();
         setCompanyData(listData);
         const res = await productPhaseApi.searchProductPhase({
-          PageIndex: params.PageIndex,
-          PageSize: params.PageSize,
-          SearchCompany: params.SearchCompany
-            ? params.SearchCompany
+          PageIndex: paramsDebounce.PageIndex,
+          PageSize: paramsDebounce.PageSize,
+          SearchCompany: paramsDebounce.SearchCompany
+            ? paramsDebounce.SearchCompany
             : firtCompany.name,
-          SearchPhase: params.SearchPhase,
-          SearchProduct: params.SearchProduct,
+          SearchPhase: paramsDebounce.SearchPhase,
+          SearchProduct: paramsDebounce.SearchProduct,
         });
         // console.log("TABLE DATA", res.data.data.data);
         setTableData(res.data.data.data);
         setTotal(res.data.data.totalPages);
 
         router.push(
-          `${pathname}?PageIndex=${params.PageIndex}&SearchCompany=${params.SearchCompany}&SearchPhase=${params.SearchPhase}&SearchProduct=${params.SearchProduct}`
+          `${pathname}?PageIndex=${paramsDebounce.PageIndex}&SearchCompany=${paramsDebounce.SearchCompany}&SearchPhase=${paramsDebounce.SearchPhase}&SearchProduct=${paramsDebounce.SearchProduct}`
         );
       } catch (e) {
         // console.log(e);
@@ -123,7 +125,7 @@ export default function ProductPhaseTable({
     };
     fetchData();
     // console.log("PRODUCT PHASE RERENDER");
-  }, [router, params, pathname, setTableData, setCompanyData, force]);
+  }, [router, paramsDebounce, pathname, setTableData, setCompanyData, force]);
 
   const formatCurrency = (value: any): string => {
     if (!value) return "";
