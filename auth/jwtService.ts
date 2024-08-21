@@ -61,7 +61,7 @@ axiosClient.interceptors.response.use(
 
               return axiosClient(config);
             } else {
-              console.log("loi2");
+              // console.log("loi2");
               authService.removeLocalStorageWhenLogout();
               if (window.location.pathname !== "/sign-in") {
                 window.location.href = jwtConfig.loginEndpoint;

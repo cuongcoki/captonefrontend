@@ -374,8 +374,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
       });
     }
   };
-  console.log("removeImageIds",removeImageIds)
-
+  // console.log("removeImageIds",removeImageIds)
   const handlePostImage = async () => {
     setLoading(true);
     const formData = new FormData();
@@ -391,7 +390,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
       setLoading(false);
     }
   };
-  console.log(imageAddRequests);
+  // console.log(imageAddRequests);
   const [isSubmitting, setIsSubmitting] = useState(false);
   // Handle form submission
   const onSubmit = async (formData: z.infer<typeof ProductUpdateSchema>) => {
@@ -422,7 +421,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
         })),
         removeImageIds: removeImageIds ? removeImageIds : ImaNull,
       };
-      console.log("requestBody", requestBody)
+      // console.log("requestBody", requestBody)
 
       try {
         const response = await productApi.updateProduct(
