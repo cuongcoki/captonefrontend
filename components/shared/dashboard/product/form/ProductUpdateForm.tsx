@@ -56,7 +56,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { formatCurrency, generateRandomString, limitLength } from "@/lib/utils";
@@ -89,10 +89,13 @@ interface productPhaseSalaries {
 
 interface ProductID {
   productId?: ProductData;
-  children?: any
+  children?: any;
 }
 
-export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) => {
+export const ProductUpdateForm: React.FC<ProductID> = ({
+  productId,
+  children,
+}) => {
   const [loading, setLoading] = useState(false);
   const { ForceRender } = ProductStore();
   const [updatedProduct, setUpdatedProduct] = useState<ProductData | undefined>(
@@ -131,9 +134,15 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     })) || [];
 
   // console.log("productId", productId)
-  const phase1 = productId?.productPhaseSalaries.find(p => p.phaseId === '42ccc305-85c7-4a4a-92c0-bc41669afe25');
-  const phase2 = productId?.productPhaseSalaries.find(p => p.phaseId === '4d2113f9-2009-4c37-82b1-195ecbb9c706');
-  const phase3 = productId?.productPhaseSalaries.find(p => p.phaseId === '0f54b781-8286-42d2-9dce-b19b22b43700');
+  const phase1 = productId?.productPhaseSalaries.find(
+    (p) => p.phaseId === "42ccc305-85c7-4a4a-92c0-bc41669afe25"
+  );
+  const phase2 = productId?.productPhaseSalaries.find(
+    (p) => p.phaseId === "4d2113f9-2009-4c37-82b1-195ecbb9c706"
+  );
+  const phase3 = productId?.productPhaseSalaries.find(
+    (p) => p.phaseId === "0f54b781-8286-42d2-9dce-b19b22b43700"
+  );
   const form = useForm({
     resolver: zodResolver(ProductUpdateSchema),
     defaultValues: {
@@ -167,18 +176,23 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     const newImageRequests = files
       .filter((file) => {
         if (!validImageTypes.includes(file.type)) {
-          toast.error(`File ${limitLength(file.name, 15)} không đúng kiểu: .png, .jpg, .jpeg.`);
+          toast.error(
+            `File ${limitLength(
+              file.name,
+              15
+            )} không đúng kiểu: .png, .jpg, .jpeg.`
+          );
           return false;
         }
         if (file.size > 1000000) {
           // 1000 KB
-          toast.error(`File ${limitLength(file.name, 15)} Dung lượng không được quá 1M.`);
+          toast.error(
+            `File ${limitLength(file.name, 15)} Dung lượng không được quá 1M.`
+          );
           return false;
         }
         if (currentTotalSize + file.size > maxTotalSize) {
-          toast.error(
-            `Vượt quá tổng kích thước giới hạn là 1200 KB.`
-          );
+          toast.error(`Vượt quá tổng kích thước giới hạn là 1200 KB.`);
           return false;
         }
         currentTotalSize += file.size;
@@ -293,8 +307,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
         const existingIndex = prevSaveUpdateImage.findIndex(
           (item) => item.id === id
         );
-        const getFileNameFromUrl = (url:string) => {
-          return url.substring(url.lastIndexOf('/') + 1, url.indexOf('?'));
+        const getFileNameFromUrl = (url: string) => {
+          return url.substring(url.lastIndexOf("/") + 1, url.indexOf("?"));
         };
         if (existingIndex !== -1) {
           const updatedSaveUpdateImage = [...prevSaveUpdateImage];
@@ -348,8 +362,8 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
         const existingIndex = prevSaveUpdateImage.findIndex(
           (item) => item.id === id
         );
-        const getFileNameFromUrl = (url:string) => {
-          return url.substring(url.lastIndexOf('/') + 1, url.indexOf('?'));
+        const getFileNameFromUrl = (url: string) => {
+          return url.substring(url.lastIndexOf("/") + 1, url.indexOf("?"));
         };
         if (existingIndex !== -1) {
           // Update existing entry
@@ -374,7 +388,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
       });
     }
   };
-  console.log("removeImageIds",removeImageIds)
+  console.log("removeImageIds", removeImageIds);
 
   const handlePostImage = async () => {
     setLoading(true);
@@ -422,17 +436,17 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
         })),
         removeImageIds: removeImageIds ? removeImageIds : ImaNull,
       };
-      console.log("requestBody", requestBody)
+      console.log("requestBody", requestBody);
 
       try {
         const response = await productApi.updateProduct(
           requestBody,
           formData.id
         );
-        setFetchTrigger((prev) => prev + 1)
-        setImageAddRequests([])
+        setFetchTrigger((prev) => prev + 1);
+        setImageAddRequests([]);
         ForceRender();
-        setOpen(false)
+        setOpen(false);
         toast.success(response.data.message);
       } catch (error: any) {
         if (
@@ -455,7 +469,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
           );
         } else {
           // Xử lý các lỗi khác
-          toast.error(`Lỗi không mong muốn trong quá trình cập nhật: ${error.message}`);
+          toast.error(
+            `Lỗi không mong muốn trong quá trình cập nhật: ${error.message}`
+          );
         }
         throw error; // Re-throw the error to stop further execution
       }
@@ -466,12 +482,11 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
     }
   };
 
-  useEffect(() => { }, [removeImageIds]);
+  useEffect(() => {}, [removeImageIds]);
 
   const parseCurrency = (value: any) => {
     return value.replace(/,/g, "");
   };
-
 
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -485,15 +500,16 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   };
 
   const handleClearForm = () => {
-    setOpen(false)
-    setOpenAlert(false)
-    setImageAddRequests([])
+    setOpen(false);
+    setOpenAlert(false);
+    setImageAddRequests([]);
     setFetchTrigger((prev) => prev + 1);
-  }
+  };
 
   const { formState } = form;
   const handleOffDialog = () => {
-    const isDetailsOmage = Array.isArray(imageAddRequests) && imageAddRequests.length === 0;
+    const isDetailsOmage =
+      Array.isArray(imageAddRequests) && imageAddRequests.length === 0;
 
     if (!formState.isDirty && isDetailsOmage) {
       setOpen(false);
@@ -504,25 +520,30 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
   };
   return (
     <>
-      {
-        openAlert && (
-          <AlertDialog open={openAlert} >
-            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-      }
+      {openAlert && (
+        <AlertDialog open={openAlert}>
+          <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Bạn có chắc chắn muốn tắt biểu mẫu này không ??
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
+                những dữ liệu mà bạn đã nhập
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleOffDialogA}>
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearForm}>
+                Tiếp tục
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
         <Dialog.Trigger asChild>{children}</Dialog.Trigger>
         <Dialog.Portal>
@@ -535,10 +556,12 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                   <h2 className="text-2xl text-white">
                     Chỉnh Sửa Thông Tin Sản Phẩm
                   </h2>
-                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
-                    <X
-                      className="w-4 h-4 dark:text-white"
-                    />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleOffDialog}
+                  >
+                    <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
                 <div className="grid gap-4 p-4 overflow-y-auto h-[650px] dark:bg-card">
@@ -608,7 +631,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                             {...field}
                                             value={formatCurrency(field.value)}
                                             onChange={(e) =>
-                                              field.onChange(parseCurrency(e.target.value))
+                                              field.onChange(
+                                                parseCurrency(e.target.value)
+                                              )
                                             }
                                           />
                                           <FormMessage />
@@ -631,7 +656,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                             {...field}
                                             value={formatCurrency(field.value)}
                                             onChange={(e) =>
-                                              field.onChange(parseCurrency(e.target.value))
+                                              field.onChange(
+                                                parseCurrency(e.target.value)
+                                              )
                                             }
                                           />
                                           <FormMessage />
@@ -654,7 +681,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                             {...field}
                                             value={formatCurrency(field.value)}
                                             onChange={(e) =>
-                                              field.onChange(parseCurrency(e.target.value))
+                                              field.onChange(
+                                                parseCurrency(e.target.value)
+                                              )
                                             }
                                           />
                                           <FormMessage />
@@ -699,8 +728,12 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                             <SelectValue placeholder="Trạng thái" />
                                           </SelectTrigger>
                                           <SelectContent>
-                                            <SelectItem value="true">Đang xử lý</SelectItem>
-                                            <SelectItem value="false">Chưa xử lý</SelectItem>
+                                            <SelectItem value="true">
+                                              Đang sản xuất
+                                            </SelectItem>
+                                            <SelectItem value="false">
+                                              Ngừng sản xuất
+                                            </SelectItem>
                                           </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -714,7 +747,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                   className="w-full bg-primary hover:bg-primary/90"
                                   disabled={isSubmitting}
                                 >
-                                  {isSubmitting ? "Đang xử lý..." : "Chỉnh Sửa Thông Tin"}
+                                  {isSubmitting
+                                    ? "Đang xử lý..."
+                                    : "Chỉnh Sửa Thông Tin"}
                                 </Button>
                               </div>
                             </form>
@@ -757,9 +792,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                               <Carousel className="w-full max-w-xs flex justify-center pb-5">
                                 <CarouselContent>
                                   {imageRequests.map((image, index) => (
-                                    <CarouselItem
-                                      key={index}
-                                    >
+                                    <CarouselItem key={index}>
                                       <div className="p-1">
                                         <Card className="border-none">
                                           <CardContent className="flex aspect-square items-center justify-center p-6 relative bg-black">
@@ -773,7 +806,12 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                             <button
                                               type="button"
                                               className="absolute right-0 top-0 "
-                                              onClick={() => handleDeleteImage(index, image.id)}
+                                              onClick={() =>
+                                                handleDeleteImage(
+                                                  index,
+                                                  image.id
+                                                )
+                                              }
                                             >
                                               <Trash2
                                                 size={35}
@@ -798,18 +836,23 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                                       Loại ảnh
                                                     </h4>
                                                     <p className="text-sm text-muted-foreground">
-                                                      Đặt loại ảnh : Bản thiết kế hoặc ảnh chính
+                                                      Đặt loại ảnh : Bản thiết
+                                                      kế hoặc ảnh chính
                                                     </p>
                                                   </div>
                                                   <div className="grid gap-2">
                                                     <div className="flex justify-between items-center">
-                                                      <Label htmlFor={`isBluePrint-${index}`}>
+                                                      <Label
+                                                        htmlFor={`isBluePrint-${index}`}
+                                                      >
                                                         [Ảnh] Bản thiết kế
                                                       </Label>
                                                       <Switch
                                                         className="data-[state=checked]:bg-primary"
                                                         id={`isBluePrint-${index}`}
-                                                        checked={image.isBluePrint}
+                                                        checked={
+                                                          image.isBluePrint
+                                                        }
                                                         onCheckedChange={() =>
                                                           handleToggleBluePrint(
                                                             image.imageUrl,
@@ -820,13 +863,17 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                                       />
                                                     </div>
                                                     <div className="flex justify-between items-center">
-                                                      <Label htmlFor={`isMainImage-${index}`}>
+                                                      <Label
+                                                        htmlFor={`isMainImage-${index}`}
+                                                      >
                                                         [Ảnh] Chính
                                                       </Label>
                                                       <Switch
                                                         className="data-[state=checked]:bg-primary"
                                                         id={`isMainImage-${index}`}
-                                                        checked={image.isMainImage}
+                                                        checked={
+                                                          image.isMainImage
+                                                        }
                                                         onCheckedChange={() =>
                                                           handleToggleMainImage(
                                                             image.imageUrl,
@@ -861,7 +908,10 @@ export const ProductUpdateForm: React.FC<ProductID> = ({ productId, children }) 
                                 onChange={(e) => handleUploadPhotos(e)}
                                 multiple
                               />
-                              <label htmlFor="image" className="absolute -bottom-4">
+                              <label
+                                htmlFor="image"
+                                className="absolute -bottom-4"
+                              >
                                 <Upload
                                   size={35}
                                   className="flex items-center justify-center text-primary bg-white rounded-md p-2 m-5 border-gray-200 border"

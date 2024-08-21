@@ -185,7 +185,6 @@ export default function ProfilePage() {
     return formatted;
   };
 
-
   // console.log("user?.user?.id", user?.user?.id)
   // console.log("userId?.id", userId)
   return (
@@ -294,7 +293,7 @@ export default function ProfilePage() {
                           <div>
                             {formatCurrency(
                               userId?.salaryHistoryResponse
-                                ?.salaryByDayResponses.salary
+                                ?.salaryByDayResponses?.salary
                             )}{" "}
                             <span className="text-gray-400">VND/Ngày</span>
                           </div>
@@ -307,7 +306,7 @@ export default function ProfilePage() {
                           <div>
                             {formatCurrency(
                               userId?.salaryHistoryResponse
-                                ?.salaryByOverTimeResponses.salary
+                                ?.salaryByOverTimeResponses?.salary
                             )}{" "}
                             <span className="text-gray-400">VND/giờ</span>
                           </div>
