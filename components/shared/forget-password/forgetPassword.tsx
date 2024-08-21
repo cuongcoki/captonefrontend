@@ -39,9 +39,10 @@ export default function ForgetPassword() {
     authApi
       .forgetPassword(data)
       .then((response) => {
-        // console.log(">>> forget pass", response.data.message);
+        console.log("SUCCESS");
         toast.success(response.data.message);
         setTimeout(() => {
+          toast.dismiss();
           router.push(`/change-password/${data.id}`);
         }, 2000);
       })
@@ -50,8 +51,15 @@ export default function ForgetPassword() {
           for (const key in error.response.data.error) {
             toast.error(error.response.data.error[key][0]);
           }
-        } else {
+        } else if (error.response.data.message) {
           toast.error(error.response.data.message);
+        }
+
+        if (error.response.data.status === 400) {
+          setTimeout(() => {
+            toast.dismiss();
+            router.push(`/change-password/${data.id}`);
+          }, 2000);
         }
       })
       .finally(() => {
