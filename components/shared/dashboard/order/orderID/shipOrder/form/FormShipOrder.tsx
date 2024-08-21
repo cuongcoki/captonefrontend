@@ -365,6 +365,9 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
       .then(({ data }) => {
         if (data.isSuccess) {
           ForceRender();
+          form.reset();
+          setProductDetail([]);
+          setShipOrderDetailRequests([]);
           setOpen(false);
           toast.success(data.message);
         }
