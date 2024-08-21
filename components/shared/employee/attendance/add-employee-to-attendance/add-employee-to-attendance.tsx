@@ -102,7 +102,7 @@ export function AddEmployeeToAttendance<TData, TValue>({
       createAttendances: tableData,
     };
 
-    console.log("createAttendanceSlotBody", createAttendanceSlotBody);
+    // console.log("createAttendanceSlotBody", createAttendanceSlotBody);
 
     // attendanceApi
     //   .createAttendance(createAttendanceSlotBody)

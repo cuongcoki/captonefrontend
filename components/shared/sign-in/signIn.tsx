@@ -35,8 +35,8 @@ export default function SignIn() {
               QUÊN MẬT KHẨU
             </Link>
 
-            <Link href="#" className=" inline-block text-sm underline">
-              TRỢ GIÚP ?
+            <Link href={`/pdf/Quên mật khẩu.pdf`} target="_blank" rel="noopener noreferrer" className=" inline-block text-sm underline">
+                TRỢ GIÚP ?
             </Link>
           </div>
         </div>
