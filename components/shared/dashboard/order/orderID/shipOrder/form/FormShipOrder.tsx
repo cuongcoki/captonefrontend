@@ -365,6 +365,9 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
       .then(({ data }) => {
         if (data.isSuccess) {
           ForceRender();
+          form.reset();
+          setProductDetail([]);
+          setShipOrderDetailRequests([]);
           setOpen(false);
           toast.success(data.message);
         }
@@ -817,13 +820,15 @@ export const FormShipOrder: React.FC<OrderId> = ({ orderId }) => {
                                             item.itemId === proDetail.itemId
                                         )?.quantity || 0
                                       }
-                                      onChange={(e) =>
+                                      onChange={(e) => {
+                                        if (parseInt(e.target.value) < 0)
+                                          return;
                                         handleChange(
                                           proDetail.itemId,
                                           "quantity",
                                           parseInt(e.target.value)
-                                        )
-                                      }
+                                        );
+                                      }}
                                       className="w-16 text-center outline-none"
                                     />
                                   </TableCell>

@@ -99,8 +99,8 @@ export default function ProductPhaseChangeQuantityType({
         <DialogContent className="max-w-[80vw] md:max-w-[750px] rounded-lg">
           <DialogHeader>
             <TitleComponent
-            title="Chuyển Đổi Sản phẩm"
-            description="Chuyển đổi số lượng của giai đoạn - chất lượng sản phẩm."
+              title="Chuyển Đổi Sản phẩm"
+              description="Chuyển đổi số lượng của giai đoạn - chất lượng sản phẩm."
             />
             <DialogDescription></DialogDescription>
           </DialogHeader>
@@ -110,7 +110,7 @@ export default function ProductPhaseChangeQuantityType({
             Thay đổi loại hàng
           </div>
           <div className="md:grid md:grid-cols-12 space-y-2">
-            <div className="md:space-y-2 md:col-span-5">
+            <div className="md:space-y-2 md:col-span-5 flex items-end">
               <Select value={from} onValueChange={setFrom}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Loại hạng sẽ chuyển" />
@@ -169,7 +169,7 @@ export default function ProductPhaseChangeQuantityType({
             Thay đổi giai đoạn
           </div>
           <div className="md:grid md:grid-cols-12 space-y-2">
-            <div className="md:space-y-2 md:col-span-5">
+            <div className="md:space-y-2 md:col-span-5 flex items-end">
               <Select disabled={true} value={productPhase.phaseId}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Giai đoạn sẽ chuyển" />
