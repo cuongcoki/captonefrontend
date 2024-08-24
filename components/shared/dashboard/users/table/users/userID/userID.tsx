@@ -71,6 +71,7 @@ import { UpdateUser } from "@/components/shared/dashboard/users/form/UsersUpdate
 import LoadingPage from "@/components/shared/loading/loading-page";
 import TitleComponent from "@/components/shared/common/Title";
 import { UserStore } from "@/components/shared/dashboard/users/user-store";
+import { NoImage } from "@/constants/images";
 
 type UserDetailContextType = {
   force: number;
@@ -353,7 +354,7 @@ export default function UserIDPage() {
                 width={80}
                 height={80}
                 className="object-cover w-20 h-20 mt-3 mr-3 rounded-full"
-                src={avatar}
+                src={avatar === "" ? NoImage : avatar}
               />
             </div>
 

@@ -27,7 +27,7 @@ export const authService = {
     }
   
     const payload: any = jwtDecode(storedToken)
-    // console.log("Payload ====== ===", payload)
+    console.log("Payload ====== ===", payload)
   
     const refreshToken = localStorage.getItem(jwtConfig.onTokenExpiration) // Đảm bảo key đúng
     if (!refreshToken) {
@@ -38,7 +38,7 @@ export const authService = {
       userId: payload?.UserID,
       refreshToken: refreshToken
     }
-    // console.log("Request data:", data)
+    console.log("Request data:", data)
   
     try {
       const response = await axios.post(apiUrl, data, {
@@ -46,7 +46,7 @@ export const authService = {
           'Content-Type': 'application/json',
         }
       })
-      // console.log("authService response:", response.data)
+      console.log("authService response:", response.data)
   
       // Kiểm tra phản hồi API để đảm bảo chứa các token mới
       if (response.data && response.data.data) {
@@ -55,7 +55,7 @@ export const authService = {
         throw new Error('Invalid response from refresh token API')
       }
     } catch (err: any) {
-      // console.error('authService Error refreshing token:', err.response ? err.response.data : err)
+      console.error('authService Error refreshing token:', err.response ? err.response.data : err)
       throw err
     }
   },

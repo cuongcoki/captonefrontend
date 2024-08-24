@@ -47,7 +47,7 @@ export const productPhaseStore = create<ProductPhaseStore>((set, get) => ({
     const toQuantity = Number(newData[index][toKey]);
 
     if (fromQuantity < quantity) {
-      console.error("Not enough quantity to transfer");
+      // console.error("Not enough quantity to transfer");
       return;
     }
 
