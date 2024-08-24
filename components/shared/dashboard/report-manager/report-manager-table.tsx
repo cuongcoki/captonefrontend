@@ -257,55 +257,58 @@ export default function ReportManagerTable({
                 </TableCell>
               </TableRow>
             ) : (
-              tableData.map((report, index) => (
-                <ReportManagerUpdate index={index} key={report.id}>
-                  <TableRow className="hover:cursor-pointer">
-                    <TableCell className="flex justify-center">
-                      <div className="w-32 h-44 bg-gray-300">
-                        <Image
-                          src={report.avatar}
-                          alt="avatar"
-                          width={320}
-                          height={440}
-                          className="object-cover h-full w-full"
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-center">{report.fullName}</div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-center">
-                        {report.reportTypeDescription}
-                      </div>
-                    </TableCell>
-                    <TableCell className="px-0">
-                      <div className="whitespace-normal break-words w-64 mx-auto text-center">
-                        {report.description}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-center">
-                        {formatDate(report.createdDate)}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="whitespace-normal break-words w-64 mx-auto text-center">
-                        {report.replyMessage}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div
-                        className={`text-center ${
-                          ColorOfTypeStatus[report.status]
-                        }`}
-                      >
-                        {StatusDescription[report.status]}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                </ReportManagerUpdate>
-              ))
+              tableData.map((report, index) => {
+                if (report.userId === user?.id) return null;
+                return (
+                  <ReportManagerUpdate index={index} key={report.id}>
+                    <TableRow className="hover:cursor-pointer">
+                      <TableCell className="flex justify-center">
+                        <div className="w-32 h-44 bg-gray-300">
+                          <Image
+                            src={report.avatar}
+                            alt="avatar"
+                            width={320}
+                            height={440}
+                            className="object-cover h-full w-full"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-center">{report.fullName}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-center">
+                          {report.reportTypeDescription}
+                        </div>
+                      </TableCell>
+                      <TableCell className="px-0">
+                        <div className="whitespace-normal break-words w-64 mx-auto text-center">
+                          {report.description}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-center">
+                          {formatDate(report.createdDate)}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="whitespace-normal break-words w-64 mx-auto text-center">
+                          {report.replyMessage}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div
+                          className={`text-center ${
+                            ColorOfTypeStatus[report.status]
+                          }`}
+                        >
+                          {StatusDescription[report.status]}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  </ReportManagerUpdate>
+                );
+              })
             )}
           </TableBody>
         </Table>

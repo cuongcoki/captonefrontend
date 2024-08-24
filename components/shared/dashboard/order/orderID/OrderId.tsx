@@ -1,12 +1,6 @@
 "use client";
 // ** import UI
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
-
-
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -24,7 +18,7 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { orderApi } from "@/apis/order.api";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 // ** import Components
 import { NoImage } from "@/constants/images";
@@ -122,6 +116,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
     setOrderResponses: [],
   });
   const { force } = OrderStore();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchDataOrderId = () => {
@@ -132,8 +127,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
           const orderData = data.data;
           setData(orderData);
         })
-        .catch((error) => {
-        })
+        .catch((error) => {})
         .finally(() => {
           setLoading(false);
         });
@@ -146,8 +140,7 @@ export default function OrderIdPage({ orderId }: OrderId) {
           const orderData = data.data;
           setDataId(orderData);
         })
-        .catch((error) => {
-        })
+        .catch((error) => {})
         .finally(() => {
           setLoading(false);
         });
@@ -174,7 +167,6 @@ export default function OrderIdPage({ orderId }: OrderId) {
         description="Thông tin chi tiết của đơn hàng."
       />
       <div className="flex flex-col gap-8">
-
         <div className="grid sm:grid-cols-1 md:grid-cols-9 gap-6">
           <Card className="sm:col-span-1 md:col-span-9 lg:col-span-3 shadow-sm">
             <CardHeader>
@@ -187,25 +179,19 @@ export default function OrderIdPage({ orderId }: OrderId) {
               <div className="flex flex-col space-y-2">
                 <div className="flex justify-between">
                   <span className="font-medium">Tên công ty:</span>
-                  <span >
-                    {data?.company.name}
-                  </span>
+                  <span>{data?.company.name}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">Địa chỉ công ty:</span>
-                  <span >
+                  <span>
                     <HoverComponent Num={25}>
-                    {data?.company.address}
+                      {data?.company.address}
                     </HoverComponent>
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-medium">
-                    Loại công ty:
-                  </span>
-                  <span >
-                    {data?.company.companyTypeDescription}
-                  </span>
+                  <span className="font-medium">Loại công ty:</span>
+                  <span>{data?.company.companyTypeDescription}</span>
                 </div>
               </div>
             </CardContent>
@@ -224,21 +210,15 @@ export default function OrderIdPage({ orderId }: OrderId) {
               <div className="flex flex-col space-y-2">
                 <div className="flex justify-between">
                   <span className="font-medium">Người đại diện:</span>
-                  <span >
-                    {data?.company.directorName}
-                  </span>
+                  <span>{data?.company.directorName}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-medium">
-                    Địa chỉ gmail:
-                  </span>
-                  <span >
-                    {data?.company.email}
-                  </span>
+                  <span className="font-medium">Địa chỉ gmail:</span>
+                  <span>{data?.company.email}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">Điện thoại:</span>
-                  <span > {data?.company.directorPhone}</span>
+                  <span> {data?.company.directorPhone}</span>
                 </div>
               </div>
             </CardContent>
@@ -258,32 +238,28 @@ export default function OrderIdPage({ orderId }: OrderId) {
               <div className="flex flex-col space-y-2">
                 <div className="flex justify-between">
                   <span className="font-medium">Trạng thái:</span>
-                  <span className={`
+                  <span
+                    className={`
   ${data?.status === 0 ? "text-[#94a3b8] font-semibold" : ""}
   ${data?.status === 1 ? "text-blue-500 font-semibold" : ""}
   ${data?.status === 2 ? "text-green-500 font-semibold" : ""}
   ${data?.status === 3 ? "text-red-500 font-semibold" : ""}
-`}>
+`}
+                  >
                     {data?.statusDescription}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">Ngày bắt đầu:</span>
-                  <span >
-                    {formatDate(data?.startOrder as string)}
-                  </span>
+                  <span>{formatDate(data?.startOrder as string)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="font-medium">
-                    Ngày kết thúc:
-                  </span>
-                  <span >
-                    {formatDate(data?.endOrder as string)}
-                  </span>
+                  <span className="font-medium">Ngày kết thúc:</span>
+                  <span>{formatDate(data?.endOrder as string)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="font-medium">Thuế:</span>
-                  <span >{data?.vat}%</span>
+                  <span>{data?.vat}%</span>
                 </div>
               </div>
             </CardContent>
@@ -296,16 +272,28 @@ export default function OrderIdPage({ orderId }: OrderId) {
                   title="Danh sách mặt hàng"
                   description="Danh sách các sản phẩm - bộ sản phẩm được đặt trong đơn hàng."
                 />
-                {checkStatus === 0 || checkStatus === 1 ? <UpdateOrderDetails orderId={dataId} /> : ""}
+                {checkStatus === 0 || checkStatus === 1 ? (
+                  <UpdateOrderDetails orderId={dataId} />
+                ) : (
+                  ""
+                )}
               </div>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="productOrderResponses" className="">
                 <TabsList className="grid grid-cols-2 w-[250px]">
-                  <TabsTrigger value="productOrderResponses" className="data-[state=active]:shadow-lg">
+                  <TabsTrigger
+                    value="productOrderResponses"
+                    className="data-[state=active]:shadow-lg"
+                  >
                     Sản phẩm
                   </TabsTrigger>
-                  <TabsTrigger value="setOrderResponses" className="data-[state=active]:shadow-lg">Bộ sản phẩm</TabsTrigger>
+                  <TabsTrigger
+                    value="setOrderResponses"
+                    className="data-[state=active]:shadow-lg"
+                  >
+                    Bộ sản phẩm
+                  </TabsTrigger>
                 </TabsList>
                 <TabsContent value="productOrderResponses">
                   <Card>
@@ -320,16 +308,24 @@ export default function OrderIdPage({ orderId }: OrderId) {
                         <TableCaption>Sản phẩm trong đơn hàng</TableCaption>
                         <TableHeader>
                           <TableRow>
-                            <TableHead className="w-[100px] text-center">Hình ảnh</TableHead>
+                            <TableHead className="w-[100px] text-center">
+                              Hình ảnh
+                            </TableHead>
                             <TableHead className="hidden sm:table-cell text-center">
                               Mã sản phẩm
                             </TableHead>
                             <TableHead className="hidden sm:table-cell text-center">
                               Tên sản phẩm
                             </TableHead>
-                            <TableHead className="text-center">Số lượng đặt</TableHead>
-                            <TableHead className="text-center">Hàng đã giao</TableHead>
-                            <TableHead className="text-center">Đơn giá</TableHead>
+                            <TableHead className="text-center">
+                              Số lượng đặt
+                            </TableHead>
+                            <TableHead className="text-center">
+                              Hàng đã giao
+                            </TableHead>
+                            <TableHead className="text-center">
+                              Đơn giá
+                            </TableHead>
                             <TableHead className="hidden md:table-cell text-center">
                               Ghi chú
                             </TableHead>
@@ -348,7 +344,12 @@ export default function OrderIdPage({ orderId }: OrderId) {
                                   width={900}
                                   height={900}
                                   alt="ảnh sản phẩm"
-                                  className="w-[50px] h-[50px] object-contain shadow-md rounded-sm"
+                                  className="w-[50px] h-[50px] object-contain shadow-md rounded-sm hover:cursor-pointer"
+                                  onClick={() => {
+                                    router.push(
+                                      `/dashboard/products/product/${item.productId}`
+                                    );
+                                  }}
                                 />
                               </TableCell>
                               <TableCell className="hidden sm:table-cell text-center">
@@ -390,13 +391,27 @@ export default function OrderIdPage({ orderId }: OrderId) {
                         <TableCaption>Bộ sản phẩm trong đơn hàng</TableCaption>
                         <TableHeader>
                           <TableRow>
-                            <TableHead className="w-[100px] text-center">Hình ảnh</TableHead>
-                            <TableHead className="text-center">Mã bộ sản phẩm</TableHead>
-                            <TableHead className="text-center">Tên bộ sản phẩm</TableHead>
-                            <TableHead className="text-center">Số lượng đặt</TableHead>
-                            <TableHead className="text-center">Hàng đã giao</TableHead>
-                            <TableHead className="text-center">Đơn giá</TableHead>
-                            <TableHead className="text-center">Ghi chú</TableHead>
+                            <TableHead className="w-[100px] text-center">
+                              Hình ảnh
+                            </TableHead>
+                            <TableHead className="text-center">
+                              Mã bộ sản phẩm
+                            </TableHead>
+                            <TableHead className="text-center">
+                              Tên bộ sản phẩm
+                            </TableHead>
+                            <TableHead className="text-center">
+                              Số lượng đặt
+                            </TableHead>
+                            <TableHead className="text-center">
+                              Hàng đã giao
+                            </TableHead>
+                            <TableHead className="text-center">
+                              Đơn giá
+                            </TableHead>
+                            <TableHead className="text-center">
+                              Ghi chú
+                            </TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -412,11 +427,20 @@ export default function OrderIdPage({ orderId }: OrderId) {
                                   width={900}
                                   height={900}
                                   alt="ảnh sản phẩm"
-                                  className="w-[50px] h-[50px] object-contain shadow-md rounded-sm"
+                                  className="w-[50px] h-[50px] object-contain shadow-md rounded-sm hover:cursor-pointer"
+                                  onClick={() => {
+                                    router.push(
+                                      `/dashboard/products/set/${item.setId}`
+                                    );
+                                  }}
                                 />
                               </TableCell>
-                              <TableCell className="text-center">{item.setCode}</TableCell>
-                              <TableCell className="text-center">{item.setName}</TableCell>
+                              <TableCell className="text-center">
+                                {item.setCode}
+                              </TableCell>
+                              <TableCell className="text-center">
+                                {item.setName}
+                              </TableCell>
                               <TableCell className="text-center">
                                 {formatCurrency(item.quantity)}
                               </TableCell>
@@ -426,7 +450,9 @@ export default function OrderIdPage({ orderId }: OrderId) {
                               <TableCell className="text-center">
                                 {formatCurrency(item.unitPrice)}
                               </TableCell>
-                              <TableCell className="text-center">{item.note}</TableCell>
+                              <TableCell className="text-center">
+                                {item.note}
+                              </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>

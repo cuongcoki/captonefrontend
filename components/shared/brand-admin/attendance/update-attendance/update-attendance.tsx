@@ -533,6 +533,9 @@ export default function UpdateAttendance({
                   .indexOf(nameSearch.toLowerCase().trim()) === -1
               )
                 return null;
+              if (item.userID == userData?.id) {
+                return null;
+              }
               return (
                 <React.Fragment key={item.userID}>
                   {item.products.length > 0 ? (
