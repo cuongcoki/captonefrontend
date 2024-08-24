@@ -30,8 +30,7 @@ interface ImageDisplayProps {
 
 const ImageDisplayDialog: React.FC<ImageDisplayProps> = ({ images }) => {
     const handleGotoPID = () => {
-        window.location.href = `/dashboard/products/product/${images.id}`;
-
+        window.open(`/dashboard/products/product/${images.id}`, '_blank');
     }
     const imageSrc = images.image === "Image_not_found" ? NoImage : images.image;
     return (

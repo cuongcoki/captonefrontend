@@ -44,7 +44,7 @@ const data = [
 export default function ImageIconShipmentForm({ dataImage }: ImageIconShipOrderProps) {
     const [open, setOpen] = useState<boolean>(false);
     const handleGotoPID = () => {
-        window.location.href = `/dashboard/products/product/${dataImage.id}`;
+        window.open(`/dashboard/products/product/${dataImage.id}`, '_blank');
         setOpen(false);
     }
     // console.log("dataImage", dataImage)
