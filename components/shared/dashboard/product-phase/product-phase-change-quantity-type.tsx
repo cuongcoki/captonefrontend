@@ -138,7 +138,7 @@ export default function ProductPhaseChangeQuantityType({
               <MoveRight className="w-10 hidden md:block" />
               <MoveDown className="w-10 md:hidden" />
             </div>
-            <div className="md:space-y-2 md:col-span-5">
+            <div className="md:space-y-2 md:col-span-5 flex items-end">
               <Select value={to} onValueChange={setTo}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Loại hạng được chuyển" />
@@ -197,7 +197,7 @@ export default function ProductPhaseChangeQuantityType({
               <MoveRight className="w-10 hidden md:block" />
               <MoveDown className="w-10 md:hidden" />
             </div>
-            <div className="space-y-2 col-span-5">
+            <div className="space-y-2 col-span-5 flex items-end">
               <Select value={phaseTo} onValueChange={setPhaseTo}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Giai đoạn được chuyển" />
