@@ -133,8 +133,8 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <span
           className={`${isInProcessing.value === true
-            ? "p-2 text-primary dark:bg-white"
-            : "p-2 text-red-500 dark:bg-white"
+            ? "p-2 text-primary dark:bg-card"
+            : "p-2 text-red-500 dark:bg-black"
             } `}
         >
           {isInProcessing.label}

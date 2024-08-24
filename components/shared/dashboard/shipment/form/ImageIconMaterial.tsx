@@ -30,7 +30,7 @@ export default function ImageIconMaterial({ dataImage }: ImageIconShipOrderProps
     const [open, setOpen] = useState<boolean>(false);
 
     const handleGotoPID = () => {
-        window.location.href = `/dashboard/material/manager`;
+        window.open(`/dashboard/material/manager`, '_blank');
         setOpen(false);
     }
     const mainImage = dataImage.image

@@ -52,9 +52,9 @@ interface ImageDisplayProps {
 const ImageDisplayDialogSet: React.FC<ImageDisplayProps> = ({ images, checkProduct }) => {
     const handleGotoPID = () => {
         if (checkProduct === 0) {
-            window.location.href = `/dashboard/products/product/${images.id}`;
+            window.open(`/dashboard/products/set/${images.id}`, '_blank');
         } else {
-            window.location.href = `/dashboard/products/set/${images.id}`;
+            window.open(`/dashboard/products/set/${images.id}`, '_blank');
         }
     }
     // console.log("images", images)

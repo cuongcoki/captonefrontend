@@ -89,6 +89,8 @@ export default function RenderTableUsers({ searchParams }: Props) {
     setCurrentPage(1);
   };
 
+  console.log("data",data)
+
   return (
     <div className="">
       <div className="flex flex-col md:flex-row items-center justify-between mb-4">
