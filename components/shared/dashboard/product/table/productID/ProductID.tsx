@@ -192,14 +192,15 @@ export default function ProductIDPage() {
                     <div className="">Trạng Thái:</div>
                     <div className="">
                       <span
-                        className={`w-[40%] px-2 py-2 rounded-full ${productId?.isInProcessing
-                          ? "bg-primary text-white"
-                          : "bg-yellow-200 text-black"
-                          }`}
+                        className={`w-[40%] px-2 py-2 rounded-full ${
+                          productId?.isInProcessing
+                            ? "bg-primary text-white"
+                            : "bg-yellow-200 text-black"
+                        }`}
                       >
                         {productId?.isInProcessing
-                          ? "Đang xử lý"
-                          : "Chưa xử lý"}
+                          ? "Đang sản xuất"
+                          : "Ngừng sản xuất"}
                       </span>
                     </div>
                   </Label>

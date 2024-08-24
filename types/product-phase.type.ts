@@ -50,4 +50,6 @@ export type ChangeQuantityTypeBody = {
   phaseIdFrom: string;
   phaseIdTo: string;
   companyId: string;
+  CompanyIdFrom: string;
+  CompanyIdTo: string;
 };
