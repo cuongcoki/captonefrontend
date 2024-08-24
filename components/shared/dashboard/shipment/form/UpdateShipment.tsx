@@ -1065,7 +1065,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                               <SelectItem
                                                 key={item.id}
                                                 value={item.id}
-                                                className="hover:bg-slate-100 shadow-md mb-1"
+                                                className="hover:bg-slate-100 dark:hover:bg-black shadow-md mb-1"
                                               >
                                                 <div className="flex flex-col items-start  ">
                                                   <span>
@@ -1159,7 +1159,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                               <SelectItem
                                                 key={item.id}
                                                 value={item.id}
-                                                className="hover:bg-slate-100 shadow-md mb-1"
+                                                className="hover:bg-slate-100 dark:hover:bg-black shadow-md mb-1"
                                               >
                                                 <div className="flex flex-col items-start  ">
                                                   <span>
@@ -1231,7 +1231,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                   </FormControl>
                                   <SelectContent>
                                     {dataEm.map((item) => (
-                                      <SelectItem key={item.id} value={item.id}>
+                                      <SelectItem key={item.id} value={item.id} 
+                                      className="hover:bg-slate-100 dark:hover:bg-black shadow-md mb-1"
+                                      >
                                         <div className="flex items-center gap-4">
                                           <Image
                                             className="w-12 h-12 rounded-full shadow-md"

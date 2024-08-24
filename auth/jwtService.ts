@@ -47,7 +47,7 @@ axiosClient.interceptors.response.use(
           return;
         }
         count++;
-        toast.error("Hết phiên đăng nhập, vui lòng đăng nhập lại");
+ 
         return authService
           .refreshToken()
           .then((rs) => {
@@ -70,6 +70,7 @@ axiosClient.interceptors.response.use(
           })
           .catch((err) => {
             // console.log("loi1");
+            toast.error("Hết phiên đăng nhập, vui lòng đăng nhập lại");
             // console.log(err);
             // toast.error(err.response.data.message);
             authService.removeLocalStorageWhenLogout();
@@ -80,7 +81,9 @@ axiosClient.interceptors.response.use(
               currentPath !== "/forgot-password" &&
               currentPath !== "/sign-in"
             ) {
-              window.location.href = jwtConfig.loginEndpoint;
+              setTimeout(() => {
+                window.location.href = jwtConfig.loginEndpoint;
+              }, 2000); // 3 giây
             }
           });
       }
