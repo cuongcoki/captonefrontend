@@ -27,12 +27,19 @@ import TitleComponent from "../../common/Title";
 export default function ProductPhaseChangeQuantityType({
   index,
   children,
+  companyId,
 }: {
   index: number;
   children: React.ReactNode;
+  companyId: string;
 }) {
-  const { tableData, changeQuantityType, phaseData, ForceRender } =
-    productPhaseStore();
+  const {
+    tableData,
+    changeQuantityType,
+    phaseData,
+    ForceRender,
+    OwnCompanyData,
+  } = productPhaseStore();
   const productPhase = tableData[index];
   const [isOpen, setIsOpen] = React.useState(false);
   const [from, setFrom] = useState<string>("");
@@ -40,6 +47,8 @@ export default function ProductPhaseChangeQuantityType({
   const [phaseTo, setPhaseTo] = useState<string>(productPhase.phaseId);
   const [quantity, setQuantity] = useState<number>(1);
   const [loading, setLoading] = useState(false);
+  const [companyTo, setCompanyTo] = useState<string>(companyId);
+  const [companyFrom, setCompanyFrom] = useState<string>(companyId);
 
   const handleChange = () => {
     if (!from) {
@@ -67,6 +76,8 @@ export default function ProductPhaseChangeQuantityType({
         phaseIdFrom: productPhase.phaseId,
         phaseIdTo: phaseTo,
         quantity: quantity,
+        CompanyIdFrom: companyFrom,
+        CompanyIdTo: companyTo,
       })
       .then((res) => {
         toast.success("Thay đổi loại hàng thành công");
@@ -105,7 +116,7 @@ export default function ProductPhaseChangeQuantityType({
             <DialogDescription></DialogDescription>
           </DialogHeader>
           <Separator />
-          {/* -------------------------------------------------------------------------------------------------------------------------------- */}
+          {/* ------------------------------------------------------------  Thay đổi loại hàng-------------------------------------------------------------------- */}
           <div className="text-sm text-primary italic text-center">
             Thay đổi loại hàng
           </div>
@@ -164,7 +175,7 @@ export default function ProductPhaseChangeQuantityType({
             </div>
           </div>
           {/* <Separator className="my-1" /> */}
-          {/* -------------------------------------------------------------------------------------------------------------------------------- */}
+          {/* ---------------------------------------------------------Thay đổi giai đoạn----------------------------------------------------------------------- */}
           <div className="text-sm text-primary italic text-center">
             Thay đổi giai đoạn
           </div>
@@ -216,6 +227,58 @@ export default function ProductPhaseChangeQuantityType({
                     ))}
                 </SelectContent>
               </Select>
+            </div>
+          </div>
+          {/* -------------------------------------------------------------------Thay đổi kho------------------------------------------------------------- */}
+          <div className="text-sm text-primary italic text-center">
+            Thay đổi kho
+          </div>
+          <div className="md:grid md:grid-cols-12 space-y-2">
+            <div className="md:space-y-2 md:col-span-5 flex items-end">
+              <Select value={companyFrom} onValueChange={setCompanyFrom}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Kho sẽ chuyển hàng" />
+                </SelectTrigger>
+                <SelectContent className="w-full">
+                  {OwnCompanyData.map((item) => (
+                    <SelectItem
+                      key={item.value}
+                      className="hover:bg-gray-200 "
+                      value={item.value}
+                    >
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="text-sm ml-1 text-primary" hidden={from == ""}>
+                {/* Số lượng: {productPhase[ProductPhaseQuantityType[Number(from)]]} */}
+              </div>
+            </div>
+            <div className="flex items-center justify-center md:col-span-2">
+              <MoveRight className="w-10 hidden md:block" />
+              <MoveDown className="w-10 md:hidden" />
+            </div>
+            <div className="md:space-y-2 md:col-span-5 flex items-end">
+              <Select value={companyTo} onValueChange={setCompanyTo}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Kho sẽ nhận được hàng" />
+                </SelectTrigger>
+                <SelectContent>
+                  {OwnCompanyData.map((item) => (
+                    <SelectItem
+                      key={item.value}
+                      className="hover:bg-gray-200 "
+                      value={item.value}
+                    >
+                      {item.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="text-sm ml-1 text-primary" hidden={to == ""}>
+                {/* Số lượng: {productPhase[ProductPhaseQuantityType[Number(to)]]} */}
+              </div>
             </div>
           </div>
           <Separator />
