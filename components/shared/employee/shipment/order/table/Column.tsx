@@ -3,7 +3,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card"
+} from "@/components/ui/hover-card";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ShipperOrderDetail } from "../orderID/shipperOrderDetail";
@@ -28,7 +28,7 @@ export type ShipOrderShipper = {
   shipOrderId: string;
   status: number;
   statusDescription: string;
-  toCompany: ToCompany
+  toCompany: ToCompany;
 };
 const limitLength = (text: any, maxLength: any) => {
   if (text.length > maxLength) {
@@ -49,78 +49,83 @@ function formatDate(isoString: string) {
   // Trả về chuỗi theo định dạng dd/MM/yyyy
   return `${day}/${month}/${year}`;
 }
+const options: Intl.DateTimeFormatOptions = {
+  timeZone: "Asia/Ho_Chi_Minh",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+};
 export const columns: ColumnDef<ShipOrderShipper>[] = [
-
-
   {
     accessorKey: "toCompany.name",
     header: ({ column }) => {
       return <Button variant="ghost">Công ty nhận hàng</Button>;
     },
     cell: ({ row }) => {
-      return <span className="flex justify-center ">
-        <HoverCard>
-          <HoverCardTrigger>
-            {" "}
-            {limitLength(row.original.toCompany.name, 30)}
-          </HoverCardTrigger>
-          <HoverCardContent>
-            <div className="max-w-sm mx-auto">
-              <div className="mb-2 text-start">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Người đại diện
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  placeholder={limitLength(
-                    row.original.toCompany.directorName.trim(),
-                    30
-                  )}
-                  disabled
-                  readOnly
-                />
+      return (
+        <span className="flex justify-center ">
+          <HoverCard>
+            <HoverCardTrigger>
+              {" "}
+              {limitLength(row.original.toCompany.name, 30)}
+            </HoverCardTrigger>
+            <HoverCardContent>
+              <div className="max-w-sm mx-auto">
+                <div className="mb-2 text-start">
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Người đại diện
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                    placeholder={limitLength(
+                      row.original.toCompany.directorName.trim(),
+                      30
+                    )}
+                    disabled
+                    readOnly
+                  />
+                </div>
+                <div className="mb-2 text-start">
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Địa chỉ email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                    placeholder={limitLength(
+                      row.original.toCompany.email.trim(),
+                      30
+                    )}
+                    disabled
+                    readOnly
+                  />
+                </div>
+                <div className="mb-2 text-start">
+                  <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Số điện thoại
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                    placeholder={limitLength(
+                      row.original.toCompany.directorPhone.trim(),
+                      30
+                    )}
+                    disabled
+                    readOnly
+                  />
+                </div>
               </div>
-              <div className="mb-2 text-start">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Địa chỉ email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  placeholder={limitLength(
-                    row.original.toCompany.email.trim(),
-                    30
-                  )}
-                  disabled
-                  readOnly
-                />
-              </div>
-              <div className="mb-2 text-start">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Số điện thoại
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                  placeholder={limitLength(
-                    row.original.toCompany.directorPhone.trim(),
-                    30
-                  )}
-                  disabled
-                  readOnly
-                />
-              </div>
-            </div>
-          </HoverCardContent>
-        </HoverCard>
-      </span>;
+            </HoverCardContent>
+          </HoverCard>
+        </span>
+      );
     },
   },
-
 
   {
     accessorKey: "deliveryMethodDescription",
@@ -135,7 +140,11 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
   {
     accessorKey: "shipOrderId",
     header: ({ column }) => {
-      return <Button variant="ghost" className=" ">Chi tiết</Button>;
+      return (
+        <Button variant="ghost" className=" ">
+          Chi tiết
+        </Button>
+      );
     },
     cell: ({ row }) => {
       return (
@@ -155,7 +164,7 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
       const StatusCheck = [
         {
           value: 0,
-          label: "Đã nhận đơn hàng",
+          label: "Đang đợi giao",
           bgColour: "text-slate-400 border-slate-400",
         },
         {
@@ -170,7 +179,7 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
         },
         {
           value: 3,
-          label: "Đã hủy đơn hàng",
+          label: "Đã hủy",
           bgColour: "text-red-500 border-red-400",
         },
       ];
@@ -182,16 +191,19 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
       if (!statusOr) {
         return null;
       }
-
+      if (
+        row.original.shipDate.split("T")[0] !==
+        new Date().toLocaleDateString("en-CA", options)
+      ) {
+        return <span>{statusOr.label} </span>;
+      }
       return (
         <span className={`${statusOr.bgColour} px-2 py-1 `}>
-          {
-            row.original.status === 0 || row.original.status === 1 ? (
-              <ChangeStatusShipOrderEm status={row.original} />
-            ) : (
-              <span>{statusOr.label} </span>
-            )
-          }
+          {row.original.status === 0 || row.original.status === 1 ? (
+            <ChangeStatusShipOrderEm status={row.original} />
+          ) : (
+            <span>{statusOr.label} </span>
+          )}
         </span>
       );
     },
@@ -206,6 +218,4 @@ export const columns: ColumnDef<ShipOrderShipper>[] = [
       return <span>{formatDate(row.original.shipDate)}</span>;
     },
   },
-
-
 ];
