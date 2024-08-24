@@ -86,12 +86,12 @@ export default function ProductPhaseChangeQuantityType({
         setIsOpen(false);
       })
       .catch((error) => {
-        if (error.response.data.error) {
+        if (error?.response?.data?.error) {
           for (const key in error.response.data.error) {
             toast.error(error.response.data.error[key][0]);
           }
         } else {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
         }
       })
       .finally(() => {
@@ -235,7 +235,11 @@ export default function ProductPhaseChangeQuantityType({
           </div>
           <div className="md:grid md:grid-cols-12 space-y-2">
             <div className="md:space-y-2 md:col-span-5 flex items-end">
-              <Select value={companyFrom} onValueChange={setCompanyFrom}>
+              <Select
+                value={companyFrom}
+                onValueChange={setCompanyFrom}
+                disabled={true}
+              >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Kho sẽ chuyển hàng" />
                 </SelectTrigger>
