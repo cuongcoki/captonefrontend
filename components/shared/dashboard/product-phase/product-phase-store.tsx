@@ -11,6 +11,8 @@ type ProductPhaseStore = {
   setTableData: (data: ProductPhaseType[]) => void;
   companyData: ComboboxDataType[];
   setCompanyData: (data: ComboboxDataType[]) => void;
+  OwnCompanyData: ComboboxDataType[];
+  setOwnCompanyData: (data: ComboboxDataType[]) => void;
   changeQuantityType: (
     index: number,
     from: number,
@@ -65,4 +67,6 @@ export const productPhaseStore = create<ProductPhaseStore>((set, get) => ({
   },
   phaseData: [],
   setPhaseData: (data) => set({ phaseData: data }),
+  OwnCompanyData: [],
+  setOwnCompanyData: (data) => set({ OwnCompanyData: data }),
 }));

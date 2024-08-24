@@ -47,6 +47,7 @@ export default function ProductPhaseTable({
     setCompanyData,
     force,
     setPhaseData,
+    setOwnCompanyData,
   } = productPhaseStore();
   const [params, setParams] =
     React.useState<SearchProductPhaseParams>(searchParams);
@@ -82,6 +83,7 @@ export default function ProductPhaseTable({
         res.data.data.forEach((item) => {
           CompanyIDSetRef.current.add(item.id);
         });
+        setOwnCompanyData(listData);
       } catch (e) {
         // console.log(e);
       }
@@ -235,6 +237,7 @@ export default function ProductPhaseTable({
                     return (
                       <ProductPhaseChangeQuantityType
                         index={index}
+                        companyId={item.companyId}
                         key={item.productId + item.phaseId}
                       >
                         <TableRow className="hover:cursor-pointer">
