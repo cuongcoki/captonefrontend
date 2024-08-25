@@ -20,16 +20,12 @@ import {
   User,
 } from "@/types/attendance.type";
 import toast from "react-hot-toast";
-import { useAttendanceStore } from "@/components/shared/dashboard/attendance/attendance-store";
-import { format } from "date-fns";
 import { ComboboxDataType } from "@/components/shared/common/combobox/combobox-for-form";
 import { Combobox } from "@/components/shared/common/combobox/combobox";
 import { usePathname, useRouter } from "next/navigation";
 import CountProduct from "@/components/shared/dashboard/attendance/update-attendance/count-product";
 import { filesApi } from "@/apis/files.api";
 import HeaderComponent from "@/components/shared/common/header";
-import { useAuth } from "@/hooks/useAuth";
-import DatePickerLimit from "@/components/shared/common/datapicker/date-picker-limit";
 
 const comboboxData: ComboboxDataType[] = [
   {
@@ -45,6 +41,19 @@ const comboboxData: ComboboxDataType[] = [
     value: "3",
   },
 ];
+function getCurrentHourInVietnam(): string {
+  const vietnamTime = new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    hour12: false,
+    hour: "2-digit",
+  });
+
+  const hour = parseInt(vietnamTime, 10);
+  if (hour >= 7 && hour < 13) return "1";
+  if (hour >= 13 && hour <= 18) return "2";
+  if (hour > 18 && hour <= 22) return "3";
+  return "4";
+}
 
 const noIamge =
   "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg";
@@ -79,7 +88,7 @@ export default function UpdateAttendanceEm({
   const ForceRender = () => {
     setForce(force + 1);
   };
-  // const CheckUser = useAuth();
+  // use state
   const [date, setDate] = useState<string>(formatDate(dateProp));
   const [slot, setSlot] = useState<string>(slotProp);
   const [warehouse, setWarehouse] = useState<string>(userData.companyId);
@@ -95,7 +104,8 @@ export default function UpdateAttendanceEm({
   );
   const [isChangeCompany, setIsChangeCompany] = useState(false);
   const [nameSearch, setNameSearch] = useState("");
-
+  const [slotNow, setSlotNow] = useState<string>(getCurrentHourInVietnam);
+  //use ref
   const wareHouseRef = useRef(warehouse);
   const selectWareHouseDataRef = useRef(selectWareHouseData);
   const usersRef = useRef(users);
@@ -223,9 +233,7 @@ export default function UpdateAttendanceEm({
         })
         .finally(() => {
           router.push(
-            `${pathname}?${
-              userData.roleId == "2" ? "" : `warehouse=${warehouse}&`
-            }date=${date}&slot=${slot}`
+            `${pathname}?${userData.roleId == "2" ? "" : ``}&slot=${slot}`
           );
         });
       await FetchImageOfUser();
@@ -367,7 +375,7 @@ export default function UpdateAttendanceEm({
         }.`}
       />
       <div className="flex items-center mb-5 flex-wrap md:flex-nowrap ">
-        <div className="ml-2">
+        {/* <div className="ml-2">
           <DatePickerLimit
             selected={new Date(convertDateFormat(date || ""))}
             name="from"
@@ -378,7 +386,7 @@ export default function UpdateAttendanceEm({
               setDate(format(event, "dd/MM/yyyy"));
             }}
           />
-        </div>
+        </div> */}
         <div className="my-2 ml-0 sm:ml-2">
           <Combobox
             title="Vui lòng chọn slot"
@@ -686,15 +694,21 @@ export default function UpdateAttendanceEm({
         </Button> */}
         {isCreated ? (
           <Button
-            className="bg-[#00dd00] hover:bg-[#00aa00]"
+            className={`bg-[#00dd00] hover:bg-[#00aa00] ${
+              slotNow !== slot ? "hidden" : ""
+            }`}
             onClick={() => handleSubmit(false)}
+            disabled={slotNow !== slot}
           >
             Lưu điểm danh
           </Button>
         ) : (
           <Button
-            className="bg-[#00dd00] hover:bg-[#00aa00]"
+            className={`bg-[#00dd00] hover:bg-[#00aa00] ${
+              slotNow !== slot ? "hidden" : ""
+            }`}
             onClick={() => handleSubmit(true)}
+            disabled={slotNow !== slot}
           >
             Lưu điểm danh
           </Button>
