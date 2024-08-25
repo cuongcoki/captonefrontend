@@ -353,10 +353,14 @@ export default function OrderIdPage({ orderId }: OrderId) {
                                 />
                               </TableCell>
                               <TableCell className="hidden sm:table-cell text-center">
-                                {item.productCode}
+                               <HoverComponent Num={15}>
+                               {item.productCode}
+                               </HoverComponent>
                               </TableCell>
                               <TableCell className="hidden sm:table-cell text-center">
+                              <HoverComponent Num={15}>
                                 {item.productName}
+                                </HoverComponent>
                               </TableCell>
                               <TableCell className="text-center">
                                 {formatCurrency(item.quantity)}

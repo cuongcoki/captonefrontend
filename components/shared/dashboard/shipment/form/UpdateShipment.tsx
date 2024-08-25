@@ -1775,9 +1775,11 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                       </div>
                                     </TableCell>
                                     <TableCell className="text-sm">
-                                      {proDetail.kindOfShip === 0
-                                        ? `${proDetail?.item?.code}-${proDetail?.item?.name}`
-                                        : `NVL-${proDetail?.item?.name}`}
+                                      <HoverComponent Num={15}>
+                                        {proDetail.kindOfShip === 0
+                                          ? `${proDetail?.item?.code}-${proDetail?.item?.name}`
+                                          : `NVL-${proDetail?.item?.name}`}
+                                      </HoverComponent>
                                     </TableCell>
                                     <TableCell>
                                       {proDetail.kindOfShip === 0 ? (

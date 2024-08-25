@@ -24,6 +24,7 @@ import ImageIconShipment from "./ImageIconShipment";
 import Link from "next/link";
 import ImageIconShipmentMa from "./ImageIconShipmentMa";
 import { ShipmentStore } from "@/components/shared/dashboard/shipment/shipment-store";
+import HoverComponent from "@/components/shared/common/hover-card";
 
 interface ImageResponse {
   id: string;
@@ -152,7 +153,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
           const orderData = data.data;
           setData(orderData);
         })
-        .catch((error) => {})
+        .catch((error) => { })
         .finally(() => {
           setLoading(false);
         });
@@ -269,8 +270,10 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                       </Link>
                                     </span>
                                     <span>
-                                      {item?.product?.code}-
-                                      {item?.product?.name}
+                                      <HoverComponent Num={10}>
+                                        {item?.product?.code}-
+                                        {item?.product?.name}
+                                      </HoverComponent>
                                     </span>
                                   </>
                                 ) : item?.material ? (
@@ -281,8 +284,10 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                       />
                                     </span>
                                     <span>
-                                      {item?.material?.name}/
-                                      {item?.material?.unit}
+                                      <HoverComponent Num={10}>
+                                        {item?.material?.name}/
+                                        {item?.material?.unit}
+                                      </HoverComponent>
                                     </span>
                                   </>
                                 ) : null}
@@ -305,11 +310,10 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                                 </span>
                                 <span className="text-muted-foreground flex justify-between items-center">
                                   {item.product &&
-                                    `- ${
-                                      ProductPhaseType.find(
-                                        (phase) =>
-                                          phase.id === item.productPhaseType
-                                      )?.des || "Không có"
+                                    `- ${ProductPhaseType.find(
+                                      (phase) =>
+                                        phase.id === item.productPhaseType
+                                    )?.des || "Không có"
                                     }`}
                                 </span>
                               </div>
