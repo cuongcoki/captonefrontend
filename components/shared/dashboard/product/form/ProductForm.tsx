@@ -229,7 +229,9 @@ export const ProductForm = () => {
             isMainImage: image.isMainImage,
           })),
         };
-
+        // console.log("requestBody", requestBody)
+        // console.log("imageRequests", imageRequests)
+        // console.log("imageRequests", nameImage)
         const response = await productApi.createProduct(requestBody);
         if (response.data.isSuccess) {
           toast.success(response.data.message);
@@ -237,6 +239,7 @@ export const ProductForm = () => {
             setOpen(false);
             ForceRender();
             form.reset();
+            setNameImage([])
             setImageRequests([]);
           }, 1000);
         } else {
@@ -300,6 +303,8 @@ export const ProductForm = () => {
       isPricePhase2Empty &&
       isSizeEmpty
     ) {
+      setNameImage([])
+      setImageRequests([]);
       setOpen(false);
       form.reset();
     } else {
