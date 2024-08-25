@@ -461,7 +461,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                 name="startOrder"
                                 render={({ field }) => (
                                   <FormItem className="flex flex-col">
-                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">
+                                    <FormLabel className="flex items-center text-primary">
                                       Ngày bắt đầu *
                                     </FormLabel>
                                     <Popover
@@ -525,7 +525,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                 name="endOrder"
                                 render={({ field }) => (
                                   <FormItem className="flex flex-col">
-                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">
+                                    <FormLabel className="flex items-center text-primary">
                                       Ngày kết thúc *
                                     </FormLabel>
                                     <Popover

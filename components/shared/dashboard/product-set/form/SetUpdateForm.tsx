@@ -806,7 +806,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
 
                                           <div>
                                             <span
-                                              className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                              className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
                                               onClick={() =>
                                                 handleAddProducts(product)
                                               }
@@ -884,7 +884,7 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                                           }
                                         />
                                         <span
-                                          className="hover:bg-slate-50 cursor-pointer col-span-1 border p-3 rounded-lg"
+                                          className=" hover:bg-slate-50  cursor-pointer col-span-1 border p-3 rounded-lg"
                                           onClick={() =>
                                             handleMinusProducts(product.id)
                                           }

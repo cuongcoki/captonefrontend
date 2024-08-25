@@ -250,7 +250,7 @@ export const ShipmentID: React.FC<ShipmentIDProps> = ({ shipmentIDDes }) => {
                         <ul className="grid gap-3">
                           {data?.details.map((item, index) => (
                             <li
-                              className="p-2 shadow-sm hover:bg-gray-100/90 cursor-pointer"
+                              className="p-2 shadow-sm hover:bg-gray-100/90 dark:hover:bg-black cursor-pointer"
                               key={index}
                             >
                               <span className="text-muted-foreground flex justify-between items-center mb-1">

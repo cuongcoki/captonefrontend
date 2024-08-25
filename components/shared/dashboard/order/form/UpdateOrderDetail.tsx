@@ -581,7 +581,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                   </div>
 
                                   <span
-                                    className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                    className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
                                     onClick={() => handleAddProducts(product)}
                                   >
                                     <Plus className="text-white" />

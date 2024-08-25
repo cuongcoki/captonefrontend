@@ -855,7 +855,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                   name="salaryHistoryResponse.salaryByDayResponses.startDate"
                                   render={({ field }) => (
                                     <FormItem className="flex flex-col">
-                                      <FormLabel className="flex items-center text-primary-backgroudPrimary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Ngày bắt đầu *
                                       </FormLabel>
                                       <Popover
@@ -953,7 +953,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                   name="salaryHistoryResponse.salaryByOverTimeResponses.startDate"
                                   render={({ field }) => (
                                     <FormItem className="flex flex-col">
-                                      <FormLabel className="flex items-center text-primary-backgroudPrimary">
+                                      <FormLabel className="flex items-center text-primary">
                                         Ngày bắt đầu *
                                       </FormLabel>
                                       <Popover
