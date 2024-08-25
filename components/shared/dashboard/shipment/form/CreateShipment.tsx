@@ -245,6 +245,7 @@ export default function CreateShipment() {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const { ForceRender } = ShipmentStore();
+  const [dialogDate, setDialogDate] = useState<boolean>(false);
 
   //state ** company
   const [company, setCompany] = useState<Company[]>([]);
@@ -655,14 +656,13 @@ export default function CreateShipment() {
 
     let hasError = false;
 
-
-
     shipmentDetailRequests.forEach((request, index) => {
       if (!request.itemId) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -686,8 +686,9 @@ export default function CreateShipment() {
       } else if (!request.phaseId && request.kindOfShip === 0) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -715,8 +716,9 @@ export default function CreateShipment() {
       } else if (request.quantity <= 0) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -748,8 +750,9 @@ export default function CreateShipment() {
         // Sửa điều kiện ở đây
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -777,8 +780,9 @@ export default function CreateShipment() {
       } else if (request.materialPrice <= 0 && request.kindOfShip === 1) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -1049,11 +1053,13 @@ export default function CreateShipment() {
                                                         {item.directorName}
                                                       </span>
                                                       <span className="text-sm text-gray-500">
-                                                        {`${item.directorPhone
-                                                          } - ${!item.email
+                                                        {`${
+                                                          item.directorPhone
+                                                        } - ${
+                                                          !item.email
                                                             ? "Không có"
                                                             : item.email
-                                                          }`}
+                                                        }`}
                                                       </span>
                                                     </div>
                                                   </span>
@@ -1141,11 +1147,13 @@ export default function CreateShipment() {
                                                         {item.directorName}
                                                       </span>
                                                       <span className="text-sm text-gray-500">
-                                                        {`${item.directorPhone
-                                                          } - ${!item.email
+                                                        {`${
+                                                          item.directorPhone
+                                                        } - ${
+                                                          !item.email
                                                             ? "Không có"
                                                             : item.email
-                                                          }`}
+                                                        }`}
                                                       </span>
                                                     </div>
                                                   </span>
@@ -1195,7 +1203,9 @@ export default function CreateShipment() {
                                   </FormControl>
                                   <SelectContent>
                                     {dataEm.map((item) => (
-                                      <SelectItem key={item.id} value={item.id}
+                                      <SelectItem
+                                        key={item.id}
+                                        value={item.id}
                                         className="hover:bg-slate-100 dark:hover:bg-black shadow-md mb-1"
                                       >
                                         <div className="flex items-center gap-4">
@@ -1235,7 +1245,11 @@ export default function CreateShipment() {
                                 <FormLabel className="flex items-end text-primary">
                                   Ngày vận đơn *
                                 </FormLabel>
-                                <Popover modal={true}>
+                                <Popover
+                                  modal={true}
+                                  open={dialogDate}
+                                  onOpenChange={setDialogDate}
+                                >
                                   <PopoverTrigger asChild>
                                     <FormControl>
                                       <Button
@@ -1243,7 +1257,7 @@ export default function CreateShipment() {
                                         className={cn(
                                           "w-full md:w-[240px] pl-3 text-left font-normal row-span-4",
                                           !field.value &&
-                                          "text-muted-foreground"
+                                            "text-muted-foreground"
                                         )}
                                       >
                                         {field.value ? (
@@ -1279,6 +1293,7 @@ export default function CreateShipment() {
                                             )
                                           ).toISOString();
                                           field.onChange(formattedDate);
+                                          setDialogDate(false);
                                         }
                                       }}
                                       initialFocus
@@ -1385,7 +1400,7 @@ export default function CreateShipment() {
                                                 )
                                                     ? "absolute top-0 right-0 bg-primary text-white"
                                                     : "hidden"
-                                                  }`}
+                                                }`}
                                               />
                                               <span
                                                 className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
@@ -1484,13 +1499,14 @@ export default function CreateShipment() {
                                                 dataImage={item}
                                               />
                                               <Check
-                                                className={`${shipmentDetailRequests.some(
-                                                  (item1) =>
-                                                    item1.itemId === item.id
-                                                )
+                                                className={`${
+                                                  shipmentDetailRequests.some(
+                                                    (item1) =>
+                                                      item1.itemId === item.id
+                                                  )
                                                     ? "absolute top-0 right-0 bg-primary text-white"
                                                     : "hidden"
-                                                  }`}
+                                                }`}
                                               />
                                               <span
                                                 className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
@@ -1603,13 +1619,14 @@ export default function CreateShipment() {
                                         <div className="group relative w-[100px] h-[90px] shadow-md rounded-md">
                                           <ImageIconMaterial dataImage={item} />
                                           <Check
-                                            className={`${shipmentDetailRequests.some(
-                                              (item1) =>
-                                                item1.itemId === item.id
-                                            )
+                                            className={`${
+                                              shipmentDetailRequests.some(
+                                                (item1) =>
+                                                  item1.itemId === item.id
+                                              )
                                                 ? "absolute top-0 right-0 bg-primary text-white"
                                                 : "hidden"
-                                              }`}
+                                            }`}
                                           />
                                           <span
                                             className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
@@ -1756,9 +1773,9 @@ export default function CreateShipment() {
                                                   .filter(
                                                     (item) =>
                                                       item.id ===
-                                                      "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
+                                                        "2a67fe58-e68c-4988-94b8-dc4ac35fb290" ||
                                                       item.id ===
-                                                      "4d2113f9-2009-4c37-82b1-195ecbb9c706"
+                                                        "4d2113f9-2009-4c37-82b1-195ecbb9c706"
                                                   )
                                                   .map((item) => (
                                                     <SelectItem
@@ -1794,7 +1811,7 @@ export default function CreateShipment() {
                                             shipmentDetailRequests.find(
                                               (item, i) =>
                                                 item.itemId ===
-                                                proDetail.itemId &&
+                                                  proDetail.itemId &&
                                                 i === index
                                             )?.quantity || 0
                                           }
@@ -1819,7 +1836,7 @@ export default function CreateShipment() {
                                             shipmentDetailRequests.find(
                                               (item, i) =>
                                                 item.itemId ===
-                                                proDetail.itemId &&
+                                                  proDetail.itemId &&
                                                 i === index
                                             )?.quantity || 0
                                           }
@@ -1887,7 +1904,7 @@ export default function CreateShipment() {
                                             shipmentDetailRequests.find(
                                               (item, i) =>
                                                 item.itemId ===
-                                                proDetail.itemId &&
+                                                  proDetail.itemId &&
                                                 i === index
                                             )?.materialPrice || 0
                                           )}

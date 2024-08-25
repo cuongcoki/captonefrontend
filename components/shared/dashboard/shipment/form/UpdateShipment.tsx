@@ -199,6 +199,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
   const { ForceRender } = ShipmentStore();
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
+  const [isSelectDate, setIsSelectDate] = useState<boolean>(false);
   //state ** company
   const [company, setCompany] = useState<Company[]>([]);
   const [companyType, setCompanyType] = useState<any>();
@@ -1262,7 +1263,11 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                 <FormLabel className="flex items-end text-primary">
                                   Ngày đặt hàng *
                                 </FormLabel>
-                                <Popover modal={true}>
+                                <Popover
+                                  modal={true}
+                                  open={isSelectDate}
+                                  onOpenChange={setIsSelectDate}
+                                >
                                   <PopoverTrigger asChild>
                                     <FormControl>
                                       <Button
@@ -1315,6 +1320,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                             .toISOString()
                                             .split("T")[0]; // Giữ lại chỉ phần ngày
                                           field.onChange(formattedDate);
+                                          setIsSelectDate(false);
                                         }
                                       }}
                                       initialFocus
@@ -1419,8 +1425,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                                   (item1) =>
                                                     item1.itemId === itemP.id && item1.phaseId === itemP.phaseId
                                                 )
-                                                    ? "absolute top-0 right-0 bg-primary text-white"
-                                                    : "hidden"
+                                                  ? "absolute top-0 right-0 bg-primary text-white"
+                                                  : "hidden"
                                                   }`}
                                               />
                                               <span
@@ -1524,8 +1530,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                                   (item1) =>
                                                     item1.itemId === itemPF.id
                                                 )
-                                                    ? "absolute top-0 right-0 bg-primary text-white"
-                                                    : "hidden"
+                                                  ? "absolute top-0 right-0 bg-primary text-white"
+                                                  : "hidden"
                                                   }`}
                                               />
                                               <span
@@ -1647,8 +1653,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                               (item1) =>
                                                 item1.itemId === itemM.id
                                             )
-                                                ? "absolute top-0 right-0 bg-primary text-white"
-                                                : "hidden"
+                                              ? "absolute top-0 right-0 bg-primary text-white"
+                                              : "hidden"
                                               }`}
                                           />
                                           <span
@@ -1797,10 +1803,10 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                                 {dataPh
                                                   .filter(
                                                     (item) =>
-                                                      item.id ===
-                                                      "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
-                                                      item.id ===
-                                                      "4d2113f9-2009-4c37-82b1-195ecbb9c706"
+                                                      item.name ===
+                                                      "PH_001" ||
+                                                      item.name ===
+                                                      "PH_002"
                                                   )
                                                   .map((item) => (
                                                     <SelectItem

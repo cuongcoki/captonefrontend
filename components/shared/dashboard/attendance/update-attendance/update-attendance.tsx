@@ -131,7 +131,9 @@ export default function UpdateAttendance({
     if (selectWareHouseDataRef.current.length === 0) {
       companyApi.getCompanyByType(0).then(({ data }) => {
         setSelectWareHouseData(
-          data.data.map((item) => ({ label: item.name, value: item.id }))
+          data.data
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((item) => ({ label: item.name, value: item.id }))
         );
         if (wareHouseRef.current === "") {
           localWareHouse = data.data[0].id;

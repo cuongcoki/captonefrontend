@@ -135,7 +135,8 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   const [imageRequests, setImageRequests] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<File | null>(null);
   const [nameImage, setNameImage] = useState<string | null>(null);
-
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const handleOnDialog = () => {
     setOpen(true);
   };
@@ -218,7 +219,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
     }
   };
 
-
   const formatDateData = (dateString: any) => {
     const formattedDate =
       typeof dateString === "string"
@@ -246,15 +246,18 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           salary:
             user?.salaryHistoryResponse?.salaryByDayResponses?.salary || "",
           startDate:
-          formatDate(user?.salaryHistoryResponse?.salaryByDayResponses?.startDate) || "",
+            formatDate(
+              user?.salaryHistoryResponse?.salaryByDayResponses?.startDate
+            ) || "",
         },
         salaryByOverTimeResponses: {
           salary:
             user?.salaryHistoryResponse?.salaryByOverTimeResponses?.salary ||
             "",
           startDate:
-          formatDate( user?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate) ||
-            "",
+            formatDate(
+              user?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate
+            ) || "",
         },
       },
     },
@@ -296,17 +299,20 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
             salaryHistoryResponse: {
               salaryByDayResponses: {
                 salary:
-                  userData?.salaryHistoryResponse?.salaryByDayResponses?.salary || "",
+                  userData?.salaryHistoryResponse?.salaryByDayResponses
+                    ?.salary || "",
                 startDate: formatDate(
-                  userData?.salaryHistoryResponse?.salaryByDayResponses?.startDate || ""
+                  userData?.salaryHistoryResponse?.salaryByDayResponses
+                    ?.startDate || ""
                 ),
               },
               salaryByOverTimeResponses: {
                 salary:
-                  userData?.salaryHistoryResponse?.salaryByOverTimeResponses?.salary ||
-                  "",
+                  userData?.salaryHistoryResponse?.salaryByOverTimeResponses
+                    ?.salary || "",
                 startDate: formatDate(
-                  userData?.salaryHistoryResponse?.salaryByOverTimeResponses?.startDate || ""
+                  userData?.salaryHistoryResponse?.salaryByOverTimeResponses
+                    ?.startDate || ""
                 ),
               },
             },
@@ -316,7 +322,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           });
           form.reset(formattedUserData);
         })
-        .catch((error) => { })
+        .catch((error) => {})
         .finally(() => {
           setLoading(false);
         });
@@ -328,8 +334,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       fetchDataUserId();
     }
   }, [userId, fetchTrigger, form, force]);
-
-
 
   const formatCurrency = (value: any): string => {
     if (!value) return "";
@@ -569,7 +573,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
                                   {/* CMND/CCCD */}
                                   <FormField
-
                                     control={form.control}
                                     name="id"
                                     render={({ field }) => (
@@ -578,7 +581,11 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                           CCCD/CMND *
                                         </FormLabel>
                                         <FormControl>
-                                          <InputOTP maxLength={12} {...field} disabled>
+                                          <InputOTP
+                                            maxLength={12}
+                                            {...field}
+                                            disabled
+                                          >
                                             <InputOTPGroup className="w-full xl:w-[350px]">
                                               {[...Array(12)].map(
                                                 (_, index) => (
@@ -851,7 +858,11 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                       <FormLabel className="flex items-center text-primary">
                                         Ngày bắt đầu *
                                       </FormLabel>
-                                      <Popover modal={true}>
+                                      <Popover
+                                        modal={true}
+                                        open={open1}
+                                        onOpenChange={setOpen1}
+                                      >
                                         <PopoverTrigger asChild>
                                           <FormControl>
                                             <Button
@@ -859,7 +870,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                               className={cn(
                                                 "w-[240px] pl-3 text-left font-normal",
                                                 !field.value &&
-                                                "text-muted-foreground"
+                                                  "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -880,17 +891,18 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                             selected={
                                               field.value
                                                 ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                    field.value,
+                                                    "dd/MM/yyyy",
+                                                    new Date()
+                                                  )
                                                 : undefined
                                             }
-                                            onSelect={(date: any) =>
+                                            onSelect={(date: any) => {
+                                              setOpen1(false);
                                               field.onChange(
                                                 format(date, "dd/MM/yyyy")
-                                              )
-                                            }
+                                              );
+                                            }}
                                             // disabled={(date) =>
                                             //   date > new Date() || date < new Date("1900-01-01")
                                             // }
@@ -935,7 +947,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                     );
                                   }}
                                 />
-                              
+
                                 <FormField
                                   control={form.control}
                                   name="salaryHistoryResponse.salaryByOverTimeResponses.startDate"
@@ -944,7 +956,11 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                       <FormLabel className="flex items-center text-primary">
                                         Ngày bắt đầu *
                                       </FormLabel>
-                                      <Popover modal={true}>
+                                      <Popover
+                                        modal={true}
+                                        open={open2}
+                                        onOpenChange={setOpen2}
+                                      >
                                         <PopoverTrigger asChild>
                                           <FormControl>
                                             <Button
@@ -952,7 +968,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                               className={cn(
                                                 "w-[240px] pl-3 text-left font-normal",
                                                 !field.value &&
-                                                "text-muted-foreground"
+                                                  "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -973,17 +989,18 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                             selected={
                                               field.value
                                                 ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                    field.value,
+                                                    "dd/MM/yyyy",
+                                                    new Date()
+                                                  )
                                                 : undefined
                                             }
-                                            onSelect={(date: any) =>
+                                            onSelect={(date: any) => {
+                                              setOpen2(false);
                                               field.onChange(
                                                 format(date, "dd/MM/yyyy")
-                                              )
-                                            }
+                                              );
+                                            }}
                                             // disabled={(date) =>
                                             //   date > new Date() || date < new Date("1900-01-01")
                                             // }
