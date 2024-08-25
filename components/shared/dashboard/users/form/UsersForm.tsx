@@ -392,7 +392,7 @@ export const UsersForm = () => {
                                       return (
                                         <FormItem>
                                           <FormLabel className="text-primary">
-                                            Họ nhân viên *
+                                            Họ và tên đệm nhân viên *
                                           </FormLabel>
                                           <FormControl>
                                             <Input type="text" {...field} />
@@ -608,6 +608,7 @@ export const UsersForm = () => {
                                               <SelectItem
                                                 value={item.id}
                                                 key={item.id}
+                                                className="hover:bg-gray-100 dark:hover:bg-black"
                                               >
                                                 {item.name}
                                               </SelectItem>
@@ -642,31 +643,31 @@ export const UsersForm = () => {
                                               />
                                               <SelectContent>
                                                 <SelectItem
-                                                  className="hover:bg-gray-100"
+                                                  className="hover:bg-gray-100 dark:hover:bg-black"
                                                   value="1"
                                                 >
                                                   Quản lý hệ thống
                                                 </SelectItem>
                                                 <SelectItem
-                                                  className="hover:bg-gray-100"
+                                                  className="hover:bg-gray-100 dark:hover:bg-black"
                                                   value="2"
                                                 >
                                                   Quản lý cơ sở
                                                 </SelectItem>
                                                 <SelectItem
-                                                  className="hover:bg-gray-100"
+                                                  className="hover:bg-gray-100 dark:hover:bg-black"
                                                   value="3"
                                                 >
                                                   Quản lý số lượng
                                                 </SelectItem>
                                                 <SelectItem
-                                                  className="hover:bg-gray-100"
+                                                  className="hover:bg-gray-100 dark:hover:bg-black"
                                                   value="4"
                                                 >
                                                   Nhân viên vận chuyển
                                                 </SelectItem>
                                                 <SelectItem
-                                                  className="hover:bg-gray-100"
+                                                  className="hover:bg-gray-100 dark:hover:bg-black"
                                                   value="5"
                                                 >
                                                   Nhân viên thường
@@ -740,7 +741,7 @@ export const UsersForm = () => {
                                               className={cn(
                                                 "w-full pl-3 text-left font-normal",
                                                 !field.value &&
-                                                  "text-muted-foreground"
+                                                "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -761,10 +762,10 @@ export const UsersForm = () => {
                                             selected={
                                               field.value
                                                 ? parse(
-                                                    field.value,
-                                                    "dd/MM/yyyy",
-                                                    new Date()
-                                                  )
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
                                                 : undefined
                                             }
                                             onDayClick={(date: any) => {
@@ -838,7 +839,7 @@ export const UsersForm = () => {
                                               className={cn(
                                                 "w-full pl-3 text-left font-normal",
                                                 !field.value &&
-                                                  "text-muted-foreground"
+                                                "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -859,10 +860,10 @@ export const UsersForm = () => {
                                             selected={
                                               field.value
                                                 ? parse(
-                                                    field.value,
-                                                    "dd/MM/yyyy",
-                                                    new Date()
-                                                  )
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
                                                 : undefined
                                             }
                                             onDayClick={(date: any) => {
