@@ -978,7 +978,7 @@ export default function CreateShipment() {
                         <CardContent>
                           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
                             <div className="w-full">
-                              <FormLabel className="text-primary-backgroudPrimary ">
+                              <FormLabel className="text-primary ">
                                 Công ty gửi *
                               </FormLabel>
                               <Card className="w-full mt-2 shadow-lg">
@@ -1073,7 +1073,7 @@ export default function CreateShipment() {
                               <Truck className="w-10 h-10 p-1" />
                             </Card>
                             <div className="w-full">
-                              <FormLabel className="text-primary-backgroudPrimary ">
+                              <FormLabel className="text-primary ">
                                 Công ty nhận *
                               </FormLabel>
                               <Card className="w-full mt-2 shadow-lg">
@@ -1178,7 +1178,7 @@ export default function CreateShipment() {
                             name="shipperId"
                             render={({ field }) => (
                               <FormItem className="grid grid-rows-5 h-full">
-                                <FormLabel className="flex items-end text-primary-backgroudPrimary">
+                                <FormLabel className="flex items-end text-primary">
                                   Nhân viên *
                                 </FormLabel>
                                 <Select
@@ -1232,7 +1232,7 @@ export default function CreateShipment() {
                             name="shipDate"
                             render={({ field }) => (
                               <FormItem className="grid grid-rows-5 h-full">
-                                <FormLabel className="flex items-end text-primary-backgroudPrimary">
+                                <FormLabel className="flex items-end text-primary">
                                   Ngày vận đơn *
                                 </FormLabel>
                                 <Popover modal={true}>
@@ -1349,10 +1349,10 @@ export default function CreateShipment() {
                                             {dataPh
                                               .filter(
                                                 (item) =>
-                                                  item.id ===
-                                                  "42ccc305-85c7-4a4a-92c0-bc41669afe25" ||
-                                                  item.id ===
-                                                  "4d2113f9-2009-4c37-82b1-195ecbb9c706"
+                                                  item.name ===
+                                                  "PH_001" ||
+                                                  item.name ===
+                                                  "PH_002"
                                               )
                                               .map((item) => (
                                                 <SelectItem
@@ -1381,14 +1381,14 @@ export default function CreateShipment() {
                                               <Check
                                                 className={`${shipmentDetailRequests.some(
                                                   (item1) =>
-                                                    item1.itemId === itemP.id
+                                                    item1.itemId === itemP.id && item1.phaseId === itemP.phaseId
                                                 )
                                                     ? "absolute top-0 right-0 bg-primary text-white"
                                                     : "hidden"
                                                   }`}
                                               />
                                               <span
-                                                className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
                                                 onClick={() => {
                                                   handleAddProducts(
                                                     itemP,
@@ -1493,7 +1493,7 @@ export default function CreateShipment() {
                                                   }`}
                                               />
                                               <span
-                                                className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                                className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
                                                 onClick={() => {
                                                   handleAddProducts(
                                                     item,
@@ -1612,7 +1612,7 @@ export default function CreateShipment() {
                                               }`}
                                           />
                                           <span
-                                            className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                            className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
                                             onClick={() =>
                                               handleAddProducts(
                                                 item,
