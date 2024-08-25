@@ -241,10 +241,10 @@ export const ChangePasswordSchema = z
   .object({
     id: z.string().refine(
       (id) => {
-        const idPattern = /^(\d{9}|\d{12})$/; // Allow 9 or 12 digits
+        const idPattern = /^(\d{9}|\d{12}|\d{10})$/;
         return idPattern.test(id);
       },
-      { message: "CCCD/CMND phải đúng 9 hoặc 12 chữ số" }
+      { message: "CCCD/CMND 9 hoặc 12 số, Số điện thoại 10 số" }
     ),
     verifyCode: z.string(),
     password: z

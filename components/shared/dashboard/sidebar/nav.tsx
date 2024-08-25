@@ -438,7 +438,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                       alt="Channel Logo"
                     />
                     <AvatarFallback>
-                      {user.user?.firstName.charAt(0)}
+                      {user.user?.firstName?.charAt(0)}
                     </AvatarFallback>
                   </Link>
                 </Avatar>
