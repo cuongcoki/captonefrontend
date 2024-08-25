@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { format, parse } from "date-fns";
+import { format, parse, set } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ interface DatePickerProps {
 const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
   ({ title, className, name, form, ...props }, ref) => {
     const [date, setDate] = React.useState<Date>();
+    const [open, setOpen] = React.useState(false);
 
     const dateFromForm = form?.getValues(name);
 
@@ -41,7 +42,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     }, [date, name, form]);
 
     return (
-      <Popover modal={true}>
+      <Popover modal={true} open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
@@ -64,6 +65,7 @@ const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
             defaultMonth={date}
             onSelect={(date) => {
               setDate(date);
+              setOpen(false);
               // form?.trigger(name);
             }}
             // onDayClick={() => form?.trigger(name)}
