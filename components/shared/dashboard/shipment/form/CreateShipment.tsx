@@ -245,6 +245,7 @@ export default function CreateShipment() {
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
   const { ForceRender } = ShipmentStore();
+  const [dialogDate, setDialogDate] = useState<boolean>(false);
 
   //state ** company
   const [company, setCompany] = useState<Company[]>([]);
@@ -1244,7 +1245,11 @@ export default function CreateShipment() {
                                 <FormLabel className="flex items-end text-primary-backgroudPrimary">
                                   Ngày vận đơn *
                                 </FormLabel>
-                                <Popover modal={true}>
+                                <Popover
+                                  modal={true}
+                                  open={dialogDate}
+                                  onOpenChange={setDialogDate}
+                                >
                                   <PopoverTrigger asChild>
                                     <FormControl>
                                       <Button
@@ -1288,6 +1293,7 @@ export default function CreateShipment() {
                                             )
                                           ).toISOString();
                                           field.onChange(formattedDate);
+                                          setDialogDate(false);
                                         }
                                       }}
                                       initialFocus

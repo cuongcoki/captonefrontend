@@ -199,6 +199,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
   const { ForceRender } = ShipmentStore();
   const [openAlert, setOpenAlert] = useState<boolean>(false);
   const [fetchTrigger, setFetchTrigger] = useState<number>(0);
+  const [isSelectDate, setIsSelectDate] = useState<boolean>(false);
   //state ** company
   const [company, setCompany] = useState<Company[]>([]);
   const [companyType, setCompanyType] = useState<any>();
@@ -1273,7 +1274,11 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                 <FormLabel className="flex items-end text-primary-backgroudPrimary">
                                   Ngày đặt hàng *
                                 </FormLabel>
-                                <Popover modal={true}>
+                                <Popover
+                                  modal={true}
+                                  open={isSelectDate}
+                                  onOpenChange={setIsSelectDate}
+                                >
                                   <PopoverTrigger asChild>
                                     <FormControl>
                                       <Button
@@ -1326,6 +1331,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                             .toISOString()
                                             .split("T")[0]; // Giữ lại chỉ phần ngày
                                           field.onChange(formattedDate);
+                                          setIsSelectDate(false);
                                         }
                                       }}
                                       initialFocus

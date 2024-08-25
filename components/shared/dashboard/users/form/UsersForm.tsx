@@ -41,7 +41,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 import { Calendar } from "@/components/ui/calendar";
 import { format, parse } from "date-fns";
@@ -93,7 +93,8 @@ export const UsersForm = () => {
   const [imageRequests, setImageRequests] = useState<string | null>(null);
   const [imageUrls, setImageUrls] = useState<File | null>(null);
   const [nameImage, setNameImage] = useState<string | null>(null);
-
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
@@ -137,7 +138,6 @@ export const UsersForm = () => {
   const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
-
       // Kiểm tra kích cỡ ảnh
       const maxSize = 800 * 1024; // 800KB
       if (file.size > maxSize) {
@@ -273,12 +273,12 @@ export const UsersForm = () => {
   };
 
   const handleClearForm = () => {
-    setOpen(false)
-    setOpenAlert(false)
+    setOpen(false);
+    setOpenAlert(false);
     form.reset();
     setImageRequests(null);
     setFetchTrigger((prev) => prev + 1);
-  }
+  };
 
   const { formState } = form;
   const handleOffDialog = () => {
@@ -293,25 +293,30 @@ export const UsersForm = () => {
 
   return (
     <>
-      {
-        openAlert && (
-          <AlertDialog open={openAlert} >
-            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-      }
+      {openAlert && (
+        <AlertDialog open={openAlert}>
+          <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Bạn có chắc chắn muốn tắt biểu mẫu này không ??
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
+                những dữ liệu mà bạn đã nhập
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleOffDialogA}>
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearForm}>
+                Tiếp tục
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
         <Dialog.Trigger className="rounded p-2 hover:bg-[#2bff7e] bg-[#24d369] ">
           <Plus onClick={handleOnDialog} className="" />
@@ -324,7 +329,11 @@ export const UsersForm = () => {
               <div className="bg-slate-100  flex flex-col rounded-md">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-md">
                   <h2 className="text-2xl text-white ">Thêm nhân viên</h2>
-                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleOffDialog}
+                  >
                     <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
@@ -375,7 +384,6 @@ export const UsersForm = () => {
                             <CardContent className="relative mt-5">
                               <div className="grid grid-cols-1 gap-2">
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
-
                                   {/* firstName */}
                                   <FormField
                                     control={form.control}
@@ -416,7 +424,6 @@ export const UsersForm = () => {
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
-
                                   {/* CMND/CCCD */}
                                   <FormField
                                     control={form.control}
@@ -429,12 +436,14 @@ export const UsersForm = () => {
                                         <FormControl>
                                           <InputOTP maxLength={12} {...field}>
                                             <InputOTPGroup className="w-full xl:w-[350px]">
-                                              {[...Array(12)].map((_, index) => (
-                                                <InputOTPSlot
-                                                  key={index}
-                                                  index={index}
-                                                />
-                                              ))}
+                                              {[...Array(12)].map(
+                                                (_, index) => (
+                                                  <InputOTPSlot
+                                                    key={index}
+                                                    index={index}
+                                                  />
+                                                )
+                                              )}
                                             </InputOTPGroup>
                                           </InputOTP>
                                         </FormControl>
@@ -483,7 +492,6 @@ export const UsersForm = () => {
                                 </div>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5">
-
                                   {/* Dob */}
                                   <FormField
                                     control={form.control}
@@ -533,7 +541,6 @@ export const UsersForm = () => {
                           <Card className="sm:w-[50%] w-full">
                             <CardContent className="mt-5 flex flex-col gap-2">
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
                                 {/* address */}
                                 <FormField
                                   control={form.control}
@@ -574,7 +581,6 @@ export const UsersForm = () => {
                               </div>
 
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
                                 {/* companyId */}
                                 <FormField
                                   control={form.control}
@@ -683,7 +689,6 @@ export const UsersForm = () => {
                           {/* tính lương  */}
                           <Card className="sm:w-[50%] w-full">
                             <CardContent className="mt-5 flex flex-col gap-2">
-
                               {/* salaryByDayRequest */}
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <FormField
@@ -723,7 +728,11 @@ export const UsersForm = () => {
                                       <FormLabel className="flex items-center text-primary">
                                         Ngày bắt đầu *
                                       </FormLabel>
-                                      <Popover modal={true}>
+                                      <Popover
+                                        modal={true}
+                                        open={open1}
+                                        onOpenChange={setOpen1}
+                                      >
                                         <PopoverTrigger asChild>
                                           <FormControl>
                                             <Button
@@ -731,7 +740,7 @@ export const UsersForm = () => {
                                               className={cn(
                                                 "w-full pl-3 text-left font-normal",
                                                 !field.value &&
-                                                "text-muted-foreground"
+                                                  "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -752,17 +761,18 @@ export const UsersForm = () => {
                                             selected={
                                               field.value
                                                 ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                    field.value,
+                                                    "dd/MM/yyyy",
+                                                    new Date()
+                                                  )
                                                 : undefined
                                             }
-                                            onDayClick={(date: any) =>
+                                            onDayClick={(date: any) => {
+                                              setOpen1(false);
                                               field.onChange(
                                                 format(date, "dd/MM/yyyy")
-                                              )
-                                            }
+                                              );
+                                            }}
                                             disabled={(date) =>
                                               date < new Date("2024-01-01")
                                             }
@@ -816,7 +826,11 @@ export const UsersForm = () => {
                                       <FormLabel className="flex items-center  text-primary">
                                         Ngày bắt đầu *
                                       </FormLabel>
-                                      <Popover modal={true}>
+                                      <Popover
+                                        modal={true}
+                                        open={open2}
+                                        onOpenChange={setOpen2}
+                                      >
                                         <PopoverTrigger asChild>
                                           <FormControl>
                                             <Button
@@ -824,7 +838,7 @@ export const UsersForm = () => {
                                               className={cn(
                                                 "w-full pl-3 text-left font-normal",
                                                 !field.value &&
-                                                "text-muted-foreground"
+                                                  "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -845,17 +859,18 @@ export const UsersForm = () => {
                                             selected={
                                               field.value
                                                 ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                    field.value,
+                                                    "dd/MM/yyyy",
+                                                    new Date()
+                                                  )
                                                 : undefined
                                             }
-                                            onDayClick={(date: any) =>
+                                            onDayClick={(date: any) => {
+                                              setOpen2(false);
                                               field.onChange(
                                                 format(date, "dd/MM/yyyy")
-                                              )
-                                            }
+                                              );
+                                            }}
                                             disabled={(date) =>
                                               date < new Date("2024-01-01")
                                             }
@@ -868,7 +883,6 @@ export const UsersForm = () => {
                                   )}
                                 />
                               </div>
-
                             </CardContent>
                           </Card>
                         </div>
