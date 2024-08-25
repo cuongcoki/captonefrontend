@@ -7,26 +7,11 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { Truck } from "lucide-react"
-import { ShipmentID } from "../shipmentID/ShipmentID"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { useState } from "react"
-import { shipmentApi } from "@/apis/shipment.api"
-import toast from "react-hot-toast"
+} from "@/components/ui/hover-card";
+
+import { ShipmentID } from "../shipmentID/ShipmentID";
+
 import { ChangeStatusShipmentShipper } from "../form/ChangeStatusShipment";
-import { error } from "console";
 
 export type Shipment = {
   from: {
@@ -68,22 +53,22 @@ const OrderStatus = [
   {
     id: 0,
     des: "Đang đợi giao",
-    name: "PENDING"
+    name: "PENDING",
   },
   {
     id: 1,
     des: "Đang thực hiện",
-    name: "PROCESSING"
+    name: "PROCESSING",
   },
   {
     id: 2,
     des: "Đã hoàn thành",
-    name: "PROCESSING"
+    name: "PROCESSING",
   },
   {
     id: 3,
     des: "Đã hủy",
-    name: "PROCESSING"
+    name: "PROCESSING",
   },
 ];
 
@@ -99,6 +84,12 @@ function formatDate(isoString: string) {
   // Trả về chuỗi theo định dạng dd/MM/yyyy
   return `${day}/${month}/${year}`;
 }
+const options: Intl.DateTimeFormatOptions = {
+  timeZone: "Asia/Ho_Chi_Minh",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+};
 export const columns: ColumnDef<Shipment>[] = [
   {
     accessorKey: "from.companyTypeDescription",
@@ -288,21 +279,20 @@ export const columns: ColumnDef<Shipment>[] = [
         </Button>
       );
     },
-    cell: ({ row }) => <span>
-      {
-        row.original.isAccepted === false ? (
-          <span>
-            <ChangeStatusShipmentShipper shipmentID={row.original} />
-          </span>
-        ) : row.original.status !== 2 && row.original.status !== 3 ? (
-          <span>
-            <ChangeStatusShipmentShipper shipmentID={row.original} />
-          </span>
-        ) : (
-          <span>{row.original.statusDescription}</span>
-        )
-      }
-    </span>,
+    cell: ({ row }) => {
+      return (
+        <span>
+          {row.original.isAccepted === false &&
+          row.original.shipDate.split("T")[0] ===
+            new Date().toLocaleDateString("en-CA", options) ? (
+            <span>
+              <ChangeStatusShipmentShipper shipmentID={row.original} />
+            </span>
+          ) : (
+            <span>{row.original.statusDescription}</span>
+          )}
+        </span>
+      );
+    },
   },
-
-]
+];
