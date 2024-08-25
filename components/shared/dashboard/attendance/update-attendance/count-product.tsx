@@ -99,8 +99,7 @@ export default function CountProduct({
       try {
         const res = await filesApi.getFile(name);
         return res.data.data;
-      } catch (error: any) {
-      }
+      } catch (error: any) {}
     };
     const imageP = await getImage(product.imageResponses[0]?.imageUrl || "");
     // setSearchData(null);
@@ -114,7 +113,7 @@ export default function CountProduct({
             productID: product.id,
             productName: product.name,
             image: imageP || "",
-            phaseID: "42ccc305-85c7-4a4a-92c0-bc41669afe25",
+            phaseID: "2a67fe58-e68c-4988-94b8-dc4ac35fb290",
             phaseName: product.code,
             quantity: "0",
           },
@@ -230,11 +229,13 @@ export default function CountProduct({
                 {searchData.data.data.map((item, index) => (
                   <li
                     key={item.id}
-                    className={`hover:bg-gray-100 cursor-pointer dark:bg-black dark:hover:bg-[#4c4c4c] ${index === 1 ? "rounded-t-md" : ""
-                      } ${index === searchData.data.data.length - 1
+                    className={`hover:bg-gray-100 cursor-pointer dark:bg-black dark:hover:bg-[#4c4c4c] ${
+                      index === 1 ? "rounded-t-md" : ""
+                    } ${
+                      index === searchData.data.data.length - 1
                         ? "rounded-b-md"
                         : ""
-                      }`}
+                    }`}
                     onClick={async () => {
                       await AddNewProductForUser(item);
                       setSearchInput("");
