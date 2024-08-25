@@ -23,6 +23,8 @@ type ProductPhaseStore = {
   ForceRender: () => void;
   phaseData: PhaseType[];
   setPhaseData: (data: PhaseType[]) => void;
+  CompanyThirdData: [];
+  setCompanyThirdData: (data: []) => void;
 };
 
 export const productPhaseStore = create<ProductPhaseStore>((set, get) => ({
@@ -69,4 +71,6 @@ export const productPhaseStore = create<ProductPhaseStore>((set, get) => ({
   setPhaseData: (data) => set({ phaseData: data }),
   OwnCompanyData: [],
   setOwnCompanyData: (data) => set({ OwnCompanyData: data }),
+  CompanyThirdData: [],
+  setCompanyThirdData: (data) => set({ CompanyThirdData: data }),
 }));
