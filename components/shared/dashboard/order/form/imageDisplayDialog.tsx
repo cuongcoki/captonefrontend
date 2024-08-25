@@ -37,7 +37,7 @@ const ImageDisplayDialog: React.FC<ImageDisplayProps> = ({ images, checkProduct 
     // console.log("images", images)
     return (
         <Popover modal={true} >
-            <PopoverTrigger className=" h-[90px] bg-primary-backgroudPrimary rounded-md"> <Image src={String(images.image === "Image_not_found" ? NoImage : images.image)} width={900} height={900} className=" w-full h-full object-cover rounded-md" alt="Ảnh mãu sản phẩm" />
+            <PopoverTrigger className=" h-[90px] bg-primary-backgroudPrimary rounded-md w-full"> <Image src={String(images.image === "Image_not_found" ? NoImage : images.image)} width={900} height={900} className=" w-full h-full object-cover rounded-md" alt="Ảnh mãu sản phẩm" />
             </PopoverTrigger>
             <PopoverContent align="start">
                 <div className="grid gap-4">

@@ -134,9 +134,9 @@ export const ProductUpdateForm: React.FC<ProductID> = ({
     })) || [];
 
   // console.log("productId", productId)
-  const phase1 = productId?.productPhaseSalaries?.find(p => p?.phaseId === '42ccc305-85c7-4a4a-92c0-bc41669afe25');
-  const phase2 = productId?.productPhaseSalaries?.find(p => p?.phaseId === '4d2113f9-2009-4c37-82b1-195ecbb9c706');
-  const phase3 = productId?.productPhaseSalaries?.find(p => p?.phaseId === '0f54b781-8286-42d2-9dce-b19b22b43700');
+  const phase1 = productId?.productPhaseSalaries?.find(p => p?.phaseName === 'PH_001');
+  const phase2 = productId?.productPhaseSalaries?.find(p => p?.phaseName === 'PH_002');
+  const phase3 = productId?.productPhaseSalaries?.find(p => p?.phaseName === 'PH_003');
   const form = useForm({
     resolver: zodResolver(ProductUpdateSchema),
     defaultValues: {
@@ -475,7 +475,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({
     }
   };
 
-  useEffect(() => {}, [removeImageIds]);
+  useEffect(() => { }, [removeImageIds]);
 
   const parseCurrency = (value: any) => {
     return value.replace(/,/g, "");
@@ -821,22 +821,23 @@ export const ProductUpdateForm: React.FC<ProductID> = ({
                                               </HoverCardTrigger>
                                               <HoverCardContent
                                                 align="start"
-                                                className="w-full"
+                                                className="w-[235px] "
                                               >
                                                 <div className="grid gap-4">
-                                                  <div className="space-y-2">
+                                                  <div className="space-y-2 text-sm">
                                                     <h4 className="font-medium leading-none">
                                                       Loại ảnh
                                                     </h4>
-                                                    <p className="text-sm text-muted-foreground">
+                                                    <p className="text-[12px] text-muted-foreground">
                                                       Đặt loại ảnh : Bản thiết
                                                       kế hoặc ảnh chính
                                                     </p>
                                                   </div>
-                                                  <div className="grid gap-2">
+                                                  <div className="grid gap-2 ">
                                                     <div className="flex justify-between items-center">
                                                       <Label
                                                         htmlFor={`isBluePrint-${index}`}
+                                                        className="text-[13px]"
                                                       >
                                                         [Ảnh] Bản thiết kế
                                                       </Label>
@@ -858,6 +859,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({
                                                     <div className="flex justify-between items-center">
                                                       <Label
                                                         htmlFor={`isMainImage-${index}`}
+                                                        className="text-[13px]"
                                                       >
                                                         [Ảnh] Chính
                                                       </Label>
