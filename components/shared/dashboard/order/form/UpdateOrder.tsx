@@ -2,11 +2,7 @@
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 import { Calendar } from "@/components/ui/calendar";
 
@@ -43,7 +39,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 // ** import REACT
 import { useEffect, useState } from "react";
@@ -53,16 +49,10 @@ import { z } from "zod";
 import { format, parse } from "date-fns";
 
 // ** import ICON
-import {
-  CalendarIcon,
-  PenLine,
-  X,
-} from "lucide-react";
+import { CalendarIcon, PenLine, X } from "lucide-react";
 
 // ** import TYPE & SCHEMA
-import {
-  UpdateOrderSchema,
-} from "@/schema/order";
+import { UpdateOrderSchema } from "@/schema/order";
 import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/utils";
 import { orderApi } from "@/apis/order.api";
@@ -71,7 +61,6 @@ import { companyApi } from "@/apis/company.api";
 import { OrderStore } from "../order-store";
 import { shipOrderApi } from "@/apis/shipOrder.api";
 import TitleComponent from "@/components/shared/common/Title";
-
 
 // Define Status Enum
 const OrderStatus = [
@@ -144,7 +133,6 @@ interface ShipOrder {
   statusDescription: string;
   deliveryMethod: number;
   deliveryMethodDescription: string;
-
 }
 
 let initialFormValues: any = null;
@@ -178,6 +166,8 @@ export default function UpdateOrder({ orderId }: OrderId) {
       vat: 0,
     },
   });
+  const [open1, setOpen1] = useState<boolean>(false);
+  const [open2, setOpen2] = useState<boolean>(false);
 
   const formatDate = (dateString: any) => {
     try {
@@ -205,7 +195,15 @@ export default function UpdateOrder({ orderId }: OrderId) {
         vat: orderId?.vat,
       });
     }
-  }, [orderId, currentPage, pageSize, searchTermAll, form, fetchTrigger, company]);
+  }, [
+    orderId,
+    currentPage,
+    pageSize,
+    searchTermAll,
+    form,
+    fetchTrigger,
+    company,
+  ]);
   const [dataShipOrder, setDataShipOrder] = useState<ShipOrder[]>([]);
   useEffect(() => {
     setLoading(true);
@@ -216,7 +214,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
           setDataShipOrder(data.data);
         })
         .catch((error) => {
-          setDataShipOrder([])
+          setDataShipOrder([]);
         })
         .finally(() => {
           setLoading(false);
@@ -225,7 +223,6 @@ export default function UpdateOrder({ orderId }: OrderId) {
   }, [orderId]);
 
   const onSubmit = async (formData: z.infer<typeof UpdateOrderSchema>) => {
-
     const requestBody = {
       ...formData,
       orderId: orderId?.id,
@@ -236,12 +233,12 @@ export default function UpdateOrder({ orderId }: OrderId) {
       .then(({ data }) => {
         if (data.isSuccess) {
           ForceRender();
-          setOpen(false)
+          setOpen(false);
           toast.success("Cập nhật đơn hàng thành công");
         }
       })
       .catch((error) => {
-        const errors = error.response.data.error
+        const errors = error.response.data.error;
         if (errors && !errors.Status) {
           toast.error(errors);
         }
@@ -249,30 +246,26 @@ export default function UpdateOrder({ orderId }: OrderId) {
           errors.Status.forEach((error: any) => {
             toast.error(error);
           });
-
         }
         if (errors.CompanyId) {
           const companyIdError = errors.CompanyId;
-          if (typeof companyIdError === 'string') {
+          if (typeof companyIdError === "string") {
             toast.error(companyIdError);
           } else {
             toast.error(JSON.stringify(companyIdError));
           }
         }
       })
-      .finally(() => (
-        setLoading(false)
-      ))
+      .finally(() => setLoading(false));
   };
 
   const { pending } = useFormStatus();
   const handleClearForm = () => {
-    setOpen(false)
-    setOpenAlert(false)
+    setOpen(false);
+    setOpenAlert(false);
     setFetchTrigger((prev) => prev + 1);
     form.reset();
-  }
-
+  };
 
   const handleOffDialog = () => {
     const currentFormValues = form.getValues();
@@ -281,7 +274,8 @@ export default function UpdateOrder({ orderId }: OrderId) {
       initialFormValues = currentFormValues;
     }
 
-    const isFormChanged = JSON.stringify(initialFormValues) === JSON.stringify(currentFormValues);
+    const isFormChanged =
+      JSON.stringify(initialFormValues) === JSON.stringify(currentFormValues);
     if (isFormChanged) {
       setOpen(false);
     } else {
@@ -291,25 +285,30 @@ export default function UpdateOrder({ orderId }: OrderId) {
 
   return (
     <>
-      {
-        openAlert && (
-          <AlertDialog open={openAlert} >
-            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-      }
+      {openAlert && (
+        <AlertDialog open={openAlert}>
+          <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Bạn có chắc chắn muốn tắt biểu mẫu này không ??
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
+                những dữ liệu mà bạn đã nhập
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleOffDialogA}>
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearForm}>
+                Tiếp tục
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
         <Dialog.Trigger>
           <div className="rounded p-2 bg-primary text-primary-foreground hover:bg-primary/90">
@@ -326,7 +325,11 @@ export default function UpdateOrder({ orderId }: OrderId) {
                   <h2 className="text-2xl text-white">
                     Chỉnh Sửa Thông Tin Đơn Hàng
                   </h2>
-                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleOffDialog}
+                  >
                     <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
@@ -353,7 +356,9 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                   <Select
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
-                                    disabled={dataShipOrder.some((item) => item.status === 2)}
+                                    disabled={dataShipOrder.some(
+                                      (item) => item.status === 2
+                                    )}
                                   >
                                     <FormControl>
                                       <SelectTrigger>
@@ -365,7 +370,10 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                     </FormControl>
                                     <SelectContent>
                                       {company.map((item) => (
-                                        <SelectItem key={item.id} value={item.id}>
+                                        <SelectItem
+                                          key={item.id}
+                                          value={item.id}
+                                        >
                                           {item.name}
                                         </SelectItem>
                                       ))}
@@ -435,7 +443,9 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                           <SelectItem value="0">0%</SelectItem>
                                           <SelectItem value="5">5%</SelectItem>
                                           <SelectItem value="8">8%</SelectItem>
-                                          <SelectItem value="10">10%</SelectItem>
+                                          <SelectItem value="10">
+                                            10%
+                                          </SelectItem>
                                         </SelectContent>
                                       </Select>
                                     </FormControl>
@@ -451,10 +461,14 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                 name="startOrder"
                                 render={({ field }) => (
                                   <FormItem className="flex flex-col">
-                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">
+                                    <FormLabel className="flex items-center text-primary">
                                       Ngày bắt đầu *
                                     </FormLabel>
-                                    <Popover modal={true}>
+                                    <Popover
+                                      modal={true}
+                                      open={open1}
+                                      onOpenChange={setOpen1}
+                                    >
                                       <PopoverTrigger asChild>
                                         <FormControl>
                                           <Button
@@ -462,7 +476,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                              "text-muted-foreground"
+                                                "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -483,17 +497,18 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                           selected={
                                             field.value
                                               ? parse(
-                                                field.value,
-                                                "dd/MM/yyyy",
-                                                new Date()
-                                              )
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
                                               : undefined
                                           }
-                                          onSelect={(date: any) =>
+                                          onSelect={(date: any) => {
+                                            setOpen1(false);
                                             field.onChange(
                                               format(date, "dd/MM/yyyy")
-                                            )
-                                          }
+                                            );
+                                          }}
                                           // disabled={(date) =>
                                           //   date > new Date() || date < new Date("1900-01-01")
                                           // }
@@ -510,10 +525,14 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                 name="endOrder"
                                 render={({ field }) => (
                                   <FormItem className="flex flex-col">
-                                    <FormLabel className="flex items-center text-primary-backgroudPrimary">
+                                    <FormLabel className="flex items-center text-primary">
                                       Ngày kết thúc *
                                     </FormLabel>
-                                    <Popover modal={true}>
+                                    <Popover
+                                      modal={true}
+                                      open={open2}
+                                      onOpenChange={setOpen2}
+                                    >
                                       <PopoverTrigger asChild>
                                         <FormControl>
                                           <Button
@@ -521,7 +540,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                              "text-muted-foreground"
+                                                "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -542,17 +561,18 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                           selected={
                                             field.value
                                               ? parse(
-                                                field.value,
-                                                "dd/MM/yyyy",
-                                                new Date()
-                                              )
+                                                  field.value,
+                                                  "dd/MM/yyyy",
+                                                  new Date()
+                                                )
                                               : undefined
                                           }
-                                          onDayClick={(date: any) =>
+                                          onDayClick={(date: any) => {
+                                            setOpen2(false);
                                             field.onChange(
                                               format(date, "dd/MM/yyyy")
-                                            )
-                                          }
+                                            );
+                                          }}
                                           disabled={(date) =>
                                             date < new Date("2024-01-01")
                                           }
@@ -572,7 +592,9 @@ export default function UpdateOrder({ orderId }: OrderId) {
                                 className="w-full bg-primary hover:bg-primary/90"
                                 disabled={pending}
                               >
-                                {pending ? "Đang xử lý..." : "Cập nhật thông tin"}
+                                {pending
+                                  ? "Đang xử lý..."
+                                  : "Cập nhật thông tin"}
                               </Button>
                             </Card>
                           </div>

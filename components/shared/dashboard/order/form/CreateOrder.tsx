@@ -174,6 +174,9 @@ export default function CreateOrder() {
   const pageIndex = useRef(1);
   const pageSizeS = useRef(100);
 
+  const [open1, setOpen1] = useState(false);
+  const [open2, setOpen2] = useState(false);
+
   useEffect(() => {
     const handleSearch = () => {
       setLoading(true);
@@ -478,7 +481,7 @@ export default function CreateOrder() {
                               name="companyId"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel className="text-primary-backgroudPrimary">
+                                  <FormLabel className="text-primary">
                                     Công ty *
                                   </FormLabel>
                                   <Select
@@ -551,7 +554,11 @@ export default function CreateOrder() {
                                     <FormLabel className="flex items-center text-primary">
                                       Ngày bắt đầu *
                                     </FormLabel>
-                                    <Popover modal={true}>
+                                    <Popover
+                                      modal={true}
+                                      open={open1}
+                                      onOpenChange={setOpen1}
+                                    >
                                       <PopoverTrigger asChild>
                                         <FormControl>
                                           <Button
@@ -586,11 +593,12 @@ export default function CreateOrder() {
                                                 )
                                               : undefined
                                           }
-                                          onSelect={(date: any) =>
+                                          onSelect={(date: any) => {
+                                            setOpen1(false);
                                             field.onChange(
                                               format(date, "dd/MM/yyyy")
-                                            )
-                                          }
+                                            );
+                                          }}
                                           // disabled={(date) =>
                                           //   date > new Date() || date < new Date("1900-01-01")
                                           // }
@@ -611,7 +619,11 @@ export default function CreateOrder() {
                                     <FormLabel className="flex items-center text-primary">
                                       Ngày kết thúc *
                                     </FormLabel>
-                                    <Popover modal={true}>
+                                    <Popover
+                                      modal={true}
+                                      open={open2}
+                                      onOpenChange={setOpen2}
+                                    >
                                       <PopoverTrigger asChild>
                                         <FormControl>
                                           <Button
@@ -646,11 +658,12 @@ export default function CreateOrder() {
                                                 )
                                               : undefined
                                           }
-                                          onDayClick={(date: any) =>
+                                          onDayClick={(date: any) => {
+                                            setOpen2(false);
                                             field.onChange(
                                               format(date, "dd/MM/yyyy")
-                                            )
-                                          }
+                                            );
+                                          }}
                                           disabled={(date) =>
                                             date < new Date("2024-01-01")
                                           }
@@ -748,7 +761,7 @@ export default function CreateOrder() {
                                               }`}
                                             />
                                             <span
-                                              className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6"
+                                              className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
                                               onClick={() =>
                                                 handleAddProducts(
                                                   product,

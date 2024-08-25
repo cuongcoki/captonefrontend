@@ -5,7 +5,15 @@ import React from "react";
 type Props = {
   searchParams: AttendanceDetailProps;
 };
+function getCurrentHourInVietnam(): number {
+  const vietnamTime = new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    hour12: false,
+    hour: "2-digit",
+  });
 
+  return parseInt(vietnamTime, 10);
+}
 export default async function page({ searchParams }: Props) {
   const options = { timeZone: "Asia/Ho_Chi_Minh", hour12: false };
   const day = new Date();
@@ -13,10 +21,7 @@ export default async function page({ searchParams }: Props) {
     day
   );
 
-  const vietnamHours = parseInt(
-    vietnamTime.find((part) => part.type === "hour")?.value || "0",
-    10
-  );
+  const vietnamHours = getCurrentHourInVietnam();
   const vietnamMonth = vietnamTime.find((part) => part.type === "month")?.value;
   const vietnamDate = vietnamTime.find((part) => part.type === "day")?.value;
   const vietnamYear = vietnamTime.find((part) => part.type === "year")?.value;
