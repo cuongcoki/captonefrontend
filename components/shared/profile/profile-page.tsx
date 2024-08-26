@@ -157,12 +157,12 @@ export default function ProfilePage() {
       })
       .catch((error) => {
         // console.error("Error changing password:", error);
-        if (error.response.data.error) {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+        if (error?.response?.data?.error) {
+          for (const key in error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error[key][0]);
           }
         } else {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
         }
       });
   };
@@ -330,7 +330,9 @@ export default function ProfilePage() {
                             Ngày nhận lương gần nhất
                           </div>
                           <div>
-                          {userId?.lastPaidSalaryDate !== "0001-01-01" ? formatDate(userId?.lastPaidSalaryDate) : "Không có"}
+                            {userId?.lastPaidSalaryDate !== "0001-01-01"
+                              ? formatDate(userId?.lastPaidSalaryDate)
+                              : "Không có"}
                           </div>
                         </div>
                       </div>

@@ -11,11 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import {
-  CardHeader,
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { CardHeader, Card, CardContent } from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -35,13 +31,7 @@ import { useContext, useEffect, useState } from "react";
 import { SetSchema } from "@/schema/set";
 
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Check,
-  Minus,
-  Plus,
-  Upload,
-  X,
-} from "lucide-react";
+import { Check, Minus, Plus, Upload, X } from "lucide-react";
 import ImageDisplay from "./ImageDisplay";
 
 import toast from "react-hot-toast";
@@ -91,7 +81,6 @@ export const SetForm = () => {
   const handleUploadPhoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file) {
-
       // Kiểm tra kích cỡ ảnh
       const maxSize = 800 * 1024; // 800KB
       if (file.size > maxSize) {
@@ -161,7 +150,6 @@ export const SetForm = () => {
     }
   };
 
-
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -205,7 +193,6 @@ export const SetForm = () => {
 
   // ** hàm thêm vào danh sách sản phẩm
   const handleAddProducts = (product: any) => {
-
     //kiểm tra xem sản phẩm đã có trong danh sách setGetDetailsProUpdate chưa
     const exstingDetailProUpdate = getDetailsProUpdate.some(
       (item) => item.productId === product.id
@@ -266,7 +253,6 @@ export const SetForm = () => {
       (product) => product.productId !== productId
     );
     setUpdateProducts(updatedUpdateProducts);
-
   };
 
   // ** hàm thay đổi số lượng khỏi danh sách sản phẩm
@@ -307,7 +293,7 @@ export const SetForm = () => {
     try {
       await handlePostImage();
       if (nameImage === "") {
-        toast.error("Hãy chọn 1 ảnh cho bộ sản phẩm")
+        toast.error("Hãy chọn 1 ảnh cho bộ sản phẩm");
       }
       if (nameImage) {
         const requestBody = {
@@ -324,10 +310,10 @@ export const SetForm = () => {
           forceUpdate();
           setOpen(false);
           form.reset();
-          setProductsRequest([])
+          setProductsRequest([]);
           setGetDetailsPro([]);
-          setUpdateProducts([])
-          setImageRequests(null)
+          setUpdateProducts([]);
+          setImageRequests(null);
         } else {
           toast.error(response.data.message);
         }
@@ -337,12 +323,12 @@ export const SetForm = () => {
         toast.error("Vui lòng chọn ảnh bộ");
       }
     } catch (error: any) {
-      if (error.response.data.error) {
-        for (const key in error.response.data.error) {
-          toast.error(error.response.data.error[key][0]);
+      if (error?.response?.data?.error) {
+        for (const key in error?.response?.data?.error) {
+          toast.error(error?.response?.data?.error[key][0]);
         }
       } else {
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message);
       }
     } finally {
       setLoading(false);
@@ -355,23 +341,28 @@ export const SetForm = () => {
     return text;
   };
 
-
   const handleClearForm = () => {
-    setOpen(false)
-    setOpenAlert(false)
+    setOpen(false);
+    setOpenAlert(false);
     form.reset();
     setProductsRequest([]);
     setGetDetailsPro([]);
-    setImageRequests(null)
-  }
+    setImageRequests(null);
+  };
 
   const handleOffDialog = () => {
-    const isDetailsProEmpty = Array.isArray(getDetailsPro) && getDetailsPro.length === 0;
+    const isDetailsProEmpty =
+      Array.isArray(getDetailsPro) && getDetailsPro.length === 0;
     const isCodeIdEmpty = form.getValues().code === "";
     const isDescriptionEmpty = form.getValues().description === "";
     const isNameEmpty = form.getValues().name === "";
 
-    if (isDetailsProEmpty && isCodeIdEmpty && isDescriptionEmpty && isNameEmpty) {
+    if (
+      isDetailsProEmpty &&
+      isCodeIdEmpty &&
+      isDescriptionEmpty &&
+      isNameEmpty
+    ) {
       setOpen(false);
     } else {
       setOpenAlert(true);
@@ -382,25 +373,30 @@ export const SetForm = () => {
 
   return (
     <>
-      {
-        openAlert && (
-          <AlertDialog open={openAlert} >
-            <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Bạn có chắc chắn muốn tắt biểu mẫu này không ??</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn những dữ liệu mà bạn đã nhập
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleOffDialogA}>Hủy bỏ</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearForm}>Tiếp tục</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )
-      }
+      {openAlert && (
+        <AlertDialog open={openAlert}>
+          <AlertDialogTrigger className="hidden "></AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Bạn có chắc chắn muốn tắt biểu mẫu này không ??
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Không thể hoàn tác hành động này. Thao tác này sẽ xóa vĩnh viễn
+                những dữ liệu mà bạn đã nhập
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={handleOffDialogA}>
+                Hủy bỏ
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearForm}>
+                Tiếp tục
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
       <Dialog.Root open={open} onOpenChange={handleOnDialog}>
         <Dialog.Trigger className="rounded p-2 hover:bg-primary/90 bg-primary">
           <Plus onClick={handleOnDialog} />
@@ -413,14 +409,21 @@ export const SetForm = () => {
               <div className="bg-white flex flex-col">
                 <div className="p-4 flex items-center justify-between bg-primary rounded-t-md">
                   <h2 className="text-2xl text-white">Tạo Bộ Sản Phẩm Mới</h2>
-                  <Button variant="outline" size="icon" onClick={handleOffDialog}>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleOffDialog}
+                  >
                     <X className="w-4 h-4 dark:text-white" />
                   </Button>
                 </div>
                 <div className="grid gap-4 p-4 overflow-y-auto h-[700px] dark:bg-black">
                   <div className="gap-4 w-full lg:gap-8">
                     <Form {...form}>
-                      <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+                      <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="grid gap-4"
+                      >
                         <div className="flex flex-wrap gap-2 lg:gap-5">
                           <Card className="flex-1 items-start gap-4 lg:gap-8">
                             <CardHeader>
@@ -524,7 +527,6 @@ export const SetForm = () => {
                               )}
                             </CardContent>
                           </Card>
-
                         </div>
                         <Card>
                           <CardHeader>
@@ -553,19 +555,24 @@ export const SetForm = () => {
                                   <CardContent className="w-full grid grid-cols-3 md:grid-cols-5  gap-4 min-h-[100px]  overflow-y-auto ">
                                     {searchResults !== null ? (
                                       searchResults.map((product) => (
-                                        <div key={product.id} className="group relative w-[60px] h-[60px] shadow-md">
+                                        <div
+                                          key={product.id}
+                                          className="group relative w-[60px] h-[60px] shadow-md"
+                                        >
                                           <div className="font-medium flex flex-col rounded-md">
                                             <ImageDisplayDialog
                                               images={product}
                                             />
                                           </div>
                                           <Check
-                                            className={`w-5 h-5 ${productsRequest.some(
-                                              (item1) => item1.productId === product.id
-                                            )
-                                              ? "absolute top-0 right-0 bg-primary text-white"
-                                              : "hidden"
-                                              }`}
+                                            className={`w-5 h-5 ${
+                                              productsRequest.some(
+                                                (item1) =>
+                                                  item1.productId === product.id
+                                              )
+                                                ? "absolute top-0 right-0 bg-primary text-white"
+                                                : "hidden"
+                                            }`}
                                           />
                                           <div>
                                             <span
@@ -611,18 +618,24 @@ export const SetForm = () => {
                                             height={900}
                                             src={
                                               product?.image ===
-                                                "Image_not_found"
+                                              "Image_not_found"
                                                 ? NoImage
                                                 : product?.image
                                             }
                                           />
                                         </div>
                                         <div className="font-medium dark:text-white text-sm">
-                                          {limitLength(product.code, 10)} - {limitLength(product.name, 15)}
+                                          {limitLength(product.code, 10)} -{" "}
+                                          {limitLength(product.name, 15)}
                                         </div>
                                       </div>
                                       <div className="flex items-center gap-6">
-                                        <Label htmlFor="email" className="hidden sm:block">Số lượng</Label>
+                                        <Label
+                                          htmlFor="email"
+                                          className="hidden sm:block"
+                                        >
+                                          Số lượng
+                                        </Label>
                                         <Input
                                           min={0}
                                           className="w-[60px] text-center outline-none border"
@@ -649,7 +662,6 @@ export const SetForm = () => {
                                           <Minus className="h-4 w-4" />
                                         </span>
                                       </div>
-
                                     </div>
                                   ))}
                                 </CardContent>
@@ -657,20 +669,19 @@ export const SetForm = () => {
                             </div>
                           </CardContent>
                         </Card>
-                        {
-                          !loading ? (
-                            <Button
-                              type="submit"
-                              className="w-full bg-primary hover:bg-primary/90 my-3"
-                              disabled={loading}
-                            >
-                              {loading ? "Đang xử lý..." : "Thêm bộ sản phẩm"}
-                            </Button>
-                          ) : (
-                            <span className="opacity-65 w-full text-white bg-primary/90 text-center text-sm rounded-md py-2">{loading ? "Đang xử lý..." : "Thêm bộ sản phẩm"}</span>
-
-                          )
-                        }
+                        {!loading ? (
+                          <Button
+                            type="submit"
+                            className="w-full bg-primary hover:bg-primary/90 my-3"
+                            disabled={loading}
+                          >
+                            {loading ? "Đang xử lý..." : "Thêm bộ sản phẩm"}
+                          </Button>
+                        ) : (
+                          <span className="opacity-65 w-full text-white bg-primary/90 text-center text-sm rounded-md py-2">
+                            {loading ? "Đang xử lý..." : "Thêm bộ sản phẩm"}
+                          </span>
+                        )}
                       </form>
                     </Form>
                   </div>

@@ -85,12 +85,12 @@ export default function CompanyUpdate({
         });
       })
       .catch((error) => {
-        if (error.response.data.error) {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+        if (error?.response?.data?.error) {
+          for (const key in error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error[key][0]);
           }
         } else {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
         }
       });
   };
@@ -114,7 +114,10 @@ export default function CompanyUpdate({
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-left text-primary">
+                        <Label
+                          htmlFor="name"
+                          className="text-left text-primary"
+                        >
                           Tên công ty *
                         </Label>
                         <Input
@@ -137,7 +140,10 @@ export default function CompanyUpdate({
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="address" className="text-left text-primary">
+                        <Label
+                          htmlFor="address"
+                          className="text-left text-primary"
+                        >
                           Địa chỉ *
                         </Label>
                         <Input
@@ -160,8 +166,11 @@ export default function CompanyUpdate({
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="directorName" className="text-left text-primary">
-                        Người đại diện *
+                        <Label
+                          htmlFor="directorName"
+                          className="text-left text-primary"
+                        >
+                          Người đại diện *
                         </Label>
                         <Input
                           id="directorName"
@@ -183,7 +192,10 @@ export default function CompanyUpdate({
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="directorPhone" className="text-left text-primary">
+                        <Label
+                          htmlFor="directorPhone"
+                          className="text-left text-primary"
+                        >
                           Số điện thoại *
                         </Label>
                         <Input
@@ -206,7 +218,10 @@ export default function CompanyUpdate({
                   <FormItem>
                     <FormControl>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="email" className="text-left text-primary">
+                        <Label
+                          htmlFor="email"
+                          className="text-left text-primary"
+                        >
                           Email
                         </Label>
                         <Input
@@ -229,7 +244,10 @@ export default function CompanyUpdate({
                   render={({ field }) => (
                     <FormItem>
                       <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="companyType" className="text-left text-primary">
+                        <Label
+                          htmlFor="companyType"
+                          className="text-left text-primary"
+                        >
                           Loại công ty *
                         </Label>
                         <div className="col-span-3">

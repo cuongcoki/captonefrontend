@@ -214,7 +214,7 @@ export default function UpdateAttendanceEm({
           setTableData(attendanceData);
         })
         .catch((error) => {
-          if (404 === error.response.data.status) {
+          if (404 === error?.response?.data?.status) {
             const attendanceData = userD?.map((item): AttendanceDetailType => {
               return {
                 userID: item.id,
@@ -330,12 +330,12 @@ export default function UpdateAttendanceEm({
           setIsCreated(true);
         })
         .catch((error) => {
-          if (error.response.data.error) {
-            for (const key in error.response.data.error) {
-              toast.error(error.response.data.error[key][0]);
+          if (error?.response?.data?.error) {
+            for (const key in error?.response?.data?.error) {
+              toast.error(error?.response?.data?.error[key][0]);
             }
           } else {
-            toast.error(error.response.data.message);
+            toast.error(error?.response?.data?.message);
           }
         })
         .finally(() => {});
@@ -348,12 +348,12 @@ export default function UpdateAttendanceEm({
           updateEmployeeProduct();
         })
         .catch((error) => {
-          if (error.response.data.error) {
-            for (const key in error.response.data.error) {
-              toast.error(error.response.data.error[key][0]);
+          if (error?.response?.data?.error) {
+            for (const key in error?.response?.data?.error) {
+              toast.error(error?.response?.data?.error[key][0]);
             }
           } else {
-            toast.error(error.response.data.message);
+            toast.error(error?.response?.data?.message);
           }
         })
         .finally(() => {});
