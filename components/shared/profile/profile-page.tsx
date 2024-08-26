@@ -211,7 +211,7 @@ export default function ProfilePage() {
 
                 <div className="w-full flex flex-col gap-3 justify-center items-center">
                   <div className="text-lg">
-                    {userId?.firstName} {userId?.lastName}
+                     {userId?.lastName} {userId?.firstName}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
                     <div className="flex gap-4 text-sm sm:text-base">
