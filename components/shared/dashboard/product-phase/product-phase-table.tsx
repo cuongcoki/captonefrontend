@@ -53,11 +53,12 @@ export default function ProductPhaseTable({
   } = productPhaseStore();
   const [params, setParams] =
     React.useState<SearchProductPhaseParams>(searchParams);
-  const paramsDebounce = useDebounce(params, 0);
+  const paramsDebounce = useDebounce(params, 300);
   const [total, setTotal] = React.useState(0);
   const pathname = usePathname();
   const router = useRouter();
   const CompanyIDSetRef = useRef(new Set<string>());
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     attendanceApi
@@ -71,6 +72,8 @@ export default function ProductPhaseTable({
   }, [setPhaseData]);
 
   useEffect(() => {
+    setTableData([]);
+    setIsLoading(true);
     let firtCompany: CompanyResponse;
     let listData: ComboboxDataType[] = [];
     const getOwnCompany = async () => {
@@ -108,17 +111,18 @@ export default function ProductPhaseTable({
         setCompanyData(listData);
         if (
           CompanyIDSetRef.current.has(
-            paramsDebounce.SearchCompany
+            paramsDebounce.SearchCompany !== ""
               ? paramsDebounce.SearchCompany
-              : firtCompany.name
+              : firtCompany.id
           )
         ) {
           const res = await productPhaseApi.searchProductPhase({
             PageIndex: paramsDebounce.PageIndex,
             PageSize: paramsDebounce.PageSize,
-            SearchCompany: paramsDebounce.SearchCompany
-              ? paramsDebounce.SearchCompany
-              : firtCompany.name,
+            SearchCompany:
+              paramsDebounce.SearchCompany !== ""
+                ? paramsDebounce.SearchCompany
+                : firtCompany.id,
             SearchPhase: paramsDebounce.SearchPhase,
             SearchProduct: paramsDebounce.SearchProduct,
           });
@@ -144,6 +148,8 @@ export default function ProductPhaseTable({
         }
       } catch (e) {
         // console.log(e);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -269,8 +275,13 @@ export default function ProductPhaseTable({
             <TableBody>
               {tableData.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center">
-                    Không có dữ liệu
+                  <TableCell
+                    colSpan={
+                      CompanyIDSetRef.current.has(params.SearchCompany) ? 9 : 4
+                    }
+                    className="text-center"
+                  >
+                    {isLoading ? "Đang tải dữ liệu" : "Không có dữ liệu"}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -317,7 +328,7 @@ export default function ProductPhaseTable({
                     );
                   } else {
                     return (
-                      <TableRow key={item.id}>
+                      <TableRow key={item.id + item.size}>
                         <TableCell>
                           <div className="size-10 bg-gray-400">
                             <Image
@@ -331,22 +342,9 @@ export default function ProductPhaseTable({
                         </TableCell>
                         <TableCell>{item.name}</TableCell>
                         <TableCell>{item.code}</TableCell>
-                        {/* <TableCell>{item.phaseDescription}</TableCell> */}
                         <TableCell>
                           {formatCurrency(item.totalAvailableQuantity)}
                         </TableCell>
-                        {/* <TableCell>
-                          {formatCurrency(item.failureAvailabeQuantity)}
-                        </TableCell>
-                        <TableCell>
-                          {formatCurrency(item.errorAvailableQuantity)}
-                        </TableCell>
-                        <TableCell>
-                          {formatCurrency(item.brokenAvailableQuantity)}
-                        </TableCell> */}
-                        {/* <TableCell className="flex justify-center">
-                          <ProductPhaseAction index={index} />
-                        </TableCell> */}
                       </TableRow>
                     );
                   }
