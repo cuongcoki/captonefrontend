@@ -419,7 +419,9 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       // Sau khi ảnh đã được tải lên, gửi yêu cầu cập nhật người dùng
       const response = await userApi.userUpdate(formattedData);
       if (response.data.isSuccess) {
-        authService.updateUserLocal(updatedUser)
+        if(userLocal.user?.id === data.id){
+          authService.updateUserLocal(updatedUser)
+        }
         forceUpdate();
         setOpen(false);
         ForceRenderForUserDetai();

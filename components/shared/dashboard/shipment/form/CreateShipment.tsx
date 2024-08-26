@@ -171,7 +171,7 @@ export type Product = {
   description: string;
   errorAvailableQuantity: number;
   errorQuantity: number;
-  failureAvailableQuantity: number;
+  failureAvailabeQuantity: number;
   failureQuantity: number;
   id: string;
   imageUrl: string;
