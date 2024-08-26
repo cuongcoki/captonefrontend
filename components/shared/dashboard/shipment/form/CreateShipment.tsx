@@ -918,7 +918,8 @@ export default function CreateShipment() {
       setOpenAlert(true);
     }
   };
-
+console.log("dataP",dataP)
+console.log("dataM",dataM)
   const { pending } = useFormStatus();
   return (
     <>
@@ -1445,11 +1446,11 @@ export default function CreateShipment() {
                                               </div>
                                               <div className="flex gap-2">
                                                 <span className="font-medium">
-                                                  Kích thước:
+                                                  Có sẵn:
                                                 </span>
-                                                <span className="font-light">
+                                                <span className="font-bold">
                                                   <HoverComponent Num={10}>
-                                                    {itemP.size}
+                                                    {itemP.availableQuantity}
                                                   </HoverComponent>
                                                 </span>
                                               </div>
@@ -1668,11 +1669,11 @@ export default function CreateShipment() {
                                           </div>
                                           <div className="flex gap-2">
                                             <span className="font-medium">
-                                              Số lượng/một đơn vị:
+                                              Đơn vị:
                                             </span>
                                             <span className="font-light">
                                               <HoverComponent Num={10}>
-                                                {item.quantityPerUnit}
+                                                {item.unit}
                                               </HoverComponent>
                                             </span>
                                           </div>
