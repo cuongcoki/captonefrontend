@@ -72,7 +72,6 @@ export default function ProductPhaseTable({
   }, [setPhaseData]);
 
   useEffect(() => {
-    setTableData([]);
     setIsLoading(true);
     let firtCompany: CompanyResponse;
     let listData: ComboboxDataType[] = [];
@@ -208,6 +207,7 @@ export default function ProductPhaseTable({
               title="Vui lòng chọn công ty"
               setValue={(value: string) => {
                 setParams({ ...params, SearchCompany: value, PageIndex: 1 });
+                setTableData([]);
               }}
               value={
                 params.SearchCompany
@@ -256,7 +256,8 @@ export default function ProductPhaseTable({
                 <TableHead>Ảnh minh họa</TableHead>
                 <TableHead>Tên sản phẩm</TableHead>
                 <TableHead>Mã sản phẩm</TableHead>
-                {CompanyIDSetRef.current.has(params.SearchCompany) ? (
+                {params.SearchCompany === "" ||
+                CompanyIDSetRef.current.has(params.SearchCompany) ? (
                   <>
                     <TableHead>Giai đoạn</TableHead>
                     <TableHead>Bình thường</TableHead>
