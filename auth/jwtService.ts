@@ -41,13 +41,13 @@ axiosClient.interceptors.response.use(
       const config = error.config;
       if (error?.response?.status === 401) {
         if (!localStorage.getItem("accessToken")) {
-          return toast.error(error.response.data.message);
+          return toast.error(error?.response?.data?.message);
         }
         if (count > 0) {
           return;
         }
         count++;
- 
+
         return authService
           .refreshToken()
           .then((rs) => {

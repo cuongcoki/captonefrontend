@@ -324,7 +324,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
           });
           form.reset(formattedUserData);
         })
-        .catch((error) => { })
+        .catch((error) => {})
         .finally(() => {
           setLoading(false);
         });
@@ -428,13 +428,17 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
         toast.success(response.data.message);
       }
     } catch (error: any) {
-      if (error.response && error.response.data && error.response.data.error) {
-        if (error.response.data.error) {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+      if (
+        error.response &&
+        error?.response?.data &&
+        error?.response?.data?.error
+      ) {
+        if (error?.response?.data?.error) {
+          for (const key in error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error[key][0]);
           }
         } else {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
         }
       } else {
         toast.error("Có lỗi xảy ra khi cập nhật.");
@@ -753,7 +757,6 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                               <SelectValue
                                                 placeholder="Hãy chọn cơ sở"
                                                 defaultValue={field.value}
-
                                               />
                                             </SelectTrigger>
                                           </FormControl>
@@ -895,7 +898,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                               className={cn(
                                                 "w-[240px] pl-3 text-left font-normal",
                                                 !field.value &&
-                                                "text-muted-foreground"
+                                                  "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -916,10 +919,10 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                             selected={
                                               field.value
                                                 ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                    field.value,
+                                                    "dd/MM/yyyy",
+                                                    new Date()
+                                                  )
                                                 : undefined
                                             }
                                             onSelect={(date: any) => {
@@ -993,7 +996,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                               className={cn(
                                                 "w-[240px] pl-3 text-left font-normal",
                                                 !field.value &&
-                                                "text-muted-foreground"
+                                                  "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -1014,10 +1017,10 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                             selected={
                                               field.value
                                                 ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                    field.value,
+                                                    "dd/MM/yyyy",
+                                                    new Date()
+                                                  )
                                                 : undefined
                                             }
                                             onSelect={(date: any) => {

@@ -134,9 +134,15 @@ export const ProductUpdateForm: React.FC<ProductID> = ({
     })) || [];
 
   // console.log("productId", productId)
-  const phase1 = productId?.productPhaseSalaries?.find(p => p?.phaseName === 'PH_001');
-  const phase2 = productId?.productPhaseSalaries?.find(p => p?.phaseName === 'PH_002');
-  const phase3 = productId?.productPhaseSalaries?.find(p => p?.phaseName === 'PH_003');
+  const phase1 = productId?.productPhaseSalaries?.find(
+    (p) => p?.phaseName === "PH_001"
+  );
+  const phase2 = productId?.productPhaseSalaries?.find(
+    (p) => p?.phaseName === "PH_002"
+  );
+  const phase3 = productId?.productPhaseSalaries?.find(
+    (p) => p?.phaseName === "PH_003"
+  );
   const form = useForm({
     resolver: zodResolver(ProductUpdateSchema),
     defaultValues: {
@@ -475,7 +481,7 @@ export const ProductUpdateForm: React.FC<ProductID> = ({
     }
   };
 
-  useEffect(() => { }, [removeImageIds]);
+  useEffect(() => {}, [removeImageIds]);
 
   const parseCurrency = (value: any) => {
     return value.replace(/,/g, "");

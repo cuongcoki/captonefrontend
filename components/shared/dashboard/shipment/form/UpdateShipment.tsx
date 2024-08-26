@@ -485,7 +485,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
         .then(({ data }) => {
           setCompany(data.data.data);
         })
-        .catch((error) => { });
+        .catch((error) => {});
     };
     const fetchDataCompany1 = () => {
       shipmentApi
@@ -493,7 +493,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
         .then(({ data }) => {
           setCompany1(data.data.data);
         })
-        .catch((error) => { });
+        .catch((error) => {});
     };
     fetchDataCompany1();
     fetchDataCompany();
@@ -694,8 +694,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
       if (!request.itemId) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -719,8 +720,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
       } else if (!request.phaseId && request.kindOfShip === 0) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -748,8 +750,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
       } else if (request.quantity <= 0) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -781,8 +784,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
         // Sửa điều kiện ở đây
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -810,8 +814,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
       } else if (request.materialPrice <= 0 && request.kindOfShip === 1) {
         toast.custom((t) => (
           <div
-            className={`${t.visible ? "animate-enter" : "animate-leave"
-              } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+            className={`${
+              t.visible ? "animate-enter" : "animate-leave"
+            } max-w-md w-full bg-white shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
           >
             <div className="flex-1 w-0 p-4">
               <div className="flex items-start">
@@ -871,11 +876,11 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
       .catch((error) => {
         const errorResponse = error.response?.data?.error;
         if (errorResponse) {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+          for (const key in error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error[key][0]);
           }
         } else {
-          toast.error(error.response?.data.message);
+          toast.error(error?.response?.data.message);
         }
       })
       .finally(() => {
@@ -1078,11 +1083,13 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                                         {item.directorName}
                                                       </span>
                                                       <span className="text-sm text-gray-500">
-                                                        {`${item.directorPhone
-                                                          } - ${!item.email
+                                                        {`${
+                                                          item.directorPhone
+                                                        } - ${
+                                                          !item.email
                                                             ? "Không có"
                                                             : item.email
-                                                          }`}
+                                                        }`}
                                                       </span>
                                                     </div>
                                                   </span>
@@ -1170,11 +1177,13 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                                         {item.directorName}
                                                       </span>
                                                       <span className="text-sm text-gray-500">
-                                                        {`${item.directorPhone
-                                                          } - ${!item.email
+                                                        {`${
+                                                          item.directorPhone
+                                                        } - ${
+                                                          !item.email
                                                             ? "Không có"
                                                             : item.email
-                                                          }`}
+                                                        }`}
                                                       </span>
                                                     </div>
                                                   </span>
@@ -1223,7 +1232,9 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                   </FormControl>
                                   <SelectContent>
                                     {dataEm.map((item) => (
-                                      <SelectItem key={item.id} value={item.id}
+                                      <SelectItem
+                                        key={item.id}
+                                        value={item.id}
                                         className="hover:bg-slate-100 dark:hover:bg-black shadow-md mb-1"
                                       >
                                         <div className="flex items-center gap-4">
@@ -1275,7 +1286,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                         className={cn(
                                           "w-[240px] pl-3 text-left font-normal row-span-4",
                                           !field.value &&
-                                          "text-muted-foreground"
+                                            "text-muted-foreground"
                                         )}
                                       >
                                         {field.value ? (
@@ -1391,10 +1402,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                             {dataPh
                                               .filter(
                                                 (item) =>
-                                                  item.name ===
-                                                  "PH_001" ||
-                                                  item.name ===
-                                                  "PH_002"
+                                                  item.name === "PH_001" ||
+                                                  item.name === "PH_002"
                                               )
                                               .map((item) => (
                                                 <SelectItem
@@ -1421,13 +1430,17 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                                 dataImage={itemP}
                                               />
                                               <Check
-                                                className={`${shipmentDetailRequests.some(
-                                                  (item1) =>
-                                                    item1.itemId === itemP.id && item1.phaseId === itemP.phaseId
-                                                )
-                                                  ? "absolute top-0 right-0 bg-primary text-white"
-                                                  : "hidden"
-                                                  }`}
+                                                className={`${
+                                                  shipmentDetailRequests.some(
+                                                    (item1) =>
+                                                      item1.itemId ===
+                                                        itemP.id &&
+                                                      item1.phaseId ===
+                                                        itemP.phaseId
+                                                  )
+                                                    ? "absolute top-0 right-0 bg-primary text-white"
+                                                    : "hidden"
+                                                }`}
                                               />
                                               <span
                                                 className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
@@ -1526,13 +1539,14 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                                 dataImage={itemPF}
                                               />
                                               <Check
-                                                className={`${shipmentDetailRequests.some(
-                                                  (item1) =>
-                                                    item1.itemId === itemPF.id
-                                                )
-                                                  ? "absolute top-0 right-0 bg-primary text-white"
-                                                  : "hidden"
-                                                  }`}
+                                                className={`${
+                                                  shipmentDetailRequests.some(
+                                                    (item1) =>
+                                                      item1.itemId === itemPF.id
+                                                  )
+                                                    ? "absolute top-0 right-0 bg-primary text-white"
+                                                    : "hidden"
+                                                }`}
                                               />
                                               <span
                                                 className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
@@ -1649,13 +1663,14 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                             dataImage={itemM}
                                           />
                                           <Check
-                                            className={`${shipmentDetailRequests.some(
-                                              (item1) =>
-                                                item1.itemId === itemM.id
-                                            )
-                                              ? "absolute top-0 right-0 bg-primary text-white"
-                                              : "hidden"
-                                              }`}
+                                            className={`${
+                                              shipmentDetailRequests.some(
+                                                (item1) =>
+                                                  item1.itemId === itemM.id
+                                              )
+                                                ? "absolute top-0 right-0 bg-primary text-white"
+                                                : "hidden"
+                                            }`}
                                           />
                                           <span
                                             className="cursor-pointer absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
@@ -1805,10 +1820,8 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                                 {dataPh
                                                   .filter(
                                                     (item) =>
-                                                      item.name ===
-                                                      "PH_001" ||
-                                                      item.name ===
-                                                      "PH_002"
+                                                      item.name === "PH_001" ||
+                                                      item.name === "PH_002"
                                                   )
                                                   .map((item) => (
                                                     <SelectItem
@@ -1843,7 +1856,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                             shipmentDetailRequests.find(
                                               (item, i) =>
                                                 item.itemId ===
-                                                proDetail.itemId &&
+                                                  proDetail.itemId &&
                                                 i === index
                                             )?.quantity || 0
                                           }
@@ -1868,7 +1881,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                             shipmentDetailRequests.find(
                                               (item, i) =>
                                                 item.itemId ===
-                                                proDetail.itemId &&
+                                                  proDetail.itemId &&
                                                 i === index
                                             )?.quantity || 0
                                           }
@@ -1936,7 +1949,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                             shipmentDetailRequests.find(
                                               (item, i) =>
                                                 item.itemId ===
-                                                proDetail.itemId &&
+                                                  proDetail.itemId &&
                                                 i === index
                                             )?.materialPrice || 0
                                           )}

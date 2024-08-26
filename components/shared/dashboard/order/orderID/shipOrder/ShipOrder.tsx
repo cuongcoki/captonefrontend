@@ -165,7 +165,7 @@ interface Set {
   size: string;
   description: string;
   isInProcessing: boolean;
-  imageUrl:string;
+  imageUrl: string;
 }
 
 interface ShipOrderDetailResponse {
@@ -252,7 +252,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
         toast.success(data.message);
       })
       .catch((error) => {
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message);
       });
   };
 
@@ -275,8 +275,7 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
                 <TableHead>Nhân viên vận chuyển</TableHead>
                 <TableHead>Ngày giao</TableHead>
                 <TableHead>Loại đơn</TableHead>
-                <TableHead >
-                </TableHead>
+                <TableHead></TableHead>
                 <TableHead>Trạng thái</TableHead>
                 <TableHead></TableHead>
                 <TableHead></TableHead>
@@ -285,7 +284,11 @@ export const ShipOrder: React.FC<OrderId> = ({ orderId, checkStatus }) => {
             <TableBody>
               {data.map((item, index) => (
                 <TableRow
-                  className={`bg-accent cursor-pointer ${item.isAccepted === false ? "shadow-md scale-100 bg-gray-50 dark:bg-black" :""}`}
+                  className={`bg-accent cursor-pointer ${
+                    item.isAccepted === false
+                      ? "shadow-md scale-100 bg-gray-50 dark:bg-black"
+                      : ""
+                  }`}
                   key={index}
                   onClick={() => handleIndex(index)}
                 >

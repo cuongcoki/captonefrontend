@@ -86,11 +86,11 @@ export default function RenderTableShipment() {
           setTotalPages(response.data.data.totalPages);
         }
       } catch (error: any) {
-        if (error.response.data.error) {
-          toast.error(error.response.data.message);
+        if (error?.response?.data?.error) {
+          toast.error(error?.response?.data?.message);
         } else {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+          for (const key in error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error[key][0]);
           }
         }
       } finally {

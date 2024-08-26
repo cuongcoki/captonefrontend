@@ -48,15 +48,17 @@ export default function ProductPhaseTable({
     force,
     setPhaseData,
     setOwnCompanyData,
+    CompanyThirdData,
+    setCompanyThirdData,
   } = productPhaseStore();
   const [params, setParams] =
     React.useState<SearchProductPhaseParams>(searchParams);
-  const paramsDebounce = useDebounce(params, 400);
-  const [loading, setLoading] = React.useState(false);
+  const paramsDebounce = useDebounce(params, 300);
   const [total, setTotal] = React.useState(0);
   const pathname = usePathname();
   const router = useRouter();
   const CompanyIDSetRef = useRef(new Set<string>());
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     attendanceApi
@@ -70,6 +72,8 @@ export default function ProductPhaseTable({
   }, [setPhaseData]);
 
   useEffect(() => {
+    setTableData([]);
+    setIsLoading(true);
     let firtCompany: CompanyResponse;
     let listData: ComboboxDataType[] = [];
     const getOwnCompany = async () => {
@@ -105,29 +109,61 @@ export default function ProductPhaseTable({
         await getOwnCompany();
         await getThirdCompany();
         setCompanyData(listData);
-        const res = await productPhaseApi.searchProductPhase({
-          PageIndex: paramsDebounce.PageIndex,
-          PageSize: paramsDebounce.PageSize,
-          SearchCompany: paramsDebounce.SearchCompany
-            ? paramsDebounce.SearchCompany
-            : firtCompany.name,
-          SearchPhase: paramsDebounce.SearchPhase,
-          SearchProduct: paramsDebounce.SearchProduct,
-        });
-        // console.log("TABLE DATA", res.data.data.data);
-        setTableData(res.data.data.data);
-        setTotal(res.data.data.totalPages);
+        if (
+          CompanyIDSetRef.current.has(
+            paramsDebounce.SearchCompany !== ""
+              ? paramsDebounce.SearchCompany
+              : firtCompany.id
+          )
+        ) {
+          const res = await productPhaseApi.searchProductPhase({
+            PageIndex: paramsDebounce.PageIndex,
+            PageSize: paramsDebounce.PageSize,
+            SearchCompany:
+              paramsDebounce.SearchCompany !== ""
+                ? paramsDebounce.SearchCompany
+                : firtCompany.id,
+            SearchPhase: paramsDebounce.SearchPhase,
+            SearchProduct: paramsDebounce.SearchProduct,
+          });
+          // console.log("TABLE DATA", res.data.data.data);
+          setTableData(res.data.data.data);
+          setTotal(res.data.data.totalPages);
 
-        router.push(
-          `${pathname}?PageIndex=${paramsDebounce.PageIndex}&SearchCompany=${paramsDebounce.SearchCompany}&SearchPhase=${paramsDebounce.SearchPhase}&SearchProduct=${paramsDebounce.SearchProduct}`
-        );
+          router.push(
+            `${pathname}?PageIndex=${paramsDebounce.PageIndex}&SearchCompany=${paramsDebounce.SearchCompany}&SearchPhase=${paramsDebounce.SearchPhase}&SearchProduct=${paramsDebounce.SearchProduct}`
+          );
+        } else {
+          const res = await productPhaseApi.searchProductPhaseShip(
+            paramsDebounce.SearchProduct,
+            paramsDebounce.SearchCompany,
+            paramsDebounce.PageIndex,
+            paramsDebounce.PageSize
+          );
+          setTableData(res.data.data.data);
+          setTotal(res.data.totalPages);
+          router.push(
+            `${pathname}?PageIndex=${paramsDebounce.PageIndex}&SearchCompany=${paramsDebounce.SearchCompany}&SearchProduct=${paramsDebounce.SearchProduct}`
+          );
+        }
       } catch (e) {
         // console.log(e);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
     // console.log("PRODUCT PHASE RERENDER");
-  }, [router, paramsDebounce, pathname, setTableData, setCompanyData, force]);
+  }, [
+    router,
+    paramsDebounce,
+    pathname,
+    setTableData,
+    setCompanyData,
+    force,
+    setOwnCompanyData,
+    setCompanyThirdData,
+  ]);
 
   const formatCurrency = (value: any): string => {
     if (!value) return "";
@@ -180,32 +216,36 @@ export default function ProductPhaseTable({
               }
             />
           </div>
-          <div>
-            <Select
-              value={params.SearchPhase}
-              onValueChange={(value) => {
-                if (value == "-1") {
-                  setParams({ ...params, SearchPhase: "", PageIndex: 1 });
-                  return;
-                }
-                setParams({ ...params, SearchPhase: value, PageIndex: 1 });
-              }}
-            >
-              <SelectTrigger className="sm:w-[180px] w-full">
-                <SelectValue placeholder="Chọn giai đoạn" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem value="PH_001">Giai đoạn tạo khung</SelectItem>
-                  <SelectItem value="PH_002">Giai đoạn gia công</SelectItem>
-                  <SelectItem value="PH_003">
-                    Giai đoạn hoàn thiện đóng gói
-                  </SelectItem>
-                  <SelectItem value="-1">Bỏ chọn</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          </div>
+          {CompanyIDSetRef.current.has(params.SearchCompany) ? (
+            <div>
+              <Select
+                value={params.SearchPhase}
+                onValueChange={(value) => {
+                  if (value == "-1") {
+                    setParams({ ...params, SearchPhase: "", PageIndex: 1 });
+                    return;
+                  }
+                  setParams({ ...params, SearchPhase: value, PageIndex: 1 });
+                }}
+              >
+                <SelectTrigger className="sm:w-[180px] w-full">
+                  <SelectValue placeholder="Chọn giai đoạn" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="PH_001">Giai đoạn tạo khung</SelectItem>
+                    <SelectItem value="PH_002">Giai đoạn gia công</SelectItem>
+                    <SelectItem value="PH_003">
+                      Giai đoạn hoàn thiện đóng gói
+                    </SelectItem>
+                    <SelectItem value="-1">Bỏ chọn</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <Card>
@@ -216,23 +256,36 @@ export default function ProductPhaseTable({
                 <TableHead>Ảnh minh họa</TableHead>
                 <TableHead>Tên sản phẩm</TableHead>
                 <TableHead>Mã sản phẩm</TableHead>
-                <TableHead>Giai đoạn</TableHead>
-                <TableHead>Bình thường</TableHead>
-                <TableHead>Lỗi bên mình</TableHead>
-                <TableHead>Lỗi bên hợp tác</TableHead>
-                <TableHead>Hàng hỏng</TableHead>
+                {CompanyIDSetRef.current.has(params.SearchCompany) ? (
+                  <>
+                    <TableHead>Giai đoạn</TableHead>
+                    <TableHead>Bình thường</TableHead>
+                    <TableHead>Lỗi bên mình</TableHead>
+                    <TableHead>Lỗi bên hợp tác</TableHead>
+                    <TableHead>Hàng hỏng</TableHead>
+                  </>
+                ) : (
+                  <>
+                    <TableHead>Số lượng đã nhận</TableHead>
+                  </>
+                )}
               </TableRow>
             </TableHeader>
 
             <TableBody>
               {tableData.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="text-center">
-                    Không có dữ liệu
+                  <TableCell
+                    colSpan={
+                      CompanyIDSetRef.current.has(params.SearchCompany) ? 9 : 4
+                    }
+                    className="text-center"
+                  >
+                    {isLoading ? "Đang tải dữ liệu" : "Không có dữ liệu"}
                   </TableCell>
                 </TableRow>
               ) : (
-                tableData.map((item, index) => {
+                tableData.map((item: any, index) => {
                   if (CompanyIDSetRef.current.has(item.companyId)) {
                     return (
                       <ProductPhaseChangeQuantityType
@@ -275,36 +328,23 @@ export default function ProductPhaseTable({
                     );
                   } else {
                     return (
-                      <TableRow key={item.productId + item.phaseId}>
+                      <TableRow key={item.id + item.size}>
                         <TableCell>
                           <div className="size-10 bg-gray-400">
                             <Image
                               className="object-cover size-10"
-                              src={item.imageUrl}
+                              src={item.image}
                               width={100}
                               height={100}
-                              alt={item.productName}
+                              alt={"Anh minh hoa"}
                             />
                           </div>
                         </TableCell>
-                        <TableCell>{item.productName}</TableCell>
-                        <TableCell>{item.productCode}</TableCell>
-                        <TableCell>{item.phaseDescription}</TableCell>
+                        <TableCell>{item.name}</TableCell>
+                        <TableCell>{item.code}</TableCell>
                         <TableCell>
-                          {formatCurrency(item.availableQuantity)}
+                          {formatCurrency(item.totalAvailableQuantity)}
                         </TableCell>
-                        <TableCell>
-                          {formatCurrency(item.failureAvailabeQuantity)}
-                        </TableCell>
-                        <TableCell>
-                          {formatCurrency(item.errorAvailableQuantity)}
-                        </TableCell>
-                        <TableCell>
-                          {formatCurrency(item.brokenAvailableQuantity)}
-                        </TableCell>
-                        {/* <TableCell className="flex justify-center">
-                          <ProductPhaseAction index={index} />
-                        </TableCell> */}
                       </TableRow>
                     );
                   }
