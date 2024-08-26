@@ -55,20 +55,17 @@ export default function FormSignIn() {
         router.push(`/profile/${data.data.user.id}`);
       })
       .catch((error) => {
-        const errors = error.response.data.message
+        const errors = error?.response?.data?.message;
         // console.log(error.data)
-        toast.error(errors)
-
+        toast.error(errors);
       })
       .finally(() => {
         setLoading(false);
       });
-
   };
 
   return (
     <Form {...form}>
-
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="max-w-md w-full flex flex-col gap-4"

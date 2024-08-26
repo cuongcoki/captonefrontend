@@ -26,7 +26,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, CircleHelp, Minus, MoonIcon, Plus, SunIcon } from "lucide-react";
+import {
+  ArrowRight,
+  CircleHelp,
+  Minus,
+  MoonIcon,
+  Plus,
+  SunIcon,
+} from "lucide-react";
 import { Bar, BarChart, ResponsiveContainer } from "recharts";
 import SideNavbar from "../shared/dashboard/sidebar/SideNavbar";
 import { LogoIcon } from "@/constants/images";
@@ -69,30 +76,29 @@ export const enumpdf = [
   {
     id: 1,
     href: "/pdf/Quản Lý Hệ Thống (Admin).pdf",
-    title: "Quản lý hệ thống (MAIN_ADMIN)"
+    title: "Quản lý hệ thống (MAIN_ADMIN)",
   },
   {
     id: 2,
     href: "/pdf/Quản Lý Cơ Sở (Factory manager).pdf",
-    title: "Quản lý cơ sở (BRANCH_ADMIN)"
+    title: "Quản lý cơ sở (BRANCH_ADMIN)",
   },
   {
     id: 3,
     href: "/pdf/Quản Lý Số Lượng (Quality Assurance).pdf",
-    title: "Quản lý số lượng (COUNTER)"
+    title: "Quản lý số lượng (COUNTER)",
   },
   {
     id: 4,
     href: "/pdf/Nhân Viên Vận Chuyển (Logistic).pdf",
-    title: "Nhân viên vận chuyển (DRIVER)"
+    title: "Nhân viên vận chuyển (DRIVER)",
   },
   {
     id: 5,
     href: "/pdf/Nhân Viên (Employee).pdf",
-    title: "Nhân viên thường (USER)"
+    title: "Nhân viên thường (USER)",
   },
 ];
-
 
 export function MyDrawer() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -122,7 +128,7 @@ export function MyDrawer() {
       });
   };
 
-  const matchedPdf = enumpdf.find(pdf => pdf.id === user.user?.roleId);
+  const matchedPdf = enumpdf.find((pdf) => pdf.id === user.user?.roleId);
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
@@ -144,8 +150,14 @@ export function MyDrawer() {
         <div className="mx-auto w-full relative">
           <Link href={`/profile/${user.user?.id}`}>
             <DrawerHeader className="shadow-md">
-              <DrawerTitle className="text-primary">{user.user?.lastName}{user.user?.firstName}</DrawerTitle>
-              <DrawerDescription> {Role.find((role) => role.value === user?.user?.roleId)?.label}</DrawerDescription>
+              <DrawerTitle className="text-primary">
+                {user.user?.lastName}
+                {user.user?.firstName}
+              </DrawerTitle>
+              <DrawerDescription>
+                {" "}
+                {Role.find((role) => role.value === user?.user?.roleId)?.label}
+              </DrawerDescription>
             </DrawerHeader>
           </Link>
           <div className="p-4 pb-0">
@@ -160,23 +172,39 @@ export function MyDrawer() {
               Đăng xuất
             </Button>
 
-            <Badge variant="secondary" className="absolute top-0 left-0 mx-5 text-xs cursor-pointer hover:bg-gray-200 border p-2 shadow-md ">
+            <Badge
+              variant="secondary"
+              className="absolute top-0 left-0 mx-5 text-xs cursor-pointer hover:bg-gray-200 border p-2 shadow-md "
+            >
               <div className="relative cursor-pointer" onClick={toggleTheme}>
                 <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
                 <MoonIcon className="absolute top-0 h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               </div>
             </Badge>
 
-            <Badge variant="secondary" className="absolute top-0 right-0 mx-5 text-xs cursor-pointer hover:bg-gray-200 border p-2 shadow-md ">
+            <Badge
+              variant="secondary"
+              className="absolute top-0 right-0 mx-5 text-xs cursor-pointer hover:bg-gray-200 border p-2 shadow-md "
+            >
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
                     {matchedPdf ? (
-                      <a href={matchedPdf.href} target="_blank" rel="noopener noreferrer" className="">
+                      <a
+                        href={matchedPdf.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className=""
+                      >
                         <CircleHelp className="h-[1.2rem] w-[1.2rem]" />
                       </a>
                     ) : (
-                      <a href="#" target="_blank" rel="noopener noreferrer" className="">
+                      <a
+                        href="#"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className=""
+                      >
                         <CircleHelp className="h-[1.2rem] w-[1.2rem]" />
                       </a>
                     )}

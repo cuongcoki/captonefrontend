@@ -89,7 +89,6 @@ export const ProductForm = () => {
     }[]
   >([]);
 
-
   const handleUploadPhotos = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
 
@@ -239,7 +238,7 @@ export const ProductForm = () => {
             setOpen(false);
             ForceRender();
             form.reset();
-            setNameImage([])
+            setNameImage([]);
             setImageRequests([]);
           }, 1000);
         } else {
@@ -249,18 +248,17 @@ export const ProductForm = () => {
         toast.error("imageUrl (nameImage) không hợp lệ");
       }
     } catch (error: any) {
-      if (error.response.data.error) {
-        for (const key in error.response.data.error) {
-          toast.error(error.response.data.error[key][0]);
+      if (error?.response?.data?.error) {
+        for (const key in error?.response?.data?.error) {
+          toast.error(error?.response?.data?.error[key][0]);
         }
       } else {
-        toast.error(error.response.data.message);
+        toast.error(error?.response?.data?.message);
       }
     } finally {
       setLoading(false);
     }
   };
-
 
   const parseCurrency = (value: any) => {
     return value.replace(/,/g, "");
@@ -282,7 +280,7 @@ export const ProductForm = () => {
 
     // Sử dụng hàm này để kiểm tra mảng imageRequests
     const isDetailsProEmpty = isArrayEmpty(imageRequests);
- 
+
     // Kiểm tra giá trị cụ thể của form
     const isCodeIdEmpty = form.getValues().code === "";
     const isDescriptionEmpty = form.getValues().description === "";
@@ -303,7 +301,7 @@ export const ProductForm = () => {
       isPricePhase2Empty &&
       isSizeEmpty
     ) {
-      setNameImage([])
+      setNameImage([]);
       setImageRequests([]);
       setOpen(false);
       form.reset();

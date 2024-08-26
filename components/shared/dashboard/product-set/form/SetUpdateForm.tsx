@@ -440,12 +440,12 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
         // form.reset();
       })
       .catch((error) => {
-        if (error.response.data.error) {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+        if (error?.response?.data?.error) {
+          for (const key in error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error[key][0]);
           }
         } else {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
         }
       });
   };
@@ -468,8 +468,8 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
   const [checkImageChange, setCheckImageChange] = useState<any>();
 
   useEffect(() => {
-    setCheckImageChange(imageRequests)
-  }, [])
+    setCheckImageChange(imageRequests);
+  }, []);
 
   const handleOffDialog = () => {
     //add product
@@ -492,10 +492,16 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     };
 
     const checkImage = checkImageChange === imageRequests;
-  
+
     const isRemoveEmpty = isArrayEmptyRemove(removeProductIds);
-   
-    if (isAddEmpty && !formState.isDirty && isUpdateEmpty && isRemoveEmpty && checkImage) {
+
+    if (
+      isAddEmpty &&
+      !formState.isDirty &&
+      isUpdateEmpty &&
+      isRemoveEmpty &&
+      checkImage
+    ) {
       setOpen(false);
       setFetchTrigger((prev) => prev + 1);
     } else {
@@ -503,7 +509,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
     }
   };
 
-  
   return (
     <>
       {openAlert && (
@@ -553,7 +558,6 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                   </Button>
                 </div>
                 <div className="grid gap-4 p-4 overflow-y-auto h-[750px] dark:bg-black">
-
                   <Form {...form}>
                     <form
                       onSubmit={form.handleSubmit(onSubmit)}
@@ -901,20 +905,23 @@ export const SetUpdateForm: React.FC<SetID> = ({ setId, children }) => {
                         </Card>
                       </div>
                       <Card>
-                      {
-                          !loading ? (
-                            <Button
-                              type="submit"
-                              className="w-full bg-primary hover:bg-primary/90 my-3"
-                              disabled={loading}
-                            >
-                              {loading ? "Đang xử lý..." : "Chỉnh sửa thông tin bộ"}
-                            </Button>
-                          ) : (
-                            <span className="opacity-65 w-full text-white bg-primary/90 text-center text-sm rounded-md py-2">{loading ? "Đang xử lý..." : "Chỉnh sửa thông tin bộ"}</span>
-
-                          )
-                        }
+                        {!loading ? (
+                          <Button
+                            type="submit"
+                            className="w-full bg-primary hover:bg-primary/90 my-3"
+                            disabled={loading}
+                          >
+                            {loading
+                              ? "Đang xử lý..."
+                              : "Chỉnh sửa thông tin bộ"}
+                          </Button>
+                        ) : (
+                          <span className="opacity-65 w-full text-white bg-primary/90 text-center text-sm rounded-md py-2">
+                            {loading
+                              ? "Đang xử lý..."
+                              : "Chỉnh sửa thông tin bộ"}
+                          </span>
+                        )}
                       </Card>
                     </form>
                   </Form>

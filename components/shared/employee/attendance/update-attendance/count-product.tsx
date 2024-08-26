@@ -272,6 +272,7 @@ export default function CountProduct({
                   <Input
                     type="number"
                     value={product.quantity}
+                    disabled={dialogClose}
                     onChange={(e) => {
                       updateQuantityOfProduct(indexP, e.target.value);
                     }}
