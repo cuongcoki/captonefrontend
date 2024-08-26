@@ -39,7 +39,7 @@ export default function ForgetPassword() {
     authApi
       .forgetPassword(data)
       .then((response) => {
-        console.log("SUCCESS");
+        // console.log("SUCCESS");
         toast.success(response.data.message);
         setTimeout(() => {
           toast.dismiss();
@@ -47,15 +47,15 @@ export default function ForgetPassword() {
         }, 2000);
       })
       .catch((error) => {
-        if (error.response.data.error) {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+        if (error?.response?.data?.error) {
+          for (const key in error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error[key][0]);
           }
-        } else if (error.response.data.message) {
-          toast.error(error.response.data.message);
+        } else if (error?.response?.data?.message) {
+          toast.error(error?.response?.data?.message);
         }
 
-        if (error.response.data.status === 400) {
+        if (error?.response?.data?.status === 400) {
           setTimeout(() => {
             toast.dismiss();
             router.push(`/change-password/${data.id}`);
@@ -87,7 +87,7 @@ export default function ForgetPassword() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-secondary-backgroudPrimary">
-                        Số điện thoại hoặc CCCD/CMND
+                      Số điện thoại hoặc CCCD/CMND
                     </FormLabel>
                     <FormControl>
                       <Input placeholder="Nhập CCCD hoặc CMND" {...field} />

@@ -164,7 +164,7 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
       .catch((error) => {
         setSearchResultsSet([]);
       })
-      .finally(() => {});
+      .finally(() => { });
   };
 
   // ** các hàm để tìm kiếm sản phẩm thêm mã Code và Tên sản phẩm
@@ -521,7 +521,10 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                           <Search className="mr-1 h-5 w-5 shrink-0 opacity-50" />
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <ChevronDown className="transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-primary hover:text-white duration-300 h-5 w-5 text-primary-backgroudPrimary cursor-pointer" />
+                              <div className="mx-3 text-sm transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-primary hover:text-white duration-300 w-[120px] text-center dark:text-white text-primary-backgroudPrimary cursor-pointer" >
+                                {/* <ChevronDown  /> */}
+                                {!checkProducts ? (<span >Sản phẩm</span>) : (<span >Bộ sản phẩm</span>)}
+                              </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
                               <DropdownMenuItem onClick={handleCheckProduct}>
@@ -568,15 +571,14 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                     />
 
                                     <Check
-                                      className={`w-5 h-5 ${
-                                        productsRequest.some(
-                                          (item1) =>
-                                            item1.productIdOrSetId ===
-                                            product.id
-                                        )
+                                      className={`w-5 h-5 ${productsRequest.some(
+                                        (item1) =>
+                                          item1.productIdOrSetId ===
+                                          product.id
+                                      )
                                           ? "absolute top-0 right-0 bg-primary text-white"
                                           : "hidden"
-                                      }`}
+                                        }`}
                                     />
                                   </div>
 
@@ -653,15 +655,14 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                       checkProduct={setCheck}
                                     />
                                     <Check
-                                      className={`w-5 h-5 ${
-                                        productsRequest.some(
-                                          (item1) =>
-                                            item1.productIdOrSetId ===
-                                            product.id
-                                        )
+                                      className={`w-5 h-5 ${productsRequest.some(
+                                        (item1) =>
+                                          item1.productIdOrSetId ===
+                                          product.id
+                                      )
                                           ? "absolute top-0 right-0 bg-primary text-white"
                                           : "hidden"
-                                      }`}
+                                        }`}
                                     />
                                   </div>
 
@@ -733,13 +734,13 @@ export const UpdateOrderDetails: React.FC<OrderID> = ({ orderId }) => {
                                           height={900}
                                           src={
                                             product?.imageUrl &&
-                                            product.imageUrl !==
+                                              product.imageUrl !==
                                               "Image_not_found"
                                               ? product.imageUrl
                                               : product?.image ===
                                                 "Image_not_found"
-                                              ? NoImage
-                                              : product?.image
+                                                ? NoImage
+                                                : product?.image
                                           }
                                         />
 

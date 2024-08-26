@@ -221,12 +221,12 @@ export default function UserIDPage() {
       })
       .catch((error) => {
         // console.error("Error changing user status:", error);
-        if (error.response.data.error) {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+        if (error?.response?.data?.error) {
+          for (const key in error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error[key][0]);
           }
         } else {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
         }
       });
   };
@@ -626,7 +626,11 @@ export default function UserIDPage() {
                   <div className="font-extralight text-[0.8rem]">
                     Ngày nhận lương gần nhất
                   </div>
-                  <div>{userId?.lastPaidSalaryDate !== "0001-01-01" ? formatDate(userId?.lastPaidSalaryDate) : "Không có"}</div>
+                  <div>
+                    {userId?.lastPaidSalaryDate !== "0001-01-01"
+                      ? formatDate(userId?.lastPaidSalaryDate)
+                      : "Không có"}
+                  </div>
                 </div>
               </div>
             </CardContent>

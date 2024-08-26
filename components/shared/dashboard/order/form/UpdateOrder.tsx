@@ -238,7 +238,7 @@ export default function UpdateOrder({ orderId }: OrderId) {
         }
       })
       .catch((error) => {
-        const errors = error.response.data.error;
+        const errors = error?.response?.data?.error;
         if (errors && !errors.Status) {
           toast.error(errors);
         }

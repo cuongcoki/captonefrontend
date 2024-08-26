@@ -57,9 +57,9 @@ export default function AddNewMeterialForm() {
     }
     // setLoading(true);
     const formData = new FormData();
-    formData.append("receivedFiles", file); 
+    formData.append("receivedFiles", file);
     try {
-      const response = await filesApi.postFiles(formData); 
+      const response = await filesApi.postFiles(formData);
     } catch (error) {
       // console.error("Error uploading files:", error);
     } finally {
@@ -103,8 +103,7 @@ export default function AddNewMeterialForm() {
     data.image = file?.name || " ";
     try {
       await handlePostImage(file);
-    } catch (error) {
-    }
+    } catch (error) {}
     materialApi
       .addMaterial(data)
       .then(({ data }) => {
@@ -117,12 +116,12 @@ export default function AddNewMeterialForm() {
         }
       })
       .catch((error) => {
-        if (error.response.data.error) {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+        if (error?.response?.data?.error) {
+          for (const key in error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error[key][0]);
           }
         } else {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
         }
       })
       .finally(() => {

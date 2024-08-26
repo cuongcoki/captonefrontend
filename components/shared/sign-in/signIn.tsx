@@ -13,7 +13,7 @@ export default function SignIn() {
           alt="Image"
           width="1920"
           height="1080"
-          className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+          className="h-full w-full object-cover "
         />
       </div>
       <div className="flex items-center justify-center py-12">
@@ -35,8 +35,13 @@ export default function SignIn() {
               QUÊN MẬT KHẨU
             </Link>
 
-            <Link href={`/pdf/Quên mật khẩu.pdf`} target="_blank" rel="noopener noreferrer" className=" inline-block text-sm underline">
-                TRỢ GIÚP ?
+            <Link
+              href={`/pdf/Quên mật khẩu.pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className=" inline-block text-sm underline"
+            >
+              TRỢ GIÚP ?
             </Link>
           </div>
         </div>

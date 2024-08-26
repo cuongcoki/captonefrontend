@@ -135,21 +135,6 @@ export default function CountProduct({
     setIsUpdate(true);
   };
 
-  const updatePhaseOfProduct = (indexP: number, value: string) => {
-    setUserData((prev) => {
-      const newProducts = [...prev.products];
-      newProducts[indexP].phaseID = value;
-      newProducts[indexP].phaseName = dataPhase.find(
-        (phase) => phase.value === value
-      )?.label as string;
-      return {
-        ...prev,
-        products: newProducts,
-      };
-    });
-    setIsUpdate(true);
-  };
-
   const removeProduct = () => {
     setUserData((prev) => {
       const newProducts = [...prev.products];
@@ -162,12 +147,14 @@ export default function CountProduct({
     setIsUpdate(true);
   };
   const handleDialog = (value: boolean) => {
+    // document.getElementById("resetFocus")?.click();
     if (isUpdate) {
       setDialogClose(true);
       return;
     }
     setDialogIsOpen(value);
   };
+
   useEffect(() => {
     if (!dialogIsOpen && isUpdate) {
       const data = userData;
@@ -198,6 +185,7 @@ export default function CountProduct({
             </div>
           </DialogDescription>
         </DialogHeader>
+        <div id="resetFocus"></div>
         <div className="mr-auto ">
           <div style={{ position: "relative", width: "400px" }}>
             <Input
@@ -289,6 +277,7 @@ export default function CountProduct({
                   <Input
                     type="number"
                     value={product.quantity}
+                    disabled={dialogClose}
                     onChange={(e) => {
                       updateQuantityOfProduct(indexP, e.target.value);
                     }}

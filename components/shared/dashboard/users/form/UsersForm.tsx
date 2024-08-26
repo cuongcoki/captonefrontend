@@ -226,7 +226,7 @@ export const UsersForm = () => {
         },
         avatar: avatar,
       };
-
+      // console.log("requestBody",requestBody)
       setLoading(true);
       userApi
         .createUser(requestBody)
@@ -241,13 +241,17 @@ export const UsersForm = () => {
         })
         .catch((err) => {
           // console.log(err.response);
-          if (err.response && err.response.data && err.response.data.error) {
-            if (err.response.data.error) {
-              for (const key in err.response.data.error) {
-                toast.error(err.response.data.error[key][0]);
+          if (
+            err?.response &&
+            err?.response?.data &&
+            err?.response?.data?.error
+          ) {
+            if (err?.response?.data?.error) {
+              for (const key in err?.response?.data?.error) {
+                toast.error(err?.response?.data?.error[key][0]);
               }
             } else {
-              toast.error(err.response.data.message);
+              toast.error(err?.response?.data?.message);
             }
           } else {
             toast.error("Có lỗi xảy ra khi tạo tài khoản.");
@@ -387,7 +391,7 @@ export const UsersForm = () => {
                                   {/* firstName */}
                                   <FormField
                                     control={form.control}
-                                    name="firstName"
+                                    name="lastName"
                                     render={({ field }) => {
                                       return (
                                         <FormItem>
@@ -406,7 +410,7 @@ export const UsersForm = () => {
                                   {/* lastName */}
                                   <FormField
                                     control={form.control}
-                                    name="lastName"
+                                    name="firstName"
                                     render={({ field }) => {
                                       return (
                                         <FormItem>
@@ -741,7 +745,7 @@ export const UsersForm = () => {
                                               className={cn(
                                                 "w-full pl-3 text-left font-normal",
                                                 !field.value &&
-                                                "text-muted-foreground"
+                                                  "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -762,10 +766,10 @@ export const UsersForm = () => {
                                             selected={
                                               field.value
                                                 ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                    field.value,
+                                                    "dd/MM/yyyy",
+                                                    new Date()
+                                                  )
                                                 : undefined
                                             }
                                             onDayClick={(date: any) => {
@@ -839,7 +843,7 @@ export const UsersForm = () => {
                                               className={cn(
                                                 "w-full pl-3 text-left font-normal",
                                                 !field.value &&
-                                                "text-muted-foreground"
+                                                  "text-muted-foreground"
                                               )}
                                             >
                                               {field.value ? (
@@ -860,10 +864,10 @@ export const UsersForm = () => {
                                             selected={
                                               field.value
                                                 ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                    field.value,
+                                                    "dd/MM/yyyy",
+                                                    new Date()
+                                                  )
                                                 : undefined
                                             }
                                             onDayClick={(date: any) => {

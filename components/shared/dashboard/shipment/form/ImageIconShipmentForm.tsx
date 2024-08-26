@@ -20,7 +20,7 @@ interface dataProduct {
     description: string;
     errorAvailableQuantity: number;
     errorQuantity: number;
-    failureAvailableQuantity: number;
+    failureAvailabeQuantity: number;
     failureQuantity: number;
     id: string;
     imageUrl: string;
@@ -75,9 +75,9 @@ export default function ImageIconShipmentForm({ dataImage }: ImageIconShipOrderP
                                                         {item.id === 0
                                                             ? dataImage.brokenAvailableQuantity
                                                             : item.id === 1
-                                                                ? dataImage.errorAvailableQuantity
+                                                                ? dataImage.failureAvailabeQuantity
                                                                 : item.id === 2
-                                                                    ? dataImage.failureAvailableQuantity
+                                                                    ? dataImage.errorAvailableQuantity
                                                                     : null}
                                                     </span>
                                                 </div>

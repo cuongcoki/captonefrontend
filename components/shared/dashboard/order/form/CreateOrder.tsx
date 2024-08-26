@@ -227,7 +227,7 @@ export default function CreateOrder() {
         .catch((error) => {
           setSearchResultsSet([]);
         })
-        .finally(() => {});
+        .finally(() => { });
     };
     if (debouncedSearchTermSet) {
       handleSearchSet();
@@ -566,7 +566,7 @@ export default function CreateOrder() {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -587,10 +587,10 @@ export default function CreateOrder() {
                                           selected={
                                             field.value
                                               ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                field.value,
+                                                "dd/MM/yyyy",
+                                                new Date()
+                                              )
                                               : undefined
                                           }
                                           onSelect={(date: any) => {
@@ -631,7 +631,7 @@ export default function CreateOrder() {
                                             className={cn(
                                               "w-[240px] pl-3 text-left font-normal",
                                               !field.value &&
-                                                "text-muted-foreground"
+                                              "text-muted-foreground"
                                             )}
                                           >
                                             {field.value ? (
@@ -652,10 +652,10 @@ export default function CreateOrder() {
                                           selected={
                                             field.value
                                               ? parse(
-                                                  field.value,
-                                                  "dd/MM/yyyy",
-                                                  new Date()
-                                                )
+                                                field.value,
+                                                "dd/MM/yyyy",
+                                                new Date()
+                                              )
                                               : undefined
                                           }
                                           onDayClick={(date: any) => {
@@ -694,16 +694,21 @@ export default function CreateOrder() {
                                   <Search className="mr-1 h-5 w-5 shrink-0 opacity-50" />
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                      <ChevronDown className="transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-primary hover:text-white duration-300 h-5 w-5 text-primary-backgroudPrimary cursor-pointer" />
+                                      <div className="mx-3 text-sm transition ease-in-out delay-150  hover:-translate-y-1 hover:scale-110 hover:bg-primary hover:text-white duration-300 w-[120px] text-center dark:text-white text-primary-backgroudPrimary cursor-pointer" >
+                                        {/* <ChevronDown  /> */}
+                                        {!checkProducts ? (<span >Sản phẩm</span>) : (<span >Bộ sản phẩm</span>)}
+                                      </div>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="start">
                                       <DropdownMenuItem
                                         onClick={handleCheckProduct}
+                                        className="hover:bg-slate-50 dark:hover:bg-black"
                                       >
                                         Sản phẩm
                                       </DropdownMenuItem>
                                       <DropdownMenuItem
                                         onClick={handleCheckOrder}
+                                        className="hover:bg-slate-50 dark:hover:bg-black"
                                       >
                                         Bộ sản phẩm
                                       </DropdownMenuItem>
@@ -750,15 +755,14 @@ export default function CreateOrder() {
                                               checkProduct={productCheck}
                                             />
                                             <Check
-                                              className={`w-5 h-5 ${
-                                                productsRequest.some(
-                                                  (item1) =>
-                                                    item1.productIdOrSetId ===
-                                                    product.id
-                                                )
+                                              className={`w-5 h-5 ${productsRequest.some(
+                                                (item1) =>
+                                                  item1.productIdOrSetId ===
+                                                  product.id
+                                              )
                                                   ? "absolute top-0 right-0 bg-primary text-white"
                                                   : "hidden"
-                                              }`}
+                                                }`}
                                             />
                                             <span
                                               className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 hover:bg-primary h-6 w-6 bg-primary-backgroudPrimary"
@@ -845,15 +849,14 @@ export default function CreateOrder() {
                                               checkProduct={setCheck}
                                             />
                                             <Check
-                                              className={`w-5 h-5 ${
-                                                productsRequest.some(
-                                                  (item1) =>
-                                                    item1.productIdOrSetId ===
-                                                    product.id
-                                                )
+                                              className={`w-5 h-5 ${productsRequest.some(
+                                                (item1) =>
+                                                  item1.productIdOrSetId ===
+                                                  product.id
+                                              )
                                                   ? "absolute top-0 right-0 bg-primary text-white"
                                                   : "hidden"
-                                              }`}
+                                                }`}
                                             />
                                           </div>
                                           <div>
@@ -938,13 +941,13 @@ export default function CreateOrder() {
                                                     height={900}
                                                     src={
                                                       product?.imageUrl &&
-                                                      product.imageUrl !==
+                                                        product.imageUrl !==
                                                         "Image_not_found"
                                                         ? product.imageUrl
                                                         : product?.image ===
                                                           "Image_not_found"
-                                                        ? NoImage
-                                                        : product?.image
+                                                          ? NoImage
+                                                          : product?.image
                                                     }
                                                   />
                                                 </div>

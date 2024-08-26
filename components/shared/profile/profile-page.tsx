@@ -157,12 +157,12 @@ export default function ProfilePage() {
       })
       .catch((error) => {
         // console.error("Error changing password:", error);
-        if (error.response.data.error) {
-          for (const key in error.response.data.error) {
-            toast.error(error.response.data.error[key][0]);
+        if (error?.response?.data?.error) {
+          for (const key in error?.response?.data?.error) {
+            toast.error(error?.response?.data?.error[key][0]);
           }
         } else {
-          toast.error(error.response.data.message);
+          toast.error(error?.response?.data?.message);
         }
       });
   };
@@ -211,7 +211,7 @@ export default function ProfilePage() {
 
                 <div className="w-full flex flex-col gap-3 justify-center items-center">
                   <div className="text-lg">
-                    {userId?.firstName} {userId?.lastName}
+                     {userId?.lastName} {userId?.firstName}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
                     <div className="flex gap-4 text-sm sm:text-base">
@@ -330,7 +330,9 @@ export default function ProfilePage() {
                             Ngày nhận lương gần nhất
                           </div>
                           <div>
-                          {userId?.lastPaidSalaryDate !== "0001-01-01" ? formatDate(userId?.lastPaidSalaryDate) : "Không có"}
+                            {userId?.lastPaidSalaryDate !== "0001-01-01"
+                              ? formatDate(userId?.lastPaidSalaryDate)
+                              : "Không có"}
                           </div>
                         </div>
                       </div>
