@@ -273,7 +273,19 @@ export default function ProductPhaseTable({
             </TableHeader>
 
             <TableBody>
-              {tableData.length === 0 ? (
+              {!tableData && (
+                <TableRow>
+                  <TableCell
+                    colSpan={
+                      CompanyIDSetRef.current.has(params.SearchCompany) ? 9 : 4
+                    }
+                    className="text-center"
+                  >
+                    Không có dữ liệu
+                  </TableCell>
+                </TableRow>
+              )}
+              {tableData?.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={
@@ -285,7 +297,7 @@ export default function ProductPhaseTable({
                   </TableCell>
                 </TableRow>
               ) : (
-                tableData.map((item: any, index) => {
+                tableData?.map((item: any, index) => {
                   if (CompanyIDSetRef.current.has(item.companyId)) {
                     return (
                       <ProductPhaseChangeQuantityType
