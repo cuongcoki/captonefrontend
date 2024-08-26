@@ -146,7 +146,7 @@ export const SetForm = () => {
   // ** Xử lý khi đăng ảnh xong và lấy ảnh về
   const handleGetImage = async () => {
     if (!imageUrls) {
-      console.error("No image selected");
+      // console.error("No image selected");
       return;
     }
     setLoading(true);

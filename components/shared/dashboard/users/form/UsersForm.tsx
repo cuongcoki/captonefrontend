@@ -226,7 +226,7 @@ export const UsersForm = () => {
         },
         avatar: avatar,
       };
-
+      // console.log("requestBody",requestBody)
       setLoading(true);
       userApi
         .createUser(requestBody)
@@ -387,7 +387,7 @@ export const UsersForm = () => {
                                   {/* firstName */}
                                   <FormField
                                     control={form.control}
-                                    name="firstName"
+                                    name="lastName"
                                     render={({ field }) => {
                                       return (
                                         <FormItem>
@@ -406,7 +406,7 @@ export const UsersForm = () => {
                                   {/* lastName */}
                                   <FormField
                                     control={form.control}
-                                    name="lastName"
+                                    name="firstName"
                                     render={({ field }) => {
                                       return (
                                         <FormItem>

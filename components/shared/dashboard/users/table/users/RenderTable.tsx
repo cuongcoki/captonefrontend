@@ -89,7 +89,7 @@ export default function RenderTableUsers({ searchParams }: Props) {
     setCurrentPage(1);
   };
 
-  console.log("data",data)
+  // console.log("data",data)
 
   return (
     <div className="">

@@ -69,6 +69,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { UserDetailContext } from "@/components/shared/dashboard/users/table/users/userID/userID";
 import { UserStore } from "@/components/shared/dashboard/users/user-store";
+import { authService } from "@/auth/authService";
+import { useAuth } from "@/hooks/useAuth";
 
 // ** type
 
@@ -119,7 +121,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
   const handleOffDialogA = () => {
     setOpenAlert(false);
   };
-
+  const userLocal = useAuth();
   const { forceUpdate } = useContext(MyContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<User>();
@@ -396,9 +398,28 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
       // Đợi cho ảnh được tải lên trước
       await handlePostImage();
 
+      const updatedUser = {
+        ...userLocal.user, // Giữ lại các giá trị hiện tại
+        id: data.id, // Cập nhật các giá trị mới
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone,
+        avatar: nameImage === null ? user?.avatar : nameImage,
+        address: data.address,
+        gender: data.gender,
+        dob: formatDateData(data.dob),
+        salaryHistoryResponse: {
+          salaryByDayResponses: formattedSalaryByDayRequest,
+          salaryByOverTimeResponses: formattedSalaryOverTimeRequest
+        },
+        companyId: data.companyId,
+        roleId: data.roleId,
+      };
+
       // Sau khi ảnh đã được tải lên, gửi yêu cầu cập nhật người dùng
       const response = await userApi.userUpdate(formattedData);
       if (response.data.isSuccess) {
+        authService.updateUserLocal(updatedUser)
         forceUpdate();
         setOpen(false);
         ForceRenderForUserDetai();
@@ -535,7 +556,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                   {/* firstName */}
                                   <FormField
                                     control={form.control}
-                                    name="firstName"
+                                    name="lastName"
                                     render={({ field }) => {
                                       return (
                                         <FormItem>
@@ -553,7 +574,7 @@ export const UpdateUser: React.FC<UserID> = ({ userId, children }) => {
                                   {/* lastName */}
                                   <FormField
                                     control={form.control}
-                                    name="lastName"
+                                    name="firstName"
                                     render={({ field }) => {
                                       return (
                                         <FormItem>
