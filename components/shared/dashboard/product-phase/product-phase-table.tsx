@@ -73,6 +73,7 @@ export default function ProductPhaseTable({
 
   useEffect(() => {
     setIsLoading(true);
+    setTableData([]);
     let firtCompany: CompanyResponse;
     let listData: ComboboxDataType[] = [];
     const getOwnCompany = async () => {
@@ -152,7 +153,7 @@ export default function ProductPhaseTable({
       }
     };
     fetchData();
-    // console.log("PRODUCT PHASE RERENDER");
+    console.log("PRODUCT PHASE RERENDER");
   }, [
     router,
     paramsDebounce,
@@ -216,7 +217,8 @@ export default function ProductPhaseTable({
               }
             />
           </div>
-          {CompanyIDSetRef.current.has(params.SearchCompany) ? (
+          {params.SearchCompany === "" ||
+          CompanyIDSetRef.current.has(params.SearchCompany) ? (
             <div>
               <Select
                 value={params.SearchPhase}
@@ -225,7 +227,11 @@ export default function ProductPhaseTable({
                     setParams({ ...params, SearchPhase: "", PageIndex: 1 });
                     return;
                   }
-                  setParams({ ...params, SearchPhase: value, PageIndex: 1 });
+                  setParams({
+                    ...params,
+                    SearchPhase: value,
+                    PageIndex: 1,
+                  });
                 }}
               >
                 <SelectTrigger className="sm:w-[180px] w-full">
