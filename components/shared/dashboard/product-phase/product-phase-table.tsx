@@ -74,6 +74,7 @@ export default function ProductPhaseTable({
   useEffect(() => {
     setIsLoading(true);
     setTableData([]);
+
     let firtCompany: CompanyResponse;
     let listData: ComboboxDataType[] = [];
     const getOwnCompany = async () => {
@@ -141,7 +142,7 @@ export default function ProductPhaseTable({
             paramsDebounce.PageSize
           );
           setTableData(res.data.data.data);
-          setTotal(res.data.totalPages);
+          setTotal(res.data.data.totalPages);
           router.push(
             `${pathname}?PageIndex=${paramsDebounce.PageIndex}&SearchCompany=${paramsDebounce.SearchCompany}&SearchProduct=${paramsDebounce.SearchProduct}`
           );
