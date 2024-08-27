@@ -360,7 +360,7 @@ export default function UserIDPage() {
 
             <div className="w-full sm:w-auto flex flex-col items-center sm:items-start">
               <p className="font-display mb-2 text-xl dark:text-primary font-semibold text-primary">
-                {userId?.firstName} {userId?.lastName}
+                {userId?.lastName} {userId?.firstName}
               </p>
 
               <div className="mb-4 text-sm sm:text-md md:text-lg text-center sm:text-start">
@@ -553,7 +553,7 @@ export default function UserIDPage() {
                 <div>
                   <div className="font-extralight text-[0.8rem]">Họ và tên</div>
                   <div>
-                    {userId?.firstName} {userId?.lastName}
+                    {userId?.lastName} {userId?.firstName}
                   </div>
                 </div>
 

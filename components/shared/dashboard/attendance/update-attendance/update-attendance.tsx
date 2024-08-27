@@ -229,7 +229,7 @@ export default function UpdateAttendance({
             const attendanceData = userD?.map((item): AttendanceDetailType => {
               return {
                 userID: item.id,
-                userName: item.firstName + " " + item.lastName,
+                userName: item.lastName + " " + item.firstName,
                 image: "",
                 hourOverTime: "0",
                 isAttendance: false,

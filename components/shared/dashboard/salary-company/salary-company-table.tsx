@@ -211,7 +211,11 @@ export default function SalaryCompanyTable({
                   <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
                     {formatCurrencyWithNegative(item.salary)}
                   </TableCell>
-                  <TableCell className="px-4 py-4 text-sm text-gray-800 dark:text-white">
+                  <TableCell
+                    className={`px-4 py-4 text-sm text-gray-800 dark:text-white ${
+                      item.status === 0 ? "text-destructive" : "text-primary"
+                    }`}
+                  >
                     {item.status === 0 ? "Chưa thanh toán" : "Đã thanh toán"}
                   </TableCell>
                 </TableRow>
