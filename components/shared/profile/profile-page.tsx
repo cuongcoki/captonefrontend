@@ -211,7 +211,7 @@ export default function ProfilePage() {
 
                 <div className="w-full flex flex-col gap-3 justify-center items-center">
                   <div className="text-lg">
-                    {userId?.firstName} {userId?.lastName}
+                    {userId?.lastName} {userId?.firstName}
                   </div>
                   <div className="flex flex-col sm:flex-row gap-4 text-sm sm:text-base">
                     <div className="flex gap-4 text-sm sm:text-base">
@@ -253,7 +253,7 @@ export default function ProfilePage() {
                         <div className="flex gap-3 items-center">
                           <ContactRound className="w-6 h-6 flex-shrink-0 text-gray-500" />
                           <div>
-                            {userId?.firstName} {userId?.lastName}
+                            {userId?.lastName} {userId?.firstName}
                           </div>
                         </div>
 
