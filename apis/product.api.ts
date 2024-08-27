@@ -88,7 +88,8 @@ export const productApi = {
           SearchTerm: searchTerm,
           PageIndex: pageIndex,
           PageSize: pageSize
-        }
+        },
+        cache: false,
       }
     ),
 
