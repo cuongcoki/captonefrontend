@@ -120,7 +120,7 @@ import ImageIconShipmentFormPF from "./ImageIconShipmentFormPF";
 import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 
 export type Product = {
-  failureAvailabeQuantity:number
+  failureAvailabeQuantity: number;
   availableQuantity: number;
   brokenAvailableQuantity: number;
   brokenQuantity: number;
@@ -371,6 +371,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
         // orderData.details = await Promise.all(imagePromises);
 
         setDataSID(orderData);
+        console.log("dataSID", orderData);
       } catch (error) {
       } finally {
         setLoading(false);
@@ -1023,6 +1024,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                     onValueChange={(value) =>
                                       handleStatusChange(parseInt(value))
                                     }
+                                    disabled={dataSID?.status !== 0}
                                   >
                                     <SelectTrigger className="mb-2">
                                       {" "}
@@ -1050,6 +1052,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                             handleSelectChange(value);
                                           }}
                                           defaultValue={field.value}
+                                          disabled={dataSID?.status !== 0}
                                         >
                                           <FormControl>
                                             <SelectTrigger className="h-32">
@@ -1120,6 +1123,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                     onValueChange={(value) =>
                                       handleStatusChange1(parseInt(value))
                                     }
+                                    disabled={dataSID?.status !== 0}
                                   >
                                     <SelectTrigger className="mb-2">
                                       {" "}
@@ -1144,6 +1148,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                         <Select
                                           onValueChange={field.onChange}
                                           defaultValue={field.value}
+                                          disabled={dataSID?.status !== 0}
                                         >
                                           <FormControl>
                                             <SelectTrigger className="h-32">
@@ -1248,7 +1253,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                                           />
                                           <div className="font-medium dark:text-white">
                                             <div>
-                                              {item.firstName} {item.lastName}
+                                              {item.lastName} {item.firstName}
                                             </div>
                                             <div className="text-sm text-gray-500 dark:text-gray-400">
                                               {item.id}
@@ -1273,7 +1278,7 @@ export const UpdateShipment: React.FC<ShipmentIDProps> = ({
                             render={({ field }) => (
                               <FormItem className="grid grid-rows-5 h-full">
                                 <FormLabel className="flex items-end text-primary">
-                                  Ngày đặt hàng *
+                                  Ngày vận đơn *
                                 </FormLabel>
                                 <Popover
                                   modal={true}
