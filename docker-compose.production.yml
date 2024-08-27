@@ -5,7 +5,7 @@ networks:
 
 services:
   capstone-fe:
-    image: dihson103/capstone-fe:v8.8
+    image: dihson103/capstone-fe:v6.6
     volumes:
       - .:/app
       - /app/node_modules
