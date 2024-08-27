@@ -297,7 +297,10 @@ export default function ProductPhaseTable({
                 <TableRow>
                   <TableCell
                     colSpan={
-                      CompanyIDSetRef.current.has(params.SearchCompany) ? 9 : 4
+                      params.SearchCompany === "" ||
+                      CompanyIDSetRef.current.has(params.SearchCompany)
+                        ? 9
+                        : 4
                     }
                     className="text-center"
                   >
