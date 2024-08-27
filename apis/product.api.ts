@@ -74,7 +74,10 @@ export const productApi = {
 
   searchProduct: (searchTerm?: string, phaseId?: string, companyId?: string, pageIndex: number = 1, pageSize: number = 10) =>
     axiosClient.get(
-      `${endPointConstant.BASE_URL}/products/search?search=${searchTerm}&phaseId=${phaseId}&companyId=${companyId}&pageIndex=${pageIndex}&pageSize=${pageSize}`
+      `${endPointConstant.BASE_URL}/products/search?search=${searchTerm}&phaseId=${phaseId}&companyId=${companyId}&pageIndex=${pageIndex}&pageSize=${pageSize}`,
+      {
+        cache: false,
+      }
     ),
 
   searchProductForSet: (searchTerm?: string, pageIndex: number = 1, pageSize: number = 10) =>
