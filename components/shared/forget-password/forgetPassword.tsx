@@ -39,7 +39,7 @@ export default function ForgetPassword() {
     authApi
       .forgetPassword(data)
       .then((response) => {
-        console.log("SUCCESS");
+        // console.log("SUCCESS");
         toast.success(response.data.message);
         setTimeout(() => {
           toast.dismiss();

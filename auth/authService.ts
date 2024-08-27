@@ -27,7 +27,7 @@ export const authService = {
     }
   
     const payload: any = jwtDecode(storedToken)
-    console.log("Payload ====== ===", payload)
+    // console.log("Payload ====== ===", payload)
   
     const refreshToken = localStorage.getItem(jwtConfig.onTokenExpiration) // Đảm bảo key đúng
     if (!refreshToken) {
@@ -38,7 +38,7 @@ export const authService = {
       userId: payload?.UserID,
       refreshToken: refreshToken
     }
-    console.log("Request data:", data)
+    // console.log("Request data:", data)
   
     try {
       const response = await axios.post(apiUrl, data, {
@@ -76,5 +76,8 @@ export const authService = {
   updateStorageWhenRefreshToken: (payload: LoginPayload) => {
     localStorage.setItem(jwtConfig.storageTokenKeyName, payload.accessToken)
     localStorage.setItem(jwtConfig.onTokenExpiration, payload.refreshToken)
-  }
+  },
+  updateUserLocal: (payload: any) => {
+    localStorage.setItem(jwtConfig.userData, JSON.stringify(payload))
+  },
 }

@@ -46,7 +46,7 @@ export const columns: ColumnDef<Employee>[] = [
     },
     cell: ({ row }) => (
       <div className="">
-       {row.original.firstName} {row.original.lastName}
+        {row.original.lastName} {row.original.firstName}
       </div>
     ),
   },

@@ -445,8 +445,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 <div className="space-y-1">
                   <h2 className="text-md font-semibold">
                     <HoverComponent Num={10}>
-                      {user.user?.lastName}
-                      {user.user?.firstName}
+                    {`${user.user?.lastName} ${user.user?.firstName}`}
                     </HoverComponent>
                   </h2>
                   <h2 className="text-xs font-semibold text-primary">

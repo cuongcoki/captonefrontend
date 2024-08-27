@@ -120,6 +120,7 @@ import ImageIconShipmentFormPF from "./ImageIconShipmentFormPF";
 import useDebounce from "@/components/shared/common/customer-hook/use-debounce";
 
 export type Product = {
+  failureAvailabeQuantity:number
   availableQuantity: number;
   brokenAvailableQuantity: number;
   brokenQuantity: number;
